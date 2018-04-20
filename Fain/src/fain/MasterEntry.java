@@ -41,13 +41,16 @@ public class MasterEntry extends javax.swing.JInternalFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
+        setClosable(true);
         setTitle("Master");
-        getContentPane().setLayout(new java.awt.BorderLayout(30, 30));
+        getContentPane().setLayout(new java.awt.BorderLayout(100, 30));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jPanel1.setLayout(new java.awt.GridLayout(6, 2, 20, 20));
 
+        jLabel1.setLabelFor(jTextField1);
         jLabel1.setText("jLabel1");
+        jLabel1.setOpaque(true);
         jPanel1.add(jLabel1);
 
         jTextField1.setText("jTextField1");
