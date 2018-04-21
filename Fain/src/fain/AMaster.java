@@ -31,6 +31,7 @@ public class AMaster extends javax.swing.JInternalFrame {
         outerPanel = new javax.swing.JPanel();
         leftInerPannel = new javax.swing.JPanel();
         logoPanel = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
         labelsPanel = new javax.swing.JPanel();
         accountCodeLabel = new javax.swing.JLabel();
         accountHeadLabel = new javax.swing.JLabel();
@@ -55,16 +56,13 @@ public class AMaster extends javax.swing.JInternalFrame {
 
         leftInerPannel.setLayout(new java.awt.GridLayout(1, 2));
 
-        javax.swing.GroupLayout logoPanelLayout = new javax.swing.GroupLayout(logoPanel);
-        logoPanel.setLayout(logoPanelLayout);
-        logoPanelLayout.setHorizontalGroup(
-            logoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        logoPanelLayout.setVerticalGroup(
-            logoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
+        logoPanel.setLayout(new java.awt.BorderLayout());
+
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fain/note.png"))); // NOI18N
+        jLabel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        logoPanel.add(jLabel1, java.awt.BorderLayout.CENTER);
 
         leftInerPannel.add(logoPanel);
 
@@ -133,6 +131,7 @@ public class AMaster extends javax.swing.JInternalFrame {
     private javax.swing.JLabel currBalLabel;
     private javax.swing.JTextField currentBalanceTbox;
     private javax.swing.JButton enterButton;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel labelsPanel;
     private javax.swing.JPanel leftInerPannel;
     private javax.swing.JPanel logoPanel;

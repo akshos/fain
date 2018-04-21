@@ -180,8 +180,8 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_optionsMenuMouseExited
 
     private void aMasterMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aMasterMenuItemActionPerformed
-        MasterEntry masterEntry = new MasterEntry();
-        masterEntry.setSize(300, 500);
+        AMaster masterEntry = new AMaster();
+        masterEntry.setSize(790, 300);
         addToMainDesktopPane(masterEntry);
     }//GEN-LAST:event_aMasterMenuItemActionPerformed
     
