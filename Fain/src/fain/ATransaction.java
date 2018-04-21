@@ -32,17 +32,17 @@ public class ATransaction extends javax.swing.JInternalFrame {
         logoPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         labelsPanel = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
+        dateLabel = new javax.swing.JLabel();
+        branchLabel = new javax.swing.JLabel();
+        debitLabel = new javax.swing.JLabel();
+        creditLabel = new javax.swing.JLabel();
+        amountLabel = new javax.swing.JLabel();
+        narrationLabel = new javax.swing.JLabel();
         rightInerPannel = new javax.swing.JPanel();
         dateTbox = new javax.swing.JTextField();
-        branchTbox = new javax.swing.JTextField();
-        debitTbox = new javax.swing.JTextField();
-        creditTbox = new javax.swing.JTextField();
+        branchCbox = new javax.swing.JComboBox<>();
+        debitCbox = new javax.swing.JComboBox<>();
+        creditCbox = new javax.swing.JComboBox<>();
         amountTbox = new javax.swing.JTextField();
         narrationTbox = new javax.swing.JTextField();
         buttonPanel = new javax.swing.JPanel();
@@ -69,23 +69,23 @@ public class ATransaction extends javax.swing.JInternalFrame {
 
         labelsPanel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
 
-        jLabel2.setText("Date");
-        labelsPanel.add(jLabel2);
+        dateLabel.setText("Date");
+        labelsPanel.add(dateLabel);
 
-        jLabel3.setText("Branch");
-        labelsPanel.add(jLabel3);
+        branchLabel.setText("Branch");
+        labelsPanel.add(branchLabel);
 
-        jLabel4.setText("Debit ( R )");
-        labelsPanel.add(jLabel4);
+        debitLabel.setText("Debit ( R )");
+        labelsPanel.add(debitLabel);
 
-        jLabel5.setText("Credit ( P )");
-        labelsPanel.add(jLabel5);
+        creditLabel.setText("Credit ( P )");
+        labelsPanel.add(creditLabel);
 
-        jLabel6.setText("Amount");
-        labelsPanel.add(jLabel6);
+        amountLabel.setText("Amount");
+        labelsPanel.add(amountLabel);
 
-        jLabel7.setText("Narration");
-        labelsPanel.add(jLabel7);
+        narrationLabel.setText("Narration");
+        labelsPanel.add(narrationLabel);
 
         leftInerPannel.add(labelsPanel);
 
@@ -93,9 +93,15 @@ public class ATransaction extends javax.swing.JInternalFrame {
 
         rightInerPannel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
         rightInerPannel.add(dateTbox);
-        rightInerPannel.add(branchTbox);
-        rightInerPannel.add(debitTbox);
-        rightInerPannel.add(creditTbox);
+
+        branchCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        rightInerPannel.add(branchCbox);
+
+        debitCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        rightInerPannel.add(debitCbox);
+
+        creditCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        rightInerPannel.add(creditCbox);
         rightInerPannel.add(amountTbox);
         rightInerPannel.add(narrationTbox);
 
@@ -116,23 +122,23 @@ public class ATransaction extends javax.swing.JInternalFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel amountLabel;
     private javax.swing.JTextField amountTbox;
-    private javax.swing.JTextField branchTbox;
+    private javax.swing.JComboBox<String> branchCbox;
+    private javax.swing.JLabel branchLabel;
     private javax.swing.JPanel buttonPanel;
-    private javax.swing.JTextField creditTbox;
+    private javax.swing.JComboBox<String> creditCbox;
+    private javax.swing.JLabel creditLabel;
+    private javax.swing.JLabel dateLabel;
     private javax.swing.JTextField dateTbox;
-    private javax.swing.JTextField debitTbox;
+    private javax.swing.JComboBox<String> debitCbox;
+    private javax.swing.JLabel debitLabel;
     private javax.swing.JButton enterButton;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel labelsPanel;
     private javax.swing.JPanel leftInerPannel;
     private javax.swing.JPanel logoPanel;
+    private javax.swing.JLabel narrationLabel;
     private javax.swing.JTextField narrationTbox;
     private javax.swing.JPanel outerPanel;
     private javax.swing.JPanel rightInerPannel;
