@@ -29,19 +29,19 @@ public class A_transaction extends javax.swing.JInternalFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        date_tbox = new javax.swing.JTextField();
+        dateTbox = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        branch_tbox = new javax.swing.JTextField();
+        branchTbox = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        debit_tbox = new javax.swing.JTextField();
+        debitTbox = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        credit_tbox = new javax.swing.JTextField();
+        creditTbox = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        amount_tbox = new javax.swing.JTextField();
+        amountTbox = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        narration_tbox = new javax.swing.JTextField();
-        exit_button = new javax.swing.JButton();
-        head_button = new javax.swing.JButton();
+        narrationTbox = new javax.swing.JTextField();
+        exitButton = new javax.swing.JButton();
+        headButton = new javax.swing.JButton();
 
         setTitle("Transactions Data Entry");
 
@@ -49,33 +49,33 @@ public class A_transaction extends javax.swing.JInternalFrame {
 
         jLabel1.setText("Date");
         jPanel1.add(jLabel1);
-        jPanel1.add(date_tbox);
+        jPanel1.add(dateTbox);
 
         jLabel2.setText("Branch");
         jPanel1.add(jLabel2);
-        jPanel1.add(branch_tbox);
+        jPanel1.add(branchTbox);
 
         jLabel3.setText("Debit ( R )");
         jPanel1.add(jLabel3);
-        jPanel1.add(debit_tbox);
+        jPanel1.add(debitTbox);
 
         jLabel4.setText("Credit ( P )");
         jPanel1.add(jLabel4);
-        jPanel1.add(credit_tbox);
+        jPanel1.add(creditTbox);
 
         jLabel5.setText("Amount");
         jPanel1.add(jLabel5);
-        jPanel1.add(amount_tbox);
+        jPanel1.add(amountTbox);
 
         jLabel6.setText("Narration");
         jPanel1.add(jLabel6);
-        jPanel1.add(narration_tbox);
+        jPanel1.add(narrationTbox);
 
-        exit_button.setText("Esc : Exit");
-        jPanel1.add(exit_button);
+        exitButton.setText("Esc : Exit");
+        jPanel1.add(exitButton);
 
-        head_button.setText("F10 : A/c Head");
-        jPanel1.add(head_button);
+        headButton.setText("F10 : A/c Head");
+        jPanel1.add(headButton);
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
 
@@ -84,13 +84,13 @@ public class A_transaction extends javax.swing.JInternalFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField amount_tbox;
-    private javax.swing.JTextField branch_tbox;
-    private javax.swing.JTextField credit_tbox;
-    private javax.swing.JTextField date_tbox;
-    private javax.swing.JTextField debit_tbox;
-    private javax.swing.JButton exit_button;
-    private javax.swing.JButton head_button;
+    private javax.swing.JTextField amountTbox;
+    private javax.swing.JTextField branchTbox;
+    private javax.swing.JTextField creditTbox;
+    private javax.swing.JTextField dateTbox;
+    private javax.swing.JTextField debitTbox;
+    private javax.swing.JButton exitButton;
+    private javax.swing.JButton headButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -98,6 +98,6 @@ public class A_transaction extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField narration_tbox;
+    private javax.swing.JTextField narrationTbox;
     // End of variables declaration//GEN-END:variables
 }

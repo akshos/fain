@@ -41,49 +41,49 @@
             <Property name="text" type="java.lang.String" value="Date"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="date_tbox">
+        <Component class="javax.swing.JTextField" name="dateTbox">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="text" type="java.lang.String" value="Branch"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="branch_tbox">
+        <Component class="javax.swing.JTextField" name="branchTbox">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
             <Property name="text" type="java.lang.String" value="Debit ( R )"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="debit_tbox">
+        <Component class="javax.swing.JTextField" name="debitTbox">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
             <Property name="text" type="java.lang.String" value="Credit ( P )"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="credit_tbox">
+        <Component class="javax.swing.JTextField" name="creditTbox">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
             <Property name="text" type="java.lang.String" value="Amount"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="amount_tbox">
+        <Component class="javax.swing.JTextField" name="amountTbox">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel6">
           <Properties>
             <Property name="text" type="java.lang.String" value="Narration"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="narration_tbox">
+        <Component class="javax.swing.JTextField" name="narrationTbox">
         </Component>
-        <Component class="javax.swing.JButton" name="exit_button">
+        <Component class="javax.swing.JButton" name="exitButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Esc : Exit"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="head_button">
+        <Component class="javax.swing.JButton" name="headButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="F10 : A/c Head"/>
           </Properties>
