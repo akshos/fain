@@ -5,6 +5,7 @@
  */
 package fain;
 
+import java.awt.Dimension;
 import javax.swing.Box;
 
 /**
@@ -12,7 +13,8 @@ import javax.swing.Box;
  * @author akshos
  */
 public class Main extends javax.swing.JFrame {
-
+    javax.swing.JInternalFrame activeInternalFrame[];
+    int level;
     /**
      * Creates new form Main
      */
@@ -20,6 +22,8 @@ public class Main extends javax.swing.JFrame {
         this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         initComponents();
         createLogoutMenu();
+        this.activeInternalFrame = new javax.swing.JInternalFrame[5];
+        this.level = 0;
     }
 
     private void createLogoutMenu(){
@@ -48,14 +52,23 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenuItem3 = new javax.swing.JMenuItem();
         mainDesktopPane = new javax.swing.JDesktopPane();
         fainMainMenu = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         aMasterMenuItem = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        aTransactionMenuItem = new javax.swing.JMenuItem();
+        aStockMenuItem = new javax.swing.JMenuItem();
+        aPurchaseLatexMenuItem = new javax.swing.JMenuItem();
+        aPurchaseOthersMenuItem = new javax.swing.JMenuItem();
+        aSalesLatexMenuItem = new javax.swing.JMenuItem();
+        aConsumptionMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
+        eMasterMenuItem = new javax.swing.JMenuItem();
         printingMenu = new javax.swing.JMenu();
         optionsMenu = new javax.swing.JMenu();
+
+        jMenuItem3.setText("jMenuItem3");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -99,8 +112,59 @@ public class Main extends javax.swing.JFrame {
         });
         fileMenu.add(aMasterMenuItem);
 
-        jMenuItem2.setText("jMenuItem2");
-        fileMenu.add(jMenuItem2);
+        aTransactionMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        aTransactionMenuItem.setText("Transaction");
+        aTransactionMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aTransactionMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(aTransactionMenuItem);
+
+        aStockMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        aStockMenuItem.setText("Stock");
+        aStockMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aStockMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(aStockMenuItem);
+
+        aPurchaseLatexMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        aPurchaseLatexMenuItem.setText("Purchase Latex");
+        aPurchaseLatexMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aPurchaseLatexMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(aPurchaseLatexMenuItem);
+
+        aPurchaseOthersMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        aPurchaseOthersMenuItem.setText("Purchase Others");
+        aPurchaseOthersMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aPurchaseOthersMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(aPurchaseOthersMenuItem);
+
+        aSalesLatexMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        aSalesLatexMenuItem.setText("Sales Latex");
+        aSalesLatexMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aSalesLatexMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(aSalesLatexMenuItem);
+
+        aConsumptionMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        aConsumptionMenuItem.setText("Consumption");
+        aConsumptionMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aConsumptionMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(aConsumptionMenuItem);
 
         fainMainMenu.add(fileMenu);
 
@@ -115,6 +179,15 @@ public class Main extends javax.swing.JFrame {
                 editMenuMouseEntered(evt);
             }
         });
+
+        eMasterMenuItem.setText("Master");
+        eMasterMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eMasterMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(eMasterMenuItem);
+
         fainMainMenu.add(editMenu);
 
         printingMenu.setText("Printing");
@@ -182,14 +255,64 @@ public class Main extends javax.swing.JFrame {
     private void aMasterMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aMasterMenuItemActionPerformed
         AMaster masterEntry = new AMaster();
         masterEntry.setSize(790, 300);
-        addToMainDesktopPane(masterEntry);
+        addToMainDesktopPane(masterEntry, this.level);
     }//GEN-LAST:event_aMasterMenuItemActionPerformed
+
+    private void eMasterMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eMasterMenuItemActionPerformed
+        EMaster masterEdit = new EMaster();
+        masterEdit.setSize(785, 470);
+        addToMainDesktopPane(masterEdit, this.level);
+    }//GEN-LAST:event_eMasterMenuItemActionPerformed
+
+    private void aTransactionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aTransactionMenuItemActionPerformed
+        ATransaction transactionEntry = new ATransaction();
+        transactionEntry.setSize(790, 310);
+        addToMainDesktopPane(transactionEntry, this.level);
+    }//GEN-LAST:event_aTransactionMenuItemActionPerformed
+
+    private void aStockMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aStockMenuItemActionPerformed
+        AStock stockEntry = new AStock();
+        stockEntry.setSize(790, 360);
+        addToMainDesktopPane(stockEntry, this.level);
+    }//GEN-LAST:event_aStockMenuItemActionPerformed
+
+    private void aPurchaseLatexMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aPurchaseLatexMenuItemActionPerformed
+        APLatex purchaseLatexEntry = new APLatex();
+        purchaseLatexEntry.setSize(790, 450);
+        addToMainDesktopPane(purchaseLatexEntry, this.level);
+    }//GEN-LAST:event_aPurchaseLatexMenuItemActionPerformed
+
+    private void aPurchaseOthersMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aPurchaseOthersMenuItemActionPerformed
+        APOthers purchaseOthersEntry = new APOthers();
+        purchaseOthersEntry.setSize(790, 410);
+        addToMainDesktopPane(purchaseOthersEntry, this.level);
+    }//GEN-LAST:event_aPurchaseOthersMenuItemActionPerformed
+
+    private void aSalesLatexMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aSalesLatexMenuItemActionPerformed
+        ASLatex salesLatexEntry = new ASLatex();
+        salesLatexEntry.setSize(790, 530);
+        addToMainDesktopPane(salesLatexEntry, this.level);
+    }//GEN-LAST:event_aSalesLatexMenuItemActionPerformed
+
+    private void aConsumptionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aConsumptionMenuItemActionPerformed
+        AConsumption consumptionEntry = new AConsumption();
+        consumptionEntry.setSize(790, 380);
+        addToMainDesktopPane(consumptionEntry, this.level);
+    }//GEN-LAST:event_aConsumptionMenuItemActionPerformed
     
     /**
      * @param item the internal frame to be added to desktop pane
      */
-    private void addToMainDesktopPane(javax.swing.JInternalFrame item){
+    private void addToMainDesktopPane(javax.swing.JInternalFrame item, int level){
+        if(this.activeInternalFrame[level] != null){
+            this.activeInternalFrame[level].doDefaultCloseAction();
+        }
+        this.activeInternalFrame[level] = item;
         item.setVisible(true);
+        Dimension desktopSize = this.mainDesktopPane.getSize();
+        Dimension internalFrameSize = item.getSize();
+        item.setLocation((int)(desktopSize.getWidth() - internalFrameSize.getWidth())/2, 
+                (int)(desktopSize.getHeight() - internalFrameSize.getHeight())/2);
         this.mainDesktopPane.add(item);
         this.mainDesktopPane.revalidate();
         this.mainDesktopPane.repaint();
@@ -231,11 +354,18 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem aConsumptionMenuItem;
     private javax.swing.JMenuItem aMasterMenuItem;
+    private javax.swing.JMenuItem aPurchaseLatexMenuItem;
+    private javax.swing.JMenuItem aPurchaseOthersMenuItem;
+    private javax.swing.JMenuItem aSalesLatexMenuItem;
+    private javax.swing.JMenuItem aStockMenuItem;
+    private javax.swing.JMenuItem aTransactionMenuItem;
+    private javax.swing.JMenuItem eMasterMenuItem;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuBar fainMainMenu;
     private javax.swing.JMenu fileMenu;
-    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JDesktopPane mainDesktopPane;
     private javax.swing.JMenu optionsMenu;
     private javax.swing.JMenu printingMenu;

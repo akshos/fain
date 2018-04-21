@@ -31,7 +31,7 @@ public class AMaster extends javax.swing.JInternalFrame {
         outerPanel = new javax.swing.JPanel();
         leftInerPannel = new javax.swing.JPanel();
         logoPanel = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        logoLabel = new javax.swing.JLabel();
         labelsPanel = new javax.swing.JPanel();
         accountCodeLabel = new javax.swing.JLabel();
         accountHeadLabel = new javax.swing.JLabel();
@@ -58,29 +58,29 @@ public class AMaster extends javax.swing.JInternalFrame {
 
         logoPanel.setLayout(new java.awt.BorderLayout());
 
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fain/note.png"))); // NOI18N
-        jLabel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        logoPanel.add(jLabel1, java.awt.BorderLayout.CENTER);
+        logoLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        logoLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fain/note.png"))); // NOI18N
+        logoLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        logoLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        logoPanel.add(logoLabel, java.awt.BorderLayout.CENTER);
 
         leftInerPannel.add(logoPanel);
 
         labelsPanel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
 
-        accountCodeLabel.setText("jLabel1");
+        accountCodeLabel.setText("Account Code");
         labelsPanel.add(accountCodeLabel);
 
-        accountHeadLabel.setText("jLabel2");
+        accountHeadLabel.setText("Account Head");
         labelsPanel.add(accountHeadLabel);
 
-        yopBalLabel.setText("jLabel3");
+        yopBalLabel.setText("YOP-Balance");
         labelsPanel.add(yopBalLabel);
 
-        currBalLabel.setText("jLabel4");
+        currBalLabel.setText("Current Balance");
         labelsPanel.add(currBalLabel);
 
-        categoryLabel.setText("jLabel5");
+        categoryLabel.setText("Category");
         labelsPanel.add(categoryLabel);
 
         leftInerPannel.add(labelsPanel);
@@ -88,20 +88,21 @@ public class AMaster extends javax.swing.JInternalFrame {
         outerPanel.add(leftInerPannel);
 
         rightInerPannel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
-
-        accountCodeTbox.setText("jTextField1");
         rightInerPannel.add(accountCodeTbox);
-
-        accountHeadTbox.setText("jTextField2");
         rightInerPannel.add(accountHeadTbox);
 
-        yopBalanceTbox.setText("jTextField3");
+        yopBalanceTbox.setText("0.00");
         rightInerPannel.add(yopBalanceTbox);
 
-        currentBalanceTbox.setText("jTextField4");
+        currentBalanceTbox.setText("0.00");
         rightInerPannel.add(currentBalanceTbox);
 
         categoryCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        categoryCbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                categoryCboxActionPerformed(evt);
+            }
+        });
         rightInerPannel.add(categoryCbox);
 
         buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 60, 2, 60));
@@ -119,6 +120,10 @@ public class AMaster extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void categoryCboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoryCboxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_categoryCboxActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel accountCodeLabel;
@@ -131,9 +136,9 @@ public class AMaster extends javax.swing.JInternalFrame {
     private javax.swing.JLabel currBalLabel;
     private javax.swing.JTextField currentBalanceTbox;
     private javax.swing.JButton enterButton;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel labelsPanel;
     private javax.swing.JPanel leftInerPannel;
+    private javax.swing.JLabel logoLabel;
     private javax.swing.JPanel logoPanel;
     private javax.swing.JPanel outerPanel;
     private javax.swing.JPanel rightInerPannel;
