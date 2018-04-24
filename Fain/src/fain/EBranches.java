@@ -9,12 +9,12 @@ package fain;
  *
  * @author akshos
  */
-public class ECustomers extends javax.swing.JInternalFrame {
+public class EBranches extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form EMaster
      */
-    public ECustomers() {
+    public EBranches() {
         initComponents();
         initTable();
     }
@@ -48,7 +48,7 @@ public class ECustomers extends javax.swing.JInternalFrame {
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
-        setTitle("Customers");
+        setTitle("Branches");
         setMinimumSize(new java.awt.Dimension(785, 450));
 
         upperPanel.setLayout(new java.awt.BorderLayout());

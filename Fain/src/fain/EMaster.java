@@ -48,6 +48,7 @@ public class EMaster extends javax.swing.JInternalFrame {
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
+        setTitle("Master Browse");
         setMinimumSize(new java.awt.Dimension(785, 450));
 
         upperPanel.setLayout(new java.awt.BorderLayout());
@@ -257,7 +258,7 @@ public class EMaster extends javax.swing.JInternalFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                " Code", "A/c Head", "Opening Balance", "Cr. Balance"
             }
         ) {
             boolean[] canEdit = new boolean [] {

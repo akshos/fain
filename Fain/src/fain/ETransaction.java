@@ -9,12 +9,12 @@ package fain;
  *
  * @author akshos
  */
-public class EConsumption extends javax.swing.JInternalFrame {
+public class ETransaction extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form EMaster
      */
-    public EConsumption() {
+    public ETransaction() {
         initComponents();
         initTable();
     }
@@ -48,7 +48,7 @@ public class EConsumption extends javax.swing.JInternalFrame {
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
-        setTitle("Consumption");
+        setTitle("Transaction Browse");
         setMinimumSize(new java.awt.Dimension(785, 450));
 
         upperPanel.setLayout(new java.awt.BorderLayout());
@@ -258,7 +258,7 @@ public class EConsumption extends javax.swing.JInternalFrame {
                 {null, null, null, null, null}
             },
             new String [] {
-                "Branch", "Date", "Reference Number", "Item", "Narration"
+                "Branch", "Date", "Debit Code", "Credit Code", "Amount"
             }
         ) {
             boolean[] canEdit = new boolean [] {
