@@ -48,8 +48,26 @@ public class AMaster extends javax.swing.JInternalFrame {
         enterButton = new javax.swing.JButton();
 
         setClosable(true);
+        setResizable(true);
         setTitle("Data Entry (Master)");
         setPreferredSize(new java.awt.Dimension(450, 410));
+        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameClosed(evt);
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+        });
 
         outerPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
         outerPanel.setLayout(new java.awt.GridLayout(1, 2));
@@ -123,6 +141,10 @@ public class AMaster extends javax.swing.JInternalFrame {
     private void categoryCboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoryCboxActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_categoryCboxActionPerformed
+
+    private void formInternalFrameClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosed
+        Preferences.storeInternalFrameDimension(this);
+    }//GEN-LAST:event_formInternalFrameClosed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
