@@ -20,7 +20,7 @@ public final class Tables {
             + "closingBal   real,"
             + "category varchar(20));";
     
-    public static final String transactionTable = "create table transaction("
+    public static final String transactionTable = "create table transactions("
             + "transactionID    integer primary key autoincrement,"
             + "date             date,"
             + "debit            varchar(20),"
@@ -96,6 +96,7 @@ public final class Tables {
         System.out.println("Creating tables");
         try{
             stmt.execute(masterTable);
+            //MasterDB.insert(stmt, "sdsds", "sdsds", 0, 0, "masterTable");
             stmt.execute(transactionTable);
             stmt.execute(stockTable);
             stmt.execute(purchaseLatexTable);
