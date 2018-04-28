@@ -5,6 +5,7 @@
  */
 package database;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -105,6 +106,8 @@ public final class Tables {
             stmt.execute(consumptionTable);
             stmt.execute(branchTable);
             stmt.execute(customerTable);
+            MasterDB.insert(stmt,"1", stockTable, 0, 0, masterTable);
+            MasterDB.insert(stmt,"2", "stockTable", 0, 0, "masterTable");
             CustomerDB.insert(stmt,"123","de3","deee3","234","hello","6456");
             BranchDB.insert(stmt, "stockTable", masterTable, salesTable, masterTable);
             ConsumptionDB.insert(stmt, branchTable, salesTable, salesTable, masterTable, masterTable, salesTable, 0);
