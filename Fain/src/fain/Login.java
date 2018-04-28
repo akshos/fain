@@ -215,7 +215,7 @@ public class Login extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_exitButtonActionPerformed
 
     private void usernameTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameTboxActionPerformed
-        attemptLogin();
+        this.passwordPbox.requestFocus();
     }//GEN-LAST:event_usernameTboxActionPerformed
 
     private void passwordPboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordPboxActionPerformed

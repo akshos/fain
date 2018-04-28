@@ -36,6 +36,7 @@ public class CreateUser extends javax.swing.JInternalFrame {
     }
     
     private boolean validateFields(){
+        System.out.println("Validating fields");
         if(!User.validUsername(this.usernameTbox.getText())){
             this.usernameLabel.setText("<html>Username : <span style=\"color:red\">invalid</span></html>");
             return false;
@@ -118,6 +119,23 @@ public class CreateUser extends javax.swing.JInternalFrame {
         createButton = new javax.swing.JButton();
 
         setClosable(true);
+        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameActivated(evt);
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+        });
 
         jPanel1.setPreferredSize(new java.awt.Dimension(459, 50));
         jPanel1.setLayout(new java.awt.BorderLayout());
@@ -181,6 +199,11 @@ public class CreateUser extends javax.swing.JInternalFrame {
                 passwordPboxFocusGained(evt);
             }
         });
+        passwordPbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                passwordPboxActionPerformed(evt);
+            }
+        });
         rightPanel.add(passwordPbox);
 
         rePasswodPbox.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -188,10 +211,20 @@ public class CreateUser extends javax.swing.JInternalFrame {
                 rePasswodPboxFocusGained(evt);
             }
         });
+        rePasswodPbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rePasswodPboxActionPerformed(evt);
+            }
+        });
         rightPanel.add(rePasswodPbox);
 
         typeCbox.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         typeCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrator", "Standard User" }));
+        typeCbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                typeCboxActionPerformed(evt);
+            }
+        });
         rightPanel.add(typeCbox);
 
         createButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -199,6 +232,11 @@ public class CreateUser extends javax.swing.JInternalFrame {
         createButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 createButtonActionPerformed(evt);
+            }
+        });
+        createButton.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                createButtonKeyPressed(evt);
             }
         });
         rightPanel.add(createButton);
@@ -223,8 +261,31 @@ public class CreateUser extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_createButtonActionPerformed
 
     private void usernameTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameTboxActionPerformed
-        // TODO add your handling code here:
+        this.passwordPbox.requestFocus();
     }//GEN-LAST:event_usernameTboxActionPerformed
+
+    private void passwordPboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordPboxActionPerformed
+        this.rePasswodPbox.requestFocus();
+    }//GEN-LAST:event_passwordPboxActionPerformed
+
+    private void rePasswodPboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rePasswodPboxActionPerformed
+        this.typeCbox.requestFocus();
+    }//GEN-LAST:event_rePasswodPboxActionPerformed
+
+    private void typeCboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_typeCboxActionPerformed
+        this.createButton.requestFocus();
+    }//GEN-LAST:event_typeCboxActionPerformed
+
+    private void formInternalFrameActivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameActivated
+        this.requestFocusInWindow();
+        this.usernameTbox.requestFocus();
+    }//GEN-LAST:event_formInternalFrameActivated
+
+    private void createButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_createButtonKeyPressed
+        if( evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER ){
+            addUser();
+        }
+    }//GEN-LAST:event_createButtonKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

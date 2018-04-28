@@ -799,6 +799,11 @@ public class Main extends javax.swing.JFrame {
         this.mainDesktopPane.add(item);
         this.mainDesktopPane.revalidate();
         this.mainDesktopPane.repaint();
+        try{
+            item.setSelected(true);
+        }catch(Exception se){
+            se.printStackTrace();
+        }
     }
     
     /**
