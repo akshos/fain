@@ -52,16 +52,14 @@ public class DBConnection {
         return true;
     }
     
-    private void createTables(){
-        System.out.println("Creating tables");
-    }
+
     
     public void createDatabase(String url){
         try{
             Connection conn = DriverManager.getConnection(url);
             Statement stmt = conn.createStatement();
             System.out.println("New database created : " + databaseName);
-            createTables();
+            Tables.createTables(stmt);
             stmt.close();
             conn.close();
         }catch(SQLException se){
