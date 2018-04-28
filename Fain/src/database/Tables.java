@@ -5,6 +5,7 @@
  */
 package database;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -36,7 +37,7 @@ public final class Tables {
             + "saleAC       varchar(20),"
             + "stockAC      varchar(20));";
     public static final String purchaseLatexTable = "create table purchaseLatex("
-            + "purchaseLatexCode    varchar(20) primary key,"
+            + "purchaseLatexId      integer primary key autoincrement,"
             + "branch               varchar(20),"
             + "date                 date,"
             + "prBill               varchar(20),"
@@ -47,7 +48,7 @@ public final class Tables {
             + "rate                 real,"
             + "value                real);";
     public static final String purchaseTable = "create table purchase("
-            + "purchaseCode     varchar(20) primary key,"
+            + "purchaseId       integer primary key autoincrement,"
             + "branch           varchar(20),"
             + "date             varchar(20),"
             + "billNo           varchar(20),"
@@ -57,7 +58,7 @@ public final class Tables {
             + "quantity         real,"
             + "value            real);";
     public static final String salesTable = "create table sales("
-            + "salesCode    varchar(20) primary key,"
+            + "salesId      integer primary key autoincrement,"
             + "branch       varchar(20),"
             + "date         date,"
             + "billNo       varchar(20),"
@@ -70,16 +71,16 @@ public final class Tables {
             + "rate         real,"
             + "value        real);";
     public static final String consumptionTable = "create table consumption("
-            + "consumptionCode      varchar(20) primary key,"
+            + "consumptionId        INTEGER primary key autoincrement,"
             + "branch               varchar(20),"
             + "date                 date,"
-            + "refNo                date,"
+            + "refNo                varchar(20),"
             + "itemCode             varchar(20),"
             + "itemName             varchar(20),"
             + "narration            varchar(50),"
             + "quantity             real);";
     public static final String branchTable ="create table branch("
-            + "branchCode   varchar(20) primary key,"
+            + "branchId     integer primary key autoincrement,"
             + "name         varchar(50),"
             + "address      varchar(200),"
             + "kgst         varchar(20),"
@@ -96,8 +97,8 @@ public final class Tables {
         System.out.println("Creating tables");
         try{
             stmt.execute(masterTable);
-            //MasterDB.insert(stmt, "sdsds", "sdsds", 0, 0, "masterTable");
             stmt.execute(transactionTable);
+            
             stmt.execute(stockTable);
             stmt.execute(purchaseLatexTable);
             stmt.execute(purchaseTable);
@@ -105,6 +106,16 @@ public final class Tables {
             stmt.execute(consumptionTable);
             stmt.execute(branchTable);
             stmt.execute(customerTable);
+            MasterDB.insert(stmt,"1", stockTable, 0, 0, masterTable);
+            MasterDB.insert(stmt,"2", "stockTable", 0, 0, "masterTable");
+            CustomerDB.insert(stmt,"123","de3","deee3","234","hello","6456");
+            BranchDB.insert(stmt, "stockTable", masterTable, salesTable, masterTable);
+            ConsumptionDB.insert(stmt, branchTable, salesTable, salesTable, masterTable, masterTable, salesTable, 0);
+            PurchaseDB.insert(stmt, branchTable, salesTable, salesTable, masterTable, masterTable, masterTable, 0, 0);
+            PurchaseLatexDB.insert(stmt, branchTable, salesTable, stockTable, masterTable, masterTable, 0, 0, 0, 0, 0);
+            SalesDB.insert(stmt, branchTable, salesTable, salesTable, masterTable, 0, 0, 0, 0, 0, 0, 0);
+            StockDB.insert(stmt, masterTable, masterTable, 0, 0, purchaseTable, salesTable, stockTable);
+            
         }
         catch(SQLException se){
             se.printStackTrace();
