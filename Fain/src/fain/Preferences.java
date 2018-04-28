@@ -131,7 +131,8 @@ public class Preferences {
     //
     private static Properties getDefatultDatabaseProperties(){
         Properties props = new Properties();
-        props.setProperty("dblocation", "db/");
+        String sep = File.separator;
+        props.setProperty("dblocation", "db" + sep);
         props.setProperty("dbname", "none");
         return props;
     }
