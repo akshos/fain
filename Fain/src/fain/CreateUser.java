@@ -35,7 +35,28 @@ public class CreateUser extends javax.swing.JInternalFrame {
         initDetails(action, null);
     }
     
+    private boolean validateFields(){
+        if(!User.validUsername(this.usernameTbox.getText())){
+            this.usernameLabel.setText("<html>Username : <span style=\"color:red\">invalid</span></html>");
+            return false;
+        }
+        else{
+            this.usernameLabel.setText("<html>Username : ");
+        }
+        if(!User.validPassword(this.passwordPbox.getText())){
+            this.passwordLabel.setText("<html>Password : <span style=\"color:red\">invalid</span></html>");
+            return false;
+        }
+        else{
+            this.usernameLabel.setText("<html>Password : ");
+        }
+        return true;
+    }
+    
     private void addUser(){
+        if(!validateFields()){
+            return;
+        }
         String username = this.usernameTbox.getText();
         if(UsersDB.existingUser(username)){
             JOptionPane.showMessageDialog(this, "Username already exists", "Warning", JOptionPane.WARNING_MESSAGE);
@@ -62,6 +83,10 @@ public class CreateUser extends javax.swing.JInternalFrame {
             this.typeCbox.setEditable(false);
             this.typeCbox.setEnabled(false);
             this.setClosable(false);
+        }
+        else if(action == Codes.CREATE_USER){
+            this.headingLabel.setText("Create a new User Account");
+            this.typeCbox.setSelectedIndex(1);
         }
     }
 
@@ -121,18 +146,19 @@ public class CreateUser extends javax.swing.JInternalFrame {
         labelPanel.setLayout(new java.awt.GridLayout(5, 0, 10, 0));
 
         usernameLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        usernameLabel.setText("Username");
+        usernameLabel.setText("Username :");
         labelPanel.add(usernameLabel);
 
         passwordLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        passwordLabel.setText("Password");
+        passwordLabel.setText("Password :");
         labelPanel.add(passwordLabel);
 
-        rPasswordLabel.setText("Retype Password");
+        rPasswordLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        rPasswordLabel.setText("Retype Password :");
         labelPanel.add(rPasswordLabel);
 
         typeLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        typeLabel.setText("Type");
+        typeLabel.setText("Type :");
         labelPanel.add(typeLabel);
 
         leftPanel.add(labelPanel);
@@ -143,6 +169,11 @@ public class CreateUser extends javax.swing.JInternalFrame {
         rightPanel.setLayout(new java.awt.GridLayout(5, 0, 0, 15));
 
         usernameTbox.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        usernameTbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                usernameTboxActionPerformed(evt);
+            }
+        });
         rightPanel.add(usernameTbox);
 
         passwordPbox.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -190,6 +221,10 @@ public class CreateUser extends javax.swing.JInternalFrame {
     private void createButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createButtonActionPerformed
         addUser();
     }//GEN-LAST:event_createButtonActionPerformed
+
+    private void usernameTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameTboxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_usernameTboxActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

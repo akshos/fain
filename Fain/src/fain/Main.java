@@ -17,6 +17,7 @@ import utility.Codes;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import database.InfoDB;
+import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 
 /**
@@ -177,6 +178,8 @@ public class Main extends javax.swing.JFrame {
     }
     
     private void addNewSession(){
+        String status = "<html>Session : <span style=\"color:blue\">Updating</span></html>";
+        this.databaseNameStatus.setText(status);
         if(askForNewSession()){
             dbFound = true;
             closeAllInternalFrames();
@@ -185,13 +188,24 @@ public class Main extends javax.swing.JFrame {
     }
     
     private void loadSession(){
+        String status = "<html>Session : <span style=\"color:blue\">Updating</span></html>";
+        this.databaseNameStatus.setText(status);
         if(askForSessionChoice()){
             dbFound = true;
             closeAllInternalFrames();
             setDatabaseStatus();
         }
     }
-
+    
+    private void logout(){
+        int ret = JOptionPane.showConfirmDialog(this, "Are you sure to logout?", "Logout", JOptionPane.YES_NO_OPTION);
+        if(ret == JOptionPane.YES_OPTION){
+            System.out.println("Logout");
+            user = null;
+            initLogin();
+        }
+    }
+    
     private void createLogoutMenu(){
         logoutMenu = new javax.swing.JMenu();
         logoutMenu.setFont(new java.awt.Font("Dialog", 1, 14));
@@ -204,6 +218,10 @@ public class Main extends javax.swing.JFrame {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 ((javax.swing.JMenu)evt.getSource()).setSelected(true);
+            }
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt){
+                logout();
             }
         });
         fainMainMenu.add(Box.createHorizontalGlue());
@@ -220,6 +238,7 @@ public class Main extends javax.swing.JFrame {
             String status = "<html>Session : <span style=\"color:red\">NOT FOUND</span></html>";
             this.databaseNameStatus.setText(status);
         }
+        this.databaseNameStatus.repaint();
     }
     
     
@@ -258,6 +277,7 @@ public class Main extends javax.swing.JFrame {
         optionsMenu = new javax.swing.JMenu();
         startNewSessionMenuItem = new javax.swing.JMenuItem();
         loadSessionMenuItem = new javax.swing.JMenuItem();
+        addUserMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -503,7 +523,7 @@ public class Main extends javax.swing.JFrame {
         });
         optionsMenu.add(startNewSessionMenuItem);
 
-        loadSessionMenuItem.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        loadSessionMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         loadSessionMenuItem.setText("Load Session");
         loadSessionMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -511,6 +531,15 @@ public class Main extends javax.swing.JFrame {
             }
         });
         optionsMenu.add(loadSessionMenuItem);
+
+        addUserMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        addUserMenuItem.setText("Add User");
+        addUserMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addUserMenuItemActionPerformed(evt);
+            }
+        });
+        optionsMenu.add(addUserMenuItem);
 
         fainMainMenu.add(optionsMenu);
 
@@ -744,6 +773,11 @@ public class Main extends javax.swing.JFrame {
     private void loadSessionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadSessionMenuItemActionPerformed
         loadSession();
     }//GEN-LAST:event_loadSessionMenuItemActionPerformed
+
+    private void addUserMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserMenuItemActionPerformed
+        CreateUser item = new CreateUser(this, Codes.CREATE_USER);
+        addToMainDesktopPane(item, this.level, Codes.OPTIONS);
+    }//GEN-LAST:event_addUserMenuItemActionPerformed
     
     /**
      * @param item the internal frame to be added to desktop pane
@@ -810,6 +844,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem aSalesLatexMenuItem;
     private javax.swing.JMenuItem aStockMenuItem;
     private javax.swing.JMenuItem aTransactionMenuItem;
+    private javax.swing.JMenuItem addUserMenuItem;
     private javax.swing.JLabel databaseNameStatus;
     private javax.swing.JMenuItem eBranchesMenuItem;
     private javax.swing.JMenuItem eConsumptionMenuItem;

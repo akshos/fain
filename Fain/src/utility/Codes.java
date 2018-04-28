@@ -20,6 +20,7 @@ public final class Codes {
     public static int ADMIN_USER = 10;
     public static int STANDARD_USER = 11;
     
+    public static int CREATE_USER = 14;
     public static int CREARTE_ADMIN = 15;
     public static int CHANGE_PASSWORD = 16;
     

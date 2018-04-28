@@ -32,6 +32,7 @@ public final class UsersDB {
             String passwordHash = encode(password);
             String query = "insert into users values (\"" + username + "\", \"" + passwordHash + "\", " + type + " );";
             stmt.execute(query);
+            conn.close();
             return Codes.SUCCESS;
         }catch(SQLException se){
             se.printStackTrace();
@@ -45,6 +46,7 @@ public final class UsersDB {
             Statement stmt = conn.createStatement();
             String query = "select * from users where username=\"" + username + "\";";
             ResultSet rs = stmt.executeQuery(query);
+            conn.close();
             if (!rs.next()){
                 return false;
             }
@@ -81,8 +83,8 @@ public final class UsersDB {
                 data = new String[2];
                 data[0] = rs.getString(1);
                 data[1] = rs.getString(2);
-                conn.close();
             }
+            conn.close();
         }catch(SQLException se){
             se.printStackTrace();
         }
@@ -120,6 +122,7 @@ public final class UsersDB {
                 System.out.println("No admin account");
                 return false;
             }
+            conn.close();
         }catch(SQLException se){
             se.printStackTrace();
         }

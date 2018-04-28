@@ -94,6 +94,7 @@
                 <Property name="toolTipText" type="java.lang.String" value="Enter you username"/>
               </Properties>
               <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="usernameTboxActionPerformed"/>
                 <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="usernameTboxKeyTyped"/>
               </Events>
             </Component>
@@ -114,6 +115,7 @@
                 <Property name="toolTipText" type="java.lang.String" value="Enter your password"/>
               </Properties>
               <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="passwordPboxActionPerformed"/>
                 <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="passwordPboxKeyTyped"/>
               </Events>
             </Component>

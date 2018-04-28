@@ -126,6 +126,11 @@ public class Login extends javax.swing.JInternalFrame {
 
         usernameTbox.setFont(new java.awt.Font("Cantarell", 0, 24)); // NOI18N
         usernameTbox.setToolTipText("Enter you username");
+        usernameTbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                usernameTboxActionPerformed(evt);
+            }
+        });
         usernameTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 usernameTboxKeyTyped(evt);
@@ -140,6 +145,11 @@ public class Login extends javax.swing.JInternalFrame {
 
         passwordPbox.setFont(new java.awt.Font("Cantarell", 0, 24)); // NOI18N
         passwordPbox.setToolTipText("Enter your password");
+        passwordPbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                passwordPboxActionPerformed(evt);
+            }
+        });
         passwordPbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 passwordPboxKeyTyped(evt);
@@ -203,6 +213,14 @@ public class Login extends javax.swing.JInternalFrame {
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
         exit();
     }//GEN-LAST:event_exitButtonActionPerformed
+
+    private void usernameTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameTboxActionPerformed
+        attemptLogin();
+    }//GEN-LAST:event_usernameTboxActionPerformed
+
+    private void passwordPboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordPboxActionPerformed
+        attemptLogin();
+    }//GEN-LAST:event_passwordPboxActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
