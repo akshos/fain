@@ -16,18 +16,22 @@ import users.User;
  * @author akshos
  */
 public class CreateUser extends javax.swing.JInternalFrame {
+    Main mainFrame;
+    
     /** Creates new form createUser */
     public CreateUser() {
         initComponents();
     }
     
-    public CreateUser(int action, User user){
+    public CreateUser(Main frame, int action, User user){
         initComponents();
+        this.mainFrame = frame;
         initDetails(action, user);
     }
     
-    public CreateUser(int action){
+    public CreateUser(Main frame, int action){
         initComponents();
+        this.mainFrame = frame;
         initDetails(action, null);
     }
     
@@ -38,11 +42,17 @@ public class CreateUser extends javax.swing.JInternalFrame {
             return;
         }
         String password = this.passwordPbox.getText();
+        String rePassword = this.rePasswodPbox.getText();
+        if(password.compareTo(rePassword) != 0){
+            JOptionPane.showMessageDialog(this, "Passwords do not match", "Warning", JOptionPane.WARNING_MESSAGE);
+        }
         int type = Codes.STANDARD_USER;
         if(this.typeCbox.getSelectedItem().toString().compareTo("Administrator") == 0){
             type = Codes.ADMIN_USER;
         }
         UsersDB.addUser(username, password, type);
+        mainFrame.initLogin();
+        this.doDefaultCloseAction();
     }
     
     public void initDetails(int action, User user){

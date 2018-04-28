@@ -40,10 +40,23 @@ public class User {
     public int getLoginStatus(){
         return this.loginStatus;
     }
-    
+        
     public int authenticate(String password){
+        String[] data = UsersDB.getPasswordandType(username);
+        if(data == null){
+            System.out.println("No username " + username);
+            return Codes.UNAUTHORIZED;
+        }
+        String storedHash = data[0];
+        int userType = Integer.valueOf(data[1]);
+        String currHash = UsersDB.encode(password);
+        if(currHash.compareTo(storedHash) != 0){
+            System.out.println("Passwords dont match for " + username);
+            return Codes.UNAUTHORIZED;
+        }
+        System.out.println("Authentication success for " + username);
         this.loginStatus = Codes.AUTHORIZED;
-        this.userType = 1;//UsersDB.getUserType(this.username);
+        this.userType = userType;
         return this.loginStatus;
     }
     

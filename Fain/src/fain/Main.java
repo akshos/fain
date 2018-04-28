@@ -9,9 +9,15 @@ import java.awt.Dimension;
 import javax.swing.Box;
 import database.DBConnection;
 import database.UsersDB;
+import java.awt.event.WindowEvent;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import users.User;
 import utility.Codes;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import database.InfoDB;
+import javax.swing.JComboBox;
 
 /**
  *
@@ -36,7 +42,6 @@ public class Main extends javax.swing.JFrame {
         this.activeInternalFrame = new javax.swing.JInternalFrame[5];
         this.level = 0;
         Preferences.loadAllProperties();
-        initDatabase();
     }
     
     private void disableComponents(){
@@ -55,31 +60,135 @@ public class Main extends javax.swing.JFrame {
         this.logoutMenu.setEnabled(true);
     }
     
-    private void initLogin(){
-        
+    public void initLogin(){
         if( !UsersDB.chechUsersDB() ){
-            CreateUser createUser = new CreateUser(Codes.CREARTE_ADMIN);
-            this.addToMainDesktopPane(createUser, level);
+            CreateUser createUser = new CreateUser(this, Codes.CREARTE_ADMIN);
+            this.addToMainDesktopPane(createUser, level, Codes.OPTIONS);
         }
         else if(user == null){
             disableComponents();
             Login login = new Login(this, user, Codes.LOGIN);
-            this.addToMainDesktopPane(login, level);
+            this.addToMainDesktopPane(login, level, Codes.OPTIONS);
         }
+    }
+    
+    public void closeFain(){
+        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+    }
+    
+    public void setUser(User user){
+        this.user = user;
     }
     
     public void loginSuccess(){
         this.enableComponents();
+        initDatabase();
+    }
+    
+    private boolean askForNewSession(){
+        JTextField sessionNameTbox = new JTextField();
+        sessionNameTbox.setFont(new java.awt.Font("Dialog", 1, 14));
+        JLabel msg = new JLabel("Enter Session Name : ");
+        msg.setFont(new java.awt.Font("Dialog", 1, 14));
+        JLabel msg2 = new JLabel("(Alpabets, numbers, - , _ only)");
+        msg2.setFont(new java.awt.Font("Dialog", 1, 11));
+        final JComponent[] inputs = new JComponent[]{
+            msg,
+            new JLabel("(Alpabets, numbers, - , _ only)"),
+            sessionNameTbox
+        };
+        while(true){
+            int res = JOptionPane.showConfirmDialog(this, inputs, "Create a new Session", JOptionPane.OK_CANCEL_OPTION);
+            if(res == JOptionPane.OK_OPTION){
+                String sessionName = sessionNameTbox.getText();
+                if(!InfoDB.validSessionName(sessionName)){
+                    int ret2 = JOptionPane.showConfirmDialog(this, "Please enter a valid session name", "Invalid Session Name", JOptionPane.WARNING_MESSAGE);
+                    continue;
+                }
+                InfoDB.addSessionName(sessionName);
+                this.dbConnection.createNewDatabase(sessionName);
+                this.dbConnection = new DBConnection(sessionName);
+                this.dbConnection.connect();
+                break;
+            }
+            else{
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    private boolean askForSessionChoice(){
+        String[] sessionNames = InfoDB.getSessionNames();
+        if(sessionNames == null){
+            int ret = JOptionPane.showConfirmDialog(this, "The session list was not found", "ERROR", JOptionPane.ERROR_MESSAGE);
+            closeFain();
+        }
+        JComboBox sessionNamesCbox = new JComboBox(sessionNames);
+        String currSession = this.dbConnection.getDatabaseName();
+        sessionNamesCbox.setSelectedItem(currSession);
+        sessionNamesCbox.setFont(new java.awt.Font("Dialog", 1, 14));
+        JLabel msg = new JLabel("Choose Session Name : ");
+        msg.setFont(new java.awt.Font("Dialog", 1, 14));
+        final JComponent[] inputs = new JComponent[]{
+            msg,
+            sessionNamesCbox
+        };
+        int res = JOptionPane.showConfirmDialog(this, inputs, "Choose a Session to continue", JOptionPane.PLAIN_MESSAGE);
+        if(res == JOptionPane.OK_OPTION){
+            String sessionName = sessionNamesCbox.getSelectedItem().toString();
+            this.dbConnection = new DBConnection(sessionName);
+            dbConnection.connect();
+            return true;
+        }
+        return false;
     }
     
     private void initDatabase(){
+        if(dbFound == true){
+            return;
+        }
         dbConnection = new DBConnection();
-        if(dbConnection.checkDatabaseAvailability()){
-            dbConnection.connect();
+        int ret = dbConnection.checkDatabaseAvailability();
+        if(ret == Codes.DATABASE_FOUND){
+            askForSessionChoice();
             dbFound = true;
         }
-        else{
+        else if(ret == Codes.NO_DATABASE){
+            if(askForNewSession()){
+                dbFound = true;
+            }else{
+                dbFound = false;
+            }
+        }
+        else if(ret == Codes.FAIL){
+            
             dbFound = false;
+        }
+        setDatabaseStatus();
+    }
+    
+    private void closeAllInternalFrames(){
+        for( int i = 0; i < 5; i++ ){
+            if(activeInternalFrame[i] != null){
+                activeInternalFrame[i].doDefaultCloseAction();
+            }
+        }
+    }
+    
+    private void addNewSession(){
+        if(askForNewSession()){
+            dbFound = true;
+            closeAllInternalFrames();
+            setDatabaseStatus();
+        }
+    }
+    
+    private void loadSession(){
+        if(askForSessionChoice()){
+            dbFound = true;
+            closeAllInternalFrames();
+            setDatabaseStatus();
         }
     }
 
@@ -104,14 +213,15 @@ public class Main extends javax.swing.JFrame {
     private void setDatabaseStatus(){
         if(this.dbFound == true){
             String dbName = dbConnection.getDatabaseName();
-            String status = "<html>Database : <span style=\"color:blue\">" + dbName + "</span></html>";
+            String status = "<html>Session : <span style=\"color:blue\">" + dbName + "</span></html>";
             this.databaseNameStatus.setText(status);
         }
         else{
-            String status = "<html>Database : <span style=\"color:red\">NOT FOUND</span></html>";
+            String status = "<html>Session : <span style=\"color:red\">NOT FOUND</span></html>";
             this.databaseNameStatus.setText(status);
         }
     }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -146,6 +256,8 @@ public class Main extends javax.swing.JFrame {
         eConsumptionMenuItem = new javax.swing.JMenuItem();
         printingMenu = new javax.swing.JMenu();
         optionsMenu = new javax.swing.JMenu();
+        startNewSessionMenuItem = new javax.swing.JMenuItem();
+        loadSessionMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -174,9 +286,10 @@ public class Main extends javax.swing.JFrame {
 
         statusPanel.setMaximumSize(new java.awt.Dimension(32767, 30));
         statusPanel.setPreferredSize(new java.awt.Dimension(699, 25));
-        statusPanel.setLayout(new java.awt.GridLayout());
+        statusPanel.setLayout(new java.awt.GridLayout(1, 0));
 
-        databaseNameStatus.setText("jLabel1");
+        databaseNameStatus.setFont(new java.awt.Font("Cantarell", 0, 24)); // NOI18N
+        databaseNameStatus.setText("Session");
         statusPanel.add(databaseNameStatus);
 
         getContentPane().add(statusPanel, java.awt.BorderLayout.SOUTH);
@@ -380,6 +493,25 @@ public class Main extends javax.swing.JFrame {
                 optionsMenuMouseEntered(evt);
             }
         });
+
+        startNewSessionMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        startNewSessionMenuItem.setText("Start New Session");
+        startNewSessionMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startNewSessionMenuItemActionPerformed(evt);
+            }
+        });
+        optionsMenu.add(startNewSessionMenuItem);
+
+        loadSessionMenuItem.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        loadSessionMenuItem.setText("Load Session");
+        loadSessionMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadSessionMenuItemActionPerformed(evt);
+            }
+        });
+        optionsMenu.add(loadSessionMenuItem);
+
         fainMainMenu.add(optionsMenu);
 
         setJMenuBar(fainMainMenu);
@@ -428,7 +560,7 @@ public class Main extends javax.swing.JFrame {
         }else{
             item.setSize(790, 300);
         }
-        addToMainDesktopPane(item, this.level);
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_aMasterMenuItemActionPerformed
 
     private void eMasterMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eMasterMenuItemActionPerformed
@@ -440,7 +572,7 @@ public class Main extends javax.swing.JFrame {
             item.setSize(785, 470);
         }
         item.setSize(785, 470);
-        addToMainDesktopPane(item, this.level);
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_eMasterMenuItemActionPerformed
 
     private void aTransactionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aTransactionMenuItemActionPerformed
@@ -451,7 +583,7 @@ public class Main extends javax.swing.JFrame {
         }else{
             item.setSize(790, 310);
         }
-        addToMainDesktopPane(item, this.level);
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_aTransactionMenuItemActionPerformed
 
     private void aStockMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aStockMenuItemActionPerformed
@@ -462,7 +594,7 @@ public class Main extends javax.swing.JFrame {
         }else{
             item.setSize(790, 360);
         }
-        addToMainDesktopPane(item, this.level);
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_aStockMenuItemActionPerformed
 
     private void aPurchaseLatexMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aPurchaseLatexMenuItemActionPerformed
@@ -473,7 +605,7 @@ public class Main extends javax.swing.JFrame {
         }else{
             item.setSize(790, 450);
         }
-        addToMainDesktopPane(item, this.level);
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_aPurchaseLatexMenuItemActionPerformed
 
     private void aPurchaseOthersMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aPurchaseOthersMenuItemActionPerformed
@@ -484,7 +616,7 @@ public class Main extends javax.swing.JFrame {
         }else{
             item.setSize(790, 410);
         }
-        addToMainDesktopPane(item, this.level);
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_aPurchaseOthersMenuItemActionPerformed
 
     private void aSalesLatexMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aSalesLatexMenuItemActionPerformed
@@ -495,7 +627,7 @@ public class Main extends javax.swing.JFrame {
         }else{
             item.setSize(790, 530);
         }
-        addToMainDesktopPane(item, this.level);
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_aSalesLatexMenuItemActionPerformed
 
     private void aConsumptionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aConsumptionMenuItemActionPerformed
@@ -506,11 +638,10 @@ public class Main extends javax.swing.JFrame {
         }else{
             item.setSize(790, 380);
         }
-        addToMainDesktopPane(item, this.level);
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_aConsumptionMenuItemActionPerformed
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-        setDatabaseStatus();
         initLogin();
     }//GEN-LAST:event_formWindowActivated
 
@@ -526,7 +657,7 @@ public class Main extends javax.swing.JFrame {
         }else{
             item.setSize(790, 470);
         }
-        addToMainDesktopPane(item, this.level);
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_eTransactionMenuItemActionPerformed
 
     private void eStockMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eStockMenuItemActionPerformed
@@ -537,7 +668,7 @@ public class Main extends javax.swing.JFrame {
         }else{
             item.setSize(790, 470);
         }
-        addToMainDesktopPane(item, this.level);
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_eStockMenuItemActionPerformed
 
     private void ePurchaseLatexMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ePurchaseLatexMenuItemActionPerformed
@@ -548,7 +679,7 @@ public class Main extends javax.swing.JFrame {
         }else{
             item.setSize(790, 470);
         }
-        addToMainDesktopPane(item, this.level);
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_ePurchaseLatexMenuItemActionPerformed
 
     private void ePurchaseOthersMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ePurchaseOthersMenuItemActionPerformed
@@ -559,7 +690,7 @@ public class Main extends javax.swing.JFrame {
         }else{
             item.setSize(790, 470);
         }
-        addToMainDesktopPane(item, this.level);
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_ePurchaseOthersMenuItemActionPerformed
 
     private void eSalesLatexMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eSalesLatexMenuItemActionPerformed
@@ -570,7 +701,7 @@ public class Main extends javax.swing.JFrame {
         }else{
             item.setSize(790, 470);
         }
-        addToMainDesktopPane(item, this.level);
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_eSalesLatexMenuItemActionPerformed
 
     private void eBranchesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eBranchesMenuItemActionPerformed
@@ -581,7 +712,7 @@ public class Main extends javax.swing.JFrame {
         }else{
             item.setSize(790, 470);
         }
-        addToMainDesktopPane(item, this.level);
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_eBranchesMenuItemActionPerformed
 
     private void eCustomersMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eCustomersMenuItemActionPerformed
@@ -592,7 +723,7 @@ public class Main extends javax.swing.JFrame {
         }else{
             item.setSize(790, 470);
         }
-        addToMainDesktopPane(item, this.level);
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_eCustomersMenuItemActionPerformed
 
     private void eConsumptionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eConsumptionMenuItemActionPerformed
@@ -603,13 +734,25 @@ public class Main extends javax.swing.JFrame {
         }else{
             item.setSize(790, 470);
         }
-        addToMainDesktopPane(item, this.level);
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_eConsumptionMenuItemActionPerformed
+
+    private void startNewSessionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startNewSessionMenuItemActionPerformed
+        addNewSession();
+    }//GEN-LAST:event_startNewSessionMenuItemActionPerformed
+
+    private void loadSessionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadSessionMenuItemActionPerformed
+        loadSession();
+    }//GEN-LAST:event_loadSessionMenuItemActionPerformed
     
     /**
      * @param item the internal frame to be added to desktop pane
      */
-    private void addToMainDesktopPane(javax.swing.JInternalFrame item, int level){
+    private void addToMainDesktopPane(javax.swing.JInternalFrame item, int level, int dep){
+        if(dep == Codes.DATABASE_DEP && this.dbFound == false){
+            JOptionPane.showConfirmDialog(this, "Please Load or Create a Session (Options)", "No Active Session", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         if(this.activeInternalFrame[level] != null){
             this.activeInternalFrame[level].doDefaultCloseAction();
         }
@@ -680,9 +823,11 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuBar fainMainMenu;
     private javax.swing.JMenu fileMenu;
+    private javax.swing.JMenuItem loadSessionMenuItem;
     private javax.swing.JDesktopPane mainDesktopPane;
     private javax.swing.JMenu optionsMenu;
     private javax.swing.JMenu printingMenu;
+    private javax.swing.JMenuItem startNewSessionMenuItem;
     private javax.swing.JPanel statusPanel;
     // End of variables declaration//GEN-END:variables
 }

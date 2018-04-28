@@ -58,6 +58,11 @@ public class Login extends javax.swing.JInternalFrame {
         }
     }
     
+    private void exit(){
+        this.mainFrame.closeFain();
+        this.doDefaultCloseAction();
+    }
+    
     private void attemptLogin(){
         String username = this.usernameTbox.getText();
         String password = this.passwordPbox.getText();
@@ -67,10 +72,13 @@ public class Login extends javax.swing.JInternalFrame {
         }
         this.user = new User(username);
         if(user.authenticate(password) == Codes.AUTHORIZED){
+            this.mainFrame.setUser(this.user);
+            this.setVisible(false);
             this.mainFrame.loginSuccess();
             this.doDefaultCloseAction();
         }else{
             JOptionPane.showMessageDialog(this, "Username or Password incorrect", "Cannot Login", JOptionPane.WARNING_MESSAGE);
+            this.user = null;
             return;
         }
     }
@@ -116,7 +124,7 @@ public class Login extends javax.swing.JInternalFrame {
         usernameLabel.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         entryPanel.add(usernameLabel);
 
-        usernameTbox.setFont(new java.awt.Font("Cantarell", 0, 18)); // NOI18N
+        usernameTbox.setFont(new java.awt.Font("Cantarell", 0, 24)); // NOI18N
         usernameTbox.setToolTipText("Enter you username");
         usernameTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -130,7 +138,7 @@ public class Login extends javax.swing.JInternalFrame {
         passwordLabel.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         entryPanel.add(passwordLabel);
 
-        passwordPbox.setFont(new java.awt.Font("Cantarell", 0, 18)); // NOI18N
+        passwordPbox.setFont(new java.awt.Font("Cantarell", 0, 24)); // NOI18N
         passwordPbox.setToolTipText("Enter your password");
         passwordPbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -153,6 +161,11 @@ public class Login extends javax.swing.JInternalFrame {
 
         exitButton.setFont(new java.awt.Font("Cantarell", 0, 18)); // NOI18N
         exitButton.setText("Exit");
+        exitButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exitButtonActionPerformed(evt);
+            }
+        });
         buttonPanel.add(exitButton);
 
         entryPanel.add(buttonPanel);
@@ -186,6 +199,10 @@ public class Login extends javax.swing.JInternalFrame {
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
         attemptLogin();
     }//GEN-LAST:event_loginButtonActionPerformed
+
+    private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
+        exit();
+    }//GEN-LAST:event_exitButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

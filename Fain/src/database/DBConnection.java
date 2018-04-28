@@ -13,6 +13,7 @@ import fain.Preferences;
 import java.io.File;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import utility.Codes;
 /**
  *
  * @author akshos
@@ -75,9 +76,10 @@ public class DBConnection {
         return dbFileName;
     }
     
-    public void createNewDatabase(){
+    public void createNewDatabase(String dbName){
         String location = Preferences.getDatabaseLocation();
-        databaseName = dbNameFromDate();
+        databaseName = dbName;
+        Preferences.setDatabaseName(databaseName);
         String url = "jdbc:sqlite:"+location+databaseName;
         createDatabase(url);
     }
@@ -98,18 +100,16 @@ public class DBConnection {
         }
     }
     
-    public boolean checkDatabaseAvailability(){
+    public int checkDatabaseAvailability(){
         if(databaseName.compareTo("none") == 0){
             System.out.println("No previous database defined");
-            createNewDatabase();
-            Preferences.setDatabaseName(databaseName);
-            return true;
+            return Codes.NO_DATABASE;
         }
         else if(!checkExisting(databaseName)){
             System.out.println("ERROR : Database : " + databaseName + " not found");
-            return false;
+            return Codes.FAIL;
         }
         System.out.println("Database : " + databaseName + " found");
-        return true;
+        return Codes.DATABASE_FOUND;
     }
 }
