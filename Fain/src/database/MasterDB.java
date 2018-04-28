@@ -5,6 +5,7 @@
  */
 package database;
 
+import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
@@ -13,11 +14,18 @@ import java.sql.Statement;
  */
 public final class MasterDB {
     public static void insert(Statement stmt, String accountNo, String accountHead, double openingBal, double closingBal, String category ){
-        String branchTable ="insert into master values('"   +accountNo  + "','"
+        String in ="insert into master values('"   +accountNo  + "','"
                                                             +accountHead+ "',"
                                                             +openingBal + ","
                                                             +closingBal + ",'"
-                                                            +category   + "')";   
+                                                            +category   + "')";
+        try{
+            stmt.execute(in);
+        }
+        catch(SQLException se){
+            se.printStackTrace();
+        }
+            
     }
 }
 
