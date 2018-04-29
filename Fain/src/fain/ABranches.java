@@ -5,19 +5,34 @@
  */
 package fain;
 
+import database.BranchDB;
+import database.DBConnection;
+import database.MasterDB;
+import java.sql.Statement;
+import utility.Codes;
+
 /**
  *
  * @author akshos
  */
-public class ABranches extends javax.swing.JInternalFrame {
+public class ABranches extends javax.swing.JInternalFrame implements RefreshOption {
 
     /**
      * Creates new form MasterEntry
      */
+    
+    DBConnection dbConnection;
+    
     public ABranches() {
         initComponents();
     }
-
+    public ABranches(DBConnection db, int mode){
+        this.dbConnection = db;
+        initComponents();
+        if(mode == Codes.EDIT){
+            refreshContents(Codes.REFRESH_ALL);
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -116,6 +131,11 @@ public class ABranches extends javax.swing.JInternalFrame {
         buttonPanel.setLayout(new java.awt.BorderLayout());
 
         enterButton.setText("ENTER");
+        enterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                enterButtonActionPerformed(evt);
+            }
+        });
         buttonPanel.add(enterButton, java.awt.BorderLayout.CENTER);
 
         rightInerPannel.add(buttonPanel);
@@ -132,6 +152,18 @@ public class ABranches extends javax.swing.JInternalFrame {
             this.doDefaultCloseAction();
         }
     }//GEN-LAST:event_formKeyPressed
+
+    private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
+// TODO add your handling code here:
+        Statement stmt=dbConnection.getStatement();
+        String code  =codeTbox.getText();//implement in database 
+        String name  =nameTbox.getText();
+        String addr  =addressTarea.getText();
+        String kgst  =kgstTbox.getText();
+        String rbno  =rbregnoTbox.getText();
+        BranchDB.insert(stmt, name, addr, kgst, rbno);
+           // TODO add your handling code here:
+    }//GEN-LAST:event_enterButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -155,4 +187,9 @@ public class ABranches extends javax.swing.JInternalFrame {
     private javax.swing.JPanel rightInerPannel;
     private javax.swing.JLabel yopBalLabel;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void refreshContents(int type) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

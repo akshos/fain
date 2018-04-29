@@ -70,20 +70,20 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         setTitle("Data Entry (Master)");
         setPreferredSize(new java.awt.Dimension(450, 410));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameClosed(evt);
             }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
             }
         });
 
@@ -139,7 +139,11 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(accountHeadTbox);
 
-        yopBalanceTbox.setText("0.00");
+        yopBalanceTbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                yopBalanceTboxActionPerformed(evt);
+            }
+        });
         yopBalanceTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 yopBalanceTboxKeyPressed(evt);
@@ -147,7 +151,6 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(yopBalanceTbox);
 
-        currentBalanceTbox.setText("0.00");
         currentBalanceTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 currentBalanceTboxKeyPressed(evt);
@@ -172,6 +175,11 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         buttonPanel.setLayout(new java.awt.BorderLayout());
 
         enterButton.setText("ENTER");
+        enterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                enterButtonActionPerformed(evt);
+            }
+        });
         buttonPanel.add(enterButton, java.awt.BorderLayout.CENTER);
 
         rightInerPannel.add(buttonPanel);
@@ -220,8 +228,13 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
             this.doDefaultCloseAction();
         }
     }//GEN-LAST:event_categoryCboxKeyPressed
-    private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
+
+    private void yopBalanceTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yopBalanceTboxActionPerformed
         // TODO add your handling code here:
+    }//GEN-LAST:event_yopBalanceTboxActionPerformed
+
+    private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
+    // TODO add your handling code here:
         Statement stmt=dbConnection.getStatement();
         String accountCode  =accountCodeTbox.getText();
         String accountHead  =accountHeadTbox.getText();
@@ -234,8 +247,9 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
             category = selectedItem.toString();
         }
         MasterDB.insert(stmt, accountCode, accountHead, yopBalance, currBalance, category);
-    }  
-
+    
+    }//GEN-LAST:event_enterButtonActionPerformed
+ 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel accountCodeLabel;
     private javax.swing.JTextField accountCodeTbox;

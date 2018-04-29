@@ -12,7 +12,7 @@ import java.sql.Statement;
  * @author lenovo
  */
 public final class PurchaseLatexDB {
-    public static void insert(Statement stmt, String branch, String date, String credit, String prBill,String party,double quantity, double drc, double dryRubber, double rate, double value ){
+    public static void insert(Statement stmt, String branch, String date, String prBill,String party,double quantity, double drc, double dryRubber, double rate, double value ){
         String in ="insert into purchaseLatex values(NULL,'"     +branch         + "','"
                                                                 +date           + "','"
                                                                 +prBill         + "','"

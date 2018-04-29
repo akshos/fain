@@ -5,19 +5,33 @@
  */
 package fain;
 
+import database.ConsumptionDB;
+import database.CustomerDB;
+import database.DBConnection;
+import database.MasterDB;
+import java.sql.Statement;
+import utility.Codes;
 /**
  *
  * @author akshos
  */
-public class ACustomers extends javax.swing.JInternalFrame {
+public class ACustomers extends javax.swing.JInternalFrame implements RefreshOption{
 
+    DBConnection dbConnection;
+  
     /**
      * Creates new form MasterEntry
      */
     public ACustomers() {
         initComponents();
     }
-
+    public ACustomers(DBConnection db, int mode){
+        this.dbConnection = db;
+        initComponents();
+        if(mode == Codes.EDIT){
+            refreshContents(Codes.REFRESH_ALL);
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -120,6 +134,11 @@ public class ACustomers extends javax.swing.JInternalFrame {
         buttonPanel.setLayout(new java.awt.BorderLayout());
 
         enterButton.setText("ENTER");
+        enterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                enterButtonActionPerformed(evt);
+            }
+        });
         buttonPanel.add(enterButton, java.awt.BorderLayout.CENTER);
 
         rightInerPannel.add(buttonPanel);
@@ -130,6 +149,24 @@ public class ACustomers extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
+    // TODO add your handling code here:
+        Statement stmt=dbConnection.getStatement();
+        String code     =codeTbox.getText();
+        String name     =nameTbox.getText();
+        String address  =addressTarea.getText();
+
+        String branch     ="";
+        Object selectedItem = branchCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            branch = selectedItem.toString();
+        }
+        String kgst     =kgstTbox.getText();
+        String rbregno  =rbregnoTbox.getText();
+        CustomerDB.insert(stmt, code, name, address, branch, kgst, rbregno);
+        }//GEN-LAST:event_enterButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -155,4 +192,9 @@ public class ACustomers extends javax.swing.JInternalFrame {
     private javax.swing.JPanel rightInerPannel;
     private javax.swing.JLabel yopBalLabel;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void refreshContents(int type) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

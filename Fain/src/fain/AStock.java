@@ -4,20 +4,31 @@
  * and open the template in the editor.
  */
 package fain;
-
+import database.DBConnection;
+import database.MasterDB;
+import database.StockDB;
+import java.sql.Statement;
+import utility.Codes;
+/**
 /**
  *
  * @author akshos
  */
-public class AStock extends javax.swing.JInternalFrame {
-
+public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
+DBConnection dbConnection;
     /**
      * Creates new form MasterEntry
      */
     public AStock() {
         initComponents();
     }
-
+    public AStock(DBConnection db, int mode){
+        this.dbConnection = db;
+        initComponents();
+        if(mode == Codes.EDIT){
+            refreshContents(Codes.REFRESH_ALL);
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -128,6 +139,11 @@ public class AStock extends javax.swing.JInternalFrame {
         buttonPanel.setLayout(new java.awt.BorderLayout());
 
         enterButton.setText("ENTER");
+        enterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                enterButtonActionPerformed(evt);
+            }
+        });
         buttonPanel.add(enterButton, java.awt.BorderLayout.CENTER);
 
         rightInerPannel.add(buttonPanel);
@@ -142,6 +158,35 @@ public class AStock extends javax.swing.JInternalFrame {
     private void itemCodeTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCodeTboxActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_itemCodeTboxActionPerformed
+
+    private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
+        // TODO add your handling code here:
+        Statement stmt=dbConnection.getStatement();
+        String icode        =itemCodeTbox.getText();
+        String iname        =itemNameTbox.getText();
+        int currentStock    =Integer.parseInt(currentStockTbox.getText());
+        double rate         =Double.parseDouble(rateTbox.getText());
+        String purchase     ="";
+        Object selectedItem = purchasesCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            purchase = selectedItem.toString();
+        }      
+        String sales     ="";
+         selectedItem = salesCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            sales = selectedItem.toString();
+        }
+        String stock     ="";
+         selectedItem = stockCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            stock = selectedItem.toString();
+        }
+        StockDB.insert(stmt, icode, iname, currentStock, rate, purchase, sales, stock);
+
+    }//GEN-LAST:event_enterButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -168,4 +213,8 @@ public class AStock extends javax.swing.JInternalFrame {
     private javax.swing.JComboBox<String> stockCbox;
     private javax.swing.JLabel stockLabel;
     // End of variables declaration//GEN-END:variables
+
+    public void refreshContents(int REFRESH_ALL) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

@@ -12,8 +12,9 @@ import java.sql.Statement;
  * @author lenovo
  */
 public final class TransactionDB {
-    public static void insert(Statement stmt, String date, String debit, String credit, double amount, String narration ){
+    public static void insert(Statement stmt, String date, String branch, String debit, String credit, double amount, String narration ){
         String in ="insert into transactions values(NULL,'"      +date   + "','"
+                                                            +branch  + "','"
                                                             +debit  + "','"
                                                             +credit + "',"
                                                             +amount + ",'"

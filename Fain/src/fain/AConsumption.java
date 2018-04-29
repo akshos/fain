@@ -5,12 +5,18 @@
  */
 package fain;
 
+import database.ConsumptionDB;
+import database.DBConnection;
+import database.MasterDB;
+import java.sql.Statement;
+import utility.Codes;
 /**
  *
  * @author akshos
  */
-public class AConsumption extends javax.swing.JInternalFrame {
+public class AConsumption extends javax.swing.JInternalFrame implements RefreshOption {
 
+    DBConnection dbConnection;
     /**
      * Creates new form MasterEntry
      */
@@ -18,6 +24,13 @@ public class AConsumption extends javax.swing.JInternalFrame {
         initComponents();
     }
 
+    public AConsumption(DBConnection db, int mode){
+        this.dbConnection = db;
+        initComponents();
+        if(mode == Codes.EDIT){
+            refreshContents(Codes.REFRESH_ALL);
+        }
+    }    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -123,6 +136,11 @@ public class AConsumption extends javax.swing.JInternalFrame {
         buttonPanel.setLayout(new java.awt.BorderLayout());
 
         enterButton.setText("ENTER");
+        enterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                enterButtonActionPerformed(evt);
+            }
+        });
         buttonPanel.add(enterButton, java.awt.BorderLayout.CENTER);
 
         rightInerPannel.add(buttonPanel);
@@ -133,6 +151,33 @@ public class AConsumption extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
+    // TODO add your handling code here:
+        Statement stmt=dbConnection.getStatement();
+        
+        String branch     ="";
+        Object selectedItem = branchCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            branch = selectedItem.toString();
+        }
+        
+        String date  =dateTbox.getText();
+        String refno =referencenumberTbox.getText();
+        
+        String itemCode     ="";
+        selectedItem = itemcodeCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            itemCode = selectedItem.toString();
+        }
+        String itemname  = itemnameTbox.getText();
+        String narration = narrationTbox.getText();
+        int quantity  = Integer.parseInt(quantityTbox.getText());
+        
+        ConsumptionDB.insert(stmt, branch, date, refno, itemCode, itemname, narration, quantity);
+    }//GEN-LAST:event_enterButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -159,4 +204,9 @@ public class AConsumption extends javax.swing.JInternalFrame {
     private javax.swing.JTextField referencenumberTbox;
     private javax.swing.JPanel rightInerPannel;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void refreshContents(int type) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

@@ -5,17 +5,32 @@
  */
 package fain;
 
+import database.DBConnection;
+import database.MasterDB;
+import database.TransactionDB;
+import java.sql.Statement;
+import utility.Codes;
 /**
  *
  * @author akshos
  */
 public class ATransaction extends javax.swing.JInternalFrame implements RefreshOption{
 
+    
+    DBConnection dbConnection;
     /**
      * Creates new form MasterEntry
      */
     public ATransaction() {
         initComponents();
+    }
+    
+    public ATransaction(DBConnection db, int mode){
+        this.dbConnection = db;
+        initComponents();
+        if(mode == Codes.EDIT){
+            refreshContents(Codes.REFRESH_ALL);
+        }
     }
     
     @Override
@@ -114,6 +129,11 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         buttonPanel.setLayout(new java.awt.BorderLayout());
 
         enterButton.setText("ENTER");
+        enterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                enterButtonActionPerformed(evt);
+            }
+        });
         buttonPanel.add(enterButton, java.awt.BorderLayout.CENTER);
 
         rightInerPannel.add(buttonPanel);
@@ -124,6 +144,34 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
+       // TODO add your handling code here:
+        Statement stmt=dbConnection.getStatement();
+        String date         =dateTbox.getText();
+        
+        String branch     ="";
+        Object selectedItem = branchCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            branch = selectedItem.toString();
+        }      
+        String debit     ="";
+         selectedItem = debitCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            debit = selectedItem.toString();
+        }
+        String credit     ="";
+         selectedItem = creditCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            credit = selectedItem.toString();
+        }
+        double amount         =Double.parseDouble(amountTbox.getText());
+        String narration      =narrationTbox.getText();
+        TransactionDB.insert(stmt, date, branch, debit, credit, amount, narration);
+    }//GEN-LAST:event_enterButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

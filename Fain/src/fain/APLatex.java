@@ -5,19 +5,32 @@
  */
 package fain;
 
+import database.DBConnection;
+import database.MasterDB;
+import database.PurchaseLatexDB;
+import java.sql.Statement;
+import utility.Codes;
 /**
  *
  * @author akshos
  */
-public class APLatex extends javax.swing.JInternalFrame {
+public class APLatex extends javax.swing.JInternalFrame implements RefreshOption{
 
+     DBConnection dbConnection;
     /**
      * Creates new form MasterEntry
      */
     public APLatex() {
         initComponents();
     }
-
+    public APLatex(DBConnection db, int mode){
+        this.dbConnection = db;
+        initComponents();
+        if(mode == Codes.EDIT){
+            refreshContents(Codes.REFRESH_ALL);
+        }
+    }
+        
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -182,6 +195,11 @@ public class APLatex extends javax.swing.JInternalFrame {
         buttonPanel.setLayout(new java.awt.BorderLayout());
 
         enterButton.setText("ENTER");
+        enterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                enterButtonActionPerformed(evt);
+            }
+        });
         enterButton.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -207,6 +225,32 @@ public class APLatex extends javax.swing.JInternalFrame {
             this.doDefaultCloseAction();
         }
     }//GEN-LAST:event_keyPressedHandler
+
+    private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
+        // TODO add your handling code here:
+        Statement stmt=dbConnection.getStatement();
+        String branch     ="";
+        Object selectedItem = branchCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            branch = selectedItem.toString();
+        }
+        String date = dateTbox.getText();
+        String pbil = prbillTbox.getText();
+        String party      ="";
+        selectedItem = partyCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            party = selectedItem.toString();
+        }
+        double quantity=Double.parseDouble(quantityTbox.getText());
+        double drc      =Double.parseDouble(drcTbox.getText());
+        double dryrubber=Double.parseDouble(dryrubberTbox.getText());
+        double rate     =Double.parseDouble(rateTbox.getText());
+        double value    =Double.parseDouble(valueTbox.getText());
+
+        PurchaseLatexDB.insert(stmt, branch, date, pbil, party, quantity, drc, dryrubber, rate, value);
+    }//GEN-LAST:event_enterButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -237,4 +281,9 @@ public class APLatex extends javax.swing.JInternalFrame {
     private javax.swing.JLabel valueLabel;
     private javax.swing.JTextField valueTbox;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void refreshContents(int type) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

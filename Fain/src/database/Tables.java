@@ -112,7 +112,7 @@ public final class Tables {
             BranchDB.insert(stmt, "stockTable", masterTable, salesTable, masterTable);
             ConsumptionDB.insert(stmt, branchTable, salesTable, salesTable, masterTable, masterTable, salesTable, 0);
             PurchaseDB.insert(stmt, branchTable, salesTable, salesTable, masterTable, masterTable, masterTable, 0, 0);
-            PurchaseLatexDB.insert(stmt, branchTable, salesTable, stockTable, masterTable, masterTable, 0, 0, 0, 0, 0);
+            //PurchaseLatexDB.insert(stmt, branchTable, salesTable, stockTable, masterTable, masterTable, 0, 0, 0, 0, 0);
             SalesDB.insert(stmt, branchTable, salesTable, salesTable, masterTable, 0, 0, 0, 0, 0, 0, 0);
             StockDB.insert(stmt, masterTable, masterTable, 0, 0, purchaseTable, salesTable, stockTable);
             
