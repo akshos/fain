@@ -317,6 +317,7 @@ public class Main extends javax.swing.JFrame {
         fainMainMenu.setName("fainMenuBar"); // NOI18N
         fainMainMenu.setPreferredSize(new java.awt.Dimension(240, 30));
 
+        fileMenu.setMnemonic('a');
         fileMenu.setText("Append");
         fileMenu.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         fileMenu.setName("fileMenu"); // NOI18N
@@ -395,6 +396,7 @@ public class Main extends javax.swing.JFrame {
 
         fainMainMenu.add(fileMenu);
 
+        editMenu.setMnemonic('e');
         editMenu.setText("Edit");
         editMenu.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         editMenu.setPreferredSize(new java.awt.Dimension(50, 21));
@@ -490,6 +492,7 @@ public class Main extends javax.swing.JFrame {
 
         fainMainMenu.add(editMenu);
 
+        printingMenu.setMnemonic('p');
         printingMenu.setText("Printing");
         printingMenu.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         printingMenu.setPreferredSize(new java.awt.Dimension(80, 21));
@@ -503,6 +506,7 @@ public class Main extends javax.swing.JFrame {
         });
         fainMainMenu.add(printingMenu);
 
+        optionsMenu.setMnemonic('o');
         optionsMenu.setText("Options");
         optionsMenu.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         optionsMenu.addMouseListener(new java.awt.event.MouseAdapter() {

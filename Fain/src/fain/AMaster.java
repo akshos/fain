@@ -26,7 +26,6 @@ public class AMaster extends javax.swing.JInternalFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         outerPanel = new javax.swing.JPanel();
         leftInerPannel = new javax.swing.JPanel();
@@ -106,19 +105,46 @@ public class AMaster extends javax.swing.JInternalFrame {
         outerPanel.add(leftInerPannel);
 
         rightInerPannel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
+
+        accountCodeTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                accountCodeTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(accountCodeTbox);
+
+        accountHeadTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                accountHeadTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(accountHeadTbox);
 
         yopBalanceTbox.setText("0.00");
+        yopBalanceTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                yopBalanceTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(yopBalanceTbox);
 
         currentBalanceTbox.setText("0.00");
+        currentBalanceTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                currentBalanceTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(currentBalanceTbox);
 
         categoryCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         categoryCbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 categoryCboxActionPerformed(evt);
+            }
+        });
+        categoryCbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                categoryCboxKeyPressed(evt);
             }
         });
         rightInerPannel.add(categoryCbox);
@@ -145,6 +171,36 @@ public class AMaster extends javax.swing.JInternalFrame {
     private void formInternalFrameClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosed
         Preferences.storeInternalFrameDimension(this);
     }//GEN-LAST:event_formInternalFrameClosed
+
+    private void accountCodeTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_accountCodeTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
+    }//GEN-LAST:event_accountCodeTboxKeyPressed
+
+    private void accountHeadTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_accountHeadTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
+    }//GEN-LAST:event_accountHeadTboxKeyPressed
+
+    private void yopBalanceTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_yopBalanceTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
+    }//GEN-LAST:event_yopBalanceTboxKeyPressed
+
+    private void currentBalanceTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_currentBalanceTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
+    }//GEN-LAST:event_currentBalanceTboxKeyPressed
+
+    private void categoryCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_categoryCboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
+    }//GEN-LAST:event_categoryCboxKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
