@@ -5,17 +5,34 @@
  */
 package fain;
 
+import database.DBConnection;
+import utility.Codes;
 /**
  *
  * @author akshos
  */
-public class AMaster extends javax.swing.JInternalFrame {
-
+public class AMaster extends javax.swing.JInternalFrame implements RefreshOption{
+    
+    DBConnection dbConnection;
+    
     /**
      * Creates new form MasterEntry
      */
     public AMaster() {
         initComponents();
+    }
+    
+    public AMaster(DBConnection db, int mode){
+        this.dbConnection = db;
+        initComponents();
+        if(mode == Codes.EDIT){
+            refreshContents(Codes.REFRESH_ALL);
+        }
+    }
+        
+    @Override
+    public final void refreshContents(int code){
+        
     }
 
     /**

@@ -31,4 +31,9 @@ public final class Codes {
     public static int DATABASE_DEP = 23;
     public static int OPTIONS = 24;
     
+    public static int EDIT = 25;
+    public static int NEW_ENTRY = 26;
+    
+    public static int REFRESH_ALL = 30;
+    
 }
