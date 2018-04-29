@@ -9,13 +9,18 @@ package fain;
  *
  * @author akshos
  */
-public class ATransaction extends javax.swing.JInternalFrame {
+public class ATransaction extends javax.swing.JInternalFrame implements RefreshOption{
 
     /**
      * Creates new form MasterEntry
      */
     public ATransaction() {
         initComponents();
+    }
+    
+    @Override
+    public void refreshContents(int type){
+        
     }
 
     /**
