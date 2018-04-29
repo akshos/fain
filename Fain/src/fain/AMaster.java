@@ -6,6 +6,8 @@
 package fain;
 
 import database.DBConnection;
+import database.MasterDB;
+import java.sql.Statement;
 import utility.Codes;
 /**
  *
@@ -218,7 +220,21 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
             this.doDefaultCloseAction();
         }
     }//GEN-LAST:event_categoryCboxKeyPressed
-
+    private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        // TODO add your handling code here:
+        Statement stmt=dbConnection.getStatement();
+        String accountCode  =accountCodeTbox.getText();
+        String accountHead  =accountHeadTbox.getText();
+        double currBalance  =Double.parseDouble(currentBalanceTbox.getText());
+        double yopBalance   =Double.parseDouble(yopBalanceTbox.getText());
+        String category     ="";
+        Object selectedItem = categoryCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            category = selectedItem.toString();
+        }
+        MasterDB.insert(stmt, accountCode, accountHead, yopBalance, currBalance, category);
+    }  
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel accountCodeLabel;

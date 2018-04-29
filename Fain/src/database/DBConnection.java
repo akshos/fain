@@ -34,7 +34,13 @@ public class DBConnection {
         stmt = null;
     }
     
+    public Statement getStatement(){
+        
+        return this.stmt;
+    }
+    
     public String getDatabaseName(){
+        
         return databaseName;
     }
     public void setDatabaseName(String name){
