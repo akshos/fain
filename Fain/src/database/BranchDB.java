@@ -34,8 +34,21 @@ public final class BranchDB {
         try {
             stmt.executeUpdate(del);
         } catch (SQLException ex) {
-            Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BranchDB.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public static boolean checkExisting(Statement stmt,String id){
+        String check="select * from branch where branchId="+id+";";
+        try {
+            ResultSet rs=stmt.executeQuery(check);
+            if (rs.next()){
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BranchDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
     public static TableModel getTable(Statement stmt){
         String sqlQuery = "select branchId as 'ID', name as 'Name', address as 'Address', kgst as 'GST', rbno as 'RBNO' from branch;";

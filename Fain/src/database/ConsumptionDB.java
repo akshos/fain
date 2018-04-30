@@ -37,8 +37,20 @@ public static void delete(Statement stmt,String id){
         try {
             stmt.executeUpdate(del);
         } catch (SQLException ex) {
-            Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ConsumptionDB.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    public static boolean checkExisting(Statement stmt,String id){
+        String check="select * from consumption where consumptionId="+id+";";
+        try {
+            ResultSet rs=stmt.executeQuery(check);
+            if (rs.next()){
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ConsumptionDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
     public static TableModel getTable(Statement stmt){
         String sqlQuery = "select consumptionId as 'ID', branch as 'Branch', date as 'Date', refNo as 'Ref. No:', itemCode as 'Item Code', itemName as 'Item Name',narration as 'Narration', quantity as 'Quantity' from consumption;";

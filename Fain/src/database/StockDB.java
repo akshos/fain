@@ -37,9 +37,23 @@ public final class StockDB {
         try {
             stmt.executeUpdate(del);
         } catch (SQLException ex) {
-            Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(StockDB.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+        public static boolean checkExisting(Statement stmt,String id){
+        String check="select * from stock where itemCode='"+id+"';";
+        try {
+            ResultSet rs=stmt.executeQuery(check);
+            if (rs.next()){
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(StockDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
     public static TableModel getTable(Statement stmt){
         String sqlQuery = "select itemCode as 'Item Code', itemName as 'Item Name', currentStock as 'Current Stock', rate as 'Rate', purchaseAC as 'Purchase A/C', saleAC as'SaleA/C', stockAC as 'StockA/C' from stock;";
 	TableModel table = null;
