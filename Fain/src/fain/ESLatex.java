@@ -7,6 +7,7 @@ package fain;
 
 import database.DBConnection;
 import database.SalesDB;
+import java.awt.Dimension;
 import javax.swing.table.TableModel;
 import utility.Codes;
 /**
@@ -51,6 +52,17 @@ public class ESLatex extends javax.swing.JInternalFrame implements RefreshOption
         if(code == Codes.REFRESH_SLATEX){
             updateTable();
         }
+    }
+    
+    private void addEntry(){
+        ESLatex item = new ESLatex(dbConnection, this.mainFrame, this.level+1);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -327,6 +339,11 @@ public class ESLatex extends javax.swing.JInternalFrame implements RefreshOption
         lowerPanel.add(editButton);
 
         addButton.setText("F2: Add");
+        addButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addButtonActionPerformed(evt);
+            }
+        });
         lowerPanel.add(addButton);
 
         deleteButton.setText("F3: Delete");
@@ -349,6 +366,10 @@ public class ESLatex extends javax.swing.JInternalFrame implements RefreshOption
     private void formInternalFrameClosing(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosing
         Preferences.storeInternalFrameDimension(this);
     }//GEN-LAST:event_formInternalFrameClosing
+
+    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
+        addEntry();        // TODO add your handling code here:
+    }//GEN-LAST:event_addButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

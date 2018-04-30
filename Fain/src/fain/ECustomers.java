@@ -7,6 +7,7 @@ package fain;
 
 import database.DBConnection;
 import database.CustomerDB;
+import java.awt.Dimension;
 import javax.swing.table.TableModel;
 import utility.Codes;
 
@@ -46,6 +47,17 @@ public class ECustomers extends javax.swing.JInternalFrame implements RefreshOpt
         if(code == Codes.REFRESH_CUSTOMERS){
             updateTable();
         }
+    }
+    
+    private void addEntry(){
+        ECustomers item = new ECustomers(dbConnection, this.mainFrame, this.level+1);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -322,6 +334,11 @@ public class ECustomers extends javax.swing.JInternalFrame implements RefreshOpt
         lowerPanel.add(editButton);
 
         addButton.setText("F2: Add");
+        addButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addButtonActionPerformed(evt);
+            }
+        });
         lowerPanel.add(addButton);
 
         deleteButton.setText("F3: Delete");
@@ -344,6 +361,10 @@ public class ECustomers extends javax.swing.JInternalFrame implements RefreshOpt
     private void formInternalFrameClosing(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosing
         Preferences.storeInternalFrameDimension(this);
     }//GEN-LAST:event_formInternalFrameClosing
+
+    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
+        addEntry();
+    }//GEN-LAST:event_addButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
