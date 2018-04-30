@@ -41,8 +41,21 @@ public final class SalesDB {
         try {
             stmt.executeUpdate(del);
         } catch (SQLException ex) {
-            Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SalesDB.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+        public static boolean checkExisting(Statement stmt,String id){
+        String check="select * from sales where Id="+id+";";
+        try {
+            ResultSet rs=stmt.executeQuery(check);
+            if (rs.next()){
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(SalesDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
     public static TableModel getTable(Statement stmt){
         String sqlQuery = "select salesId as 'ID', branch as 'Branch', date as 'Date', billNo as 'Bill No:', party as 'Party',barrelNoFrom as 'Barrel # From', barrelNoTo as 'Barrel # To', quantity as 'Quantity', drc as 'DRC', dryRubber as 'Dry Rubber', rate as 'Rate' , value as 'Value' from sales;";

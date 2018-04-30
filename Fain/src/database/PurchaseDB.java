@@ -38,8 +38,21 @@ public final class PurchaseDB {
         try {
             stmt.executeUpdate(del);
         } catch (SQLException ex) {
-            Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PurchaseDB.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public static boolean checkExisting(Statement stmt,String id){
+        String check="select * from purchase where purchaseId="+id+";";
+        try {
+            ResultSet rs=stmt.executeQuery(check);
+            if (rs.next()){
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PurchaseDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
     public static TableModel getTable(Statement stmt){
         String sqlQuery = "select purchaseId as 'ID', branch as 'Branch', date as 'Date', billNo as 'Bill No:', party as 'Party', itemCode as 'Item Code', itemName as 'Item Name', quantity as 'Quantity',  value as 'Value' from purchase;";

@@ -36,8 +36,20 @@ public final class CustomerDB {
         try {
             stmt.executeUpdate(del);
         } catch (SQLException ex) {
-            Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CustomerDB.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+        public static boolean checkExisting(Statement stmt,String id){
+        String check="select * from customer where customerCode='"+id+"';";
+        try {
+            ResultSet rs=stmt.executeQuery(check);
+            if (rs.next()){
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CustomerDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
     public static TableModel getTable(Statement stmt){
         String sqlQuery = "select customerCode as 'ID', name as 'Name', address as 'Address',branch AS 'Branch' kgst as 'GST', rbno as 'RBNO' from customer;";

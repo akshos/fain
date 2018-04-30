@@ -39,8 +39,21 @@ public final class PurchaseLatexDB {
         try {
             stmt.executeUpdate(del);
         } catch (SQLException ex) {
-            Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PurchaseLatexDB.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public static boolean checkExisting(Statement stmt,String id){
+        String check="select * from purchaseLatex where purchaseLatexId="+id+";";
+        try {
+            ResultSet rs=stmt.executeQuery(check);
+            if (rs.next()){
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PurchaseLatexDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
     public static TableModel getTable(Statement stmt){
         String sqlQuery = "select purchaseLatexId as 'ID', branch as 'Branch', date as 'Date', prBill as 'Pr. Bill', party as 'Party', quantity as 'Quantity', drc as 'DRC', dryRubber as 'Dry Rubber', rate as 'Rate' , value as 'Value' from purchaseLatex;";

@@ -36,9 +36,23 @@ public final class TransactionDB {
         try {
             stmt.executeUpdate(del);
         } catch (SQLException ex) {
-            Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TransactionDB.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public static boolean checkExisting(Statement stmt,String id){
+        String check="select * from transactions where transactionId="+id+";";
+        try {
+            ResultSet rs=stmt.executeQuery(check);
+            if (rs.next()){
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TransactionDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
     public static TableModel getTable(Statement stmt){
         String sqlQuery = "select transactionID as 'Transaction ID', date as 'Date', debit as 'Debit', credit as 'Credit', amount as 'Amount', narration as 'Narration' from transactions;";
 	TableModel table = null;

@@ -40,6 +40,20 @@ public final class MasterDB {
             Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public static boolean checkExisting(Statement stmt,String id){
+        String check="select * from master where accountNo='"+id+"';";
+        try {
+            ResultSet rs=stmt.executeQuery(check);
+            if (rs.next()){
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
     public static TableModel getTable(Statement stmt){
         String sqlQuery = "select accountNo as 'Account Number', accountHead as 'Account Head', openingBal as 'Opening Balance', closingBal as 'Closing Balance', category as 'Category' from master;";
 	TableModel table = null;
