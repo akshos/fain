@@ -9,6 +9,8 @@ import database.DBConnection;
 import database.MasterDB;
 import database.TransactionDB;
 import java.sql.Statement;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import utility.Codes;
 /**
  *
@@ -19,6 +21,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
     Main mainFrame;
     DBConnection dbConnection;
     RefreshOption prevFrame;
+    String data[][];
     /**
      * Creates new form MasterEntry
      */
@@ -31,9 +34,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         this.mainFrame = frame;
         this.dbConnection = db;
         initComponents();
-        if(mode == Codes.EDIT){
-            refreshContents(Codes.REFRESH_ALL);
-        }
+        refreshContents(Codes.REFRESH_ALL);
         this.prevFrame = null;
     }
     
@@ -43,14 +44,25 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         this.mainFrame = frame;
         this.dbConnection = db;
         initComponents();
-        if(mode == Codes.EDIT){
-            refreshContents(Codes.REFRESH_ALL);
-        }
+        refreshContents(Codes.REFRESH_ALL);
     }
     
     @Override
     public void refreshContents(int type){
-        
+        if(type == Codes.REFRESH_ALL){
+            loadCreditDebit();
+        }
+    }
+    
+    private void loadCreditDebit(){
+        System.out.println("loasing credit and debit cbox");
+        data = MasterDB.getAccountHead(this.dbConnection.getStatement());
+        String[] cboxData = new String[data.length];
+        for(int i = 0; i < data.length; i++){
+            cboxData[i] = data[0][i] + " : " + data[1][i];
+        }
+        this.creditCbox.setModel(new DefaultComboBoxModel(cboxData));
+        this.debitCbox.setModel(new DefaultComboBoxModel(cboxData));
     }
     
     private void insertData(){
@@ -63,17 +75,17 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         {
             branch = selectedItem.toString();
         }      
-        String debit     ="";
-         selectedItem = debitCbox.getSelectedItem();
+        String debit = "";
+        int index = debitCbox.getSelectedIndex();
         if (selectedItem != null)
         {
-            debit = selectedItem.toString();
+            debit = this.data[0][index];
         }
-        String credit     ="";
-         selectedItem = creditCbox.getSelectedItem();
+        String credit = "";
+        index = creditCbox.getSelectedIndex();
         if (selectedItem != null)
         {
-            credit = selectedItem.toString();
+            credit = this.data[0][index];
         }
         double amount         =Double.parseDouble(amountTbox.getText());
         String narration      =narrationTbox.getText();
