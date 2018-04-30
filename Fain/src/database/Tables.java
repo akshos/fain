@@ -106,6 +106,8 @@ public final class Tables {
             stmt.execute(consumptionTable);
             stmt.execute(branchTable);
             stmt.execute(customerTable);
+            
+            /*
             MasterDB.insert(stmt,"1", stockTable, 0, 0, masterTable);
             MasterDB.insert(stmt,"2", "stockTable", 0, 0, "masterTable");
             CustomerDB.insert(stmt,"123","de3","deee3","234","hello","6456");
@@ -115,7 +117,7 @@ public final class Tables {
             //PurchaseLatexDB.insert(stmt, branchTable, salesTable, stockTable, masterTable, masterTable, 0, 0, 0, 0, 0);
             SalesDB.insert(stmt, branchTable, salesTable, salesTable, masterTable, 0, 0, 0, 0, 0, 0, 0);
             StockDB.insert(stmt, masterTable, masterTable, 0, 0, purchaseTable, salesTable, stockTable);
-            
+            */
         }
         catch(SQLException se){
             se.printStackTrace();

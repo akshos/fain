@@ -5,16 +5,24 @@
  */
 package fain;
 
+import database.DBConnection;
+
 /**
  *
  * @author akshos
  */
 public class EPOthers extends javax.swing.JInternalFrame {
-
+    DBConnection dbConnection;
     /**
      * Creates new form EMaster
      */
     public EPOthers() {
+        initComponents();
+        initTable();
+    }
+    
+    public EPOthers(DBConnection db) {
+        this.dbConnection = db;
         initComponents();
         initTable();
     }

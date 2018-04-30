@@ -22,7 +22,7 @@ DBConnection dbConnection;
     public AStock() {
         initComponents();
     }
-    public AStock(DBConnection db, int mode){
+    public AStock(DBConnection db, int mode, String id){
         this.dbConnection = db;
         initComponents();
         if(mode == Codes.EDIT){

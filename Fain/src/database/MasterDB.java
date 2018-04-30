@@ -16,11 +16,11 @@ import javax.swing.table.TableModel;
  */
 public final class MasterDB {
     public static void insert(Statement stmt, String accountNo, String accountHead, double openingBal, double closingBal, String category ){
-        String in ="insert into master values('"   +accountNo  + "','"
-                                                            +accountHead+ "',"
-                                                            +openingBal + ","
-                                                            +closingBal + ",'"
-                                                            +category   + "')";
+        String in ="insert into master values('"+accountNo  + "','"
+                                                +accountHead+ "',"
+                                                +openingBal + ","
+                                                +closingBal + ",'"
+                                                +category   + "')";
         try{
             stmt.execute(in);
         }
@@ -30,14 +30,14 @@ public final class MasterDB {
             
     }
     public static TableModel getTable(Statement stmt){
-        String sqlQuery = "select accountNo as 'Account Number', accountHead as 'Account Head', openingBal as 'Opening Balance', closingBal as 'Closing Balance', category as 'Category' from refuels;";
+        String sqlQuery = "select accountNo as 'Account Number', accountHead as 'Account Head', openingBal as 'Opening Balance', closingBal as 'Closing Balance', category as 'Category' from master;";
 	TableModel table = null;
         ResultSet rs = null;
 	try{
-		rs = stmt.executeQuery(sqlQuery);
-		table = ResultSetToTableModel.getTableModel(rs);
+            rs = stmt.executeQuery(sqlQuery);
+            table = ResultSetToTableModel.getTableModel(rs);
 	}catch( SQLException se ){
-		se.printStackTrace();
+            se.printStackTrace();
 	}
 	return table;
 }
@@ -45,13 +45,11 @@ public final class MasterDB {
         String sql="select * from master;";
         ResultSet rs = null;
         try{
-        rs=stmt.executeQuery(sql);
-        
+            rs=stmt.executeQuery(sql);
         }
         catch(SQLException se){
             se.printStackTrace();
         }
-        
         return rs;
     }
     
@@ -62,7 +60,7 @@ public final class MasterDB {
         try{
             rs=stmt.executeQuery(sql);
             rs1=rs;
-                    }
+        }
         catch(SQLException se){
             se.printStackTrace();
         }

@@ -25,7 +25,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
     public ACustomers() {
         initComponents();
     }
-    public ACustomers(DBConnection db, int mode){
+    public ACustomers(DBConnection db, int mode, String id){
         this.dbConnection = db;
         initComponents();
         if(mode == Codes.EDIT){

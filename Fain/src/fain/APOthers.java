@@ -23,7 +23,7 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         initComponents();
     }
 
-    public APOthers(DBConnection db, int mode){
+    public APOthers(DBConnection db, int mode, String id){
         this.dbConnection = db;
         initComponents();
         if(mode == Codes.EDIT){

@@ -16,7 +16,7 @@ import utility.Codes;
 public class AMaster extends javax.swing.JInternalFrame implements RefreshOption{
     
     DBConnection dbConnection;
-    
+    String id;
     /**
      * Creates new form MasterEntry
      */
@@ -24,12 +24,13 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         initComponents();
     }
     
-    public AMaster(DBConnection db, int mode){
+    public AMaster(DBConnection db, int mode, String id){
         this.dbConnection = db;
+        this.id = id;
         initComponents();
         if(mode == Codes.EDIT){
             refreshContents(Codes.REFRESH_ALL);
-        }
+        } 
     }
         
     @Override

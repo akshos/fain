@@ -5,16 +5,25 @@
  */
 package fain;
 
+import database.DBConnection;
+
 /**
  *
  * @author akshos
  */
 public class ESLatex extends javax.swing.JInternalFrame {
-
+    DBConnection dbConnection;
+            
     /**
      * Creates new form EMaster
      */
     public ESLatex() {
+        initComponents();
+        initTable();
+    }
+    
+    public ESLatex(DBConnection db) {
+        this.dbConnection = db;
         initComponents();
         initTable();
     }

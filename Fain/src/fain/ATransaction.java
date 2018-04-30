@@ -25,7 +25,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         initComponents();
     }
     
-    public ATransaction(DBConnection db, int mode){
+    public ATransaction(DBConnection db, int mode, String id){
         this.dbConnection = db;
         initComponents();
         if(mode == Codes.EDIT){

@@ -5,16 +5,24 @@
  */
 package fain;
 
+import database.DBConnection;
+
 /**
  *
  * @author akshos
  */
 public class ETransaction extends javax.swing.JInternalFrame {
-
+    DBConnection dbConnection;
     /**
      * Creates new form EMaster
      */
     public ETransaction() {
+        initComponents();
+        initTable();
+    }
+    
+    public ETransaction(DBConnection db) {
+        this.dbConnection = db;
         initComponents();
         initTable();
     }

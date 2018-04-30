@@ -5,16 +5,24 @@
  */
 package fain;
 
+import database.DBConnection;
+
 /**
  *
  * @author akshos
  */
 public class EPLatex extends javax.swing.JInternalFrame {
-
+    DBConnection dbConnection;
     /**
      * Creates new form EMaster
      */
     public EPLatex() {
+        initComponents();
+        initTable();
+    }
+    
+    public EPLatex(DBConnection db) {
+        this.dbConnection = db;
         initComponents();
         initTable();
     }

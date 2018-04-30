@@ -595,7 +595,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_optionsMenuMouseExited
 
     private void aMasterMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aMasterMenuItemActionPerformed
-        AMaster item = new AMaster();
+        AMaster item = new AMaster(dbConnection, Codes.NEW_ENTRY, null);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             System.out.println("setting size");
@@ -607,7 +607,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_aMasterMenuItemActionPerformed
 
     private void eMasterMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eMasterMenuItemActionPerformed
-        EMaster item = new EMaster();
+        EMaster item = new EMaster(dbConnection);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -619,7 +619,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_eMasterMenuItemActionPerformed
 
     private void aTransactionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aTransactionMenuItemActionPerformed
-        ATransaction item = new ATransaction();
+        ATransaction item = new ATransaction(dbConnection, Codes.NEW_ENTRY, null);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -630,7 +630,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_aTransactionMenuItemActionPerformed
 
     private void aStockMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aStockMenuItemActionPerformed
-        AStock item = new AStock();
+        AStock item = new AStock(dbConnection, Codes.NEW_ENTRY, null);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -641,7 +641,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_aStockMenuItemActionPerformed
 
     private void aPurchaseLatexMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aPurchaseLatexMenuItemActionPerformed
-        APLatex item = new APLatex();
+        APLatex item = new APLatex(dbConnection, Codes.NEW_ENTRY, null);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -652,7 +652,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_aPurchaseLatexMenuItemActionPerformed
 
     private void aPurchaseOthersMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aPurchaseOthersMenuItemActionPerformed
-        APOthers item = new APOthers();
+        APOthers item = new APOthers(dbConnection, Codes.NEW_ENTRY, null);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -663,7 +663,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_aPurchaseOthersMenuItemActionPerformed
 
     private void aSalesLatexMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aSalesLatexMenuItemActionPerformed
-        ASLatex item = new ASLatex();
+        ASLatex item = new ASLatex(dbConnection, Codes.NEW_ENTRY, null);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -674,7 +674,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_aSalesLatexMenuItemActionPerformed
 
     private void aConsumptionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aConsumptionMenuItemActionPerformed
-        AConsumption item = new AConsumption();
+        AConsumption item = new AConsumption(dbConnection, Codes.NEW_ENTRY, null);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);

@@ -23,7 +23,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
     public ASLatex() {
         initComponents();
     }
-    public ASLatex(DBConnection db, int mode){
+    public ASLatex(DBConnection db, int mode, String id){
         this.dbConnection = db;
         initComponents();
         if(mode == Codes.EDIT){

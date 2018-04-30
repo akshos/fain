@@ -5,12 +5,17 @@
  */
 package fain;
 
+import utility.Codes;
+import database.MasterDB;
+import database.DBConnection;
+import javax.swing.table.TableModel;
 /**
  *
  * @author akshos
  */
-public class EMaster extends javax.swing.JInternalFrame {
-
+public class EMaster extends javax.swing.JInternalFrame implements RefreshOption{
+    private DBConnection dbConnection;
+    
     /**
      * Creates new form EMaster
      */
@@ -19,11 +24,30 @@ public class EMaster extends javax.swing.JInternalFrame {
         initTable();
     }
     
+    public EMaster(DBConnection db) {
+        initComponents();
+        this.dbConnection = db;
+        updateTable();
+        initTable();
+    }
+    
     private void initTable(){
         this.dataTable.getColumnModel().getColumn(0).setMinWidth(200);
         this.dataTable.getColumnModel().getColumn(1).setMinWidth(200);
         this.dataTable.getColumnModel().getColumn(2).setMinWidth(200);
         this.dataTable.getColumnModel().getColumn(3).setMinWidth(200);
+        this.dataTable.setRowHeight(30);
+    }
+    
+    public void updateTable(){
+        TableModel table = MasterDB.getTable(dbConnection.getStatement());
+        this.dataTable.setModel(table);
+    }
+    
+    public final void refreshContents(int code){
+        if(code == Codes.REFRESH_TABLE){
+            this.updateTable();
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -71,6 +95,7 @@ public class EMaster extends javax.swing.JInternalFrame {
         upperPanel.setLayout(new java.awt.BorderLayout());
 
         dataTable.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        dataTable.setFont(new java.awt.Font("Cantarell", 0, 18)); // NOI18N
         dataTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -286,6 +311,7 @@ public class EMaster extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
+        dataTable.setEditingRow(0);
         tableScrollPane.setViewportView(dataTable);
 
         upperPanel.add(tableScrollPane, java.awt.BorderLayout.CENTER);

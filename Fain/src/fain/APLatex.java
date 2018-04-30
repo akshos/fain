@@ -23,7 +23,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
     public APLatex() {
         initComponents();
     }
-    public APLatex(DBConnection db, int mode){
+    public APLatex(DBConnection db, int mode, String id){
         this.dbConnection = db;
         initComponents();
         if(mode == Codes.EDIT){

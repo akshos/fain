@@ -32,8 +32,9 @@ public final class Codes {
     public static int OPTIONS = 24;
     
     public static int EDIT = 25;
-    public static int NEW_ENTRY = 26;
+    public static int NEW_ENTRY = -2;
     
     public static int REFRESH_ALL = 30;
+    public static int REFRESH_TABLE = 31;
     
 }

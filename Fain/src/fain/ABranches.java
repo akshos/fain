@@ -26,7 +26,7 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
     public ABranches() {
         initComponents();
     }
-    public ABranches(DBConnection db, int mode){
+    public ABranches(DBConnection db, int mode, String id){
         this.dbConnection = db;
         initComponents();
         if(mode == Codes.EDIT){

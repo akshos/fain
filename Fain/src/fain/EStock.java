@@ -5,16 +5,24 @@
  */
 package fain;
 
+import database.DBConnection;
+
 /**
  *
  * @author akshos
  */
 public class EStock extends javax.swing.JInternalFrame {
-
+    DBConnection dbConnection;
     /**
      * Creates new form EMaster
      */
     public EStock() {
+        initComponents();
+        initTable();
+    }
+    
+    public EStock(DBConnection db) {
+        this.dbConnection = db;
         initComponents();
         initTable();
     }

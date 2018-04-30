@@ -24,7 +24,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         initComponents();
     }
 
-    public AConsumption(DBConnection db, int mode){
+    public AConsumption(DBConnection db, int mode, String id){
         this.dbConnection = db;
         initComponents();
         if(mode == Codes.EDIT){
