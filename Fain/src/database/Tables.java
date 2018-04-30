@@ -93,6 +93,10 @@ public final class Tables {
             + "kgst         varchar(20),"
             + "rbno         varchar(20));";
     
+    public static final String category = "create table category("
+            + "code varchar(10) primary key,"
+            + "name varchar(20));";
+    
     public static void createTables(Statement stmt){
         System.out.println("Creating tables");
         try{
@@ -106,6 +110,24 @@ public final class Tables {
             stmt.execute(consumptionTable);
             stmt.execute(branchTable);
             stmt.execute(customerTable);
+            stmt.execute(category);
+            CategoryDB.insert(stmt,"Asset","AS");
+            CategoryDB.insert(stmt,"Liability","LI");
+            CategoryDB.insert(stmt,"Share Capital","SH");
+            CategoryDB.insert(stmt,"Deposits","DP");
+            CategoryDB.insert(stmt,"Loans and Advances","LN");
+            CategoryDB.insert(stmt,"Income","IN");
+            CategoryDB.insert(stmt,"Direct Exp.","SE");
+            CategoryDB.insert(stmt,"Indirect Exp.","EX");
+            CategoryDB.insert(stmt,"Debtor","DB");
+            CategoryDB.insert(stmt,"Creditor","CR");
+            CategoryDB.insert(stmt,"Cash","CH");
+            CategoryDB.insert(stmt,"Bank","BK");
+            CategoryDB.insert(stmt,"Purchase","PR");
+            CategoryDB.insert(stmt,"Sales","SL");
+            CategoryDB.insert(stmt,"Stock","SK");
+            
+            
             
             /*
             MasterDB.insert(stmt,"1", stockTable, 0, 0, masterTable);
