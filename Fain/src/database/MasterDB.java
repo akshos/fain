@@ -8,6 +8,8 @@ package database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.TableModel;
 
 /**
@@ -28,6 +30,15 @@ public final class MasterDB {
             se.printStackTrace();
         }
             
+    }
+    
+    public static void delete(Statement stmt,String id){
+        String del="delete from master where accountNo='"+id+"';";
+        try {
+            stmt.executeUpdate(del);
+        } catch (SQLException ex) {
+            Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     public static TableModel getTable(Statement stmt){
         String sqlQuery = "select accountNo as 'Account Number', accountHead as 'Account Head', openingBal as 'Opening Balance', closingBal as 'Closing Balance', category as 'Category' from master;";
