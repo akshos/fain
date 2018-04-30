@@ -8,12 +8,12 @@ package fain;
 import database.DBConnection;
 import database.SalesDB;
 import javax.swing.table.TableModel;
-
+import utility.Codes;
 /**
  *
  * @author akshos
  */
-public class ESLatex extends javax.swing.JInternalFrame {
+public class ESLatex extends javax.swing.JInternalFrame implements RefreshOption{
     DBConnection dbConnection;
     Main mainFrame;
     int level;
@@ -41,9 +41,16 @@ public class ESLatex extends javax.swing.JInternalFrame {
         this.dataTable.getColumnModel().getColumn(2).setMinWidth(200);
         this.dataTable.getColumnModel().getColumn(3).setMinWidth(200);
     }
-        public void updateTable(){
+    
+    public void updateTable(){
         TableModel table = SalesDB.getTable(dbConnection.getStatement());
         this.dataTable.setModel(table);
+    }
+        
+    public void refreshContents(int code){
+        if(code == Codes.REFRESH_SLATEX){
+            updateTable();
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.

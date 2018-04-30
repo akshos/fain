@@ -8,12 +8,13 @@ package fain;
 import database.DBConnection;
 import database.TransactionDB;
 import javax.swing.table.TableModel;
+import utility.Codes;
 
 /**
  *
  * @author akshos
  */
-public class ETransaction extends javax.swing.JInternalFrame {
+public class ETransaction extends javax.swing.JInternalFrame implements RefreshOption{
     DBConnection dbConnection;
     Main mainFrame;
     int level;
@@ -40,10 +41,18 @@ public class ETransaction extends javax.swing.JInternalFrame {
         this.dataTable.getColumnModel().getColumn(2).setMinWidth(200);
         this.dataTable.getColumnModel().getColumn(3).setMinWidth(200);
     }
-        public void updateTable(){
+    
+    public void updateTable(){
         TableModel table = TransactionDB.getTable(dbConnection.getStatement());
         this.dataTable.setModel(table);
     }
+    
+    public void refreshContents(int code){
+        if(code == Codes.REFRESH_TRANSACTION){
+            updateTable();
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

@@ -18,6 +18,7 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
     DBConnection dbConnection;
     Main mainFrame;
     int level;
+    RefreshOption prevFrame;
     /**
      * Creates new form MasterEntry
      */
@@ -26,6 +27,18 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
     }
 
     public APOthers(DBConnection db, int mode, String id, Main frame, int level){
+        this.level =  level;
+        this.mainFrame  = frame;
+        this.dbConnection = db;
+        initComponents();
+        if(mode == Codes.EDIT){
+            refreshContents(Codes.REFRESH_ALL);
+        }
+        prevFrame = null;
+    }
+    
+    public APOthers(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame){
+        this.prevFrame = prevFrame;
         this.level =  level;
         this.mainFrame  = frame;
         this.dbConnection = db;
@@ -62,6 +75,9 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         double value    =Double.parseDouble(valueTbox.getText());
 
         PurchaseDB.insert(stmt, branch, date, bill, party, itemcode, itemname, quantity, value);
+        if(this.prevFrame != null){
+            prevFrame.refreshContents(Codes.REFRESH_POTHERS);
+        }
     }
 
     /**

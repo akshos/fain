@@ -8,12 +8,13 @@ package fain;
 import database.DBConnection;
 import database.StockDB;
 import javax.swing.table.TableModel;
+import utility.Codes;
 
 /**
  *
  * @author akshos
  */
-public class EStock extends javax.swing.JInternalFrame {
+public class EStock extends javax.swing.JInternalFrame implements RefreshOption{
     DBConnection dbConnection;
     Main mainFrame;
     int level;
@@ -40,9 +41,16 @@ public class EStock extends javax.swing.JInternalFrame {
         this.dataTable.getColumnModel().getColumn(2).setMinWidth(200);
         this.dataTable.getColumnModel().getColumn(3).setMinWidth(200);
     }
-        public void updateTable(){
+    
+    public void updateTable(){
         TableModel table = StockDB.getTable(dbConnection.getStatement());
         this.dataTable.setModel(table);
+    }
+    
+    public void refreshContents(int code){
+        if(code == Codes.REFRESH_STOCK){
+            updateTable();
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.

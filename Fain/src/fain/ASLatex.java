@@ -19,13 +19,27 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
     DBConnection dbConnection;
     Main mainFrame;
     int level;
+    RefreshOption prevFrame;
     /**
      * Creates new form MasterEntry
      */
     public ASLatex() {
         initComponents();
     }
+    
     public ASLatex(DBConnection db, int mode, String id, Main frame, int level){
+        this.level = level;
+        this.mainFrame = frame;
+        this.dbConnection = db;
+        initComponents();
+        if(mode == Codes.EDIT){
+            refreshContents(Codes.REFRESH_ALL);
+        }
+        prevFrame = null;
+    }
+    
+    public ASLatex(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame){
+        this.prevFrame = prevFrame;
         this.level = level;
         this.mainFrame = frame;
         this.dbConnection = db;
@@ -60,6 +74,10 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         double value    =Double.parseDouble(valueTbox.getText());
 
         SalesDB.insert(stmt, branch, date, bill, party, bnfrom, bnto, quantity, drc, dryrubber, rate, value);
+        
+        if(prevFrame != null){
+            prevFrame.refreshContents(Codes.REFRESH_SLATEX);
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.

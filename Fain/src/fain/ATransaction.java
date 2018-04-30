@@ -18,6 +18,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
     int level;
     Main mainFrame;
     DBConnection dbConnection;
+    RefreshOption prevFrame;
     /**
      * Creates new form MasterEntry
      */
@@ -26,6 +27,18 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
     }
     
     public ATransaction(DBConnection db, int mode, String id, Main frame, int level){
+        this.level = level;
+        this.mainFrame = frame;
+        this.dbConnection = db;
+        initComponents();
+        if(mode == Codes.EDIT){
+            refreshContents(Codes.REFRESH_ALL);
+        }
+        this.prevFrame = null;
+    }
+    
+    public ATransaction(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame){
+        this.prevFrame = prevFrame;
         this.level = level;
         this.mainFrame = frame;
         this.dbConnection = db;
@@ -65,6 +78,9 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         double amount         =Double.parseDouble(amountTbox.getText());
         String narration      =narrationTbox.getText();
         TransactionDB.insert(stmt, date, branch, debit, credit, amount, narration);
+        if(this.prevFrame != null){
+            prevFrame.refreshContents(Codes.REFRESH_TRANSACTION);
+        }
     }
 
     /**

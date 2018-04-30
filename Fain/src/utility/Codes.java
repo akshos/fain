@@ -41,4 +41,8 @@ public final class Codes {
     public static int REFRESH_CONSUMPTION = 34;
     public static int REFRESH_CUSTOMERS = 35;
     public static int REFRESH_PLATEX = 36;
+    public static int REFRESH_POTHERS = 37;
+    public static int REFRESH_SLATEX = 38;
+    public static int REFRESH_STOCK = 39;
+    public static int REFRESH_TRANSACTION = 40;
 }

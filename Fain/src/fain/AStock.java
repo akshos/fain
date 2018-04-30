@@ -18,13 +18,27 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
     DBConnection dbConnection;
     Main mainFrame;
     int level;
+    RefreshOption prevFrame;
     /**
      * Creates new form MasterEntry
      */
     public AStock() {
         initComponents();
     }
+    
     public AStock(DBConnection db, int mode, String id, Main frame, int level){
+        this.level = level;
+        this.mainFrame = frame;
+        this.dbConnection = db;
+        initComponents();
+        if(mode == Codes.EDIT){
+            refreshContents(Codes.REFRESH_ALL);
+        }
+        this.prevFrame = null;
+    }
+    
+    public AStock(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame){
+        this.prevFrame = prevFrame;
         this.level = level;
         this.mainFrame = frame;
         this.dbConnection = db;
@@ -59,7 +73,9 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
             stock = selectedItem.toString();
         }
         StockDB.insert(stmt, icode, iname, currentStock, rate, purchase, sales, stock);
-
+        if(this.prevFrame != null){
+            prevFrame.refreshContents(Codes.REFRESH_STOCK);
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
