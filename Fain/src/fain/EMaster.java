@@ -8,6 +8,7 @@ package fain;
 import utility.Codes;
 import database.MasterDB;
 import database.DBConnection;
+import java.awt.Dimension;
 import javax.swing.table.TableModel;
 /**
  *
@@ -15,7 +16,8 @@ import javax.swing.table.TableModel;
  */
 public class EMaster extends javax.swing.JInternalFrame implements RefreshOption{
     private DBConnection dbConnection;
-    
+    private Main mainFrame;
+    private int level;
     /**
      * Creates new form EMaster
      */
@@ -24,9 +26,11 @@ public class EMaster extends javax.swing.JInternalFrame implements RefreshOption
         initTable();
     }
     
-    public EMaster(DBConnection db) {
+    public EMaster(Main frame, DBConnection db, int level) {
         initComponents();
         this.dbConnection = db;
+        this.mainFrame = frame;
+        this.level = level;
         updateTable();
         initTable();
     }
@@ -45,9 +49,21 @@ public class EMaster extends javax.swing.JInternalFrame implements RefreshOption
     }
     
     public final void refreshContents(int code){
-        if(code == Codes.REFRESH_TABLE){
+        if(code == Codes.REFRESH_MASTER){
             this.updateTable();
         }
+    }
+    
+    private void addEntry(){
+        AMaster item = new AMaster(dbConnection, Codes.NEW_ENTRY, null, this.level, this);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            System.out.println("setting size");
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 300);
+        }
+        mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -326,6 +342,11 @@ public class EMaster extends javax.swing.JInternalFrame implements RefreshOption
         lowerPanel.add(editButton);
 
         addButton.setText("F2: Add");
+        addButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addButtonActionPerformed(evt);
+            }
+        });
         lowerPanel.add(addButton);
 
         deleteButton.setText("F3: Delete");
@@ -348,6 +369,10 @@ public class EMaster extends javax.swing.JInternalFrame implements RefreshOption
     private void formInternalFrameClosing(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosing
         Preferences.storeInternalFrameDimension(this);
     }//GEN-LAST:event_formInternalFrameClosing
+
+    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
+        addEntry();
+    }//GEN-LAST:event_addButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

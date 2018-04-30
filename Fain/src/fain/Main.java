@@ -595,7 +595,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_optionsMenuMouseExited
 
     private void aMasterMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aMasterMenuItemActionPerformed
-        AMaster item = new AMaster(dbConnection, Codes.NEW_ENTRY, null);
+        AMaster item = new AMaster(dbConnection, Codes.NEW_ENTRY, null, this.level+1);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             System.out.println("setting size");
@@ -607,7 +607,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_aMasterMenuItemActionPerformed
 
     private void eMasterMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eMasterMenuItemActionPerformed
-        EMaster item = new EMaster(dbConnection);
+        EMaster item = new EMaster(this, dbConnection, this.level+1);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -796,7 +796,7 @@ public class Main extends javax.swing.JFrame {
     /**
      * @param item the internal frame to be added to desktop pane
      */
-    private void addToMainDesktopPane(javax.swing.JInternalFrame item, int level, int dep){
+    public void addToMainDesktopPane(javax.swing.JInternalFrame item, int level, int dep){
         if(dep == Codes.DATABASE_DEP && this.dbFound == false){
             JOptionPane.showConfirmDialog(this, "Please Load or Create a Session (Options)", "No Active Session", JOptionPane.WARNING_MESSAGE);
             return;

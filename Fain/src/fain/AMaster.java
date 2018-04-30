@@ -17,6 +17,8 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
     
     DBConnection dbConnection;
     String id;
+    int level;
+    RefreshOption prevFrame;
     /**
      * Creates new form MasterEntry
      */
@@ -24,9 +26,22 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         initComponents();
     }
     
-    public AMaster(DBConnection db, int mode, String id){
+    public AMaster(DBConnection db, int mode, String id, int level){
         this.dbConnection = db;
         this.id = id;
+        this.level = level;
+        initComponents();
+        if(mode == Codes.EDIT){
+            refreshContents(Codes.REFRESH_ALL);
+        }
+        prevFrame = null;
+    }
+    
+    public AMaster(DBConnection db, int mode, String id, int level, RefreshOption prevFrame){
+        this.dbConnection = db;
+        this.id = id;
+        this.level = level;
+        this.prevFrame = prevFrame;
         initComponents();
         if(mode == Codes.EDIT){
             refreshContents(Codes.REFRESH_ALL);
@@ -51,6 +66,10 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
             category = selectedItem.toString();
         }
         MasterDB.insert(stmt, accountCode, accountHead, yopBalance, currBalance, category);
+        if(prevFrame != null){
+            prevFrame.refreshContents(Codes.REFRESH_MASTER);
+            this.doDefaultCloseAction();
+        }
     }
 
     /**

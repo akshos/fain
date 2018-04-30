@@ -36,5 +36,6 @@ public final class Codes {
     
     public static int REFRESH_ALL = 30;
     public static int REFRESH_TABLE = 31;
+    public static int REFRESH_MASTER = 32;
     
 }
