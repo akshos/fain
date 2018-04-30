@@ -398,6 +398,11 @@ public class Main extends javax.swing.JFrame {
 
         aBranchesMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         aBranchesMenuItem.setText("Branches");
+        aBranchesMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aBranchesMenuItemActionPerformed(evt);
+            }
+        });
         fileMenu.add(aBranchesMenuItem);
 
         aCustomersMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -595,7 +600,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_optionsMenuMouseExited
 
     private void aMasterMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aMasterMenuItemActionPerformed
-        AMaster item = new AMaster(dbConnection, Codes.NEW_ENTRY, null, this.level+1);
+        AMaster item = new AMaster(dbConnection, Codes.NEW_ENTRY, null, this, this.level+1);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             System.out.println("setting size");
@@ -607,7 +612,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_aMasterMenuItemActionPerformed
 
     private void eMasterMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eMasterMenuItemActionPerformed
-        EMaster item = new EMaster(this, dbConnection, this.level+1);
+        EMaster item = new EMaster(dbConnection, this, this.level+1);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -619,7 +624,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_eMasterMenuItemActionPerformed
 
     private void aTransactionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aTransactionMenuItemActionPerformed
-        ATransaction item = new ATransaction(dbConnection, Codes.NEW_ENTRY, null);
+        ATransaction item = new ATransaction(dbConnection, Codes.NEW_ENTRY, null, this, this.level+1);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -630,7 +635,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_aTransactionMenuItemActionPerformed
 
     private void aStockMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aStockMenuItemActionPerformed
-        AStock item = new AStock(dbConnection, Codes.NEW_ENTRY, null);
+        AStock item = new AStock(dbConnection, Codes.NEW_ENTRY, null, this, this.level+1);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -641,7 +646,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_aStockMenuItemActionPerformed
 
     private void aPurchaseLatexMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aPurchaseLatexMenuItemActionPerformed
-        APLatex item = new APLatex(dbConnection, Codes.NEW_ENTRY, null);
+        APLatex item = new APLatex(dbConnection, Codes.NEW_ENTRY, null, this, this.level+1);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -652,7 +657,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_aPurchaseLatexMenuItemActionPerformed
 
     private void aPurchaseOthersMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aPurchaseOthersMenuItemActionPerformed
-        APOthers item = new APOthers(dbConnection, Codes.NEW_ENTRY, null);
+        APOthers item = new APOthers(dbConnection, Codes.NEW_ENTRY, null, this, this.level+1);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -663,7 +668,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_aPurchaseOthersMenuItemActionPerformed
 
     private void aSalesLatexMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aSalesLatexMenuItemActionPerformed
-        ASLatex item = new ASLatex(dbConnection, Codes.NEW_ENTRY, null);
+        ASLatex item = new ASLatex(dbConnection, Codes.NEW_ENTRY, null, this, this.level+1);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -674,7 +679,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_aSalesLatexMenuItemActionPerformed
 
     private void aConsumptionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aConsumptionMenuItemActionPerformed
-        AConsumption item = new AConsumption(dbConnection, Codes.NEW_ENTRY, null);
+        AConsumption item = new AConsumption(dbConnection, Codes.NEW_ENTRY, null, this, this.level+1);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -693,7 +698,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void eTransactionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eTransactionMenuItemActionPerformed
-        ETransaction item = new ETransaction();
+        ETransaction item = new ETransaction(dbConnection, this, this.level+1);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -704,7 +709,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_eTransactionMenuItemActionPerformed
 
     private void eStockMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eStockMenuItemActionPerformed
-        EStock item = new EStock();
+        EStock item = new EStock(dbConnection, this, this.level+1);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -715,7 +720,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_eStockMenuItemActionPerformed
 
     private void ePurchaseLatexMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ePurchaseLatexMenuItemActionPerformed
-        EPLatex item = new EPLatex();
+        EPLatex item = new EPLatex(dbConnection, this, this.level+1);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -726,7 +731,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_ePurchaseLatexMenuItemActionPerformed
 
     private void ePurchaseOthersMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ePurchaseOthersMenuItemActionPerformed
-        EPOthers item = new EPOthers();
+        EPOthers item = new EPOthers(dbConnection, this, this.level+1);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -737,7 +742,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_ePurchaseOthersMenuItemActionPerformed
 
     private void eSalesLatexMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eSalesLatexMenuItemActionPerformed
-        ESLatex item = new ESLatex();
+        ESLatex item = new ESLatex(dbConnection, this, this.level+1);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -748,7 +753,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_eSalesLatexMenuItemActionPerformed
 
     private void eBranchesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eBranchesMenuItemActionPerformed
-        EBranches item = new EBranches();
+        EBranches item = new EBranches(dbConnection, this, this.level+1);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -759,7 +764,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_eBranchesMenuItemActionPerformed
 
     private void eCustomersMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eCustomersMenuItemActionPerformed
-        ECustomers item = new ECustomers();
+        ECustomers item = new ECustomers(dbConnection, this, this.level+1);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -770,7 +775,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_eCustomersMenuItemActionPerformed
 
     private void eConsumptionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eConsumptionMenuItemActionPerformed
-        EConsumption item = new EConsumption();
+        EConsumption item = new EConsumption(dbConnection, this, this.level+1);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -792,6 +797,17 @@ public class Main extends javax.swing.JFrame {
         CreateUser item = new CreateUser(this, Codes.CREATE_USER);
         addToMainDesktopPane(item, this.level, Codes.OPTIONS);
     }//GEN-LAST:event_addUserMenuItemActionPerformed
+
+    private void aBranchesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aBranchesMenuItemActionPerformed
+        ABranches item = new ABranches(dbConnection, Codes.NEW_ENTRY, null, this, this.level+1);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }//GEN-LAST:event_aBranchesMenuItemActionPerformed
     
     /**
      * @param item the internal frame to be added to desktop pane

@@ -37,5 +37,8 @@ public final class Codes {
     public static int REFRESH_ALL = 30;
     public static int REFRESH_TABLE = 31;
     public static int REFRESH_MASTER = 32;
-    
+    public static int REFRESH_BRANCHES = 33;
+    public static int REFRESH_CONSUMPTION = 34;
+    public static int REFRESH_CUSTOMERS = 35;
+    public static int REFRESH_PLATEX = 36;
 }

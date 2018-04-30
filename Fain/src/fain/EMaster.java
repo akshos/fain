@@ -26,7 +26,7 @@ public class EMaster extends javax.swing.JInternalFrame implements RefreshOption
         initTable();
     }
     
-    public EMaster(Main frame, DBConnection db, int level) {
+    public EMaster(DBConnection db, Main frame,  int level) {
         initComponents();
         this.dbConnection = db;
         this.mainFrame = frame;
@@ -55,7 +55,7 @@ public class EMaster extends javax.swing.JInternalFrame implements RefreshOption
     }
     
     private void addEntry(){
-        AMaster item = new AMaster(dbConnection, Codes.NEW_ENTRY, null, this.level, this);
+        AMaster item = new AMaster(dbConnection, Codes.NEW_ENTRY, null, this.mainFrame, this.level);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             System.out.println("setting size");

@@ -17,13 +17,17 @@ import utility.Codes;
 public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption{
 
     DBConnection dbConnection;
+    Main mainFrame;
+    int level;
     /**
      * Creates new form MasterEntry
      */
     public ASLatex() {
         initComponents();
     }
-    public ASLatex(DBConnection db, int mode, String id){
+    public ASLatex(DBConnection db, int mode, String id, Main frame, int level){
+        this.level = level;
+        this.mainFrame = frame;
         this.dbConnection = db;
         initComponents();
         if(mode == Codes.EDIT){

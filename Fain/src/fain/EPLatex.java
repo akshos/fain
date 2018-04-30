@@ -6,13 +6,16 @@
 package fain;
 
 import database.DBConnection;
+import utility.Codes;
 
 /**
  *
  * @author akshos
  */
-public class EPLatex extends javax.swing.JInternalFrame {
+public class EPLatex extends javax.swing.JInternalFrame implements RefreshOption{
     DBConnection dbConnection;
+    Main mainFrame;
+    int level;
     /**
      * Creates new form EMaster
      */
@@ -21,9 +24,12 @@ public class EPLatex extends javax.swing.JInternalFrame {
         initTable();
     }
     
-    public EPLatex(DBConnection db) {
+    public EPLatex(DBConnection db, Main frame, int level) {
         this.dbConnection = db;
+        this.level = level;
+        this.mainFrame = frame;
         initComponents();
+        updateTable();
         initTable();
     }
     
@@ -33,6 +39,17 @@ public class EPLatex extends javax.swing.JInternalFrame {
         this.dataTable.getColumnModel().getColumn(2).setMinWidth(200);
         this.dataTable.getColumnModel().getColumn(3).setMinWidth(200);
     }
+    
+    private void updateTable(){
+        
+    }
+    
+    public void refreshContents(int code){
+        if(code == Codes.REFRESH_PLATEX){
+            updateTable();
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

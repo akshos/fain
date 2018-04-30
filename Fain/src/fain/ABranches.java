@@ -22,12 +22,30 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
      */
     
     DBConnection dbConnection;
+    int level;
+    Main mainFrame;
+    RefreshOption prevFrame;
     
     public ABranches() {
         initComponents();
     }
-    public ABranches(DBConnection db, int mode, String id){
+    
+    public ABranches(DBConnection db, int mode, String id, Main frame, int level){
         this.dbConnection = db;
+        this.level = level;
+        this.mainFrame = frame;
+        this.prevFrame = null;
+        initComponents();
+        if(mode == Codes.EDIT){
+            refreshContents(Codes.REFRESH_ALL);
+        }
+    }
+    
+    public ABranches(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame){
+        this.dbConnection = db;
+        this.level = level;
+        this.mainFrame = frame;
+        this.prevFrame = prevFrame;
         initComponents();
         if(mode == Codes.EDIT){
             refreshContents(Codes.REFRESH_ALL);
@@ -42,6 +60,9 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         String kgst  =kgstTbox.getText();
         String rbno  =rbregnoTbox.getText();
         BranchDB.insert(stmt, name, addr, kgst, rbno);
+        if(this.prevFrame != null){
+            prevFrame.refreshContents(Codes.REFRESH_BRANCHES);
+        }
     }
     
     /**

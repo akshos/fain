@@ -17,6 +17,9 @@ import utility.Codes;
 public class AConsumption extends javax.swing.JInternalFrame implements RefreshOption {
 
     DBConnection dbConnection;
+    Main mainFrame;
+    int level;
+    RefreshOption prevFrame;
     /**
      * Creates new form MasterEntry
      */
@@ -24,13 +27,27 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         initComponents();
     }
 
-    public AConsumption(DBConnection db, int mode, String id){
+    public AConsumption(DBConnection db, int mode, String id, Main frame, int level){
+        this.mainFrame = frame;
+        this.level = level;
         this.dbConnection = db;
         initComponents();
         if(mode == Codes.EDIT){
             refreshContents(Codes.REFRESH_ALL);
         }
-    }    
+        prevFrame = null;
+    }  
+    
+    public AConsumption(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame){
+        this.prevFrame = prevFrame;
+        this.mainFrame = frame;
+        this.level = level;
+        this.dbConnection = db;
+        initComponents();
+        if(mode == Codes.EDIT){
+            refreshContents(Codes.REFRESH_ALL);
+        }
+    }
     
     private void insertData(){
         Statement stmt=dbConnection.getStatement();
@@ -56,6 +73,10 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         int quantity  = Integer.parseInt(quantityTbox.getText());
         
         ConsumptionDB.insert(stmt, branch, date, refno, itemCode, itemname, narration, quantity);
+        
+        if(this.prevFrame != null){
+            prevFrame.refreshContents(Codes.REFRESH_CONSUMPTION);
+        }
     }
     
     /**

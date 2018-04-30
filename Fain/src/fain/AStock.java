@@ -15,14 +15,18 @@ import utility.Codes;
  * @author akshos
  */
 public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
-DBConnection dbConnection;
+    DBConnection dbConnection;
+    Main mainFrame;
+    int level;
     /**
      * Creates new form MasterEntry
      */
     public AStock() {
         initComponents();
     }
-    public AStock(DBConnection db, int mode, String id){
+    public AStock(DBConnection db, int mode, String id, Main frame, int level){
+        this.level = level;
+        this.mainFrame = frame;
         this.dbConnection = db;
         initComponents();
         if(mode == Codes.EDIT){

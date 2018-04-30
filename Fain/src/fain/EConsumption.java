@@ -5,17 +5,26 @@
  */
 package fain;
 
+import database.DBConnection;
+import utility.Codes;
+
 /**
  *
  * @author akshos
  */
-public class EConsumption extends javax.swing.JInternalFrame {
-
+public class EConsumption extends javax.swing.JInternalFrame implements RefreshOption{
+    DBConnection dbConnection;
+    Main mainFrame;
+    int level;
     /**
      * Creates new form EMaster
      */
-    public EConsumption() {
+    public EConsumption(DBConnection db, Main frame, int level) {
+        this.dbConnection = db;
+        this.level = level;
+        this.mainFrame = frame;
         initComponents();
+        updateTable();
         initTable();
     }
     
@@ -24,6 +33,16 @@ public class EConsumption extends javax.swing.JInternalFrame {
         this.dataTable.getColumnModel().getColumn(1).setMinWidth(200);
         this.dataTable.getColumnModel().getColumn(2).setMinWidth(200);
         this.dataTable.getColumnModel().getColumn(3).setMinWidth(200);
+    }
+    
+    private void updateTable(){
+        
+    }
+    
+    public void refreshContents(int code){
+        if(code == Codes.REFRESH_CONSUMPTION){
+            this.updateTable();
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.

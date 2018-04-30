@@ -15,8 +15,8 @@ import utility.Codes;
  * @author akshos
  */
 public class ATransaction extends javax.swing.JInternalFrame implements RefreshOption{
-
-    
+    int level;
+    Main mainFrame;
     DBConnection dbConnection;
     /**
      * Creates new form MasterEntry
@@ -25,7 +25,9 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         initComponents();
     }
     
-    public ATransaction(DBConnection db, int mode, String id){
+    public ATransaction(DBConnection db, int mode, String id, Main frame, int level){
+        this.level = level;
+        this.mainFrame = frame;
         this.dbConnection = db;
         initComponents();
         if(mode == Codes.EDIT){

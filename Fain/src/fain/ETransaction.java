@@ -13,6 +13,8 @@ import database.DBConnection;
  */
 public class ETransaction extends javax.swing.JInternalFrame {
     DBConnection dbConnection;
+    Main mainFrame;
+    int level;
     /**
      * Creates new form EMaster
      */
@@ -21,7 +23,9 @@ public class ETransaction extends javax.swing.JInternalFrame {
         initTable();
     }
     
-    public ETransaction(DBConnection db) {
+    public ETransaction(DBConnection db, Main frame, int level) {
+        this.level = level;
+        this.mainFrame = frame;
         this.dbConnection = db;
         initComponents();
         initTable();

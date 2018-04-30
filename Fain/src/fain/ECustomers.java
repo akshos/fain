@@ -5,17 +5,26 @@
  */
 package fain;
 
+import database.DBConnection;
+import utility.Codes;
+
 /**
  *
  * @author akshos
  */
-public class ECustomers extends javax.swing.JInternalFrame {
-
+public class ECustomers extends javax.swing.JInternalFrame implements RefreshOption{
+    DBConnection dbConnection;
+    Main mainFrame;
+    int level;
     /**
      * Creates new form EMaster
      */
-    public ECustomers() {
+    public ECustomers(DBConnection db, Main frame, int level) {
+        this.level = level;
+        this.dbConnection = db;
+        this.mainFrame = frame;
         initComponents();
+        updateTable();
         initTable();
     }
     
@@ -24,6 +33,16 @@ public class ECustomers extends javax.swing.JInternalFrame {
         this.dataTable.getColumnModel().getColumn(1).setMinWidth(200);
         this.dataTable.getColumnModel().getColumn(2).setMinWidth(200);
         this.dataTable.getColumnModel().getColumn(3).setMinWidth(200);
+    }
+    
+    private void updateTable(){
+        
+    }
+    
+    public void refreshContents(int code){
+        if(code == Codes.REFRESH_CUSTOMERS){
+            updateTable();
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.

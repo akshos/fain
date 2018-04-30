@@ -18,15 +18,31 @@ import utility.Codes;
 public class ACustomers extends javax.swing.JInternalFrame implements RefreshOption{
 
     DBConnection dbConnection;
-  
+    Main mainFrame;
+    int level;
+    RefreshOption prevFrame;
     /**
      * Creates new form MasterEntry
      */
     public ACustomers() {
         initComponents();
     }
-    public ACustomers(DBConnection db, int mode, String id){
+    
+    public ACustomers(DBConnection db, int mode, String id, Main frame, int level){
+        this.level = level;
+        this.mainFrame = frame;
         this.dbConnection = db;
+        initComponents();
+        if(mode == Codes.EDIT){
+            refreshContents(Codes.REFRESH_ALL);
+        }
+    }
+    
+    public ACustomers(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame){
+        this.level = level;
+        this.mainFrame = frame;
+        this.dbConnection = db;
+        this.prevFrame = prevFrame;
         initComponents();
         if(mode == Codes.EDIT){
             refreshContents(Codes.REFRESH_ALL);
@@ -48,6 +64,9 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         String kgst     =kgstTbox.getText();
         String rbregno  =rbregnoTbox.getText();
         CustomerDB.insert(stmt, code, name, address, branch, kgst, rbregno);
+        if(this.prevFrame != null){
+            prevFrame.refreshContents(Codes.REFRESH_CUSTOMERS);
+        }
     }
     
     /**

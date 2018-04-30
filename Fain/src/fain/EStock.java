@@ -13,6 +13,8 @@ import database.DBConnection;
  */
 public class EStock extends javax.swing.JInternalFrame {
     DBConnection dbConnection;
+    Main mainFrame;
+    int level;
     /**
      * Creates new form EMaster
      */
@@ -21,7 +23,9 @@ public class EStock extends javax.swing.JInternalFrame {
         initTable();
     }
     
-    public EStock(DBConnection db) {
+    public EStock(DBConnection db, Main frame, int level) {
+        this.level = level;
+        this.mainFrame = frame;
         this.dbConnection = db;
         initComponents();
         initTable();

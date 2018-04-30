@@ -17,13 +17,31 @@ import utility.Codes;
 public class APLatex extends javax.swing.JInternalFrame implements RefreshOption{
 
      DBConnection dbConnection;
+     Main mainFrame;
+     int level;
+     RefreshOption prevFrame;
+     
     /**
      * Creates new form MasterEntry
      */
     public APLatex() {
         initComponents();
     }
-    public APLatex(DBConnection db, int mode, String id){
+    public APLatex(DBConnection db, int mode, String id, Main frame, int level){
+        this.level = level;
+        this.mainFrame = frame;
+        this.dbConnection = db;
+        initComponents();
+        if(mode == Codes.EDIT){
+            refreshContents(Codes.REFRESH_ALL);
+        }
+        prevFrame = null;
+    }
+    
+    public APLatex(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame){
+        this.prevFrame = prevFrame;
+        this.level = level;
+        this.mainFrame = frame;
         this.dbConnection = db;
         initComponents();
         if(mode == Codes.EDIT){
@@ -54,6 +72,9 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         double value    =Double.parseDouble(valueTbox.getText());
 
         PurchaseLatexDB.insert(stmt, branch, date, pbil, party, quantity, drc, dryrubber, rate, value);
+        if(prevFrame != null){
+            prevFrame.refreshContents(Codes.REFRESH_PLATEX);
+        }
     }
         
     /**

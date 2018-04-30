@@ -16,6 +16,8 @@ import utility.Codes;
  */
 public class APOthers extends javax.swing.JInternalFrame implements RefreshOption {
     DBConnection dbConnection;
+    Main mainFrame;
+    int level;
     /**
      * Creates new form MasterEntry
      */
@@ -23,7 +25,9 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         initComponents();
     }
 
-    public APOthers(DBConnection db, int mode, String id){
+    public APOthers(DBConnection db, int mode, String id, Main frame, int level){
+        this.level =  level;
+        this.mainFrame  = frame;
         this.dbConnection = db;
         initComponents();
         if(mode == Codes.EDIT){
