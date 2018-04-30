@@ -6,7 +6,9 @@
 package fain;
 
 import database.DBConnection;
+import database.BranchDB;
 import java.awt.Dimension;
+import javax.swing.table.TableModel;
 import utility.Codes;
 
 /**
@@ -25,6 +27,7 @@ public class EBranches extends javax.swing.JInternalFrame implements RefreshOpti
         this.mainFrame = frame;
         this.level = level;
         initComponents();
+        updateTable();
         initTable();
     }
     
@@ -34,7 +37,10 @@ public class EBranches extends javax.swing.JInternalFrame implements RefreshOpti
         this.dataTable.getColumnModel().getColumn(2).setMinWidth(200);
         this.dataTable.getColumnModel().getColumn(3).setMinWidth(200);
     }
-    
+    public void updateTable(){
+        TableModel table = BranchDB.getTable(dbConnection.getStatement());
+        this.dataTable.setModel(table);
+    }
     private void addEntry(){
         EBranches item = new EBranches(dbConnection, this.mainFrame, this.level+1);
         Dimension dim = Preferences.getInternalFrameDimension(item);
@@ -45,11 +51,7 @@ public class EBranches extends javax.swing.JInternalFrame implements RefreshOpti
         }
         mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }
-    
-    private void updateTable(){
-        
-    }
-    
+      
     public void refreshContents(int code){
         if(code == Codes.REFRESH_BRANCHES){
             updateTable();

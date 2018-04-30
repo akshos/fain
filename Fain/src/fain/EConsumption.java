@@ -6,6 +6,8 @@
 package fain;
 
 import database.DBConnection;
+import database.ConsumptionDB;
+import javax.swing.table.TableModel;
 import utility.Codes;
 
 /**
@@ -35,10 +37,10 @@ public class EConsumption extends javax.swing.JInternalFrame implements RefreshO
         this.dataTable.getColumnModel().getColumn(3).setMinWidth(200);
     }
     
-    private void updateTable(){
-        
+    public void updateTable(){
+        TableModel table = ConsumptionDB.getTable(dbConnection.getStatement());
+        this.dataTable.setModel(table);
     }
-    
     public void refreshContents(int code){
         if(code == Codes.REFRESH_CONSUMPTION){
             this.updateTable();

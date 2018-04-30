@@ -6,6 +6,8 @@
 package fain;
 
 import database.DBConnection;
+import database.PurchaseDB;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -28,6 +30,7 @@ public class EPOthers extends javax.swing.JInternalFrame {
         this.mainFrame = frame;
         this.dbConnection = db;
         initComponents();
+        updateTable();
         initTable();
     }
     
@@ -36,6 +39,11 @@ public class EPOthers extends javax.swing.JInternalFrame {
         this.dataTable.getColumnModel().getColumn(1).setMinWidth(200);
         this.dataTable.getColumnModel().getColumn(2).setMinWidth(200);
         this.dataTable.getColumnModel().getColumn(3).setMinWidth(200);
+    }
+    
+        public void updateTable(){
+        TableModel table = PurchaseDB.getTable(dbConnection.getStatement());
+        this.dataTable.setModel(table);
     }
     /**
      * This method is called from within the constructor to initialize the form.

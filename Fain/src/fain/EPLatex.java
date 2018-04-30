@@ -6,6 +6,8 @@
 package fain;
 
 import database.DBConnection;
+import database.PurchaseLatexDB;
+import javax.swing.table.TableModel;
 import utility.Codes;
 
 /**
@@ -40,8 +42,9 @@ public class EPLatex extends javax.swing.JInternalFrame implements RefreshOption
         this.dataTable.getColumnModel().getColumn(3).setMinWidth(200);
     }
     
-    private void updateTable(){
-        
+    public void updateTable(){
+        TableModel table = PurchaseLatexDB.getTable(dbConnection.getStatement());
+        this.dataTable.setModel(table);
     }
     
     public void refreshContents(int code){

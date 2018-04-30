@@ -6,6 +6,8 @@
 package fain;
 
 import database.DBConnection;
+import database.SalesDB;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -29,6 +31,7 @@ public class ESLatex extends javax.swing.JInternalFrame {
         this.mainFrame = frame;
         this.dbConnection = db;
         initComponents();
+        updateTable();
         initTable();
     }
     
@@ -37,6 +40,10 @@ public class ESLatex extends javax.swing.JInternalFrame {
         this.dataTable.getColumnModel().getColumn(1).setMinWidth(200);
         this.dataTable.getColumnModel().getColumn(2).setMinWidth(200);
         this.dataTable.getColumnModel().getColumn(3).setMinWidth(200);
+    }
+        public void updateTable(){
+        TableModel table = SalesDB.getTable(dbConnection.getStatement());
+        this.dataTable.setModel(table);
     }
     /**
      * This method is called from within the constructor to initialize the form.

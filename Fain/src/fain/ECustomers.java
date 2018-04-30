@@ -6,6 +6,8 @@
 package fain;
 
 import database.DBConnection;
+import database.CustomerDB;
+import javax.swing.table.TableModel;
 import utility.Codes;
 
 /**
@@ -35,8 +37,9 @@ public class ECustomers extends javax.swing.JInternalFrame implements RefreshOpt
         this.dataTable.getColumnModel().getColumn(3).setMinWidth(200);
     }
     
-    private void updateTable(){
-        
+    public void updateTable(){
+        TableModel table = CustomerDB.getTable(dbConnection.getStatement());
+        this.dataTable.setModel(table);
     }
     
     public void refreshContents(int code){
