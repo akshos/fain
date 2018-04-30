@@ -91,4 +91,15 @@ public final class MasterDB {
         }
         return rs1;
     }
+    public static String[][] getAccountHead(Statement stmt){
+        String sql="select accountNo,accountHead from master;";
+        try {
+            ResultSet rs=stmt.executeQuery(sql);
+            return ResultSetToStringArray.getStringArray(rs);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 }

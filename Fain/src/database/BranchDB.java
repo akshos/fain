@@ -61,7 +61,8 @@ public final class BranchDB {
             se.printStackTrace();
 	}
 	return table;
-}
+    }
+    
     public static ResultSet selectAll(Statement stmt){
         String sql="select * from branch;";
         ResultSet rs = null;
