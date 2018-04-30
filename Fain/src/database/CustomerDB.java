@@ -4,19 +4,23 @@
  * and open the template in the editor.
  */
 package database;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.TableModel;
 
 /**
  *
  * @author lenovo
  */
 public final class CustomerDB {
-    public static void insert(Statement stmt, String customerCode,String name, String address,String branch, String kgst,String rbno ){
+    public static void insert(Statement stmt, String customerCode,String name, String address,String customer, String kgst,String rbno ){
         String in ="insert into customer values('"      +customerCode   +"','"
                                                         +name           + "','"
                                                         +address        + "','"
-                                                        +branch         +"','"
+                                                        +customer         +"','"
                                                         +kgst           + "','"
                                                         +rbno           + "')";
         try{
@@ -26,5 +30,50 @@ public final class CustomerDB {
             se.printStackTrace();
         }
             
+    }
+    public static void delete(Statement stmt,String id){
+        String del="delete from customer where customerCode='"+id+"';";
+        try {
+            stmt.executeUpdate(del);
+        } catch (SQLException ex) {
+            Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public static TableModel getTable(Statement stmt){
+        String sqlQuery = "select customerCode as 'ID', name as 'Name', address as 'Address',branch AS 'Branch' kgst as 'GST', rbno as 'RBNO' from customer;";
+	TableModel table = null;
+        ResultSet rs = null;
+	try{
+            rs = stmt.executeQuery(sqlQuery);
+            table = ResultSetToTableModel.getTableModel(rs);
+	}catch( SQLException se ){
+            se.printStackTrace();
+	}
+	return table;
+}
+    public static ResultSet selectAll(Statement stmt){
+        String sql="select * from customer;";
+        ResultSet rs = null;
+        try{
+            rs=stmt.executeQuery(sql);
+        }
+        catch(SQLException se){
+            se.printStackTrace();
+        }
+        return rs;
+    }
+    
+    public static ResultSet selectOneId(Statement stmt, String id){
+        String sql="select * from customer where customerCode='"+id+"';";
+        ResultSet rs=null;
+        ResultSet rs1=null;
+        try{
+            rs=stmt.executeQuery(sql);
+            rs1=rs;
+        }
+        catch(SQLException se){
+            se.printStackTrace();
+        }
+        return rs1;
     }
 }
