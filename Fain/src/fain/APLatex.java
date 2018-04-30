@@ -30,6 +30,31 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
             refreshContents(Codes.REFRESH_ALL);
         }
     }
+    
+    private void insertData(){
+        Statement stmt=dbConnection.getStatement();
+        String branch     ="";
+        Object selectedItem = branchCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            branch = selectedItem.toString();
+        }
+        String date = dateTbox.getText();
+        String pbil = prbillTbox.getText();
+        String party      ="";
+        selectedItem = partyCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            party = selectedItem.toString();
+        }
+        double quantity=Double.parseDouble(quantityTbox.getText());
+        double drc      =Double.parseDouble(drcTbox.getText());
+        double dryrubber=Double.parseDouble(dryrubberTbox.getText());
+        double rate     =Double.parseDouble(rateTbox.getText());
+        double value    =Double.parseDouble(valueTbox.getText());
+
+        PurchaseLatexDB.insert(stmt, branch, date, pbil, party, quantity, drc, dryrubber, rate, value);
+    }
         
     /**
      * This method is called from within the constructor to initialize the form.
@@ -228,28 +253,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
 
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
         // TODO add your handling code here:
-        Statement stmt=dbConnection.getStatement();
-        String branch     ="";
-        Object selectedItem = branchCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            branch = selectedItem.toString();
-        }
-        String date = dateTbox.getText();
-        String pbil = prbillTbox.getText();
-        String party      ="";
-        selectedItem = partyCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            party = selectedItem.toString();
-        }
-        double quantity=Double.parseDouble(quantityTbox.getText());
-        double drc      =Double.parseDouble(drcTbox.getText());
-        double dryrubber=Double.parseDouble(dryrubberTbox.getText());
-        double rate     =Double.parseDouble(rateTbox.getText());
-        double value    =Double.parseDouble(valueTbox.getText());
-
-        PurchaseLatexDB.insert(stmt, branch, date, pbil, party, quantity, drc, dryrubber, rate, value);
+        insertData();
     }//GEN-LAST:event_enterButtonActionPerformed
 
 

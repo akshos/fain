@@ -29,6 +29,34 @@ DBConnection dbConnection;
             refreshContents(Codes.REFRESH_ALL);
         }
     }
+    
+    private void insertData(){
+        Statement stmt=dbConnection.getStatement();
+        String icode        =itemCodeTbox.getText();
+        String iname        =itemNameTbox.getText();
+        int currentStock    =Integer.parseInt(currentStockTbox.getText());
+        double rate         =Double.parseDouble(rateTbox.getText());
+        String purchase     ="";
+        Object selectedItem = purchasesCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            purchase = selectedItem.toString();
+        }      
+        String sales     ="";
+         selectedItem = salesCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            sales = selectedItem.toString();
+        }
+        String stock     ="";
+         selectedItem = stockCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            stock = selectedItem.toString();
+        }
+        StockDB.insert(stmt, icode, iname, currentStock, rate, purchase, sales, stock);
+
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -161,31 +189,7 @@ DBConnection dbConnection;
 
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
         // TODO add your handling code here:
-        Statement stmt=dbConnection.getStatement();
-        String icode        =itemCodeTbox.getText();
-        String iname        =itemNameTbox.getText();
-        int currentStock    =Integer.parseInt(currentStockTbox.getText());
-        double rate         =Double.parseDouble(rateTbox.getText());
-        String purchase     ="";
-        Object selectedItem = purchasesCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            purchase = selectedItem.toString();
-        }      
-        String sales     ="";
-         selectedItem = salesCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            sales = selectedItem.toString();
-        }
-        String stock     ="";
-         selectedItem = stockCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            stock = selectedItem.toString();
-        }
-        StockDB.insert(stmt, icode, iname, currentStock, rate, purchase, sales, stock);
-
+        insertData();
     }//GEN-LAST:event_enterButtonActionPerformed
 
 

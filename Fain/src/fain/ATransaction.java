@@ -37,6 +37,33 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
     public void refreshContents(int type){
         
     }
+    
+    private void insertData(){
+        Statement stmt=dbConnection.getStatement();
+        String date         =dateTbox.getText();
+        
+        String branch     ="";
+        Object selectedItem = branchCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            branch = selectedItem.toString();
+        }      
+        String debit     ="";
+         selectedItem = debitCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            debit = selectedItem.toString();
+        }
+        String credit     ="";
+         selectedItem = creditCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            credit = selectedItem.toString();
+        }
+        double amount         =Double.parseDouble(amountTbox.getText());
+        String narration      =narrationTbox.getText();
+        TransactionDB.insert(stmt, date, branch, debit, credit, amount, narration);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -147,30 +174,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
 
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
        // TODO add your handling code here:
-        Statement stmt=dbConnection.getStatement();
-        String date         =dateTbox.getText();
-        
-        String branch     ="";
-        Object selectedItem = branchCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            branch = selectedItem.toString();
-        }      
-        String debit     ="";
-         selectedItem = debitCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            debit = selectedItem.toString();
-        }
-        String credit     ="";
-         selectedItem = creditCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            credit = selectedItem.toString();
-        }
-        double amount         =Double.parseDouble(amountTbox.getText());
-        String narration      =narrationTbox.getText();
-        TransactionDB.insert(stmt, date, branch, debit, credit, amount, narration);
+        insertData();
     }//GEN-LAST:event_enterButtonActionPerformed
 
 

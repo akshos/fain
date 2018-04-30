@@ -33,6 +33,17 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
             refreshContents(Codes.REFRESH_ALL);
         }
     }
+    
+    private void insertData(){
+        Statement stmt=dbConnection.getStatement();
+        String code  =codeTbox.getText();//implement in database 
+        String name  =nameTbox.getText();
+        String addr  =addressTarea.getText();
+        String kgst  =kgstTbox.getText();
+        String rbno  =rbregnoTbox.getText();
+        BranchDB.insert(stmt, name, addr, kgst, rbno);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -154,15 +165,7 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
     }//GEN-LAST:event_formKeyPressed
 
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
-// TODO add your handling code here:
-        Statement stmt=dbConnection.getStatement();
-        String code  =codeTbox.getText();//implement in database 
-        String name  =nameTbox.getText();
-        String addr  =addressTarea.getText();
-        String kgst  =kgstTbox.getText();
-        String rbno  =rbregnoTbox.getText();
-        BranchDB.insert(stmt, name, addr, kgst, rbno);
-           // TODO add your handling code here:
+        insertData();
     }//GEN-LAST:event_enterButtonActionPerformed
 
 

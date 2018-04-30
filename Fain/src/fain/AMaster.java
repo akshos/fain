@@ -36,6 +36,21 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
     public final void refreshContents(int code){
         
     }
+    
+    private void insertData(){
+        Statement stmt=dbConnection.getStatement();
+        String accountCode  =accountCodeTbox.getText();
+        String accountHead  =accountHeadTbox.getText();
+        double currBalance  =Double.parseDouble(currentBalanceTbox.getText());
+        double yopBalance   =Double.parseDouble(yopBalanceTbox.getText());
+        String category     ="";
+        Object selectedItem = categoryCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            category = selectedItem.toString();
+        }
+        MasterDB.insert(stmt, accountCode, accountHead, yopBalance, currBalance, category);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -235,19 +250,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
 
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
     // TODO add your handling code here:
-        Statement stmt=dbConnection.getStatement();
-        String accountCode  =accountCodeTbox.getText();
-        String accountHead  =accountHeadTbox.getText();
-        double currBalance  =Double.parseDouble(currentBalanceTbox.getText());
-        double yopBalance   =Double.parseDouble(yopBalanceTbox.getText());
-        String category     ="";
-        Object selectedItem = categoryCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            category = selectedItem.toString();
-        }
-        MasterDB.insert(stmt, accountCode, accountHead, yopBalance, currBalance, category);
-    
+        insertData();
     }//GEN-LAST:event_enterButtonActionPerformed
  
     // Variables declaration - do not modify//GEN-BEGIN:variables

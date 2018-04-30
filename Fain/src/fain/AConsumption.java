@@ -31,6 +31,33 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
             refreshContents(Codes.REFRESH_ALL);
         }
     }    
+    
+    private void insertData(){
+        Statement stmt=dbConnection.getStatement();
+        
+        String branch     ="";
+        Object selectedItem = branchCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            branch = selectedItem.toString();
+        }
+        
+        String date  =dateTbox.getText();
+        String refno =referencenumberTbox.getText();
+        
+        String itemCode     ="";
+        selectedItem = itemcodeCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            itemCode = selectedItem.toString();
+        }
+        String itemname  = itemnameTbox.getText();
+        String narration = narrationTbox.getText();
+        int quantity  = Integer.parseInt(quantityTbox.getText());
+        
+        ConsumptionDB.insert(stmt, branch, date, refno, itemCode, itemname, narration, quantity);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -154,29 +181,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
 
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
     // TODO add your handling code here:
-        Statement stmt=dbConnection.getStatement();
-        
-        String branch     ="";
-        Object selectedItem = branchCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            branch = selectedItem.toString();
-        }
-        
-        String date  =dateTbox.getText();
-        String refno =referencenumberTbox.getText();
-        
-        String itemCode     ="";
-        selectedItem = itemcodeCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            itemCode = selectedItem.toString();
-        }
-        String itemname  = itemnameTbox.getText();
-        String narration = narrationTbox.getText();
-        int quantity  = Integer.parseInt(quantityTbox.getText());
-        
-        ConsumptionDB.insert(stmt, branch, date, refno, itemCode, itemname, narration, quantity);
+        insertData();
     }//GEN-LAST:event_enterButtonActionPerformed
 
 

@@ -30,6 +30,33 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
             refreshContents(Codes.REFRESH_ALL);
         }
     }
+    
+    private void insertData(){
+        Statement stmt=dbConnection.getStatement();
+        String branch     ="";
+        Object selectedItem = branchCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            branch = selectedItem.toString();
+        }
+        String date = dateTbox.getText();
+        String bill = prbillTbox.getText();
+        String party      ="";
+        selectedItem = partyCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            party = selectedItem.toString();
+        }
+        int bnto     =Integer.parseInt(barrelToTbox.getText());
+        int bnfrom      =Integer.parseInt(barrelfromTbox.getText());
+        double quantity =Double.parseDouble(quantityTbox.getText());
+        double drc      =Double.parseDouble(drcTbox.getText());
+        double dryrubber=Double.parseDouble(dryrubberTbox.getText());
+        double rate     =Double.parseDouble(rateTbox.getText());
+        double value    =Double.parseDouble(valueTbox.getText());
+
+        SalesDB.insert(stmt, branch, date, bill, party, bnfrom, bnto, quantity, drc, dryrubber, rate, value);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -245,30 +272,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
     }//GEN-LAST:event_keyPressedHandler
 
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
-        Statement stmt=dbConnection.getStatement();
-        String branch     ="";
-        Object selectedItem = branchCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            branch = selectedItem.toString();
-        }
-        String date = dateTbox.getText();
-        String bill = prbillTbox.getText();
-        String party      ="";
-        selectedItem = partyCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            party = selectedItem.toString();
-        }
-        int bnto     =Integer.parseInt(barrelToTbox.getText());
-        int bnfrom      =Integer.parseInt(barrelfromTbox.getText());
-        double quantity =Double.parseDouble(quantityTbox.getText());
-        double drc      =Double.parseDouble(drcTbox.getText());
-        double dryrubber=Double.parseDouble(dryrubberTbox.getText());
-        double rate     =Double.parseDouble(rateTbox.getText());
-        double value    =Double.parseDouble(valueTbox.getText());
-
-        SalesDB.insert(stmt, branch, date, bill, party, bnfrom, bnto, quantity, drc, dryrubber, rate, value);
+        insertData();
     }//GEN-LAST:event_enterButtonActionPerformed
 
 

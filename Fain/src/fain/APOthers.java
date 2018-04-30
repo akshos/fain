@@ -30,6 +30,35 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
             refreshContents(Codes.REFRESH_ALL);
         }
     }
+    
+    private void insertData(){
+        Statement stmt=dbConnection.getStatement();
+        String branch     ="";
+        Object selectedItem = branchCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            branch = selectedItem.toString();
+        }
+        String date = dateTbox.getText();
+        String bill = billnumberTbox.getText();
+        String party      ="";
+        selectedItem = partyCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            party = selectedItem.toString();
+        }
+        String itemcode      ="";
+        selectedItem = itemcodeCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            itemcode = selectedItem.toString();
+        }
+        String itemname= itemnameTbox.getText();
+        double quantity=Double.parseDouble(quantityTbox.getText());
+        double value    =Double.parseDouble(valueTbox.getText());
+
+        PurchaseDB.insert(stmt, branch, date, bill, party, itemcode, itemname, quantity, value);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -207,32 +236,7 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
     }//GEN-LAST:event_keyPressedHandler
 
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
-        Statement stmt=dbConnection.getStatement();
-        String branch     ="";
-        Object selectedItem = branchCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            branch = selectedItem.toString();
-        }
-        String date = dateTbox.getText();
-        String bill = billnumberTbox.getText();
-        String party      ="";
-        selectedItem = partyCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            party = selectedItem.toString();
-        }
-        String itemcode      ="";
-        selectedItem = itemcodeCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            itemcode = selectedItem.toString();
-        }
-        String itemname= itemnameTbox.getText();
-        double quantity=Double.parseDouble(quantityTbox.getText());
-        double value    =Double.parseDouble(valueTbox.getText());
-
-        PurchaseDB.insert(stmt, branch, date, bill, party, itemcode, itemname, quantity, value);
+        insertData();
     }//GEN-LAST:event_enterButtonActionPerformed
 
 

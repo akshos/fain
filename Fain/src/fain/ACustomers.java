@@ -32,6 +32,24 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
             refreshContents(Codes.REFRESH_ALL);
         }
     }
+    
+    private void insertData(){
+        Statement stmt=dbConnection.getStatement();
+        String code     =codeTbox.getText();
+        String name     =nameTbox.getText();
+        String address  =addressTarea.getText();
+
+        String branch     ="";
+        Object selectedItem = branchCbox.getSelectedItem();
+        if (selectedItem != null)
+        {
+            branch = selectedItem.toString();
+        }
+        String kgst     =kgstTbox.getText();
+        String rbregno  =rbregnoTbox.getText();
+        CustomerDB.insert(stmt, code, name, address, branch, kgst, rbregno);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -152,20 +170,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
 
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
     // TODO add your handling code here:
-        Statement stmt=dbConnection.getStatement();
-        String code     =codeTbox.getText();
-        String name     =nameTbox.getText();
-        String address  =addressTarea.getText();
-
-        String branch     ="";
-        Object selectedItem = branchCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            branch = selectedItem.toString();
-        }
-        String kgst     =kgstTbox.getText();
-        String rbregno  =rbregnoTbox.getText();
-        CustomerDB.insert(stmt, code, name, address, branch, kgst, rbregno);
+        insertData();
         }//GEN-LAST:event_enterButtonActionPerformed
 
 
