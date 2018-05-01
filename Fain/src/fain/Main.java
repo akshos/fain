@@ -264,7 +264,6 @@ public class Main extends javax.swing.JFrame {
         aSalesLatexMenuItem = new javax.swing.JMenuItem();
         aConsumptionMenuItem = new javax.swing.JMenuItem();
         aBranchesMenuItem = new javax.swing.JMenuItem();
-        aCustomersMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         eMasterMenuItem = new javax.swing.JMenuItem();
         eTransactionMenuItem = new javax.swing.JMenuItem();
@@ -404,10 +403,6 @@ public class Main extends javax.swing.JFrame {
             }
         });
         fileMenu.add(aBranchesMenuItem);
-
-        aCustomersMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        aCustomersMenuItem.setText("Custormers");
-        fileMenu.add(aCustomersMenuItem);
 
         fainMainMenu.add(fileMenu);
 
@@ -874,7 +869,6 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aBranchesMenuItem;
     private javax.swing.JMenuItem aConsumptionMenuItem;
-    private javax.swing.JMenuItem aCustomersMenuItem;
     private javax.swing.JMenuItem aMasterMenuItem;
     private javax.swing.JMenuItem aPurchaseLatexMenuItem;
     private javax.swing.JMenuItem aPurchaseOthersMenuItem;

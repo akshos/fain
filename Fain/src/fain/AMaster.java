@@ -5,9 +5,14 @@
  */
 package fain;
 
+import database.CategoryDB;
+import database.CustomerDB;
 import database.DBConnection;
 import database.MasterDB;
+import java.awt.Dimension;
 import java.sql.Statement;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import utility.Codes;
 /**
  *
@@ -20,6 +25,8 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
     int level;
     RefreshOption prevFrame;
     Main mainFrame;
+    String[][] categoryData;
+    boolean customerAdded = false;
     /**
      * Creates new form MasterEntry
      */
@@ -34,7 +41,10 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         this.mainFrame = frame;
         initComponents();
         if(mode == Codes.EDIT){
-            refreshContents(Codes.REFRESH_ALL);
+            loadPrevRecord();
+        }
+        else{
+            loadCategory();
         }
         prevFrame = null;
     }
@@ -47,16 +57,71 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         this.mainFrame = frame;
         initComponents();
         if(mode == Codes.EDIT){
-            refreshContents(Codes.REFRESH_ALL);
+            loadPrevRecord();
         } 
+        else{
+            loadCategory();
+        }
+    }
+    
+    private void loadPrevRecord(){
+        
     }
         
     @Override
     public final void refreshContents(int code){
-        
+        if(code == Codes.CUSTOMER_ADDED){
+            this.customerAdded = true;
+        }
+    }
+    
+    private void loadCategory(){
+        System.out.println("loading categorycbox");
+        categoryData = CategoryDB.getCategory(this.dbConnection.getStatement());
+        if(categoryData  == null){
+            return;
+        }
+        int len = categoryData[0].length;
+        String[] cboxData = new String[len];
+        for(int i = 0; i < len; i++){
+            cboxData[i] = categoryData[0][i] + " : " + categoryData[1][i];
+        }
+        this.categoryCbox.setModel(new DefaultComboBoxModel(cboxData));
+    }
+    
+    private void checkChangedItem(){
+        int index = this.categoryCbox.getSelectedIndex();
+        if(categoryData[0][index].compareTo("CR")==0 || categoryData[0][index].compareTo("DB")==0){
+            checkCustomer();
+        }
+    }
+    
+    private void checkCustomer(){
+        String id = this.accountCodeTbox.getText();
+        if(!CustomerDB.checkExisting(this.dbConnection.getStatement(), id)){
+            String name = this.accountHeadTbox.getText();
+            ACustomers item = new ACustomers(dbConnection, Codes.NEW_ENTRY, null, this.mainFrame, this.level+1, this, id, name);
+            Dimension dim = Preferences.getInternalFrameDimension(item);
+            if(dim != null){
+                item.setSize(dim);
+            }else{
+                item.setSize(790, 470);
+            }
+            this.mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+        }
     }
     
     private void insertData(){
+        int index = this.categoryCbox.getSelectedIndex();
+        if( categoryData[0][index].compareTo("CR")==0 || categoryData[0][index].compareTo("DB")==0 ){
+            if(this.customerAdded == false){
+                int ret = JOptionPane.showConfirmDialog(this, "Please add a customer first", "No customer", JOptionPane.WARNING_MESSAGE);
+                if(ret == JOptionPane.CANCEL_OPTION){
+                    this.doDefaultCloseAction();
+                }
+                return;
+            }
+        }
         Statement stmt=dbConnection.getStatement();
         String accountCode  =accountCodeTbox.getText();
         String accountHead  =accountHeadTbox.getText();
@@ -108,20 +173,20 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         setTitle("Data Entry (Master)");
         setPreferredSize(new java.awt.Dimension(450, 410));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameClosed(evt);
             }
-            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
         });
 
@@ -197,11 +262,6 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         rightInerPannel.add(currentBalanceTbox);
 
         categoryCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        categoryCbox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                categoryCboxActionPerformed(evt);
-            }
-        });
         categoryCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 categoryCboxKeyPressed(evt);
@@ -228,10 +288,6 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void categoryCboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoryCboxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_categoryCboxActionPerformed
 
     private void formInternalFrameClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosed
         Preferences.storeInternalFrameDimension(this);
@@ -264,6 +320,9 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
     private void categoryCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_categoryCboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
+        }
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.checkChangedItem();
         }
     }//GEN-LAST:event_categoryCboxKeyPressed
 

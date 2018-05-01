@@ -95,6 +95,7 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         enterButton = new javax.swing.JButton();
 
         setClosable(true);
+        setResizable(true);
         setTitle("Branches");
         setPreferredSize(new java.awt.Dimension(450, 410));
         addKeyListener(new java.awt.event.KeyAdapter() {

@@ -57,7 +57,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
     private void loadCreditDebit(){
         System.out.println("loasing credit and debit cbox");
         data = MasterDB.getAccountHead(this.dbConnection.getStatement());
-        String[] cboxData = new String[data.length];
+        String[] cboxData = new String[data[0].length];
         for(int i = 0; i < data.length; i++){
             cboxData[i] = data[0][i] + " : " + data[1][i];
         }

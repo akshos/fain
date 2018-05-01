@@ -45,4 +45,6 @@ public final class Codes {
     public static int REFRESH_SLATEX = 38;
     public static int REFRESH_STOCK = 39;
     public static int REFRESH_TRANSACTION = 40;
+    
+    public static int CUSTOMER_ADDED = 41;
 }

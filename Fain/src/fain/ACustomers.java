@@ -38,7 +38,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         }
     }
     
-    public ACustomers(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame){
+    public ACustomers(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame, String code, String name){
         this.level = level;
         this.mainFrame = frame;
         this.dbConnection = db;
@@ -47,6 +47,8 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         if(mode == Codes.EDIT){
             refreshContents(Codes.REFRESH_ALL);
         }
+        this.codeTbox.setText(code);
+        this.nameTbox.setText(name);
     }
     
     private void insertData(){
@@ -65,7 +67,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         String rbregno  =rbregnoTbox.getText();
         CustomerDB.insert(stmt, code, name, address, branch, kgst, rbregno);
         if(this.prevFrame != null){
-            prevFrame.refreshContents(Codes.REFRESH_CUSTOMERS);
+            prevFrame.refreshContents(Codes.CUSTOMER_ADDED);
         }
     }
     
@@ -145,11 +147,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         outerPanel.add(leftInerPannel);
 
         rightInerPannel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
-
-        codeTbox.setText("jTextField1");
         rightInerPannel.add(codeTbox);
-
-        nameTbox.setText("jTextField2");
         rightInerPannel.add(nameTbox);
 
         addressTarea.setColumns(20);
@@ -160,11 +158,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
 
         branchCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         rightInerPannel.add(branchCbox);
-
-        kgstTbox.setText("jTextField4");
         rightInerPannel.add(kgstTbox);
-
-        rbregnoTbox.setText("jTextField3");
         rightInerPannel.add(rbregnoTbox);
 
         buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 60, 2, 60));
