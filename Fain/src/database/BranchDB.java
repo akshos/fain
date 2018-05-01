@@ -88,4 +88,15 @@ public final class BranchDB {
         }
         return rs1;
     }
+    public static String[][] getStockAC(Statement stmt){
+        String sql="select branchId,name from branch;";
+        try {
+            ResultSet rs=stmt.executeQuery(sql);
+            return ResultSetToStringArray.getStringArray(rs);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 }

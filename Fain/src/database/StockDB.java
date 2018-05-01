@@ -91,4 +91,15 @@ public final class StockDB {
         }
         return rs1;
     }
+    public static String[][] getItems(Statement stmt){
+        String sql="select itemCode,itemName from stock;";
+        try {
+            ResultSet rs=stmt.executeQuery(sql);
+            return ResultSetToStringArray.getStringArray(rs);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    } 
 }

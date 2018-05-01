@@ -102,4 +102,52 @@ public final class MasterDB {
         }
         return null;
     }
+    
+    public static String[][] getPurchaseAC(Statement stmt){
+        String sql="select accountNo,accountHead from master where category='PR';";
+        try {
+            ResultSet rs=stmt.executeQuery(sql);
+            return ResultSetToStringArray.getStringArray(rs);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    public static String[][] getSalesAC(Statement stmt){
+        String sql="select accountNo,accountHead from master where category='SL';";
+        try {
+            ResultSet rs=stmt.executeQuery(sql);
+            return ResultSetToStringArray.getStringArray(rs);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    public static String[][] getStockAC(Statement stmt){
+        String sql="select accountNo,accountHead from master where category='SK';";
+        try {
+            ResultSet rs=stmt.executeQuery(sql);
+            return ResultSetToStringArray.getStringArray(rs);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    // doubtful need to confirm
+    public static String[][] getParty(Statement stmt){
+        String sql="select accountNo,accountHead from master where category='CR';";
+        try {
+            ResultSet rs=stmt.executeQuery(sql);
+            return ResultSetToStringArray.getStringArray(rs);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    } 
+    
 }
