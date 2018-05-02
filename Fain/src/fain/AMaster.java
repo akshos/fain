@@ -14,6 +14,7 @@ import java.sql.Statement;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
+import utility.ValidationChecks;
 /**
  *
  * @author akshos
@@ -27,6 +28,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
     Main mainFrame;
     String[][] categoryData;
     boolean customerAdded = false;
+    boolean existing = false;
     /**
      * Creates new form MasterEntry
      */
@@ -72,6 +74,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
     public final void refreshContents(int code){
         if(code == Codes.CUSTOMER_ADDED){
             this.customerAdded = true;
+            this.enterButton.requestFocus();
         }
     }
     
@@ -92,11 +95,16 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
     private void checkChangedItem(){
         int index = this.categoryCbox.getSelectedIndex();
         if(categoryData[0][index].compareTo("CR")==0 || categoryData[0][index].compareTo("DB")==0){
-            checkCustomer();
+            if(!this.existing){
+                addCustomer();
+            }
+        }
+        else{
+            this.enterButton.requestFocus();
         }
     }
     
-    private void checkCustomer(){
+    private void addCustomer(){
         String id = this.accountCodeTbox.getText();
         if(!CustomerDB.checkExisting(this.dbConnection.getStatement(), id)){
             String name = this.accountHeadTbox.getText();
@@ -111,33 +119,81 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         }
     }
     
-    private void insertData(){
-        int index = this.categoryCbox.getSelectedIndex();
-        if( categoryData[0][index].compareTo("CR")==0 || categoryData[0][index].compareTo("DB")==0 ){
+    private boolean validateFields(String headName, int categoryIndex, String categoryItem){
+        if(!checkCode()){
+            return false;
+        }
+        if(!ValidationChecks.validateName(headName)){
+            int ret = JOptionPane.showConfirmDialog(this, "Please enter a valid Account Head", "Invalid Entry", JOptionPane.WARNING_MESSAGE);
+            if(ret == JOptionPane.OK_OPTION){
+                return false;
+            }
+            else{
+                this.doDefaultCloseAction();
+            }
+        }
+        if(categoryItem.compareTo("Add New") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Please choose a valid category", "No category", JOptionPane.WARNING_MESSAGE);
+                if(ret == JOptionPane.CANCEL_OPTION){
+                    this.doDefaultCloseAction();
+                }
+                return false;
+        }
+        if( categoryData[0][categoryIndex].compareTo("CR")==0 || categoryData[0][categoryIndex].compareTo("DB")==0 ){
             if(this.customerAdded == false){
                 int ret = JOptionPane.showConfirmDialog(this, "Please add a customer first", "No customer", JOptionPane.WARNING_MESSAGE);
                 if(ret == JOptionPane.CANCEL_OPTION){
                     this.doDefaultCloseAction();
                 }
-                return;
+                return false;
             }
         }
+        return true;
+    }
+    
+    private void insertData(){        
         Statement stmt=dbConnection.getStatement();
         String accountCode  =accountCodeTbox.getText();
         String accountHead  =accountHeadTbox.getText();
-        double currBalance  =Double.parseDouble(currentBalanceTbox.getText());
-        double yopBalance   =Double.parseDouble(yopBalanceTbox.getText());
+        double currBalance  =Double.parseDouble(yopBalanceTbox.getText().replace(",", ""));
+        double yopBalance   =Double.parseDouble(yopBalanceTbox.getText().replace(",", ""));
         String category     ="";
-        Object selectedItem = categoryCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            category = selectedItem.toString();
+        int index = this.categoryCbox.getSelectedIndex();
+        String item = this.categoryCbox.getSelectedItem().toString();
+        if(!validateFields(accountHead, index, item)){
+            return;
         }
+        category = categoryData[0][index];
         MasterDB.insert(stmt, accountCode, accountHead, yopBalance, currBalance, category);
         if(prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_MASTER);
             this.doDefaultCloseAction();
+        }else{
+            nextEntry();
         }
+    }
+    
+    private void nextEntry(){
+        this.accountCodeTbox.requestFocus();
+    }
+    
+    private boolean checkCode(){
+        String code = this.accountCodeTbox.getText();
+        if(ValidationChecks.validateCode(code.trim())){
+            if(MasterDB.checkExisting(dbConnection.getStatement(), code)){
+                this.existing = true;
+                this.accountCodeLabel.setText("<html>Account Code <span style=\"color:red\">Existing Code</span></html>");
+            }
+            else{
+                existing = false;
+                this.accountCodeLabel.setText("<html>Account Code</html>");
+            }
+        }
+        else{
+            existing = true;
+            this.accountCodeLabel.setText("<html>Account Code <span style=\"color:red\">Invalid</span></html>");
+        }
+        return !existing;
     }
 
     /**
@@ -228,6 +284,14 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
 
         rightInerPannel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
 
+        accountCodeTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                accountCodeTboxFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                accountCodeTboxFocusLost(evt);
+            }
+        });
         accountCodeTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 accountCodeTboxKeyPressed(evt);
@@ -235,6 +299,11 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(accountCodeTbox);
 
+        accountHeadTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                accountHeadTboxFocusGained(evt);
+            }
+        });
         accountHeadTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 accountHeadTboxKeyPressed(evt);
@@ -243,9 +312,29 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         rightInerPannel.add(accountHeadTbox);
 
         yopBalanceTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
+        yopBalanceTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                yopBalanceTboxFocusGained(evt);
+            }
+        });
+        yopBalanceTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                yopBalanceTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(yopBalanceTbox);
 
         currentBalanceTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
+        currentBalanceTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                currentBalanceTboxFocusGained(evt);
+            }
+        });
+        currentBalanceTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                currentBalanceTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(currentBalanceTbox);
 
         categoryCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -284,11 +373,17 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
         }
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.accountHeadTbox.requestFocus();
+        }
     }//GEN-LAST:event_accountCodeTboxKeyPressed
 
     private void accountHeadTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_accountHeadTboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
+        }
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.yopBalanceTbox.requestFocus();
         }
     }//GEN-LAST:event_accountHeadTboxKeyPressed
 
@@ -305,6 +400,44 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
     // TODO add your handling code here:
         insertData();
     }//GEN-LAST:event_enterButtonActionPerformed
+
+    private void accountCodeTboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_accountCodeTboxFocusLost
+        checkCode();
+    }//GEN-LAST:event_accountCodeTboxFocusLost
+
+    private void yopBalanceTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_yopBalanceTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.currentBalanceTbox.requestFocus();
+        }
+    }//GEN-LAST:event_yopBalanceTboxKeyPressed
+
+    private void currentBalanceTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_currentBalanceTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.categoryCbox.requestFocus();
+        }
+    }//GEN-LAST:event_currentBalanceTboxKeyPressed
+
+    private void accountCodeTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_accountCodeTboxFocusGained
+        this.accountCodeTbox.selectAll();
+    }//GEN-LAST:event_accountCodeTboxFocusGained
+
+    private void accountHeadTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_accountHeadTboxFocusGained
+        this.accountHeadTbox.selectAll();
+    }//GEN-LAST:event_accountHeadTboxFocusGained
+
+    private void yopBalanceTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_yopBalanceTboxFocusGained
+        this.yopBalanceTbox.selectAll();        // TODO add your handling code here:
+    }//GEN-LAST:event_yopBalanceTboxFocusGained
+
+    private void currentBalanceTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_currentBalanceTboxFocusGained
+        this.currentBalanceTbox.selectAll();        // TODO add your handling code here:
+    }//GEN-LAST:event_currentBalanceTboxFocusGained
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel accountCodeLabel;
