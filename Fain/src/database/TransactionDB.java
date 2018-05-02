@@ -16,7 +16,7 @@ import javax.swing.table.TableModel;
  * @author lenovo
  */
 public final class TransactionDB {
-    public static void insert(Statement stmt, String date, String branch, String debit, String credit, double amount, String narration ){
+    public static boolean insert(Statement stmt, String date, String branch, String debit, String credit, double amount, String narration ){
         String in ="insert into transactions values(NULL,'"      +date   + "','"
                                                             +branch  + "','"
                                                             +debit  + "','"
@@ -28,7 +28,9 @@ public final class TransactionDB {
         }
         catch(SQLException se){
             se.printStackTrace();
+            return false;
         }
+        return true;
             
     }
     public static void delete(Statement stmt,String id){

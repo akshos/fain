@@ -101,8 +101,8 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         rightInerPannel = new javax.swing.JPanel();
         itemCodeTbox = new javax.swing.JTextField();
         itemNameTbox = new javax.swing.JTextField();
-        currentStockTbox = new javax.swing.JTextField();
-        rateTbox = new javax.swing.JTextField();
+        currentStockTbox = new javax.swing.JFormattedTextField();
+        rateTbox = new javax.swing.JFormattedTextField();
         purchasesCbox = new javax.swing.JComboBox<>();
         salesCbox = new javax.swing.JComboBox<>();
         stockCbox = new javax.swing.JComboBox<>();
@@ -164,9 +164,21 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         });
         rightInerPannel.add(itemCodeTbox);
         rightInerPannel.add(itemNameTbox);
+
+        currentStockTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.000"))));
+        currentStockTbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                currentStockTboxActionPerformed(evt);
+            }
+        });
         rightInerPannel.add(currentStockTbox);
 
-        rateTbox.setText("jTextField4");
+        rateTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        rateTbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rateTboxActionPerformed(evt);
+            }
+        });
         rightInerPannel.add(rateTbox);
 
         purchasesCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -207,12 +219,20 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         insertData();
     }//GEN-LAST:event_enterButtonActionPerformed
 
+    private void rateTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rateTboxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rateTboxActionPerformed
+
+    private void currentStockTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_currentStockTboxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_currentStockTboxActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel SalesLabel;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JLabel currentStockLabel;
-    private javax.swing.JTextField currentStockTbox;
+    private javax.swing.JFormattedTextField currentStockTbox;
     private javax.swing.JButton enterButton;
     private javax.swing.JLabel itemCodeLabel;
     private javax.swing.JTextField itemCodeTbox;
@@ -226,7 +246,7 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
     private javax.swing.JComboBox<String> purchasesCbox;
     private javax.swing.JLabel purchasesLabel;
     private javax.swing.JLabel rateLabel;
-    private javax.swing.JTextField rateTbox;
+    private javax.swing.JFormattedTextField rateTbox;
     private javax.swing.JPanel rightInerPannel;
     private javax.swing.JComboBox<String> salesCbox;
     private javax.swing.JComboBox<String> stockCbox;

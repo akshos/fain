@@ -16,7 +16,7 @@ import javax.swing.table.TableModel;
  * @author lenovo
  */
 public final class PurchaseLatexDB {
-    public static void insert(Statement stmt, String branch, String date, String prBill,String party,double quantity, double drc, double dryRubber, double rate, double value ){
+    public static boolean insert(Statement stmt, String branch, String date, String prBill,String party,double quantity, double drc, double dryRubber, double rate, double value ){
         String in ="insert into purchaseLatex values(NULL,'"     +branch         + "','"
                                                                 +date           + "','"
                                                                 +prBill         + "','"
@@ -31,8 +31,9 @@ public final class PurchaseLatexDB {
         }
         catch(SQLException se){
             se.printStackTrace();
+            return false;
         }
-            
+            return true;
     }
     public static void delete(Statement stmt,String id){
         String del="delete from purchaseLatex where purchaseLatexId="+id+";";

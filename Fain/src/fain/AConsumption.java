@@ -188,12 +188,12 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         quantityLabel = new javax.swing.JLabel();
         rightInerPannel = new javax.swing.JPanel();
         branchCbox = new javax.swing.JComboBox<>();
-        dateTbox = new javax.swing.JTextField();
+        dateTbox = new javax.swing.JFormattedTextField();
         referenceNumberTbox = new javax.swing.JTextField();
         itemCodeCbox = new javax.swing.JComboBox<>();
         itemNameTbox = new javax.swing.JTextField();
         narrationTbox = new javax.swing.JTextField();
-        quantityTbox = new javax.swing.JTextField();
+        quantityTbox = new javax.swing.JFormattedTextField();
         buttonPanel = new javax.swing.JPanel();
         enterButton = new javax.swing.JButton();
 
@@ -252,6 +252,17 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
             }
         });
         rightInerPannel.add(branchCbox);
+
+        try {
+            dateTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/##")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        dateTbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dateTboxActionPerformed(evt);
+            }
+        });
         rightInerPannel.add(dateTbox);
         rightInerPannel.add(referenceNumberTbox);
 
@@ -270,6 +281,13 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         });
         rightInerPannel.add(itemNameTbox);
         rightInerPannel.add(narrationTbox);
+
+        quantityTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.000"))));
+        quantityTbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                quantityTboxActionPerformed(evt);
+            }
+        });
         rightInerPannel.add(quantityTbox);
 
         buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 60, 2, 60));
@@ -309,13 +327,21 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         checkItemChangedItem();
     }//GEN-LAST:event_itemCodeCboxKeyPressed
 
+    private void dateTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dateTboxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_dateTboxActionPerformed
+
+    private void quantityTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quantityTboxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_quantityTboxActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> branchCbox;
     private javax.swing.JLabel branchLabel;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JLabel dateLabel;
-    private javax.swing.JTextField dateTbox;
+    private javax.swing.JFormattedTextField dateTbox;
     private javax.swing.JButton enterButton;
     private javax.swing.JComboBox<String> itemCodeCbox;
     private javax.swing.JTextField itemNameTbox;
@@ -329,7 +355,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
     private javax.swing.JTextField narrationTbox;
     private javax.swing.JPanel outerPanel;
     private javax.swing.JLabel quantityLabel;
-    private javax.swing.JTextField quantityTbox;
+    private javax.swing.JFormattedTextField quantityTbox;
     private javax.swing.JTextField referenceNumberTbox;
     private javax.swing.JLabel referencenumberLabel;
     private javax.swing.JPanel rightInerPannel;

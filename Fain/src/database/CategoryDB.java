@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * @author lenovo
  */
 public class CategoryDB {
-    public static void insert(Statement stmt, String code,String name){
+    public static boolean insert(Statement stmt, String code,String name){
         String in ="insert into category values('"      +name   +"','"
                                                         +code           + "')";
         try{
@@ -24,7 +24,9 @@ public class CategoryDB {
         }
         catch(SQLException se){
             se.printStackTrace();
+            return false;
         }
+        return true;
 }
         public static String[][] getCategory(Statement stmt){
         String sql="select code,name from category;";

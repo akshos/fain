@@ -116,11 +116,11 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         amountLabel = new javax.swing.JLabel();
         narrationLabel = new javax.swing.JLabel();
         rightInerPannel = new javax.swing.JPanel();
-        dateTbox = new javax.swing.JTextField();
+        dateTbox = new javax.swing.JFormattedTextField();
         branchCbox = new javax.swing.JComboBox<>();
         debitCbox = new javax.swing.JComboBox<>();
         creditCbox = new javax.swing.JComboBox<>();
-        amountTbox = new javax.swing.JTextField();
+        amountTbox = new javax.swing.JFormattedTextField();
         narrationTbox = new javax.swing.JTextField();
         buttonPanel = new javax.swing.JPanel();
         enterButton = new javax.swing.JButton();
@@ -169,6 +169,17 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         outerPanel.add(leftInerPannel);
 
         rightInerPannel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
+
+        try {
+            dateTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/##")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        dateTbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dateTboxActionPerformed(evt);
+            }
+        });
         rightInerPannel.add(dateTbox);
 
         branchCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -179,6 +190,8 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
 
         creditCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         rightInerPannel.add(creditCbox);
+
+        amountTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("###0.00"))));
         rightInerPannel.add(amountTbox);
         rightInerPannel.add(narrationTbox);
 
@@ -207,17 +220,21 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         insertData();
     }//GEN-LAST:event_enterButtonActionPerformed
 
+    private void dateTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dateTboxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_dateTboxActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel amountLabel;
-    private javax.swing.JTextField amountTbox;
+    private javax.swing.JFormattedTextField amountTbox;
     private javax.swing.JComboBox<String> branchCbox;
     private javax.swing.JLabel branchLabel;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JComboBox<String> creditCbox;
     private javax.swing.JLabel creditLabel;
     private javax.swing.JLabel dateLabel;
-    private javax.swing.JTextField dateTbox;
+    private javax.swing.JFormattedTextField dateTbox;
     private javax.swing.JComboBox<String> debitCbox;
     private javax.swing.JLabel debitLabel;
     private javax.swing.JButton enterButton;

@@ -17,7 +17,7 @@ import javax.swing.table.TableModel;
  * @author lenovo
  */
 public final class MasterDB {
-    public static void insert(Statement stmt, String accountNo, String accountHead, double openingBal, double closingBal, String category ){
+    public static boolean insert(Statement stmt, String accountNo, String accountHead, double openingBal, double closingBal, String category ){
         String in ="insert into master values('"+accountNo  + "','"
                                                 +accountHead+ "',"
                                                 +openingBal + ","
@@ -28,7 +28,9 @@ public final class MasterDB {
         }
         catch(SQLException se){
             se.printStackTrace();
+            return false;
         }
+        return true;
             
     }
     

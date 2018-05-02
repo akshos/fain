@@ -150,7 +150,15 @@
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
             </Component>
-            <Component class="javax.swing.JTextField" name="dateTbox">
+            <Component class="javax.swing.JFormattedTextField" name="dateTbox">
+              <Properties>
+                <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor" preCode="try {" postCode="} catch (java.text.ParseException ex) {&#xa;ex.printStackTrace();&#xa;}">
+                  <Format format="##/##/##" subtype="-1" type="5"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dateTboxActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="referenceNumberTbox">
             </Component>
@@ -179,7 +187,15 @@
             </Component>
             <Component class="javax.swing.JTextField" name="narrationTbox">
             </Component>
-            <Component class="javax.swing.JTextField" name="quantityTbox">
+            <Component class="javax.swing.JFormattedTextField" name="quantityTbox">
+              <Properties>
+                <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+                  <Format format="#0.000" subtype="-1" type="0"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="quantityTboxActionPerformed"/>
+              </Events>
             </Component>
             <Container class="javax.swing.JPanel" name="buttonPanel">
               <Properties>

@@ -16,7 +16,7 @@ import javax.swing.table.TableModel;
  * @author lenovo
  */
 public final class PurchaseDB {
-    public static void insert(Statement stmt, String branch, String date, String billNo,String party,String itemCode,String itemName,double quantity,double value ){
+    public static boolean insert(Statement stmt, String branch, String date, String billNo,String party,String itemCode,String itemName,double quantity,double value ){
         String in ="insert into purchase values(NULL,'"         +branch         + "','"
                                                                 +date           + "','"
                                                                 +billNo         + "','"
@@ -30,8 +30,9 @@ public final class PurchaseDB {
         }
         catch(SQLException se){
             se.printStackTrace();
+            return false;
         }
-            
+            return true;
     }
         public static void delete(Statement stmt,String id){
         String del="delete from purchase where purchaseId="+id+";";

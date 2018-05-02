@@ -16,7 +16,7 @@ import javax.swing.table.TableModel;
  * @author lenovo
  */
 public final class StockDB {
-    public static void insert(Statement stmt, String itemCode,String itemName,int currentStock, double rate, String purchaseAC, String saleAC, String stockAC ){
+    public static boolean insert(Statement stmt, String itemCode,String itemName,int currentStock, double rate, String purchaseAC, String saleAC, String stockAC ){
         String in ="insert into stock values('"      +itemCode      + "','"
                                                      +itemName      + "',"
                                                      +currentStock  + ","
@@ -29,8 +29,9 @@ public final class StockDB {
         }
         catch(SQLException se){
             se.printStackTrace();
+            return false;
         }
-            
+            return true;
     }
     public static void delete(Statement stmt,String id){
         String del="delete from stock where itemCode='"+id+"';";

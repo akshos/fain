@@ -16,7 +16,7 @@ import javax.swing.table.TableModel;
  * @author lenovo
  */
 public final class CustomerDB {
-    public static void insert(Statement stmt, String customerCode,String name, String address,String customer, String kgst,String rbno ){
+    public static boolean insert(Statement stmt, String customerCode,String name, String address,String customer, String kgst,String rbno ){
         String in ="insert into customer values('"      +customerCode   +"','"
                                                         +name           + "','"
                                                         +address        + "','"
@@ -28,8 +28,9 @@ public final class CustomerDB {
         }
         catch(SQLException se){
             se.printStackTrace();
+            return false;
         }
-            
+            return true;
     }
     public static void delete(Statement stmt,String id){
         String del="delete from customer where customerCode='"+id+"';";

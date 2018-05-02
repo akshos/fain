@@ -16,13 +16,15 @@ import javax.swing.table.TableModel;
  * @author lenovo
  */
 public final class SalesDB {
-    public static void insert(Statement stmt, String branch, String date, String billNo,String party,int barrelNoFrom,int barrelNoTo,double quantity,double drc,double dryRubber,double rate,double value ){
+    public static boolean insert(Statement stmt, String branch, String date, String billNo,String party,int barrelNoFrom,int barrelNoTo,double quantity,double drc,double dryRubber,double rate,double value ){
+        int diff=barrelNoTo-barrelNoFrom+1;
         String in ="insert into sales values(NULL,'"            +branch         + "','"
                                                                 +date           + "','"
                                                                 +billNo         + "','"
                                                                 +party          + "',"
                                                                 +barrelNoFrom   + ","
                                                                 +barrelNoTo     + ","
+                                                                +diff           + ","
                                                                 +quantity       + ","
                                                                 +drc            + ","
                                                                 +dryRubber      + ","
@@ -33,8 +35,9 @@ public final class SalesDB {
         }
         catch(SQLException se){
             se.printStackTrace();
+            return false;
         }
-            
+            return true;
     }
     public static void delete(Statement stmt,String id){
         String del="delete from sales where salesId="+id+";";
@@ -58,7 +61,7 @@ public final class SalesDB {
         return false;
     }
     public static TableModel getTable(Statement stmt){
-        String sqlQuery = "select salesId as 'ID', branch as 'Branch', date as 'Date', billNo as 'Bill No:', party as 'Party',barrelNoFrom as 'Barrel # From', barrelNoTo as 'Barrel # To', quantity as 'Quantity', drc as 'DRC', dryRubber as 'Dry Rubber', rate as 'Rate' , value as 'Value' from sales;";
+        String sqlQuery = "select salesId as 'ID', branch as 'Branch', date as 'Date', billNo as 'Bill No:', party as 'Party',barrelNoFrom as 'Barrel # From', barrelNoTo as 'Barrel # To',diff as 'Nos:', quantity as 'Quantity', drc as 'DRC', dryRubber as 'Dry Rubber', rate as 'Rate' , value as 'Value' from sales;";
 	TableModel table = null;
         ResultSet rs = null;
 	try{

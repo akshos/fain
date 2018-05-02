@@ -106,16 +106,16 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         valueLabel = new javax.swing.JLabel();
         rightInerPannel = new javax.swing.JPanel();
         branchCbox = new javax.swing.JComboBox<>();
-        dateTbox = new javax.swing.JTextField();
+        dateTbox = new javax.swing.JFormattedTextField();
         prbillTbox = new javax.swing.JTextField();
         partyCbox = new javax.swing.JComboBox<>();
         barrelfromTbox = new javax.swing.JTextField();
         barrelToTbox = new javax.swing.JTextField();
-        quantityTbox = new javax.swing.JTextField();
-        drcTbox = new javax.swing.JTextField();
-        dryrubberTbox = new javax.swing.JTextField();
-        rateTbox = new javax.swing.JTextField();
-        valueTbox = new javax.swing.JTextField();
+        quantityTbox = new javax.swing.JFormattedTextField();
+        drcTbox = new javax.swing.JFormattedTextField();
+        dryrubberTbox = new javax.swing.JFormattedTextField();
+        rateTbox = new javax.swing.JFormattedTextField();
+        valueTbox = new javax.swing.JFormattedTextField();
         buttonPanel = new javax.swing.JPanel();
         enterButton = new javax.swing.JButton();
 
@@ -187,15 +187,18 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(branchCbox);
 
-        dateTbox.setText("jTextField1");
-        dateTbox.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
+        try {
+            dateTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/##")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        dateTbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dateTboxActionPerformed(evt);
             }
         });
         rightInerPannel.add(dateTbox);
 
-        prbillTbox.setText("jTextField2");
         prbillTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -211,7 +214,6 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(partyCbox);
 
-        barrelfromTbox.setText("jTextField1");
         barrelfromTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -219,7 +221,6 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(barrelfromTbox);
 
-        barrelToTbox.setText("jTextField2");
         barrelToTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -227,42 +228,42 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(barrelToTbox);
 
-        quantityTbox.setText("jTextField3");
-        quantityTbox.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
+        quantityTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.000"))));
+        quantityTbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                quantityTboxActionPerformed(evt);
             }
         });
         rightInerPannel.add(quantityTbox);
 
-        drcTbox.setText("jTextField4");
-        drcTbox.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
+        drcTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.000"))));
+        drcTbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                drcTboxActionPerformed(evt);
             }
         });
         rightInerPannel.add(drcTbox);
 
-        dryrubberTbox.setText("jTextField5");
-        dryrubberTbox.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
+        dryrubberTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.000"))));
+        dryrubberTbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dryrubberTboxActionPerformed(evt);
             }
         });
         rightInerPannel.add(dryrubberTbox);
 
-        rateTbox.setText("jTextField6");
-        rateTbox.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
+        rateTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        rateTbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rateTboxActionPerformed(evt);
             }
         });
         rightInerPannel.add(rateTbox);
 
-        valueTbox.setText("jTextField7");
-        valueTbox.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
+        valueTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        valueTbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                valueTboxActionPerformed(evt);
             }
         });
         rightInerPannel.add(valueTbox);
@@ -297,6 +298,30 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         insertData();
     }//GEN-LAST:event_enterButtonActionPerformed
 
+    private void dateTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dateTboxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_dateTboxActionPerformed
+
+    private void quantityTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quantityTboxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_quantityTboxActionPerformed
+
+    private void drcTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_drcTboxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_drcTboxActionPerformed
+
+    private void dryrubberTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dryrubberTboxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_dryrubberTboxActionPerformed
+
+    private void rateTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rateTboxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rateTboxActionPerformed
+
+    private void valueTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_valueTboxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_valueTboxActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField barrelToTbox;
@@ -308,11 +333,11 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
     private javax.swing.JLabel branchLabel;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JLabel dateLabel;
-    private javax.swing.JTextField dateTbox;
+    private javax.swing.JFormattedTextField dateTbox;
     private javax.swing.JLabel drcLabel;
-    private javax.swing.JTextField drcTbox;
+    private javax.swing.JFormattedTextField drcTbox;
     private javax.swing.JLabel dryrubberLabel;
-    private javax.swing.JTextField dryrubberTbox;
+    private javax.swing.JFormattedTextField dryrubberTbox;
     private javax.swing.JButton enterButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel labelsPanel;
@@ -323,12 +348,12 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
     private javax.swing.JLabel partyLabel;
     private javax.swing.JTextField prbillTbox;
     private javax.swing.JLabel quantityLabel;
-    private javax.swing.JTextField quantityTbox;
+    private javax.swing.JFormattedTextField quantityTbox;
     private javax.swing.JLabel rateLabel;
-    private javax.swing.JTextField rateTbox;
+    private javax.swing.JFormattedTextField rateTbox;
     private javax.swing.JPanel rightInerPannel;
     private javax.swing.JLabel valueLabel;
-    private javax.swing.JTextField valueTbox;
+    private javax.swing.JFormattedTextField valueTbox;
     // End of variables declaration//GEN-END:variables
 
     @Override

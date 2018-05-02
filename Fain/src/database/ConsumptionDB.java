@@ -16,7 +16,7 @@ import javax.swing.table.TableModel;
  * @author lenovo
  */
 public final class ConsumptionDB {
-    public static void insert(Statement stmt, String branch, String date, String refNo,String itemCode,String itemName,String narration,double quantity){
+    public static boolean insert(Statement stmt, String branch, String date, String refNo,String itemCode,String itemName,String narration,double quantity){
         String in ="insert into consumption values(NULL,'"      +branch         + "','"
                                                                 +date           + "','"
                                                                 +refNo          + "','"
@@ -29,8 +29,9 @@ public final class ConsumptionDB {
         }
         catch(SQLException se){
             se.printStackTrace();
+            return false;
         }
-            
+            return true;
     }
 public static void delete(Statement stmt,String id){
         String del="delete from consumption where consumptionId="+id+";";

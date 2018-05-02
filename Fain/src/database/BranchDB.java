@@ -16,7 +16,7 @@ import javax.swing.table.TableModel;
  * @author lenovo
  */
 public final class BranchDB {
-    public static void insert(Statement stmt, String name, String address, String kgst,String rbno ){
+    public static boolean insert(Statement stmt, String name, String address, String kgst,String rbno ){
         String in ="insert into branch values(NULL,'"      +name   + "','"
                                                             +address  + "','"
                                                             +kgst + "','"
@@ -26,8 +26,9 @@ public final class BranchDB {
         }
         catch(SQLException se){
             se.printStackTrace();
+            return false;
         }
-            
+            return true;
     }
     public static void delete(Statement stmt,String id){
         String del="delete from branch where branchId="+id+";";

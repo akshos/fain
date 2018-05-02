@@ -127,7 +127,15 @@
             <Property name="verticalGap" type="int" value="10"/>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JTextField" name="dateTbox">
+            <Component class="javax.swing.JFormattedTextField" name="dateTbox">
+              <Properties>
+                <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor" preCode="try {" postCode="} catch (java.text.ParseException ex) {&#xa;ex.printStackTrace();&#xa;}">
+                  <Format format="##/##/##" subtype="-1" type="5"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dateTboxActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JComboBox" name="branchCbox">
               <Properties>
@@ -174,7 +182,12 @@
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
             </Component>
-            <Component class="javax.swing.JTextField" name="amountTbox">
+            <Component class="javax.swing.JFormattedTextField" name="amountTbox">
+              <Properties>
+                <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+                  <Format format="###0.00" subtype="-1" type="4"/>
+                </Property>
+              </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="narrationTbox">
             </Component>
