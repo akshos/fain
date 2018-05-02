@@ -157,18 +157,13 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
 
         rightInerPannel.setLayout(new java.awt.GridLayout(8, 0, 0, 10));
 
-        itemCodeTbox.setText("jTextField1");
         itemCodeTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 itemCodeTboxActionPerformed(evt);
             }
         });
         rightInerPannel.add(itemCodeTbox);
-
-        itemNameTbox.setText("jTextField2");
         rightInerPannel.add(itemNameTbox);
-
-        currentStockTbox.setText("jTextField3");
         rightInerPannel.add(currentStockTbox);
 
         rateTbox.setText("jTextField4");

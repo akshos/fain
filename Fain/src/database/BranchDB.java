@@ -88,7 +88,7 @@ public final class BranchDB {
         }
         return rs1;
     }
-    public static String[][] getStockAC(Statement stmt){
+    public static String[][] getBranch(Statement stmt){
         String sql="select branchId,name from branch;";
         try {
             ResultSet rs=stmt.executeQuery(sql);

@@ -5,11 +5,16 @@
  */
 package fain;
 
+import database.BranchDB;
+import database.CategoryDB;
 import database.ConsumptionDB;
 import database.CustomerDB;
 import database.DBConnection;
 import database.MasterDB;
+import java.awt.Dimension;
 import java.sql.Statement;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import utility.Codes;
 /**
  *
@@ -21,6 +26,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
     Main mainFrame;
     int level;
     RefreshOption prevFrame;
+    String[][] branchData;
     /**
      * Creates new form MasterEntry
      */
@@ -33,9 +39,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         this.mainFrame = frame;
         this.dbConnection = db;
         initComponents();
-        if(mode == Codes.EDIT){
-            refreshContents(Codes.REFRESH_ALL);
-        }
+        refreshContents(Codes.REFRESH_BRANCHES);
     }
     
     public ACustomers(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame, String code, String name){
@@ -44,11 +48,26 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         this.dbConnection = db;
         this.prevFrame = prevFrame;
         initComponents();
-        if(mode == Codes.EDIT){
-            refreshContents(Codes.REFRESH_ALL);
-        }
+        refreshContents(Codes.REFRESH_BRANCHES);
         this.codeTbox.setText(code);
         this.nameTbox.setText(name);
+    }
+    
+    private void loadBranch(){
+        System.out.println("loading categorycbox");
+        branchData = BranchDB.getBranch(this.dbConnection.getStatement());
+        int len;
+        if(branchData  == null){
+            len =  0;
+        }else{
+            len = branchData[0].length;
+        }
+        String[] cboxData = new String[len+1];
+        for(int i = 0; i < len; i++){
+            cboxData[i] = branchData[0][i] + " : " + branchData[1][i];
+        }
+        cboxData[len] = "Add New";
+        this.branchCbox.setModel(new DefaultComboBoxModel(cboxData));
     }
     
     private void insertData(){
@@ -58,16 +77,41 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         String address  =addressTarea.getText();
 
         String branch     ="";
-        Object selectedItem = branchCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            branch = selectedItem.toString();
+        int selectedIndex = branchCbox.getSelectedIndex();
+        String selectedItem = branchCbox.getSelectedItem().toString();
+        if(selectedItem.compareTo("Add New") == 0){
+            JOptionPane.showConfirmDialog(this, "Please select a valid Branch", "No branch selected", JOptionPane.WARNING_MESSAGE, JOptionPane.OK_OPTION);
         }
         String kgst     =kgstTbox.getText();
         String rbregno  =rbregnoTbox.getText();
         CustomerDB.insert(stmt, code, name, address, branch, kgst, rbregno);
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.CUSTOMER_ADDED);
+        }
+    }
+    
+    @Override
+    public void refreshContents(int type) {
+        if(type == Codes.REFRESH_BRANCHES){
+            loadBranch();
+        }
+    }
+    
+    private void addNewBranch(){
+        ABranches item = new ABranches(dbConnection, Codes.NEW_ENTRY, null, mainFrame, this.level+1, this);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }
+    
+    private void checkChangedItem(){
+        String item = this.branchCbox.getSelectedItem().toString();
+        if(item.compareTo("Add New") == 0){
+            addNewBranch();
         }
     }
     
@@ -157,6 +201,11 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         rightInerPannel.add(jScrollPane1);
 
         branchCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        branchCbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                branchCboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(branchCbox);
         rightInerPannel.add(kgstTbox);
         rightInerPannel.add(rbregnoTbox);
@@ -186,6 +235,12 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         insertData();
         }//GEN-LAST:event_enterButtonActionPerformed
 
+    private void branchCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_branchCboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.checkChangedItem();
+        }
+    }//GEN-LAST:event_branchCboxKeyPressed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel accountCodeLabel;
@@ -211,8 +266,4 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
     private javax.swing.JLabel yopBalLabel;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void refreshContents(int type) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

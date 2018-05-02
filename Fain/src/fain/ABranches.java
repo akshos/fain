@@ -62,6 +62,7 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         BranchDB.insert(stmt, name, addr, kgst, rbno);
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_BRANCHES);
+            this.doDefaultCloseAction();
         }
     }
     
@@ -141,23 +142,16 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         outerPanel.add(leftInerPannel);
 
         rightInerPannel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
-
-        codeTbox.setText("jTextField1");
         rightInerPannel.add(codeTbox);
-
-        nameTbox.setText("jTextField2");
         rightInerPannel.add(nameTbox);
 
         addressTarea.setColumns(20);
         addressTarea.setRows(5);
+        addressTarea.setTabSize(0);
         jScrollPane1.setViewportView(addressTarea);
 
         rightInerPannel.add(jScrollPane1);
-
-        kgstTbox.setText("jTextField4");
         rightInerPannel.add(kgstTbox);
-
-        rbregnoTbox.setText("jTextField3");
         rightInerPannel.add(rbregnoTbox);
 
         buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 60, 2, 60));

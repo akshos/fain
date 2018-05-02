@@ -162,8 +162,8 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         rightInerPannel = new javax.swing.JPanel();
         accountCodeTbox = new javax.swing.JTextField();
         accountHeadTbox = new javax.swing.JTextField();
-        yopBalanceTbox = new javax.swing.JTextField();
-        currentBalanceTbox = new javax.swing.JTextField();
+        yopBalanceTbox = new javax.swing.JFormattedTextField();
+        currentBalanceTbox = new javax.swing.JFormattedTextField();
         categoryCbox = new javax.swing.JComboBox<>();
         buttonPanel = new javax.swing.JPanel();
         enterButton = new javax.swing.JButton();
@@ -242,23 +242,10 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(accountHeadTbox);
 
-        yopBalanceTbox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                yopBalanceTboxActionPerformed(evt);
-            }
-        });
-        yopBalanceTbox.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                yopBalanceTboxKeyPressed(evt);
-            }
-        });
+        yopBalanceTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
         rightInerPannel.add(yopBalanceTbox);
 
-        currentBalanceTbox.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                currentBalanceTboxKeyPressed(evt);
-            }
-        });
+        currentBalanceTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
         rightInerPannel.add(currentBalanceTbox);
 
         categoryCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -305,18 +292,6 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         }
     }//GEN-LAST:event_accountHeadTboxKeyPressed
 
-    private void yopBalanceTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_yopBalanceTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }
-    }//GEN-LAST:event_yopBalanceTboxKeyPressed
-
-    private void currentBalanceTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_currentBalanceTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }
-    }//GEN-LAST:event_currentBalanceTboxKeyPressed
-
     private void categoryCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_categoryCboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
@@ -325,10 +300,6 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
             this.checkChangedItem();
         }
     }//GEN-LAST:event_categoryCboxKeyPressed
-
-    private void yopBalanceTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yopBalanceTboxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_yopBalanceTboxActionPerformed
 
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
     // TODO add your handling code here:
@@ -344,7 +315,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
     private javax.swing.JComboBox<String> categoryCbox;
     private javax.swing.JLabel categoryLabel;
     private javax.swing.JLabel currBalLabel;
-    private javax.swing.JTextField currentBalanceTbox;
+    private javax.swing.JFormattedTextField currentBalanceTbox;
     private javax.swing.JButton enterButton;
     private javax.swing.JPanel labelsPanel;
     private javax.swing.JPanel leftInerPannel;
@@ -353,6 +324,6 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
     private javax.swing.JPanel outerPanel;
     private javax.swing.JPanel rightInerPannel;
     private javax.swing.JLabel yopBalLabel;
-    private javax.swing.JTextField yopBalanceTbox;
+    private javax.swing.JFormattedTextField yopBalanceTbox;
     // End of variables declaration//GEN-END:variables
 }

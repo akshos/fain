@@ -19,8 +19,8 @@ public class User {
     private int userType;
     UsersDB usersDB;
     
-    private static final String usernamePattern = "^[a-z0-9_-]{3,15}$";
-    private static final String passwordPattern = "^[a-z0-9_@$#-]{3,15}$";
+    private static final String usernamePattern = "^[a-zA-Z0-9_-]{3,15}$";
+    private static final String passwordPattern = "^[a-zA-Z0-9_@$#-]{3,15}$";
     
     public User(){
         this.username = "";
