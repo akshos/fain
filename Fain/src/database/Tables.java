@@ -22,20 +22,24 @@ public final class Tables {
             + "category varchar(20));";
     
     public static final String transactionTable = "create table transactions("
-            + "transactionID    integer primary key autoincrement,"
+            + "transactionNo   integer primary key autoincrement,"
             + "date             date,"
+            + "branch          varchar(20),"
             + "debit            varchar(20),"
             + "credit           varchar(20),"
             + "amount           real,"
-            + "narration        varchar(50));";
+            + "narration        varchar(50),"
+            + "tid              varchar(30));";
+    
     public static final String stockTable = "create table stock("
-            + "itemCode     varchar(20) primary key,"
+            + "itemCode     integer primary key autoincrement,"
             + "itemName     varchar(20),"
             + "currentStock integer,"
             + "rate         real,"
             + "purchaseAC   varchar(20),"
             + "saleAC       varchar(20),"
             + "stockAC      varchar(20));";
+    
     public static final String purchaseLatexTable = "create table purchaseLatex("
             + "purchaseLatexId      integer primary key autoincrement,"
             + "branch               varchar(20),"
@@ -46,7 +50,9 @@ public final class Tables {
             + "drc                  real,"
             + "dryRubber            real,"
             + "rate                 real,"
-            + "value                real);";
+            + "value                real,"
+            + "tid                  varchar(30) );";
+    
     public static final String purchaseTable = "create table purchase("
             + "purchaseId       integer primary key autoincrement,"
             + "branch           varchar(20),"
@@ -56,7 +62,9 @@ public final class Tables {
             + "itemCode         varchar(20),"
             + "itemName         varchar(20),"
             + "quantity         real,"
-            + "value            real);";
+            + "value            real,"
+            + "tid              varchar(30) );";
+    
     public static final String salesTable = "create table sales("
             + "salesId      integer primary key autoincrement,"
             + "branch       varchar(20),"
@@ -70,7 +78,9 @@ public final class Tables {
             + "drc          real,"
             + "dryRubber    real,"
             + "rate         real,"
-            + "value        real);";
+            + "value        real,"
+            + "tid          varchar(30) );";
+    
     public static final String consumptionTable = "create table consumption("
             + "consumptionId        INTEGER primary key autoincrement,"
             + "branch               varchar(20),"
@@ -80,12 +90,14 @@ public final class Tables {
             + "itemName             varchar(20),"
             + "narration            varchar(50),"
             + "quantity             real);";
+    
     public static final String branchTable ="create table branch("
             + "branchId     integer primary key autoincrement,"
             + "name         varchar(50),"
             + "address      varchar(200),"
             + "kgst         varchar(20),"
             + "rbno         varchar(20));";
+    
     public static final String customerTable ="create table customer("
             + "customerCode varchar(20) primary key,"
             + "name         varchar(50),"

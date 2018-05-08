@@ -13,7 +13,9 @@ import database.StockDB;
 import java.awt.Dimension;
 import java.sql.Statement;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import utility.Codes;
+import utility.ValidationChecks;
 /**
  *
  * @author akshos
@@ -99,30 +101,46 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         }
     }
     
+    private boolean validateFields(String date, String refno, String narration){
+        if(!ValidationChecks.isDateValid(date))
+        {
+            int ret = JOptionPane.showConfirmDialog(this, "Please enter a valid date dd/mm/yy", "Invalid date", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+    
     private void insertData(){
         Statement stmt=dbConnection.getStatement();
-        
-        String branch     ="";
-        Object selectedItem = branchCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            branch = selectedItem.toString();
-        }
+        String item;
+        int index;
+        String branch = "";
+        index = this.branchCbox.getSelectedIndex();
+        item = this.branchCbox.getSelectedItem().toString();
+        if(item.compareTo("Add New") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Please select a valid Branch", "No Branch selected", JOptionPane.WARNING_MESSAGE);
+            return;
+        }  
+        branch = this.branchData[0][index];
         
         String date  =dateTbox.getText();
         String refno =referenceNumberTbox.getText();
         
-        String itemCode     ="";
-        selectedItem = itemCodeCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            itemCode = selectedItem.toString();
+        String itemCode, itemName;
+        index = this.itemCodeCbox.getSelectedIndex();
+        item = this.itemCodeCbox.getSelectedItem().toString();
+        if(item.compareTo("Add New") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Please select a valid Item", "No Item selected", JOptionPane.WARNING_MESSAGE);
+            return;
         }
-        String itemname  = itemNameTbox.getText();
+        itemCode = this.itemData[0][index];
+        itemName = this.itemData[1][index];
         String narration = narrationTbox.getText();
-        int quantity  = Integer.parseInt(quantityTbox.getText());
-        
-        ConsumptionDB.insert(stmt, branch, date, refno, itemCode, itemname, narration, quantity);
+        double quantity  = Double.parseDouble(quantityTbox.getText().replace(",", ""));
+        if(!validateFields(date, refno, narration)){
+            return;
+        }
+        ConsumptionDB.insert(stmt, branch, date, refno, itemCode, itemName, narration, quantity);
         
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_CONSUMPTION);
@@ -165,6 +183,17 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         }
     }
     
+    private void changeItemName(){
+        String selected = this.itemCodeCbox.getSelectedItem().toString();
+        if(selected.compareTo("Add New") == 0){
+            return;
+        }
+        int index = this.itemCodeCbox.getSelectedIndex();
+        String code = this.itemData[0][index];
+        String name = StockDB.getNameFromCode(this.dbConnection.getStatement(), code);
+        this.itemNameTbox.setText(name);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -189,7 +218,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         rightInerPannel = new javax.swing.JPanel();
         branchCbox = new javax.swing.JComboBox<>();
         dateTbox = new javax.swing.JFormattedTextField();
-        referenceNumberTbox = new javax.swing.JTextField();
+        referenceNumberTbox = new javax.swing.JFormattedTextField();
         itemCodeCbox = new javax.swing.JComboBox<>();
         itemNameTbox = new javax.swing.JTextField();
         narrationTbox = new javax.swing.JTextField();
@@ -264,9 +293,16 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
             }
         });
         rightInerPannel.add(dateTbox);
+
+        referenceNumberTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         rightInerPannel.add(referenceNumberTbox);
 
         itemCodeCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        itemCodeCbox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                itemCodeCboxItemStateChanged(evt);
+            }
+        });
         itemCodeCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 itemCodeCboxKeyPressed(evt);
@@ -274,6 +310,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         });
         rightInerPannel.add(itemCodeCbox);
 
+        itemNameTbox.setEditable(false);
         itemNameTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 itemNameTboxActionPerformed(evt);
@@ -282,7 +319,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         rightInerPannel.add(itemNameTbox);
         rightInerPannel.add(narrationTbox);
 
-        quantityTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.000"))));
+        quantityTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.000"))));
         quantityTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 quantityTboxActionPerformed(evt);
@@ -335,6 +372,10 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         // TODO add your handling code here:
     }//GEN-LAST:event_quantityTboxActionPerformed
 
+    private void itemCodeCboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_itemCodeCboxItemStateChanged
+        changeItemName();
+    }//GEN-LAST:event_itemCodeCboxItemStateChanged
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> branchCbox;
@@ -356,7 +397,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
     private javax.swing.JPanel outerPanel;
     private javax.swing.JLabel quantityLabel;
     private javax.swing.JFormattedTextField quantityTbox;
-    private javax.swing.JTextField referenceNumberTbox;
+    private javax.swing.JFormattedTextField referenceNumberTbox;
     private javax.swing.JLabel referencenumberLabel;
     private javax.swing.JPanel rightInerPannel;
     // End of variables declaration//GEN-END:variables

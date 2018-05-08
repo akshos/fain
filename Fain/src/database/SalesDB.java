@@ -16,7 +16,7 @@ import javax.swing.table.TableModel;
  * @author lenovo
  */
 public final class SalesDB {
-    public static boolean insert(Statement stmt, String branch, String date, String billNo,String party,int barrelNoFrom,int barrelNoTo,double quantity,double drc,double dryRubber,double rate,double value ){
+    public static boolean insert(Statement stmt, String branch, String date, String billNo,String party,int barrelNoFrom,int barrelNoTo,double quantity,double drc,double dryRubber,double rate,double value, String tid ){
         int diff=barrelNoTo-barrelNoFrom+1;
         String in ="insert into sales values(NULL,'"            +branch         + "','"
                                                                 +date           + "','"
@@ -29,7 +29,8 @@ public final class SalesDB {
                                                                 +drc            + ","
                                                                 +dryRubber      + ","
                                                                 +rate           + ","
-                                                                +value          + ")";
+                                                                +value          + ",'"
+                                                                +tid            + "')";
         try{
             stmt.execute(in);
         }

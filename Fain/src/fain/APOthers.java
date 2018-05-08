@@ -8,6 +8,7 @@ package fain;
 import database.DBConnection;
 import database.MasterDB;
 import database.PurchaseDB;
+import database.TransactionDB;
 import java.sql.Statement;
 import utility.Codes;
 /**
@@ -73,8 +74,8 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         String itemname= itemnameTbox.getText();
         double quantity=Double.parseDouble(quantityTbox.getText());
         double value    =Double.parseDouble(valueTbox.getText());
-
-        PurchaseDB.insert(stmt, branch, date, bill, party, itemcode, itemname, quantity, value);
+        String tid = TransactionDB.generateTid();
+        PurchaseDB.insert(stmt, branch, date, bill, party, itemcode, itemname, quantity, value, tid);
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_POTHERS);
         }

@@ -5,10 +5,17 @@
  */
 package fain;
 
+import database.BranchDB;
+import database.CustomerDB;
 import database.DBConnection;
 import database.MasterDB;
+import database.PurchaseDB;
 import database.PurchaseLatexDB;
+import database.StockDB;
+import database.TransactionDB;
 import java.sql.Statement;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import utility.Codes;
 /**
  *
@@ -20,7 +27,8 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
      Main mainFrame;
      int level;
      RefreshOption prevFrame;
-     
+     String branchData[][];
+     String partyData[][];
     /**
      * Creates new form MasterEntry
      */
@@ -32,9 +40,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         this.mainFrame = frame;
         this.dbConnection = db;
         initComponents();
-        if(mode == Codes.EDIT){
-            refreshContents(Codes.REFRESH_ALL);
-        }
+        refreshContents(Codes.REFRESH_ALL);
         prevFrame = null;
     }
     
@@ -44,37 +50,175 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         this.mainFrame = frame;
         this.dbConnection = db;
         initComponents();
-        if(mode == Codes.EDIT){
-            refreshContents(Codes.REFRESH_ALL);
+        refreshContents(Codes.REFRESH_ALL);
+    }
+    
+    private void resetParty(){
+        String resetData[] = new String[1];
+        resetData[0] = "Select Branch";
+        this.partyCbox.setModel(new DefaultComboBoxModel(resetData));
+        this.partyCbox.setEnabled(false);
+    }
+    
+    private void loadParty(){
+        String item = this.branchCbox.getSelectedItem().toString();
+        if(item.compareTo("Add New") == 0){
+            resetParty();
+            return;
         }
+        int index = this.branchCbox.getSelectedIndex();
+        String branchCode = this.branchData[0][index];
+        partyData = CustomerDB.getCustomersInBranch(this.dbConnection.getStatement(), branchCode);
+        int len;
+        String[] cboxData = null;
+        if(partyData  == null){
+            len =  0;
+            cboxData = new String[1];
+            cboxData[0] = "None";
+            this.partyCbox.setToolTipText("No customers available for branch");
+        }else{
+            len = partyData[0].length;
+            cboxData = new String[len];
+            for(int i = 0; i < len; i++){
+                cboxData[i] = partyData[1][i] + "  (" + partyData[0][i] +")"  ;
+            }
+            String address = this.partyData[2][0];
+            this.partyCbox.setToolTipText(address);
+        }
+        this.partyCbox.setModel(new DefaultComboBoxModel(cboxData));
+        
+    }
+    
+    private void showPartyAddress(){
+       String item = this.partyCbox.getSelectedItem().toString();
+       if(item.compareTo("None") == 0){
+           this.partyCbox.setToolTipText("No customers available for branch");
+           return;
+       }
+       int index = this.partyCbox.getSelectedIndex();
+       String address = this.partyData[2][index];
+       this.partyCbox.setToolTipText(address);
+       System.out.println("Address : " + address);
+       try
+        {
+            java.awt.event.KeyEvent ke = new java.awt.event.KeyEvent(partyCbox, java.awt.event.KeyEvent.KEY_PRESSED, System.currentTimeMillis(), java.awt.event.InputEvent.CTRL_MASK, java.awt.event.KeyEvent.VK_F1, java.awt.event.KeyEvent.CHAR_UNDEFINED);
+            this.partyCbox.dispatchEvent(ke);
+        }
+        catch (Throwable e1)
+        {e1.printStackTrace();}
+    }
+    
+    private void loadBranch(){
+        System.out.println("loading branchcbox");
+        branchData = BranchDB.getBranch(this.dbConnection.getStatement());
+        int len;
+        if(branchData  == null){
+            len =  0;
+        }else{
+            len = branchData[0].length;
+        }
+        String[] cboxData = new String[len+1];
+        for(int i = 0; i < len; i++){
+            cboxData[i] = branchData[1][i] + " (" + branchData[0][i] + ")";
+        }
+        cboxData[len] = "Add New";
+        this.branchCbox.setModel(new DefaultComboBoxModel(cboxData));
+    }
+    
+    @Override
+    public void refreshContents(int type) {
+        if(type == Codes.REFRESH_ALL){
+            loadBranch();
+            loadParty();
+        }
+    }
+    
+    private boolean chechPrBill(){
+        String billNo = this.prBillTbox.getText();
+        if(billNo.compareTo("") == 0){
+            this.prbillLabel.setText("<html>Pr. Bill <span style=\"color:red\">Empty</span></html>");
+            return false;
+        }
+        if(PurchaseDB.checkExistingBillNo(dbConnection.getStatement(), billNo)){
+            this.prbillLabel.setText("<html>Pr. Bill <span style=\"color:red\">Duplicate</span></html>");
+            return false;
+        }
+        this.prbillLabel.setText("<html>Pr. Bill</html>");
+        return true;
     }
     
     private void insertData(){
         Statement stmt=dbConnection.getStatement();
         String branch     ="";
-        Object selectedItem = branchCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            branch = selectedItem.toString();
+        String item = branchCbox.getSelectedItem().toString();
+        if(item.compareTo("Add New") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Please select a valid branch", "No branch selected", JOptionPane.WARNING_MESSAGE);
+            return;
         }
+        int index = this.branchCbox.getSelectedIndex();
+        branch = this.branchData[0][index];
         String date = dateTbox.getText();
-        String pbil = prbillTbox.getText();
+        String prBill = prBillTbox.getText();
         String party      ="";
-        selectedItem = partyCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            party = selectedItem.toString();
+        item = partyCbox.getSelectedItem().toString();
+        if(item.compareTo("None") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Please select a valid branch", "No branch selected", JOptionPane.WARNING_MESSAGE);
+            return;
         }
+        index = partyCbox.getSelectedIndex();
+        party = partyData[0][index];
         double quantity=Double.parseDouble(quantityTbox.getText());
         double drc      =Double.parseDouble(drcTbox.getText());
-        double dryrubber=Double.parseDouble(dryrubberTbox.getText());
+        double dryrubber=Double.parseDouble(dryRubberTbox.getText());
         double rate     =Double.parseDouble(rateTbox.getText());
         double value    =Double.parseDouble(valueTbox.getText());
-
-        PurchaseLatexDB.insert(stmt, branch, date, pbil, party, quantity, drc, dryrubber, rate, value);
+        String tid = TransactionDB.generateTid();
+        
+        PurchaseLatexDB.insert(stmt, branch, date, prBill, party, quantity, drc, dryrubber, rate, value, tid);
+        
+        String purchaseAccount = StockDB.getPurchaseAccount(dbConnection.getStatement(), "1");
+        if(purchaseAccount.compareTo("none") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Item 'Latex' was not found in stock", "No stock Latex", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        String narration = "PURCHASE OF LATEX (BILL #" + prBill +")";
+        
+        TransactionDB.insert(stmt, date, branch, purchaseAccount, party, value, narration, tid);
+        
         if(prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_PLATEX);
         }
+    }
+    
+    private void calculateDryRubber(){
+        double drc, qnt;
+        String item = this.quantityTbox.getText();
+        if(item.compareTo("") == 0){
+            return;
+        }
+        drc = Double.parseDouble(item);
+        item = this.drcTbox.getText();
+        if(item.compareTo("") == 0){
+            return;
+        }
+        qnt = Double.parseDouble(item);
+        Double dryRubber = (qnt * drc)/100;
+        this.dryRubberTbox.setText(String.valueOf(dryRubber));
+    }
+    
+    private void calculateValue(){
+        String item = this.dryRubberTbox.getText();
+        if(item.compareTo("") == 0){
+            return;
+        }
+        double dryRubber = Double.parseDouble(item);
+        item = this.rateTbox.getText();
+        if(item.compareTo("") == 0){
+            return;
+        }
+        double rate = Double.parseDouble(item);
+        double value = rate * dryRubber;
+        this.valueTbox.setText(String.valueOf(value));
     }
         
     /**
@@ -103,11 +247,11 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         rightInerPannel = new javax.swing.JPanel();
         branchCbox = new javax.swing.JComboBox<>();
         dateTbox = new javax.swing.JFormattedTextField();
-        prbillTbox = new javax.swing.JTextField();
+        prBillTbox = new javax.swing.JFormattedTextField();
         partyCbox = new javax.swing.JComboBox<>();
         quantityTbox = new javax.swing.JFormattedTextField();
         drcTbox = new javax.swing.JFormattedTextField();
-        dryrubberTbox = new javax.swing.JFormattedTextField();
+        dryRubberTbox = new javax.swing.JFormattedTextField();
         rateTbox = new javax.swing.JFormattedTextField();
         valueTbox = new javax.swing.JFormattedTextField();
         buttonPanel = new javax.swing.JPanel();
@@ -134,30 +278,39 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
 
         labelsPanel.setLayout(new java.awt.GridLayout(10, 0, 0, 10));
 
+        branchLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         branchLabel.setText("Branch");
         labelsPanel.add(branchLabel);
 
+        dateLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         dateLabel.setText("Date");
         labelsPanel.add(dateLabel);
 
+        prbillLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         prbillLabel.setText("Pr. Bill");
         labelsPanel.add(prbillLabel);
 
+        partyLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         partyLabel.setText("Party");
         labelsPanel.add(partyLabel);
 
+        quantityLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         quantityLabel.setText("Quantity Kgs.");
         labelsPanel.add(quantityLabel);
 
+        drcLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         drcLabel.setText("D R C");
         labelsPanel.add(drcLabel);
 
+        dryrubberLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         dryrubberLabel.setText("Dry Rubber Kgs.");
         labelsPanel.add(dryrubberLabel);
 
+        rateLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         rateLabel.setText("Rate");
         labelsPanel.add(rateLabel);
 
+        valueLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         valueLabel.setText("Value");
         labelsPanel.add(valueLabel);
 
@@ -167,7 +320,13 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
 
         rightInerPannel.setLayout(new java.awt.GridLayout(10, 0, 0, 10));
 
+        branchCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         branchCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        branchCbox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                branchCboxItemStateChanged(evt);
+            }
+        });
         branchCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -180,6 +339,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        dateTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         dateTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 dateTboxActionPerformed(evt);
@@ -187,14 +347,27 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(dateTbox);
 
-        prbillTbox.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
+        prBillTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        prBillTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        prBillTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                prBillTboxFocusLost(evt);
             }
         });
-        rightInerPannel.add(prbillTbox);
+        rightInerPannel.add(prBillTbox);
 
+        partyCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         partyCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        partyCbox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                partyCboxItemStateChanged(evt);
+            }
+        });
+        partyCbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                partyCboxFocusGained(evt);
+            }
+        });
         partyCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -202,7 +375,8 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(partyCbox);
 
-        quantityTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.000"))));
+        quantityTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat(""))));
+        quantityTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         quantityTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 quantityTboxActionPerformed(evt);
@@ -210,7 +384,8 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(quantityTbox);
 
-        drcTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.000"))));
+        drcTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat(""))));
+        drcTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         drcTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 drcTboxActionPerformed(evt);
@@ -218,15 +393,23 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(drcTbox);
 
-        dryrubberTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.000"))));
-        dryrubberTbox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                dryrubberTboxActionPerformed(evt);
+        dryRubberTbox.setEditable(false);
+        dryRubberTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.000"))));
+        dryRubberTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        dryRubberTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                dryRubberTboxFocusGained(evt);
             }
         });
-        rightInerPannel.add(dryrubberTbox);
+        dryRubberTbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dryRubberTboxActionPerformed(evt);
+            }
+        });
+        rightInerPannel.add(dryRubberTbox);
 
         rateTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        rateTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         rateTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rateTboxActionPerformed(evt);
@@ -234,7 +417,14 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(rateTbox);
 
+        valueTbox.setEditable(false);
         valueTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        valueTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        valueTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                valueTboxFocusGained(evt);
+            }
+        });
         valueTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 valueTboxActionPerformed(evt);
@@ -245,6 +435,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 60, 2, 60));
         buttonPanel.setLayout(new java.awt.BorderLayout());
 
+        enterButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         enterButton.setText("ENTER");
         enterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -290,9 +481,9 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         // TODO add your handling code here:
     }//GEN-LAST:event_drcTboxActionPerformed
 
-    private void dryrubberTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dryrubberTboxActionPerformed
+    private void dryRubberTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dryRubberTboxActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_dryrubberTboxActionPerformed
+    }//GEN-LAST:event_dryRubberTboxActionPerformed
 
     private void rateTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rateTboxActionPerformed
         // TODO add your handling code here:
@@ -301,6 +492,30 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
     private void valueTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_valueTboxActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_valueTboxActionPerformed
+
+    private void branchCboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_branchCboxItemStateChanged
+        this.loadParty();
+    }//GEN-LAST:event_branchCboxItemStateChanged
+
+    private void partyCboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_partyCboxItemStateChanged
+        showPartyAddress();
+    }//GEN-LAST:event_partyCboxItemStateChanged
+
+    private void partyCboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_partyCboxFocusGained
+        showPartyAddress();
+    }//GEN-LAST:event_partyCboxFocusGained
+
+    private void dryRubberTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_dryRubberTboxFocusGained
+        calculateDryRubber();
+    }//GEN-LAST:event_dryRubberTboxFocusGained
+
+    private void valueTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_valueTboxFocusGained
+        calculateValue();
+    }//GEN-LAST:event_valueTboxFocusGained
+
+    private void prBillTboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_prBillTboxFocusLost
+        chechPrBill();
+    }//GEN-LAST:event_prBillTboxFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -311,8 +526,8 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
     private javax.swing.JFormattedTextField dateTbox;
     private javax.swing.JLabel drcLabel;
     private javax.swing.JFormattedTextField drcTbox;
+    private javax.swing.JFormattedTextField dryRubberTbox;
     private javax.swing.JLabel dryrubberLabel;
-    private javax.swing.JFormattedTextField dryrubberTbox;
     private javax.swing.JButton enterButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel labelsPanel;
@@ -321,8 +536,8 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
     private javax.swing.JPanel outerPanel;
     private javax.swing.JComboBox<String> partyCbox;
     private javax.swing.JLabel partyLabel;
+    private javax.swing.JFormattedTextField prBillTbox;
     private javax.swing.JLabel prbillLabel;
-    private javax.swing.JTextField prbillTbox;
     private javax.swing.JLabel quantityLabel;
     private javax.swing.JFormattedTextField quantityTbox;
     private javax.swing.JLabel rateLabel;
@@ -332,8 +547,5 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
     private javax.swing.JFormattedTextField valueTbox;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void refreshContents(int type) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
 }

@@ -51,6 +51,8 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         refreshContents(Codes.REFRESH_BRANCHES);
         this.codeTbox.setText(code);
         this.nameTbox.setText(name);
+        this.codeTbox.setEditable(false);
+        this.nameTbox.setEditable(false);
     }
     
     private void loadBranch(){
@@ -81,9 +83,11 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         String selectedItem = branchCbox.getSelectedItem().toString();
         if(selectedItem.compareTo("Add New") == 0){
             JOptionPane.showConfirmDialog(this, "Please select a valid Branch", "No branch selected", JOptionPane.WARNING_MESSAGE, JOptionPane.OK_OPTION);
+            return;
         }
-        String kgst     =kgstTbox.getText();
-        String rbregno  =rbregnoTbox.getText();
+        branch = branchData[0][selectedIndex];
+        String kgst = kgstTbox.getText();
+        String rbregno = rbregnoTbox.getText();
         CustomerDB.insert(stmt, code, name, address, branch, kgst, rbregno);
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.CUSTOMER_ADDED);
@@ -196,6 +200,11 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
 
         addressTarea.setColumns(20);
         addressTarea.setRows(5);
+        addressTarea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                addressTareaKeyPressed(evt);
+            }
+        });
         jScrollPane1.setViewportView(addressTarea);
 
         rightInerPannel.add(jScrollPane1);
@@ -240,6 +249,16 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
             this.checkChangedItem();
         }
     }//GEN-LAST:event_branchCboxKeyPressed
+
+    private void addressTareaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_addressTareaKeyPressed
+         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_TAB) {
+            System.out.println(evt.getModifiers());
+            javax.swing.JTextArea input = (javax.swing.JTextArea)evt.getSource();
+            if(evt.getModifiers() > 0) input.transferFocusBackward();
+            else input.transferFocus(); 
+            evt.consume();
+        }
+    }//GEN-LAST:event_addressTareaKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

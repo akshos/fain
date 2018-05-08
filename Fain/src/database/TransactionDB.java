@@ -16,13 +16,14 @@ import javax.swing.table.TableModel;
  * @author lenovo
  */
 public final class TransactionDB {
-    public static boolean insert(Statement stmt, String date, String branch, String debit, String credit, double amount, String narration ){
-        String in ="insert into transactions values(NULL,'"      +date   + "','"
-                                                            +branch  + "','"
-                                                            +debit  + "','"
-                                                            +credit + "',"
-                                                            +amount + ",'"
-                                                            +narration   + "')";
+    public static boolean insert(Statement stmt, String date, String branch, String debit, String credit, double amount, String narration, String tid){
+        String in ="insert into transactions values(NULL,'" +date       + "','"
+                                                            +branch     + "','"
+                                                            +debit      + "','"
+                                                            +credit     + "',"
+                                                            +amount     + ",'"
+                                                            +narration  + "','"
+                                                            +tid        +"')";
         try{
             stmt.execute(in);
         }
@@ -33,8 +34,8 @@ public final class TransactionDB {
         return true;
             
     }
-    public static void delete(Statement stmt,String id){
-        String del="delete from transactions where transactionID="+id+";";
+    public static void delete(Statement stmt,String tNo){
+        String del="delete from transactions where transactionNo="+tNo+";";
         try {
             stmt.executeUpdate(del);
         } catch (SQLException ex) {
@@ -42,8 +43,21 @@ public final class TransactionDB {
         }
     }
     
-    public static boolean checkExisting(Statement stmt,String id){
-        String check="select * from transactions where transactionId="+id+";";
+    public static boolean checkExistingTNo(Statement stmt,String tNo){
+        String check="select * from transactions where transactionNo="+tNo+";";
+        try {
+            ResultSet rs=stmt.executeQuery(check);
+            if (rs.next()){
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TransactionDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
+    public static boolean checkExistingTid(Statement stmt,String tid){
+        String check="select * from transactions where tid='"+tid+"';";
         try {
             ResultSet rs=stmt.executeQuery(check);
             if (rs.next()){
@@ -56,7 +70,7 @@ public final class TransactionDB {
     }
     
     public static TableModel getTable(Statement stmt){
-        String sqlQuery = "select transactionID as 'Transaction ID', date as 'Date', debit as 'Debit', credit as 'Credit', amount as 'Amount', narration as 'Narration' from transactions;";
+        String sqlQuery = "select transactionNo as 'Transaction No', date as 'Date', branch as 'Branch', debit as 'Debit', credit as 'Credit', amount as 'Amount', narration as 'Narration' from transactions;";
 	TableModel table = null;
         ResultSet rs = null;
 	try{
@@ -80,7 +94,7 @@ public final class TransactionDB {
     }
     
     public static ResultSet selectOneId(Statement stmt, String id){
-        String sql="select * from transactions where transactionID="+id+";";
+        String sql="select * from transactions where transactionNo="+id+";";
         ResultSet rs=null;
         ResultSet rs1=null;
         try{
@@ -91,5 +105,24 @@ public final class TransactionDB {
             se.printStackTrace();
         }
         return rs1;
+    }
+    
+    public static String getTidFromTNo(Statement stmt, String tNo){
+        String sql = "select tid from transactions where transactionNo="+tNo+";";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            rs.next();
+            String tid = rs.getString(1);
+            return tid;
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static String generateTid(){
+        java.util.UUID uuid = java.util.UUID.randomUUID();
+        String id = uuid.toString().substring(0, 20);
+        return id;
     }
 }

@@ -8,6 +8,7 @@ import database.DBConnection;
 import database.MasterDB;
 import database.StockDB;
 import java.sql.Statement;
+import javax.swing.DefaultComboBoxModel;
 import utility.Codes;
 /**
 /**
@@ -19,6 +20,9 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
     Main mainFrame;
     int level;
     RefreshOption prevFrame;
+    String purchaseData[][];
+    String salesData[][];
+    String stockData[][];
     /**
      * Creates new form MasterEntry
      */
@@ -31,9 +35,7 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         this.mainFrame = frame;
         this.dbConnection = db;
         initComponents();
-        if(mode == Codes.EDIT){
-            refreshContents(Codes.REFRESH_ALL);
-        }
+        refreshContents(Codes.REFRESH_ALL);
         this.prevFrame = null;
     }
     
@@ -43,14 +45,12 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         this.mainFrame = frame;
         this.dbConnection = db;
         initComponents();
-        if(mode == Codes.EDIT){
-            refreshContents(Codes.REFRESH_ALL);
-        }
+        refreshContents(Codes.REFRESH_ALL);
     }
     
     private void insertData(){
         Statement stmt=dbConnection.getStatement();
-        String icode        =itemCodeTbox.getText();
+        //String icode        =itemCodeTbox.getText();
         String iname        =itemNameTbox.getText();
         int currentStock    =Integer.parseInt(currentStockTbox.getText());
         double rate         =Double.parseDouble(rateTbox.getText());
@@ -72,9 +72,76 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         {
             stock = selectedItem.toString();
         }
-        StockDB.insert(stmt, icode, iname, currentStock, rate, purchase, sales, stock);
+        StockDB.insert(stmt, iname, currentStock, rate, purchase, sales, stock);
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_STOCK);
+        }
+    }
+    
+    private void loadPurchaseAccounts(){
+        System.out.println("loading purchaseCbox");
+        purchaseData = MasterDB.getPurchaseAC(this.dbConnection.getStatement());
+        int len;
+        if(purchaseData == null){
+            len = 0;
+        }else{
+            len = purchaseData[0].length;
+        }
+        String[] cboxData = new String[len+1];
+        for(int i = 0; i < len; i++){
+            cboxData[i] = purchaseData[1][i] + "(" + purchaseData[0][i] + ")";
+        }
+        cboxData[len] = "Add New";
+        this.purchasesCbox.setModel(new DefaultComboBoxModel(cboxData));
+    }
+    
+    private void loadSalesAccounts(){
+        System.out.println("loading salesCbox");
+        salesData = MasterDB.getSalesAC(this.dbConnection.getStatement());
+        int len;
+        if(salesData == null){
+            len = 0;
+        }else{
+            len = salesData[0].length;
+        }
+        String[] cboxData = new String[len+1];
+        for(int i = 0; i < len; i++){
+            cboxData[i] = salesData[1][i] + "(" + salesData[0][i] + ")" ;
+        }
+        cboxData[len] = "Add New";
+        this.salesCbox.setModel(new DefaultComboBoxModel(cboxData));
+    }
+    
+    private void loadStockAccounts(){
+        System.out.println("loading salesCbox");
+        stockData = MasterDB.getStockAC(this.dbConnection.getStatement());
+        int len;
+        if(stockData == null){
+            len = 0;
+        }else{
+            len = stockData[0].length;
+        }
+        String[] cboxData = new String[len+1];
+        for(int i = 0; i < len; i++){
+            cboxData[i] = stockData[1][i] + "(" + stockData[0][i] + ")";
+        }
+        cboxData[len] = "Add New";
+        this.stockCbox.setModel(new DefaultComboBoxModel(cboxData));
+    }
+    
+    public void refreshContents(int code) {
+        if(code == Codes.REFRESH_ALL){
+            this.loadPurchaseAccounts();
+            this.loadSalesAccounts();
+            this.loadStockAccounts();
+        }
+        else if(code == Codes.REFRESH_MASTER){
+            if(this.purchasesCbox.getSelectedItem().toString().compareTo("Add New") == 0)
+                this.loadPurchaseAccounts();
+            if(this.salesCbox.getSelectedItem().toString().compareTo("Add New") == 0)
+                this.loadSalesAccounts();
+            if(this.stockCbox.getSelectedItem().toString().compareTo("Add New") == 0)
+                this.loadStockAccounts();
         }
     }
     /**
@@ -91,7 +158,6 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         logoPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         labelsPanel = new javax.swing.JPanel();
-        itemCodeLabel = new javax.swing.JLabel();
         itemNameLabel = new javax.swing.JLabel();
         currentStockLabel = new javax.swing.JLabel();
         rateLabel = new javax.swing.JLabel();
@@ -99,7 +165,6 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         SalesLabel = new javax.swing.JLabel();
         stockLabel = new javax.swing.JLabel();
         rightInerPannel = new javax.swing.JPanel();
-        itemCodeTbox = new javax.swing.JTextField();
         itemNameTbox = new javax.swing.JTextField();
         currentStockTbox = new javax.swing.JFormattedTextField();
         rateTbox = new javax.swing.JFormattedTextField();
@@ -128,10 +193,7 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
 
         leftInerPannel.add(logoPanel);
 
-        labelsPanel.setLayout(new java.awt.GridLayout(8, 0, 0, 10));
-
-        itemCodeLabel.setText("Item Code");
-        labelsPanel.add(itemCodeLabel);
+        labelsPanel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
 
         itemNameLabel.setText("Item Name");
         labelsPanel.add(itemNameLabel);
@@ -155,17 +217,10 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
 
         outerPanel.add(leftInerPannel);
 
-        rightInerPannel.setLayout(new java.awt.GridLayout(8, 0, 0, 10));
-
-        itemCodeTbox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itemCodeTboxActionPerformed(evt);
-            }
-        });
-        rightInerPannel.add(itemCodeTbox);
+        rightInerPannel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
         rightInerPannel.add(itemNameTbox);
 
-        currentStockTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.000"))));
+        currentStockTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat(""))));
         currentStockTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 currentStockTboxActionPerformed(evt);
@@ -210,10 +265,6 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void itemCodeTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCodeTboxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_itemCodeTboxActionPerformed
-
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
         // TODO add your handling code here:
         insertData();
@@ -234,8 +285,6 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
     private javax.swing.JLabel currentStockLabel;
     private javax.swing.JFormattedTextField currentStockTbox;
     private javax.swing.JButton enterButton;
-    private javax.swing.JLabel itemCodeLabel;
-    private javax.swing.JTextField itemCodeTbox;
     private javax.swing.JLabel itemNameLabel;
     private javax.swing.JTextField itemNameTbox;
     private javax.swing.JLabel jLabel1;
@@ -253,7 +302,5 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
     private javax.swing.JLabel stockLabel;
     // End of variables declaration//GEN-END:variables
 
-    public void refreshContents(int REFRESH_ALL) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
 }

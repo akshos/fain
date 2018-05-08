@@ -30,8 +30,7 @@ public final class MasterDB {
             se.printStackTrace();
             return false;
         }
-        return true;
-            
+        return true;       
     }
     
     public static void delete(Statement stmt,String id){

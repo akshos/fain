@@ -16,11 +16,11 @@ import javax.swing.table.TableModel;
  * @author lenovo
  */
 public final class CustomerDB {
-    public static boolean insert(Statement stmt, String customerCode,String name, String address,String customer, String kgst,String rbno ){
-        String in ="insert into customer values('"      +customerCode   +"','"
+    public static boolean insert(Statement stmt, String code, String name, String address,String customer, String kgst,String rbno ){
+        String in ="insert into customer values('"      +code           +"','"
                                                         +name           + "','"
                                                         +address        + "','"
-                                                        +customer         +"','"
+                                                        +customer       +"','"
                                                         +kgst           + "','"
                                                         +rbno           + "')";
         try{
@@ -88,5 +88,16 @@ public final class CustomerDB {
             se.printStackTrace();
         }
         return rs1;
+    }
+    
+    public static String[][] getCustomersInBranch(Statement stmt, String branchId){
+        String sql = "select customerCode, name, address from customer where branch='"+branchId+"';";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            return ResultSetToStringArray.getStringArray3col(rs);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
     }
 }

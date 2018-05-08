@@ -9,7 +9,9 @@ import database.BranchDB;
 import database.DBConnection;
 import database.MasterDB;
 import java.sql.Statement;
+import javax.swing.JOptionPane;
 import utility.Codes;
+import utility.ValidationChecks;
 
 /**
  *
@@ -52,13 +54,24 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         }
     }
     
+    private boolean validateFields(String name, String address, String kgst, String rbno){
+        if(!ValidationChecks.validateName(name)){
+            int ret = JOptionPane.showConfirmDialog(this, "Please enter a valid name", "Invalid name", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+    
     private void insertData(){
-        Statement stmt=dbConnection.getStatement();
-        String code  =codeTbox.getText();//implement in database 
+        //String code  =codeTbox.getText();//implement in database 
         String name  =nameTbox.getText();
         String addr  =addressTarea.getText();
         String kgst  =kgstTbox.getText();
         String rbno  =rbregnoTbox.getText();
+        if(!this.validateFields(name, addr, kgst, rbno)){
+            return;
+        }
+        Statement stmt=dbConnection.getStatement();
         BranchDB.insert(stmt, name, addr, kgst, rbno);
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_BRANCHES);
@@ -80,13 +93,11 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         logoPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         labelsPanel = new javax.swing.JPanel();
-        accountCodeLabel = new javax.swing.JLabel();
         accountHeadLabel = new javax.swing.JLabel();
         yopBalLabel = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         rightInerPannel = new javax.swing.JPanel();
-        codeTbox = new javax.swing.JTextField();
         nameTbox = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         addressTarea = new javax.swing.JTextArea();
@@ -99,6 +110,23 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         setResizable(true);
         setTitle("Branches");
         setPreferredSize(new java.awt.Dimension(450, 410));
+        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameClosing(evt);
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+        });
         addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 formKeyPressed(evt);
@@ -120,20 +148,21 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
 
         leftInerPannel.add(logoPanel);
 
-        labelsPanel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
+        labelsPanel.setLayout(new java.awt.GridLayout(5, 0, 0, 10));
 
-        accountCodeLabel.setText("Code");
-        labelsPanel.add(accountCodeLabel);
-
+        accountHeadLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         accountHeadLabel.setText("Name");
         labelsPanel.add(accountHeadLabel);
 
+        yopBalLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         yopBalLabel.setText("Address");
         labelsPanel.add(yopBalLabel);
 
+        jLabel2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel2.setText("KGST");
         labelsPanel.add(jLabel2);
 
+        jLabel3.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel3.setText("RB Registration Number");
         labelsPanel.add(jLabel3);
 
@@ -141,22 +170,34 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
 
         outerPanel.add(leftInerPannel);
 
-        rightInerPannel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
-        rightInerPannel.add(codeTbox);
+        rightInerPannel.setLayout(new java.awt.GridLayout(5, 0, 0, 10));
+
+        nameTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         rightInerPannel.add(nameTbox);
 
         addressTarea.setColumns(20);
+        addressTarea.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         addressTarea.setRows(5);
         addressTarea.setTabSize(0);
+        addressTarea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                addressTareaKeyPressed(evt);
+            }
+        });
         jScrollPane1.setViewportView(addressTarea);
 
         rightInerPannel.add(jScrollPane1);
+
+        kgstTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         rightInerPannel.add(kgstTbox);
+
+        rbregnoTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         rightInerPannel.add(rbregnoTbox);
 
         buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 60, 2, 60));
         buttonPanel.setLayout(new java.awt.BorderLayout());
 
+        enterButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         enterButton.setText("ENTER");
         enterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -184,13 +225,25 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         insertData();
     }//GEN-LAST:event_enterButtonActionPerformed
 
+    private void addressTareaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_addressTareaKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_TAB) {
+            System.out.println(evt.getModifiers());
+            javax.swing.JTextArea input = (javax.swing.JTextArea)evt.getSource();
+            if(evt.getModifiers() > 0) input.transferFocusBackward();
+            else input.transferFocus(); 
+            evt.consume();
+        }
+    }//GEN-LAST:event_addressTareaKeyPressed
+
+    private void formInternalFrameClosing(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosing
+        Preferences.storeInternalFrameDimension(this);
+    }//GEN-LAST:event_formInternalFrameClosing
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel accountCodeLabel;
     private javax.swing.JLabel accountHeadLabel;
     private javax.swing.JTextArea addressTarea;
     private javax.swing.JPanel buttonPanel;
-    private javax.swing.JTextField codeTbox;
     private javax.swing.JButton enterButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

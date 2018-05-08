@@ -16,7 +16,7 @@ import javax.swing.table.TableModel;
  * @author lenovo
  */
 public final class PurchaseDB {
-    public static boolean insert(Statement stmt, String branch, String date, String billNo,String party,String itemCode,String itemName,double quantity,double value ){
+    public static boolean insert(Statement stmt, String branch, String date, String billNo, String party, String itemCode, String itemName, double quantity, double value, String tid ){
         String in ="insert into purchase values(NULL,'"         +branch         + "','"
                                                                 +date           + "','"
                                                                 +billNo         + "','"
@@ -24,7 +24,8 @@ public final class PurchaseDB {
                                                                 +itemCode       + "','"
                                                                 +itemName       + "',"
                                                                 +quantity       + ","
-                                                                +value          + ")";
+                                                                +value          + ",'"
+                                                                +tid            + "')";
         try{
             stmt.execute(in);
         }
@@ -32,9 +33,10 @@ public final class PurchaseDB {
             se.printStackTrace();
             return false;
         }
-            return true;
+        return true;
     }
-        public static void delete(Statement stmt,String id){
+    
+    public static void delete(Statement stmt,String id){
         String del="delete from purchase where purchaseId="+id+";";
         try {
             stmt.executeUpdate(del);
@@ -55,6 +57,20 @@ public final class PurchaseDB {
         }
         return false;
     }
+    
+    public static boolean checkExistingBillNo(Statement stmt, String bill){
+        String check = "select * from purchase where billNo='"+bill+"';";
+        try{
+            ResultSet rs = stmt.executeQuery(check);
+            if(rs.next()){
+                return true;
+            }
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return false;
+    }
+    
     public static TableModel getTable(Statement stmt){
         String sqlQuery = "select purchaseId as 'ID', branch as 'Branch', date as 'Date', billNo as 'Bill No:', party as 'Party', itemCode as 'Item Code', itemName as 'Item Name', quantity as 'Quantity',  value as 'Value' from purchase;";
 	TableModel table = null;
@@ -92,4 +108,18 @@ public final class PurchaseDB {
         }
         return rs1;
     }
+    
+    public static String getTidFromPid(Statement stmt, String pid){
+        String sql = "select tid from purchase where purchaseId="+pid+";";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            rs.next();
+            String tid = rs.getString(1);
+            return tid;
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
+    
 }

@@ -16,8 +16,8 @@ import javax.swing.table.TableModel;
  * @author lenovo
  */
 public final class PurchaseLatexDB {
-    public static boolean insert(Statement stmt, String branch, String date, String prBill,String party,double quantity, double drc, double dryRubber, double rate, double value ){
-        String in ="insert into purchaseLatex values(NULL,'"     +branch         + "','"
+    public static boolean insert(Statement stmt, String branch, String date, String prBill,String party,double quantity, double drc, double dryRubber, double rate, double value, String tid ){
+        String in ="insert into purchaseLatex values(NULL,'"    +branch         + "','"
                                                                 +date           + "','"
                                                                 +prBill         + "','"
                                                                 +party          + "',"
@@ -25,7 +25,8 @@ public final class PurchaseLatexDB {
                                                                 +drc            + ","
                                                                 +dryRubber      + ","
                                                                 +rate           + ","
-                                                                +value          + ")";
+                                                                +value          + ",'"
+                                                                +tid            + "')";
         try{
             stmt.execute(in);
         }
@@ -33,7 +34,7 @@ public final class PurchaseLatexDB {
             se.printStackTrace();
             return false;
         }
-            return true;
+        return true;
     }
     public static void delete(Statement stmt,String id){
         String del="delete from purchaseLatex where purchaseLatexId="+id+";";
@@ -78,6 +79,19 @@ public final class PurchaseLatexDB {
             se.printStackTrace();
         }
         return rs;
+    }
+    
+    public static String getTidFromPid(Statement stmt, String pid){
+        String sql = "select tid from purchaseLatex where purchaseLatexId="+pid+";";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            rs.next();
+            String tid = rs.getString(1);
+            return tid;
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
     }
     
     public static ResultSet selectOneId(Statement stmt, String id){

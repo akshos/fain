@@ -185,6 +185,7 @@ public class Main extends javax.swing.JFrame {
             closeAllInternalFrames();
             setDatabaseStatus();
         }
+        setDatabaseStatus();
     }
     
     private void loadSession(){
@@ -193,8 +194,8 @@ public class Main extends javax.swing.JFrame {
         if(askForSessionChoice()){
             dbFound = true;
             closeAllInternalFrames();
-            setDatabaseStatus();
         }
+        setDatabaseStatus();
     }
     
     private void logout(){

@@ -16,9 +16,8 @@ import javax.swing.table.TableModel;
  * @author lenovo
  */
 public final class StockDB {
-    public static boolean insert(Statement stmt, String itemCode,String itemName,int currentStock, double rate, String purchaseAC, String saleAC, String stockAC ){
-        String in ="insert into stock values('"      +itemCode      + "','"
-                                                     +itemName      + "',"
+    public static boolean insert(Statement stmt, String itemName,int currentStock, double rate, String purchaseAC, String saleAC, String stockAC ){
+        String in ="insert into stock values(NULL,'" +itemName      + "',"
                                                      +currentStock  + ","
                                                      +rate          + ",'"
                                                      +purchaseAC    + "','"
@@ -34,7 +33,7 @@ public final class StockDB {
             return true;
     }
     public static void delete(Statement stmt,String id){
-        String del="delete from stock where itemCode='"+id+"';";
+        String del="delete from stock where itemCode="+id+";";
         try {
             stmt.executeUpdate(del);
         } catch (SQLException ex) {
@@ -42,8 +41,8 @@ public final class StockDB {
         }
     }
     
-        public static boolean checkExisting(Statement stmt,String id){
-        String check="select * from stock where itemCode='"+id+"';";
+    public static boolean checkExisting(Statement stmt,String id){
+        String check="select * from stock where itemCode="+id+";";
         try {
             ResultSet rs=stmt.executeQuery(check);
             if (rs.next()){
@@ -66,7 +65,7 @@ public final class StockDB {
             se.printStackTrace();
 	}
 	return table;
-}
+    }
     public static ResultSet selectAll(Statement stmt){
         String sql="select * from stock;";
         ResultSet rs = null;
@@ -80,7 +79,7 @@ public final class StockDB {
     }
     
     public static ResultSet selectOneId(Statement stmt, String id){
-        String sql="select * from stock where itemCode='"+id+"';";
+        String sql="select * from stock where itemCode="+id+";";
         ResultSet rs=null;
         ResultSet rs1=null;
         try{
@@ -92,8 +91,9 @@ public final class StockDB {
         }
         return rs1;
     }
+    
     public static String[][] getItems(Statement stmt){
-        String sql="select itemCode,itemName from stock;";
+        String sql="select itemCode, itemName from stock;";
         try {
             ResultSet rs=stmt.executeQuery(sql);
             return ResultSetToStringArray.getStringArray(rs);
@@ -102,5 +102,43 @@ public final class StockDB {
             Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
-    } 
+    }
+    
+    public static String getNameFromCode(Statement stmt, String code){
+        String sql = "select itemName from stock where itemCode="+code+";";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            rs.next();
+            return rs.getString(1);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return "";
+    }
+    
+    public static String getPurchaseAccount(Statement stmt, String itemCode){
+        String sql = "select purchaseAC from stock where itemCode="+itemCode+";";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            rs.next();
+            return rs.getString(1);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static String getLatexPurchaseAccount(Statement stmt){
+        String sql = "select purchaseAC from stock where itemName='Latex';";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            if( rs.next() )
+                return rs.getString(1);
+            else
+                return "none";
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
 }

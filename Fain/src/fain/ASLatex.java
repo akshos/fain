@@ -8,6 +8,7 @@ package fain;
 import database.DBConnection;
 import database.MasterDB;
 import database.SalesDB;
+import database.TransactionDB;
 import java.sql.Statement;
 import utility.Codes;
 /**
@@ -72,8 +73,8 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         double dryrubber=Double.parseDouble(dryrubberTbox.getText());
         double rate     =Double.parseDouble(rateTbox.getText());
         double value    =Double.parseDouble(valueTbox.getText());
-
-        SalesDB.insert(stmt, branch, date, bill, party, bnfrom, bnto, quantity, drc, dryrubber, rate, value);
+        String tid = TransactionDB.generateTid();
+        SalesDB.insert(stmt, branch, date, bill, party, bnfrom, bnto, quantity, drc, dryrubber, rate, value, tid);
         
         if(prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_SLATEX);
