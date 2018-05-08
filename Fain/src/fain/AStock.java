@@ -7,6 +7,7 @@ package fain;
 import database.DBConnection;
 import database.MasterDB;
 import database.StockDB;
+import java.awt.Dimension;
 import java.sql.Statement;
 import javax.swing.DefaultComboBoxModel;
 import utility.Codes;
@@ -144,6 +145,38 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
                 this.loadStockAccounts();
         }
     }
+    
+    private void addNewMasterAccount(){
+        AMaster item = new AMaster(dbConnection, Codes.NEW_ENTRY, null, mainFrame, this.level+1, this);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            System.out.println("setting size");
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 300);
+        }
+        mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }
+    
+    private void checkPurchasesChangedItem(){
+        String item = this.purchasesCbox.getSelectedItem().toString();
+        if(item.compareTo("Add New") == 0){
+            addNewMasterAccount();
+        }
+    }
+    
+    private void checkSalesChangedItem(){
+        String item = this.salesCbox.getSelectedItem().toString();
+        if(item.compareTo("Add New") == 0){
+            addNewMasterAccount();
+        }
+    }
+    private void checkStockChangedItem(){
+        String item = this.stockCbox.getSelectedItem().toString();
+        if(item.compareTo("Add New") == 0){
+            addNewMasterAccount();
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -237,12 +270,27 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         rightInerPannel.add(rateTbox);
 
         purchasesCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        purchasesCbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                purchasesCboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(purchasesCbox);
 
         salesCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        salesCbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                salesCboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(salesCbox);
 
         stockCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        stockCbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                stockCboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(stockCbox);
 
         buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 60, 2, 60));
@@ -277,6 +325,33 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
     private void currentStockTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_currentStockTboxActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_currentStockTboxActionPerformed
+
+    private void purchasesCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_purchasesCboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
+       if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.checkPurchasesChangedItem();
+        }
+    }//GEN-LAST:event_purchasesCboxKeyPressed
+
+    private void salesCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_salesCboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
+       if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.checkSalesChangedItem();
+        }
+    }//GEN-LAST:event_salesCboxKeyPressed
+
+    private void stockCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_stockCboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
+       if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.checkStockChangedItem();
+        }
+    }//GEN-LAST:event_stockCboxKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

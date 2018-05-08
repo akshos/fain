@@ -13,6 +13,7 @@ import database.PurchaseDB;
 import database.PurchaseLatexDB;
 import database.StockDB;
 import database.TransactionDB;
+import java.awt.Dimension;
 import java.sql.Statement;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -220,7 +221,23 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         double value = rate * dryRubber;
         this.valueTbox.setText(String.valueOf(value));
     }
-        
+    private void addNewBranch(){
+        ABranches item = new ABranches(dbConnection, Codes.NEW_ENTRY, null, mainFrame, this.level+1, this);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }
+    
+    private void checkBranchChangedItem(){
+        String item = this.branchCbox.getSelectedItem().toString();
+        if(item.compareTo("Add New") == 0){
+            addNewBranch();
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -330,6 +347,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         branchCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
+                branchCboxKeyPressed(evt);
             }
         });
         rightInerPannel.add(branchCbox);
@@ -459,9 +477,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
     }// </editor-fold>//GEN-END:initComponents
 
     private void keyPressedHandler(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyPressedHandler
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }
+
     }//GEN-LAST:event_keyPressedHandler
 
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
@@ -516,6 +532,16 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
     private void prBillTboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_prBillTboxFocusLost
         chechPrBill();
     }//GEN-LAST:event_prBillTboxFocusLost
+
+    private void branchCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_branchCboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.checkBranchChangedItem();
+        }
+        
+    }//GEN-LAST:event_branchCboxKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
