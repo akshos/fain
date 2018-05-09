@@ -162,6 +162,7 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
             resetParty();
             return;
         }
+        this.partyCbox.setEnabled(true);
         int index = this.branchCbox.getSelectedIndex();
         String branchCode = this.branchData[0][index];
         partyData = CustomerDB.getCustomersInBranch(this.dbConnection.getStatement(), branchCode);
@@ -209,12 +210,16 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         if(code == Codes.REFRESH_ALL){
             loadBranch();
             loadParty();
+            loadItems();
         }
         else if(code == Codes.REFRESH_BRANCHES){
             loadBranch();
         }
         else if(code == Codes.REFRESH_MASTER){
             loadParty();
+        }
+        else if(code == Codes.REFRESH_STOCK){
+            loadItems();
         }
     }
     
@@ -266,6 +271,24 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         String item = this.partyCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
             addNewMasterAccount();
+        }
+    }
+    
+    private void addNewStock(){
+        AStock item = new AStock(dbConnection, Codes.NEW_ENTRY, null, mainFrame, this.level+1, this);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 360);
+        }
+        mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }
+    
+    private void checkItemChangedItem(){
+        String item = this.itemCodeCbox.getSelectedItem().toString();
+        if(item.compareTo("Add New") == 0){
+            addNewStock();
         }
     }
 
@@ -417,7 +440,7 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         });
         itemCodeCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
+                itemCodeCboxKeyPressed(evt);
             }
         });
         rightInerPannel.add(itemCodeCbox);
@@ -543,6 +566,12 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
             this.doDefaultCloseAction();
         }        // TODO add your handling code here:
     }//GEN-LAST:event_valueTboxKeyPressed
+
+    private void itemCodeCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_itemCodeCboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.checkItemChangedItem();
+        }
+    }//GEN-LAST:event_itemCodeCboxKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
