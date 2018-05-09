@@ -591,7 +591,9 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
     }//GEN-LAST:event_branchCboxKeyPressed
 
     private void partyCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_partyCboxKeyPressed
-        checkPartyChangedItem();        // TODO add your handling code here:
+         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            checkPartyChangedItem();    
+        }
     }//GEN-LAST:event_partyCboxKeyPressed
 
 

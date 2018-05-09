@@ -67,7 +67,10 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         
     @Override
     public final void refreshContents(int code){
-        if(code == Codes.CUSTOMER_ADDED){
+        if(code == Codes.REFRESH_ALL){
+            loadCategory();
+        }
+        else if(code == Codes.CUSTOMER_ADDED){
             this.customerAdded = true;
             this.enterButton.requestFocus();
         }
@@ -86,6 +89,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         int indexValC=Arrays.asList(categoryData[0]).indexOf(data[4]);
         this.categoryCbox.setSelectedIndex(indexValC);
     }
+    
     private void loadCategory(){
         System.out.println("loading categorycbox");
         categoryData = CategoryDB.getCategory(this.dbConnection.getStatement());
