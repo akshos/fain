@@ -377,6 +377,11 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
                 dateTboxActionPerformed(evt);
             }
         });
+        dateTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                dateTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(dateTbox);
 
         billNumberTbox.addActionListener(new java.awt.event.ActionListener() {
@@ -431,12 +436,22 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
                 quantityTboxActionPerformed(evt);
             }
         });
+        quantityTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                quantityTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(quantityTbox);
 
         valueTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         valueTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 valueTboxActionPerformed(evt);
+            }
+        });
+        valueTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                valueTboxKeyPressed(evt);
             }
         });
         rightInerPannel.add(valueTbox);
@@ -510,6 +525,24 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
     private void itemCodeCboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_itemCodeCboxItemStateChanged
         this.setItemName();
     }//GEN-LAST:event_itemCodeCboxItemStateChanged
+
+    private void dateTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dateTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_dateTboxKeyPressed
+
+    private void quantityTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_quantityTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_quantityTboxKeyPressed
+
+    private void valueTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_valueTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_valueTboxKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

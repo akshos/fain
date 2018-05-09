@@ -410,6 +410,11 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
                 dateTboxActionPerformed(evt);
             }
         });
+        dateTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                dateTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(dateTbox);
 
         prBillTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
@@ -417,6 +422,11 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         prBillTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 prBillTboxFocusLost(evt);
+            }
+        });
+        prBillTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                prBillTboxKeyPressed(evt);
             }
         });
         rightInerPannel.add(prBillTbox);
@@ -447,6 +457,11 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
                 quantityTboxActionPerformed(evt);
             }
         });
+        quantityTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                quantityTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(quantityTbox);
 
         drcTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat(""))));
@@ -454,6 +469,11 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         drcTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 drcTboxActionPerformed(evt);
+            }
+        });
+        drcTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                drcTboxKeyPressed(evt);
             }
         });
         rightInerPannel.add(drcTbox);
@@ -471,6 +491,11 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
                 dryRubberTboxActionPerformed(evt);
             }
         });
+        dryRubberTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                dryRubberTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(dryRubberTbox);
 
         rateTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
@@ -478,6 +503,11 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         rateTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rateTboxActionPerformed(evt);
+            }
+        });
+        rateTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                rateTboxKeyPressed(evt);
             }
         });
         rightInerPannel.add(rateTbox);
@@ -493,6 +523,11 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         valueTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 valueTboxActionPerformed(evt);
+            }
+        });
+        valueTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                valueTboxKeyPressed(evt);
             }
         });
         rightInerPannel.add(valueTbox);
@@ -594,7 +629,52 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
          if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             checkPartyChangedItem();    
         }
+                 if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
     }//GEN-LAST:event_partyCboxKeyPressed
+
+    private void dateTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dateTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_dateTboxKeyPressed
+
+    private void prBillTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_prBillTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_prBillTboxKeyPressed
+
+    private void quantityTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_quantityTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_quantityTboxKeyPressed
+
+    private void drcTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_drcTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_drcTboxKeyPressed
+
+    private void dryRubberTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dryRubberTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_dryRubberTboxKeyPressed
+
+    private void rateTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rateTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_rateTboxKeyPressed
+
+    private void valueTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_valueTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_valueTboxKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

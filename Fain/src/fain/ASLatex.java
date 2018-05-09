@@ -427,6 +427,11 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
                 dateTboxActionPerformed(evt);
             }
         });
+        dateTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                dateTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(dateTbox);
 
         prBillTbox.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -474,6 +479,11 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
                 quantityTboxActionPerformed(evt);
             }
         });
+        quantityTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                quantityTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(quantityTbox);
 
         drcTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.000"))));
@@ -487,6 +497,11 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
                 drcTboxActionPerformed(evt);
             }
         });
+        drcTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                drcTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(drcTbox);
 
         dryRubberTbox.setEditable(false);
@@ -494,6 +509,11 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         dryRubberTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 dryRubberTboxActionPerformed(evt);
+            }
+        });
+        dryRubberTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                dryRubberTboxKeyPressed(evt);
             }
         });
         rightInerPannel.add(dryRubberTbox);
@@ -509,6 +529,11 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
                 rateTboxActionPerformed(evt);
             }
         });
+        rateTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                rateTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(rateTbox);
 
         valueTbox.setEditable(false);
@@ -516,6 +541,11 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         valueTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 valueTboxActionPerformed(evt);
+            }
+        });
+        valueTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                valueTboxKeyPressed(evt);
             }
         });
         rightInerPannel.add(valueTbox);
@@ -603,6 +633,42 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         this.showPartyAddress();
         this.checkPartyChangedItem();
     }//GEN-LAST:event_partyCboxItemStateChanged
+
+    private void dateTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dateTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_dateTboxKeyPressed
+
+    private void quantityTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_quantityTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_quantityTboxKeyPressed
+
+    private void drcTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_drcTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_drcTboxKeyPressed
+
+    private void dryRubberTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dryRubberTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_dryRubberTboxKeyPressed
+
+    private void rateTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rateTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_rateTboxKeyPressed
+
+    private void valueTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_valueTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_valueTboxKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

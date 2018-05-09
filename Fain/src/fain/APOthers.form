@@ -164,6 +164,7 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dateTboxActionPerformed"/>
+                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="dateTboxKeyPressed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="billNumberTbox">
@@ -226,6 +227,7 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="quantityTboxActionPerformed"/>
+                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="quantityTboxKeyPressed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JFormattedTextField" name="valueTbox">
@@ -236,6 +238,7 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="valueTboxActionPerformed"/>
+                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="valueTboxKeyPressed"/>
               </Events>
             </Component>
             <Container class="javax.swing.JPanel" name="buttonPanel">
