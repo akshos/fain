@@ -128,6 +128,9 @@
           </Layout>
           <SubComponents>
             <Component class="javax.swing.JTextField" name="itemNameTbox">
+              <Events>
+                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="itemNameTboxKeyPressed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JFormattedTextField" name="currentStockTbox">
               <Properties>
@@ -137,6 +140,7 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="currentStockTboxActionPerformed"/>
+                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="currentStockTboxKeyPressed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JFormattedTextField" name="rateTbox">
@@ -147,6 +151,7 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rateTboxActionPerformed"/>
+                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="rateTboxKeyPressed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JComboBox" name="purchasesCbox">

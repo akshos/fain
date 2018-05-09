@@ -27,6 +27,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
     int level;
     RefreshOption prevFrame;
     String[][] branchData;
+    String editId;
     /**
      * Creates new form MasterEntry
      */
@@ -47,10 +48,16 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         this.mainFrame = frame;
         this.dbConnection = db;
         this.prevFrame = prevFrame;
+        this.editId=id;
         initComponents();
         refreshContents(Codes.REFRESH_BRANCHES);
-        this.codeTbox.setText(code);
-        this.nameTbox.setText(name);
+        if (mode==Codes.EDIT){
+            loadContents();
+        }
+        else{
+            this.codeTbox.setText(code);
+            this.nameTbox.setText(name);
+        }
         this.codeTbox.setEditable(false);
         this.nameTbox.setEditable(false);
     }
@@ -70,6 +77,19 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         }
         cboxData[len] = "Add New";
         this.branchCbox.setModel(new DefaultComboBoxModel(cboxData));
+    }
+    private void loadContents(){
+        String[] data = CustomerDB.selectOneId(dbConnection.getStatement(), editId);
+        if(data == null){
+            System.out.println("Load Contents : selectedOneId has returned null");
+            return;
+        }
+        loadBranch();
+        this.codeTbox.setText(data[0]);
+        this.nameTbox.setText(data[1]);
+        this.addressTarea.setText(data[2]);
+        this.kgstTbox.setText(data[3]);
+        this.rbregnoTbox.setText(data[4]);
     }
     
     private void insertData(){
@@ -195,8 +215,26 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         outerPanel.add(leftInerPannel);
 
         rightInerPannel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
+
+        codeTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                codeTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(codeTbox);
+
+        nameTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                nameTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(nameTbox);
+
+        jScrollPane1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jScrollPane1KeyPressed(evt);
+            }
+        });
 
         addressTarea.setColumns(20);
         addressTarea.setRows(5);
@@ -216,7 +254,19 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
             }
         });
         rightInerPannel.add(branchCbox);
+
+        kgstTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                kgstTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(kgstTbox);
+
+        rbregnoTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                rbregnoTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(rbregnoTbox);
 
         buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 60, 2, 60));
@@ -226,6 +276,11 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         enterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 enterButtonActionPerformed(evt);
+            }
+        });
+        enterButton.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                enterButtonKeyPressed(evt);
             }
         });
         buttonPanel.add(enterButton, java.awt.BorderLayout.CENTER);
@@ -248,6 +303,9 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             this.checkChangedItem();
         }
+                if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
     }//GEN-LAST:event_branchCboxKeyPressed
 
     private void addressTareaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_addressTareaKeyPressed
@@ -259,6 +317,42 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
             evt.consume();
         }
     }//GEN-LAST:event_addressTareaKeyPressed
+
+    private void codeTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_codeTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_codeTboxKeyPressed
+
+    private void nameTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_nameTboxKeyPressed
+
+    private void jScrollPane1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jScrollPane1KeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_jScrollPane1KeyPressed
+
+    private void kgstTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_kgstTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_kgstTboxKeyPressed
+
+    private void rbregnoTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rbregnoTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_rbregnoTboxKeyPressed
+
+    private void enterButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterButtonKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_enterButtonKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -53,7 +53,7 @@ public final class CustomerDB {
         return false;
     }
     public static TableModel getTable(Statement stmt){
-        String sqlQuery = "select customerCode as 'ID', name as 'Name', address as 'Address',branch AS 'Branch' kgst as 'GST', rbno as 'RBNO' from customer;";
+        String sqlQuery = "select customerCode as 'ID', name as 'Name', address as 'Address',branch AS 'Branch', kgst as 'GST', rbno as 'RBNO' from customer;";
 	TableModel table = null;
         ResultSet rs = null;
 	try{

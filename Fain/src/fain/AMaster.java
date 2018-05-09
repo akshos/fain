@@ -11,6 +11,7 @@ import database.DBConnection;
 import database.MasterDB;
 import java.awt.Dimension;
 import java.sql.Statement;
+import java.util.Arrays;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
@@ -29,6 +30,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
     String[][] categoryData;
     boolean customerAdded = false;
     boolean existing = false;
+    String editId;
     /**
      * Creates new form MasterEntry
      */
@@ -41,29 +43,22 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         this.id = id;
         this.level = level;
         this.mainFrame = frame;
+        this.editId=id;
         initComponents();
-        if(mode == Codes.EDIT){
-            loadPrevRecord();
-        }
-        else{
-            loadCategory();
-        }
+        if(mode == Codes.EDIT) this.loadContents();
+        else refreshContents(Codes.REFRESH_ALL);
         prevFrame = null;
     }
     
     public AMaster(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame){
         this.dbConnection = db;
-        this.id = id;
+        this.editId = id;
         this.level = level;
         this.prevFrame = prevFrame;
         this.mainFrame = frame;
         initComponents();
-        if(mode == Codes.EDIT){
-            loadPrevRecord();
-        } 
-        else{
-            loadCategory();
-        }
+        if(mode == Codes.EDIT) this.loadContents();
+        else refreshContents(Codes.REFRESH_ALL);
     }
     
     private void loadPrevRecord(){
@@ -77,7 +72,20 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
             this.enterButton.requestFocus();
         }
     }
-    
+    private void loadContents(){
+        String[] data = MasterDB.selectOneId(dbConnection.getStatement(), editId);
+        if(data == null){
+            System.out.println("Load Contents : selectedOneId has returned null");
+            return;
+        }
+        this.accountCodeTbox.setText(data[0]);
+        this.accountHeadTbox.setText(data[1]);
+        this.yopBalanceTbox.setText(data[2]);
+        this.currentBalanceTbox.setText(data[3]);
+        loadCategory();
+        int indexValC=Arrays.asList(categoryData[0]).indexOf(data[4]);
+        this.categoryCbox.setSelectedIndex(indexValC);
+    }
     private void loadCategory(){
         System.out.println("loading categorycbox");
         categoryData = CategoryDB.getCategory(this.dbConnection.getStatement());

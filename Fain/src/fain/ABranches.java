@@ -128,20 +128,20 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         setTitle("Branches");
         setPreferredSize(new java.awt.Dimension(450, 410));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameClosing(evt);
             }
-            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
             }
         });
         addKeyListener(new java.awt.event.KeyAdapter() {
@@ -190,6 +190,11 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         rightInerPannel.setLayout(new java.awt.GridLayout(5, 0, 0, 10));
 
         nameTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        nameTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                nameTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(nameTbox);
 
         addressTarea.setColumns(20);
@@ -206,9 +211,19 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         rightInerPannel.add(jScrollPane1);
 
         kgstTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        kgstTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                kgstTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(kgstTbox);
 
         rbregnoTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        rbregnoTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                rbregnoTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(rbregnoTbox);
 
         buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 60, 2, 60));
@@ -219,6 +234,11 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         enterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 enterButtonActionPerformed(evt);
+            }
+        });
+        enterButton.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                enterButtonKeyPressed(evt);
             }
         });
         buttonPanel.add(enterButton, java.awt.BorderLayout.CENTER);
@@ -250,11 +270,38 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
             else input.transferFocus(); 
             evt.consume();
         }
+                if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
     }//GEN-LAST:event_addressTareaKeyPressed
 
     private void formInternalFrameClosing(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosing
         Preferences.storeInternalFrameDimension(this);
     }//GEN-LAST:event_formInternalFrameClosing
+
+    private void nameTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameTboxKeyPressed
+             if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }   // TODO add your handling code here:
+    }//GEN-LAST:event_nameTboxKeyPressed
+
+    private void kgstTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_kgstTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_kgstTboxKeyPressed
+
+    private void rbregnoTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rbregnoTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_rbregnoTboxKeyPressed
+
+    private void enterButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterButtonKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_enterButtonKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

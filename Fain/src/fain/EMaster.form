@@ -69,6 +69,9 @@
                 </Property>
                 <Property name="editingRow" type="int" value="0"/>
               </Properties>
+              <Events>
+                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="dataTableKeyPressed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -101,6 +104,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="ENT: Edit"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="editButtonActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="addButton">
           <Properties>

@@ -4,12 +4,15 @@
  * and open the template in the editor.
  */
 package fain;
+import database.BranchDB;
 import database.DBConnection;
 import database.MasterDB;
 import database.StockDB;
 import java.awt.Dimension;
 import java.sql.Statement;
+import java.util.Arrays;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import utility.Codes;
 /**
 /**
@@ -24,6 +27,7 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
     String purchaseData[][];
     String salesData[][];
     String stockData[][];
+    String editId;
     /**
      * Creates new form MasterEntry
      */
@@ -35,6 +39,7 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         this.level = level;
         this.mainFrame = frame;
         this.dbConnection = db;
+        this.editId=id;
         initComponents();
         refreshContents(Codes.REFRESH_ALL);
         this.prevFrame = null;
@@ -45,8 +50,10 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         this.level = level;
         this.mainFrame = frame;
         this.dbConnection = db;
+        this.editId=id;
         initComponents();
-        refreshContents(Codes.REFRESH_ALL);
+        if(mode == Codes.EDIT) this.loadContents();
+        else refreshContents(Codes.REFRESH_ALL);
     }
     
     private void insertData(){
@@ -56,23 +63,29 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         int currentStock    =Integer.parseInt(currentStockTbox.getText());
         double rate         =Double.parseDouble(rateTbox.getText());
         String purchase     ="";
-        Object selectedItem = purchasesCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            purchase = selectedItem.toString();
-        }      
+        String item = this.purchasesCbox.getSelectedItem().toString();
+        if(item.compareTo("Add New") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Please select a purchase account", "No Purchase Account", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        int index = this.purchasesCbox.getSelectedIndex();
+        purchase = this.purchaseData[0][index];
         String sales     ="";
-         selectedItem = salesCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            sales = selectedItem.toString();
+        item = this.salesCbox.getSelectedItem().toString();
+        if(item.compareTo("Add New") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Please select a sales account", "No Purchase Account", JOptionPane.WARNING_MESSAGE);
+            return;
         }
+        index = this.salesCbox.getSelectedIndex();
+        sales = this.salesData[0][index];
         String stock     ="";
-         selectedItem = stockCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            stock = selectedItem.toString();
+        item = this.stockCbox.getSelectedItem().toString();
+        if(item.compareTo("Add New") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Please select a stock account", "No Purchase Account", JOptionPane.WARNING_MESSAGE);
+            return;
         }
+        index = this.stockCbox.getSelectedIndex();
+        sales = this.stockData[0][index];
         StockDB.insert(stmt, iname, currentStock, rate, purchase, sales, stock);
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_STOCK);
@@ -128,6 +141,27 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         }
         cboxData[len] = "Add New";
         this.stockCbox.setModel(new DefaultComboBoxModel(cboxData));
+    }
+        private void loadContents(){
+        String[] data = StockDB.selectOneId(dbConnection.getStatement(), editId);
+        if(data == null){
+            System.out.println("Load Contents : selectedOneId has returned null");
+            return;
+        }
+        loadStockAccounts();
+        loadPurchaseAccounts();
+        loadSalesAccounts();
+        
+        this.itemNameTbox.setText(data[1]);
+        this.currentStockTbox.setText(data[2]);
+        this.rateTbox.setText(data[3]);
+        int indexValP=Arrays.asList(purchaseData[0]).indexOf(data[4]);
+        //System.out.println("purchase index"+indexValP+" "+purchaseData[0][0]);
+        this.purchasesCbox.setSelectedIndex(indexValP);
+        int indexValS=Arrays.asList(salesData[0]).indexOf(data[5]);
+        this.salesCbox.setSelectedIndex(indexValS);
+        int indexValC=Arrays.asList(stockData[0]).indexOf(data[6]);
+        this.stockCbox.setSelectedIndex(indexValC);
     }
     
     public void refreshContents(int code) {
@@ -251,6 +285,12 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         outerPanel.add(leftInerPannel);
 
         rightInerPannel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
+
+        itemNameTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                itemNameTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(itemNameTbox);
 
         currentStockTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat(""))));
@@ -259,12 +299,22 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
                 currentStockTboxActionPerformed(evt);
             }
         });
+        currentStockTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                currentStockTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(currentStockTbox);
 
         rateTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         rateTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rateTboxActionPerformed(evt);
+            }
+        });
+        rateTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                rateTboxKeyPressed(evt);
             }
         });
         rightInerPannel.add(rateTbox);
@@ -352,6 +402,24 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
             this.checkStockChangedItem();
         }
     }//GEN-LAST:event_stockCboxKeyPressed
+
+    private void itemNameTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_itemNameTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_itemNameTboxKeyPressed
+
+    private void currentStockTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_currentStockTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_currentStockTboxKeyPressed
+
+    private void rateTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rateTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_rateTboxKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

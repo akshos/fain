@@ -11,6 +11,7 @@ import database.MasterDB;
 import database.TransactionDB;
 import java.awt.Dimension;
 import java.sql.Statement;
+import java.util.Arrays;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import utility.Codes;
@@ -25,6 +26,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
     RefreshOption prevFrame;
     String[][] accountData;
     String branchData[][];
+    String editId;
     /**
      * Creates new form MasterEntry
      */
@@ -39,6 +41,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         initComponents();
         refreshContents(Codes.REFRESH_ALL);
         this.prevFrame = null;
+        this.editId=id;
     }
     
     public ATransaction(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame){
@@ -46,8 +49,10 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         this.level = level;
         this.mainFrame = frame;
         this.dbConnection = db;
+        this.editId=id;
         initComponents();
-        refreshContents(Codes.REFRESH_ALL);
+        if(mode == Codes.EDIT) this.loadContents();
+        else refreshContents(Codes.REFRESH_ALL);
     }
     
     @Override
@@ -80,7 +85,24 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         cboxData[len] = "Add New";
         this.branchCbox.setModel(new DefaultComboBoxModel(cboxData));
     }
-    
+    private void loadContents(){
+        String[] data = TransactionDB.selectOneId(dbConnection.getStatement(), editId);
+        if(data == null){
+            System.out.println("Load Contents : selectedOneId has returned null");
+            return;
+        }
+        this.dateTbox.setText(data[1]);
+        loadBranch();
+        loadCreditDebit();
+        int indexValB=Arrays.asList(branchData[0]).indexOf(data[2]);
+        this.branchCbox.setSelectedIndex(indexValB);
+        int indexValD=Arrays.asList(accountData[0]).indexOf(data[3]);
+        this.debitCbox.setSelectedIndex(indexValD);
+        int indexValC=Arrays.asList(accountData[0]).indexOf(data[4]);
+        this.creditCbox.setSelectedIndex(indexValC);
+        this.amountTbox.setText(data[5]);
+        this.narrationTbox.setText(data[6]);
+    }
     private void loadCreditDebit(){
         int creditSelected = this.creditCbox.getSelectedIndex();
         int debitSelected = this.debitCbox.getSelectedIndex();
@@ -270,6 +292,11 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
                 dateTboxActionPerformed(evt);
             }
         });
+        dateTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                dateTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(dateTbox);
 
         branchCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
@@ -301,12 +328,27 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
 
         amountTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("###0.00"))));
         amountTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        amountTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                amountTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(amountTbox);
 
         narrationTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        narrationTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                narrationTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(narrationTbox);
 
         buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 60, 2, 60));
+        buttonPanel.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                buttonPanelKeyPressed(evt);
+            }
+        });
         buttonPanel.setLayout(new java.awt.BorderLayout());
 
         enterButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -314,6 +356,11 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         enterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 enterButtonActionPerformed(evt);
+            }
+        });
+        enterButton.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                enterButtonKeyPressed(evt);
             }
         });
         buttonPanel.add(enterButton, java.awt.BorderLayout.CENTER);
@@ -340,11 +387,17 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             this.checkBranchChangedItem();
         }
+                if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
     }//GEN-LAST:event_branchCboxKeyPressed
 
     private void debitCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_debitCboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             this.checkDebitChangedItem();
+        }
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
         }
     }//GEN-LAST:event_debitCboxKeyPressed
 
@@ -352,7 +405,40 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             this.checkCreditChangedItem();
         }
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
     }//GEN-LAST:event_creditCboxKeyPressed
+
+    private void dateTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dateTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_dateTboxKeyPressed
+
+    private void amountTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_amountTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_amountTboxKeyPressed
+
+    private void narrationTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_narrationTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_narrationTboxKeyPressed
+
+    private void buttonPanelKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buttonPanelKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonPanelKeyPressed
+
+    private void enterButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterButtonKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_enterButtonKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
