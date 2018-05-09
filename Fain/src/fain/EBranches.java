@@ -58,6 +58,19 @@ public class EBranches extends javax.swing.JInternalFrame implements RefreshOpti
         }
     }
     
+    private void editEntry(){
+        int index = this.dataTable.getSelectedRow();
+        String id = this.dataTable.getModel().getValueAt(index, 0).toString();
+        ABranches item = new ABranches(dbConnection, Codes.EDIT, id, mainFrame, this.level+1, this);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -319,6 +332,11 @@ public class EBranches extends javax.swing.JInternalFrame implements RefreshOpti
                 return canEdit [columnIndex];
             }
         });
+        dataTable.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                dataTableKeyPressed(evt);
+            }
+        });
         tableScrollPane.setViewportView(dataTable);
 
         upperPanel.add(tableScrollPane, java.awt.BorderLayout.CENTER);
@@ -329,9 +347,16 @@ public class EBranches extends javax.swing.JInternalFrame implements RefreshOpti
         lowerPanel.setPreferredSize(new java.awt.Dimension(639, 50));
         lowerPanel.setLayout(new java.awt.GridLayout(1, 6, 20, 0));
 
+        editButton.setMnemonic(java.awt.event.KeyEvent.VK_F1);
         editButton.setText("ENT: Edit");
+        editButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editButtonActionPerformed(evt);
+            }
+        });
         lowerPanel.add(editButton);
 
+        addButton.setMnemonic(java.awt.event.KeyEvent.VK_F2);
         addButton.setText("F2: Add");
         addButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -364,6 +389,16 @@ public class EBranches extends javax.swing.JInternalFrame implements RefreshOpti
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         addEntry();
     }//GEN-LAST:event_addButtonActionPerformed
+
+    private void dataTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dataTableKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.editEntry();
+        }
+    }//GEN-LAST:event_dataTableKeyPressed
+
+    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
+        editEntry();
+    }//GEN-LAST:event_editButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

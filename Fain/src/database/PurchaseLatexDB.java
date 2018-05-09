@@ -57,6 +57,21 @@ public final class PurchaseLatexDB {
         }
         return false;
     }
+    
+    public static boolean checkExistingBillNo(Statement stmt, String bill){
+        String check = "select * from purchase where prBill='"+bill+"';";
+        try{
+            ResultSet rs = stmt.executeQuery(check);
+            if(rs.next()){
+                return true;
+            }
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return false;
+    }
+    
+    
     public static TableModel getTable(Statement stmt){
         String sqlQuery = "select purchaseLatexId as 'ID', branch as 'Branch', date as 'Date', prBill as 'Pr. Bill', party as 'Party', quantity as 'Quantity', drc as 'DRC', dryRubber as 'Dry Rubber', rate as 'Rate' , value as 'Value' from purchaseLatex;";
 	TableModel table = null;

@@ -16,7 +16,7 @@ import javax.swing.table.TableModel;
  * @author akshos
  */
 public class ResultSetToStringArray {
-    public static String[][] getStringArray( ResultSet rs ){
+    public static String[][] getStringArray2col( ResultSet rs ){
         try{
 
             Vector<String> rows = new Vector<String>();
@@ -66,6 +66,23 @@ public class ResultSetToStringArray {
                 se.printStackTrace();
         }catch( Exception e ){
                 e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static String[] getRowAsStringArray(ResultSet rs){
+        try{
+            if(rs.next()){
+                int colCount = rs.getMetaData().getColumnCount();
+                String rowData[] = new String[colCount];
+                for(int i = 0; i < colCount; i++){
+                    rowData[i] = rs.getString(i+1);
+                }
+                return rowData;
+            }
+            return null;
+        }catch(SQLException se){
+            se.printStackTrace();
         }
         return null;
     }

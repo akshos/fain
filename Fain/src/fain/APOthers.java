@@ -5,11 +5,16 @@
  */
 package fain;
 
+import database.BranchDB;
+import database.CustomerDB;
 import database.DBConnection;
 import database.MasterDB;
 import database.PurchaseDB;
+import database.StockDB;
 import database.TransactionDB;
+import java.awt.Dimension;
 import java.sql.Statement;
+import javax.swing.DefaultComboBoxModel;
 import utility.Codes;
 /**
  *
@@ -20,6 +25,9 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
     Main mainFrame;
     int level;
     RefreshOption prevFrame;
+    String branchData[][];
+    String partyData[][];
+    String itemData[][];
     /**
      * Creates new form MasterEntry
      */
@@ -32,10 +40,7 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         this.mainFrame  = frame;
         this.dbConnection = db;
         initComponents();
-        if(mode == Codes.EDIT){
-            refreshContents(Codes.REFRESH_ALL);
-        }
-        prevFrame = null;
+        refreshContents(Codes.REFRESH_ALL);
     }
     
     public APOthers(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame){
@@ -44,9 +49,7 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         this.mainFrame  = frame;
         this.dbConnection = db;
         initComponents();
-        if(mode == Codes.EDIT){
-            refreshContents(Codes.REFRESH_ALL);
-        }
+        refreshContents(Codes.REFRESH_ALL);
     }
     
     private void insertData(){
@@ -58,7 +61,7 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
             branch = selectedItem.toString();
         }
         String date = dateTbox.getText();
-        String bill = billnumberTbox.getText();
+        String bill = billNumberTbox.getText();
         String party      ="";
         selectedItem = partyCbox.getSelectedItem();
         if (selectedItem != null)
@@ -66,7 +69,7 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
             party = selectedItem.toString();
         }
         String itemcode      ="";
-        selectedItem = itemcodeCbox.getSelectedItem();
+        selectedItem = itemCodeCbox.getSelectedItem();
         if (selectedItem != null)
         {
             itemcode = selectedItem.toString();
@@ -78,6 +81,170 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         PurchaseDB.insert(stmt, branch, date, bill, party, itemcode, itemname, quantity, value, tid);
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_POTHERS);
+        }
+    }
+    
+    private void setItemName(){
+        int index = this.itemCodeCbox.getSelectedIndex();
+        String curr = this.itemCodeCbox.getSelectedItem().toString();
+        String itemName = "";
+        if(curr.compareTo("Add New") != 0){
+            itemName = this.itemData[1][index];
+        }
+        this.itemnameTbox.setText(itemName);
+    }
+    
+    private void loadItems(){
+        System.out.println("loading itemcbox");
+        itemData = StockDB.getItems(this.dbConnection.getStatement());
+        int len;
+        if(itemData  == null){
+            len =  0;
+        }else{
+            len = itemData[0].length;
+        }
+        String[] cboxData = new String[len+1];
+        for(int i = 0; i < len; i++){
+            cboxData[i] = itemData[1][i] + " (" + itemData[0][i] + ")";
+        }
+        cboxData[len] = "Add New";
+        this.itemCodeCbox.setModel(new DefaultComboBoxModel(cboxData));
+    }
+    
+    private void loadBranch(){
+        System.out.println("loading branchcbox");
+        branchData = BranchDB.getBranch(this.dbConnection.getStatement());
+        int len;
+        if(branchData  == null){
+            len =  0;
+        }else{
+            len = branchData[0].length;
+        }
+        String[] cboxData = new String[len+1];
+        for(int i = 0; i < len; i++){
+            cboxData[i] = branchData[1][i] + " (" + branchData[0][i] + ")";
+        }
+        cboxData[len] = "Add New";
+        this.branchCbox.setModel(new DefaultComboBoxModel(cboxData));
+    }
+    
+    private void resetParty(){
+        String resetData[] = new String[1];
+        resetData[0] = "Select Branch";
+        this.partyCbox.setModel(new DefaultComboBoxModel(resetData));
+        this.partyCbox.setEnabled(false);
+    }
+    
+    private void loadParty(){
+        String item = this.branchCbox.getSelectedItem().toString();
+        if(item.compareTo("Add New") == 0){
+            resetParty();
+            return;
+        }
+        int index = this.branchCbox.getSelectedIndex();
+        String branchCode = this.branchData[0][index];
+        partyData = CustomerDB.getCustomersInBranch(this.dbConnection.getStatement(), branchCode);
+        int len;
+        String[] cboxData = null;
+        if(partyData  == null){
+            len =  0;
+            cboxData = new String[1];
+            cboxData[0] = "Add New";
+            this.partyCbox.setToolTipText("No customers available for branch");
+        }else{
+            len = partyData[0].length;
+            cboxData = new String[len+1];
+            for(int i = 0; i < len; i++){
+                cboxData[i] = partyData[1][i] + "  (" + partyData[0][i] +")"  ;
+            }
+            cboxData[len] = "Add New";
+            String address = this.partyData[2][0];
+            this.partyCbox.setToolTipText(address);
+        }
+        this.partyCbox.setModel(new DefaultComboBoxModel(cboxData));
+    }
+    
+    private void showPartyAddress(){
+       String item = this.partyCbox.getSelectedItem().toString();
+       if(item.compareTo("None") == 0){
+           this.partyCbox.setToolTipText("No customers available for branch");
+           return;
+       }
+       int index = this.partyCbox.getSelectedIndex();
+       String address = this.partyData[2][index];
+       this.partyCbox.setToolTipText(address);
+       System.out.println("Address : " + address);
+       try
+        {
+            java.awt.event.KeyEvent ke = new java.awt.event.KeyEvent(partyCbox, java.awt.event.KeyEvent.KEY_PRESSED, System.currentTimeMillis(), java.awt.event.InputEvent.CTRL_MASK, java.awt.event.KeyEvent.VK_F1, java.awt.event.KeyEvent.CHAR_UNDEFINED);
+            this.partyCbox.dispatchEvent(ke);
+        }
+        catch (Throwable e1)
+        {e1.printStackTrace();}
+    }
+    
+     @Override
+    public void refreshContents(int code) {
+        if(code == Codes.REFRESH_ALL){
+            loadBranch();
+            loadParty();
+        }
+        else if(code == Codes.REFRESH_BRANCHES){
+            loadBranch();
+        }
+        else if(code == Codes.REFRESH_MASTER){
+            loadParty();
+        }
+    }
+    
+    private boolean chechPrBill(){
+        String billNo = this.billNumberTbox.getText();
+        if(billNo.compareTo("") == 0){
+            this.billNumberTbox.setText("<html>Pr. Bill <span style=\"color:red\">Empty</span></html>");
+            return false;
+        }
+        if(PurchaseDB.checkExistingBillNo(dbConnection.getStatement(), billNo)){
+            this.billNumberTbox.setText("<html>Pr. Bill <span style=\"color:red\">Duplicate</span></html>");
+            return false;
+        }
+        this.billNumberTbox.setText("<html>Pr. Bill</html>");
+        return true;
+    }
+    
+    private void addNewBranch(){
+        ABranches item = new ABranches(dbConnection, Codes.NEW_ENTRY, null, mainFrame, this.level+1, this);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }
+    
+    private void checkBranchChangedItem(){
+        String item = this.branchCbox.getSelectedItem().toString();
+        if(item.compareTo("Add New") == 0){
+            addNewBranch();
+        }
+    }
+    
+    private void addNewMasterAccount(){
+        AMaster item = new AMaster(dbConnection, Codes.NEW_ENTRY, null, mainFrame, this.level+1, this);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            System.out.println("setting size");
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 300);
+        }
+        mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }
+    
+    private void checkPartyChangedItem(){
+        String item = this.partyCbox.getSelectedItem().toString();
+        if(item.compareTo("Add New") == 0){
+            addNewMasterAccount();
         }
     }
 
@@ -106,9 +273,9 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         rightInerPannel = new javax.swing.JPanel();
         branchCbox = new javax.swing.JComboBox<>();
         dateTbox = new javax.swing.JFormattedTextField();
-        billnumberTbox = new javax.swing.JTextField();
+        billNumberTbox = new javax.swing.JTextField();
         partyCbox = new javax.swing.JComboBox<>();
-        itemcodeCbox = new javax.swing.JComboBox<>();
+        itemCodeCbox = new javax.swing.JComboBox<>();
         itemnameTbox = new javax.swing.JTextField();
         quantityTbox = new javax.swing.JFormattedTextField();
         valueTbox = new javax.swing.JFormattedTextField();
@@ -167,6 +334,11 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         rightInerPannel.setLayout(new java.awt.GridLayout(9, 0, 0, 10));
 
         branchCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        branchCbox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                branchCboxItemStateChanged(evt);
+            }
+        });
         branchCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -186,34 +358,45 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         });
         rightInerPannel.add(dateTbox);
 
-        billnumberTbox.addActionListener(new java.awt.event.ActionListener() {
+        billNumberTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                billnumberTboxActionPerformed(evt);
+                billNumberTboxActionPerformed(evt);
             }
         });
-        billnumberTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+        billNumberTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
             }
         });
-        rightInerPannel.add(billnumberTbox);
+        rightInerPannel.add(billNumberTbox);
 
         partyCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        partyCbox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                partyCboxItemStateChanged(evt);
+            }
+        });
         partyCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
+                partyCboxKeyPressed(evt);
             }
         });
         rightInerPannel.add(partyCbox);
 
-        itemcodeCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        itemcodeCbox.addKeyListener(new java.awt.event.KeyAdapter() {
+        itemCodeCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        itemCodeCbox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                itemCodeCboxItemStateChanged(evt);
+            }
+        });
+        itemCodeCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
             }
         });
-        rightInerPannel.add(itemcodeCbox);
+        rightInerPannel.add(itemCodeCbox);
 
+        itemnameTbox.setEditable(false);
         itemnameTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -260,7 +443,10 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
     private void keyPressedHandler(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyPressedHandler
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
+        }
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            
+        }
     }//GEN-LAST:event_keyPressedHandler
 
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
@@ -271,9 +457,9 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         // TODO add your handling code here:
     }//GEN-LAST:event_dateTboxActionPerformed
 
-    private void billnumberTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_billnumberTboxActionPerformed
+    private void billNumberTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_billNumberTboxActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_billnumberTboxActionPerformed
+    }//GEN-LAST:event_billNumberTboxActionPerformed
 
     private void quantityTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quantityTboxActionPerformed
         // TODO add your handling code here:
@@ -283,17 +469,38 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         // TODO add your handling code here:
     }//GEN-LAST:event_valueTboxActionPerformed
 
+    private void partyCboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_partyCboxItemStateChanged
+        this.showPartyAddress();
+    }//GEN-LAST:event_partyCboxItemStateChanged
+
+    private void branchCboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_branchCboxItemStateChanged
+        this.loadParty();
+    }//GEN-LAST:event_branchCboxItemStateChanged
+
+    private void partyCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_partyCboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.checkPartyChangedItem();
+        }
+    }//GEN-LAST:event_partyCboxKeyPressed
+
+    private void itemCodeCboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_itemCodeCboxItemStateChanged
+        this.setItemName();
+    }//GEN-LAST:event_itemCodeCboxItemStateChanged
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField billNumberTbox;
     private javax.swing.JLabel billnumberLabel;
-    private javax.swing.JTextField billnumberTbox;
     private javax.swing.JComboBox<String> branchCbox;
     private javax.swing.JLabel branchLabel;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JLabel dateLabel;
     private javax.swing.JFormattedTextField dateTbox;
     private javax.swing.JButton enterButton;
-    private javax.swing.JComboBox<String> itemcodeCbox;
+    private javax.swing.JComboBox<String> itemCodeCbox;
     private javax.swing.JLabel itemcodeLabel;
     private javax.swing.JLabel itemnameLabel;
     private javax.swing.JTextField itemnameTbox;
@@ -311,8 +518,5 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
     private javax.swing.JFormattedTextField valueTbox;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void refreshContents(int REFRESH_ALL) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+   
 }

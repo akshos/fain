@@ -27,6 +27,7 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
     int level;
     Main mainFrame;
     RefreshOption prevFrame;
+    String editId;
     
     public ABranches() {
         initComponents();
@@ -37,10 +38,9 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         this.level = level;
         this.mainFrame = frame;
         this.prevFrame = null;
+        this.editId = id;
         initComponents();
-        if(mode == Codes.EDIT){
-            refreshContents(Codes.REFRESH_ALL);
-        }
+        refreshContents(Codes.REFRESH_ALL);
     }
     
     public ABranches(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame){
@@ -48,10 +48,27 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         this.level = level;
         this.mainFrame = frame;
         this.prevFrame = prevFrame;
+        this.editId = id;
         initComponents();
-        if(mode == Codes.EDIT){
-            refreshContents(Codes.REFRESH_ALL);
+        if(mode == Codes.EDIT) this.loadContents();
+        else refreshContents(Codes.REFRESH_ALL);
+    }
+    
+    @Override
+    public void refreshContents(int type) {
+        
+    }
+    
+    private void loadContents(){
+        String[] data = BranchDB.selectOneId(dbConnection.getStatement(), editId);
+        if(data == null){
+            System.out.println("Load Contents : selectedOneId has returned null");
+            return;
         }
+        this.nameTbox.setText(data[1]);
+        this.addressTarea.setText(data[2]);
+        this.kgstTbox.setText(data[3]);
+        this.rbregnoTbox.setText(data[4]);
     }
     
     private boolean validateFields(String name, String address, String kgst, String rbno){
@@ -260,8 +277,5 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
     private javax.swing.JLabel yopBalLabel;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void refreshContents(int type) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
 }

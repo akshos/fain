@@ -96,7 +96,7 @@ public final class StockDB {
         String sql="select itemCode, itemName from stock;";
         try {
             ResultSet rs=stmt.executeQuery(sql);
-            return ResultSetToStringArray.getStringArray(rs);
+            return ResultSetToStringArray.getStringArray2col(rs);
             
         } catch (SQLException ex) {
             Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);

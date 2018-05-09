@@ -96,7 +96,7 @@ public final class MasterDB {
         String sql="select accountNo,accountHead from master;";
         try {
             ResultSet rs=stmt.executeQuery(sql);
-            return ResultSetToStringArray.getStringArray(rs);
+            return ResultSetToStringArray.getStringArray2col(rs);
             
         } catch (SQLException ex) {
             Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
@@ -108,7 +108,7 @@ public final class MasterDB {
         String sql="select accountNo,accountHead from master where category='PR';";
         try {
             ResultSet rs=stmt.executeQuery(sql);
-            return ResultSetToStringArray.getStringArray(rs);
+            return ResultSetToStringArray.getStringArray2col(rs);
             
         } catch (SQLException ex) {
             Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
@@ -119,7 +119,7 @@ public final class MasterDB {
         String sql="select accountNo,accountHead from master where category='SL';";
         try {
             ResultSet rs=stmt.executeQuery(sql);
-            return ResultSetToStringArray.getStringArray(rs);
+            return ResultSetToStringArray.getStringArray2col(rs);
             
         } catch (SQLException ex) {
             Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
@@ -130,7 +130,7 @@ public final class MasterDB {
         String sql="select accountNo,accountHead from master where category='SK';";
         try {
             ResultSet rs=stmt.executeQuery(sql);
-            return ResultSetToStringArray.getStringArray(rs);
+            return ResultSetToStringArray.getStringArray2col(rs);
             
         } catch (SQLException ex) {
             Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
@@ -143,7 +143,7 @@ public final class MasterDB {
         String sql="select accountNo,accountHead from master where category='CR';";
         try {
             ResultSet rs=stmt.executeQuery(sql);
-            return ResultSetToStringArray.getStringArray(rs);
+            return ResultSetToStringArray.getStringArray2col(rs);
             
         } catch (SQLException ex) {
             Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
