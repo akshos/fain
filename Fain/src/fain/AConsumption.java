@@ -116,7 +116,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
             loadBranch();
             loadItem();
         }
-        else if(type == Codes.REFRESH_ITEMS){
+        else if(type == Codes.REFRESH_STOCK){
             loadItem();
         }
         else if(type == Codes.REFRESH_BRANCHES){
