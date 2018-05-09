@@ -76,18 +76,18 @@ public final class CustomerDB {
         return rs;
     }
     
-    public static ResultSet selectOneId(Statement stmt, String id){
+    public static String[] selectOneId(Statement stmt, String id){
         String sql="select * from customer where customerCode='"+id+"';";
         ResultSet rs=null;
-        ResultSet rs1=null;
+        
         try{
             rs=stmt.executeQuery(sql);
-            rs1=rs;
+            return ResultSetToStringArray.getRowAsStringArray(rs);
         }
         catch(SQLException se){
             se.printStackTrace();
         }
-        return rs1;
+        return null;
     }
     
     public static String[][] getCustomersInBranch(Statement stmt, String branchId){

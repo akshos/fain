@@ -47,7 +47,21 @@ public class EConsumption extends javax.swing.JInternalFrame implements RefreshO
             this.updateTable();
         }
     }
+        
+    private void editEntry(){
+        int index = this.dataTable.getSelectedRow();
+        String id = this.dataTable.getModel().getValueAt(index, 0).toString();
+        AConsumption item = new AConsumption(dbConnection, Codes.EDIT, id, mainFrame, this.level+1, this);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }
     
+
     private void addEntry(){
         EConsumption item = new EConsumption(dbConnection, this.mainFrame, this.level+1);
         Dimension dim = Preferences.getInternalFrameDimension(item);
@@ -84,20 +98,20 @@ public class EConsumption extends javax.swing.JInternalFrame implements RefreshO
         setTitle("Consumption");
         setMinimumSize(new java.awt.Dimension(785, 450));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameClosing(evt);
             }
-            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
             }
         });
 
@@ -319,6 +333,11 @@ public class EConsumption extends javax.swing.JInternalFrame implements RefreshO
                 return canEdit [columnIndex];
             }
         });
+        dataTable.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                dataTableKeyPressed(evt);
+            }
+        });
         tableScrollPane.setViewportView(dataTable);
 
         upperPanel.add(tableScrollPane, java.awt.BorderLayout.CENTER);
@@ -330,6 +349,11 @@ public class EConsumption extends javax.swing.JInternalFrame implements RefreshO
         lowerPanel.setLayout(new java.awt.GridLayout(1, 6, 20, 0));
 
         editButton.setText("ENT: Edit");
+        editButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editButtonActionPerformed(evt);
+            }
+        });
         lowerPanel.add(editButton);
 
         addButton.setText("F2: Add");
@@ -364,6 +388,16 @@ public class EConsumption extends javax.swing.JInternalFrame implements RefreshO
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         addEntry();
     }//GEN-LAST:event_addButtonActionPerformed
+
+    private void dataTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dataTableKeyPressed
+              if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.editEntry();  // TODO add your handling code here:
+              }
+    }//GEN-LAST:event_dataTableKeyPressed
+
+    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
+        editEntry();        // TODO add your handling code here:
+    }//GEN-LAST:event_editButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

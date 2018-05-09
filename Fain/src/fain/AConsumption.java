@@ -12,6 +12,7 @@ import database.MasterDB;
 import database.StockDB;
 import java.awt.Dimension;
 import java.sql.Statement;
+import java.util.Arrays;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
@@ -28,6 +29,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
     RefreshOption prevFrame;
     String[][] branchData;
     String[][] itemData;
+    String editId;
     /**
      * Creates new form MasterEntry
      */
@@ -49,8 +51,10 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         this.mainFrame = frame;
         this.level = level;
         this.dbConnection = db;
+        this.editId=id;
         initComponents();
-        refreshContents(Codes.REFRESH_ALL);
+        if(mode == Codes.EDIT) this.loadContents();
+        else refreshContents(Codes.REFRESH_ALL);
     }
     
     private void loadBranch(){
@@ -68,6 +72,25 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         }
         cboxData[len] = "Add New";
         this.branchCbox.setModel(new DefaultComboBoxModel(cboxData));
+    }
+        
+    private void loadContents(){
+        String[] data = ConsumptionDB.selectOneId(dbConnection.getStatement(), editId);
+        if(data == null){
+            System.out.println("Load Contents : selectedOneId has returned null");
+            return;
+        }
+        loadBranch();
+        loadItem();
+        int indexValB=Arrays.asList(branchData[0]).indexOf(data[1]);
+        this.branchCbox.setSelectedIndex(indexValB);
+        this.dateTbox.setText(data[2]);
+        this.referenceNumberTbox.setText(data[3]);
+        int indexValI=Arrays.asList(itemData[0]).indexOf(data[4]);
+        this.itemCodeCbox.setSelectedIndex(indexValI);
+        this.itemNameTbox.setText(data[5]);
+        this.narrationTbox.setText(data[6]);
+        this.quantityTbox.setText(data[7]);
     }
     
     private void loadItem(){
