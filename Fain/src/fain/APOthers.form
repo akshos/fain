@@ -97,7 +97,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="billnumberLabel">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Bill Number"/>
+                    <Property name="text" type="java.lang.String" value="Bill No."/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="partyLabel">

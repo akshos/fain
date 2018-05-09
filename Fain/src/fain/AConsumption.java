@@ -357,11 +357,15 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
     }//GEN-LAST:event_itemNameTboxActionPerformed
 
     private void branchCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_branchCboxKeyPressed
-        checkBranchChangedItem();
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            checkBranchChangedItem();
+        }
     }//GEN-LAST:event_branchCboxKeyPressed
 
     private void itemCodeCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_itemCodeCboxKeyPressed
-        checkItemChangedItem();
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            checkItemChangedItem();
+        }
     }//GEN-LAST:event_itemCodeCboxKeyPressed
 
     private void dateTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dateTboxActionPerformed

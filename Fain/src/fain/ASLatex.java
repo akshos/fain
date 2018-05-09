@@ -5,11 +5,18 @@
  */
 package fain;
 
+import database.BranchDB;
+import database.CustomerDB;
 import database.DBConnection;
 import database.MasterDB;
+import database.PurchaseDB;
 import database.SalesDB;
+import database.StockDB;
 import database.TransactionDB;
+import java.awt.Dimension;
 import java.sql.Statement;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import utility.Codes;
 /**
  *
@@ -21,6 +28,8 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
     Main mainFrame;
     int level;
     RefreshOption prevFrame;
+    String[][] branchData;
+    String[][] partyData;
     /**
      * Creates new form MasterEntry
      */
@@ -33,9 +42,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         this.mainFrame = frame;
         this.dbConnection = db;
         initComponents();
-        if(mode == Codes.EDIT){
-            refreshContents(Codes.REFRESH_ALL);
-        }
+        refreshContents(Codes.REFRESH_ALL);
         prevFrame = null;
     }
     
@@ -45,39 +52,256 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         this.mainFrame = frame;
         this.dbConnection = db;
         initComponents();
-        if(mode == Codes.EDIT){
-            refreshContents(Codes.REFRESH_ALL);
+        if(mode == Codes.EDIT)  this.loadContents();
+        else refreshContents(Codes.REFRESH_ALL);
+    }
+    
+    private void resetParty(){
+        String resetData[] = new String[1];
+        resetData[0] = "Select Branch";
+        this.partyCbox.setModel(new DefaultComboBoxModel(resetData));
+        this.partyCbox.setEnabled(false);
+    }
+    
+    private void loadContents(){
+        
+    }    
+        
+        
+    private void loadParty(){
+        String item = this.branchCbox.getSelectedItem().toString();
+        if(item.compareTo("Add New") == 0){
+            resetParty();
+            return;
         }
+        this.partyCbox.setEnabled(true);
+        int index = this.branchCbox.getSelectedIndex();
+        String branchCode = this.branchData[0][index];
+        partyData = CustomerDB.getCustomersInBranch(this.dbConnection.getStatement(), branchCode);
+        int len;
+        String[] cboxData = null;
+        if(partyData  == null){
+            len =  0;
+            cboxData = new String[1];
+            cboxData[0] = "Add New";
+            this.partyCbox.setToolTipText("No customers available for branch");
+        }else{
+            len = partyData[0].length;
+            cboxData = new String[len];
+            for(int i = 0; i < len; i++){
+                cboxData[i] = partyData[1][i] + "  (" + partyData[0][i] +")"  ;
+            }
+            String address = this.partyData[2][0];
+            this.partyCbox.setToolTipText(address);
+        }
+        this.partyCbox.setModel(new DefaultComboBoxModel(cboxData));
+    }
+    
+    private void showPartyAddress(){
+       String item = this.partyCbox.getSelectedItem().toString();
+       if(item.compareTo("Add New") == 0){
+           this.partyCbox.setToolTipText("No customers available for branch");
+           return;
+       }
+       int index = this.partyCbox.getSelectedIndex();
+       String address = this.partyData[2][index];
+       this.partyCbox.setToolTipText(address);
+       System.out.println("Address : " + address);
+       try
+        {
+            java.awt.event.KeyEvent ke = new java.awt.event.KeyEvent(partyCbox, java.awt.event.KeyEvent.KEY_PRESSED, System.currentTimeMillis(), java.awt.event.InputEvent.CTRL_MASK, java.awt.event.KeyEvent.VK_F1, java.awt.event.KeyEvent.CHAR_UNDEFINED);
+            this.partyCbox.dispatchEvent(ke);
+        }
+        catch (Throwable e1)
+        {e1.printStackTrace();}
+    }
+    
+    private void loadBranch(){
+        System.out.println("loading branchcbox");
+        branchData = BranchDB.getBranch(this.dbConnection.getStatement());
+        int len;
+        if(branchData  == null){
+            len =  0;
+        }else{
+            len = branchData[0].length;
+        }
+        String[] cboxData = new String[len+1];
+        for(int i = 0; i < len; i++){
+            cboxData[i] = branchData[1][i] + " (" + branchData[0][i] + ")";
+        }
+        cboxData[len] = "Add New";
+        this.branchCbox.setModel(new DefaultComboBoxModel(cboxData));
+    }
+    
+     @Override
+    public void refreshContents(int code) {
+        if(code == Codes.REFRESH_ALL){
+            loadBranch();
+            loadParty();
+        }
+        else if(code == Codes.REFRESH_BRANCHES){
+            loadBranch();
+        }
+        else if(code == Codes.REFRESH_MASTER){
+            loadParty();
+        }
+    }
+    
+    private boolean validateFields(){
+        if(!this.chechPrBill()){
+            return false;
+        }
+        if(this.quantityTbox.getText().trim().compareTo("") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Please specify Quantity", "No Quantity", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        if(this.drcTbox.getText().trim().compareTo("") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Please specify DRC", "No DRC", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        if(this.rateTbox.getText().trim().compareTo("") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Please specify Rate", "No Rate", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        if(this.barrelToTbox.getText().trim().compareTo("") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Please specify Barrel #To", "No Barrel #", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        if(this.barrelFromTbox.getText().trim().compareTo("") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Please specify Barrel #From", "No Barrel #", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        return true;
     }
     
     private void insertData(){
         Statement stmt=dbConnection.getStatement();
-        String branch     ="";
-        Object selectedItem = branchCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            branch = selectedItem.toString();
+        String branch = "";
+        String item = branchCbox.getSelectedItem().toString();
+        if(item.compareTo("Add New") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Please select a valid branch", "No branch selected", JOptionPane.WARNING_MESSAGE);
+            return;
         }
+        int index = this.branchCbox.getSelectedIndex();
+        branch = this.branchData[0][index];
         String date = dateTbox.getText();
-        String bill = prbillTbox.getText();
+        String bill = prBillTbox.getText();
         String party      ="";
-        selectedItem = partyCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            party = selectedItem.toString();
+        item = partyCbox.getSelectedItem().toString();
+        if(item.compareTo("None") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Please select a valid branch", "No branch selected", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        index = partyCbox.getSelectedIndex();
+        party = partyData[0][index];
+        if( !validateFields() ){
+            return;
         }
         int bnto     =Integer.parseInt(barrelToTbox.getText());
-        int bnfrom      =Integer.parseInt(barrelfromTbox.getText());
+        int bnfrom      =Integer.parseInt(barrelFromTbox.getText());
         double quantity =Double.parseDouble(quantityTbox.getText());
         double drc      =Double.parseDouble(drcTbox.getText());
-        double dryrubber=Double.parseDouble(dryrubberTbox.getText());
+        double dryrubber=Double.parseDouble(dryRubberTbox.getText());
         double rate     =Double.parseDouble(rateTbox.getText());
         double value    =Double.parseDouble(valueTbox.getText());
         String tid = TransactionDB.generateTid();
+        String purchaseAccount = StockDB.getLatexPurchaseAccount(dbConnection.getStatement());
+        if(purchaseAccount.compareTo("none") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Item 'Latex' was not found in stock", "No stock Latex", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
         SalesDB.insert(stmt, branch, date, bill, party, bnfrom, bnto, quantity, drc, dryrubber, rate, value, tid);
+        
+        
+        String narration = "PURCHASE OF LATEX (BILL #" + bill +")";
+        
+        TransactionDB.insert(stmt, date, branch, party, purchaseAccount, value, narration, tid);
         
         if(prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_SLATEX);
+        }
+    }
+    
+    private boolean chechPrBill(){
+        String billNo = this.prBillTbox.getText();
+        if(billNo.compareTo("") == 0){
+            this.billnumberLabel.setText("<html>Bill No. <span style=\"color:red\">Empty</span></html>");
+            return false;
+        }
+        if(SalesDB.checkExistingBillNo(dbConnection.getStatement(), billNo)){
+            this.billnumberLabel.setText("<html>Bill No.<span style=\"color:red\">Duplicate</span></html>");
+            return false;
+        }
+        this.billnumberLabel.setText("<html>Bill No.</html>");
+        return true;
+    }
+    
+    private void calculateDryRubber(){
+        double drc, qnt;
+        String item = this.quantityTbox.getText();
+        if(item.compareTo("") == 0){
+            return;
+        }
+        drc = Double.parseDouble(item);
+        item = this.drcTbox.getText();
+        if(item.compareTo("") == 0){
+            return;
+        }
+        qnt = Double.parseDouble(item);
+        Double dryRubber = (qnt * drc)/100;
+        this.dryRubberTbox.setText(String.valueOf(dryRubber));
+    }
+    
+    private void calculateValue(){
+        String item = this.dryRubberTbox.getText();
+        if(item.compareTo("") == 0){
+            return;
+        }
+        double dryRubber = Double.parseDouble(item);
+        item = this.rateTbox.getText();
+        if(item.compareTo("") == 0){
+            return;
+        }
+        double rate = Double.parseDouble(item);
+        double value = rate * dryRubber;
+        this.valueTbox.setText(String.valueOf(value));
+    }
+    
+    private void addNewBranch(){
+        ABranches item = new ABranches(dbConnection, Codes.NEW_ENTRY, null, mainFrame, this.level+1, this);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }
+    
+    private void checkBranchChangedItem(){
+        String item = this.branchCbox.getSelectedItem().toString();
+        if(item.compareTo("Add New") == 0){
+            addNewBranch();
+        }
+    }
+    
+    private void addNewMasterAccount(){
+        AMaster item = new AMaster(dbConnection, Codes.NEW_ENTRY, null, mainFrame, this.level+1, this);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            System.out.println("setting size");
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 300);
+        }
+        mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }
+    
+    private void checkPartyChangedItem(){
+        String item = this.partyCbox.getSelectedItem().toString();
+        if(item.compareTo("Add New") == 0){
+            addNewMasterAccount();
         }
     }
     /**
@@ -108,13 +332,13 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         rightInerPannel = new javax.swing.JPanel();
         branchCbox = new javax.swing.JComboBox<>();
         dateTbox = new javax.swing.JFormattedTextField();
-        prbillTbox = new javax.swing.JTextField();
+        prBillTbox = new javax.swing.JTextField();
         partyCbox = new javax.swing.JComboBox<>();
-        barrelfromTbox = new javax.swing.JTextField();
+        barrelFromTbox = new javax.swing.JTextField();
         barrelToTbox = new javax.swing.JTextField();
         quantityTbox = new javax.swing.JFormattedTextField();
         drcTbox = new javax.swing.JFormattedTextField();
-        dryrubberTbox = new javax.swing.JFormattedTextField();
+        dryRubberTbox = new javax.swing.JFormattedTextField();
         rateTbox = new javax.swing.JFormattedTextField();
         valueTbox = new javax.swing.JFormattedTextField();
         buttonPanel = new javax.swing.JPanel();
@@ -147,7 +371,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         dateLabel.setText("Date");
         labelsPanel.add(dateLabel);
 
-        billnumberLabel.setText("Bill Number");
+        billnumberLabel.setText("Bill No.");
         labelsPanel.add(billnumberLabel);
 
         partyLabel.setText("Party");
@@ -181,9 +405,14 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         rightInerPannel.setLayout(new java.awt.GridLayout(12, 0, 0, 10));
 
         branchCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        branchCbox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                branchCboxItemStateChanged(evt);
+            }
+        });
         branchCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
+                branchCboxKeyPressed(evt);
             }
         });
         rightInerPannel.add(branchCbox);
@@ -200,14 +429,24 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(dateTbox);
 
-        prbillTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+        prBillTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                prBillTboxFocusLost(evt);
+            }
+        });
+        prBillTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
             }
         });
-        rightInerPannel.add(prbillTbox);
+        rightInerPannel.add(prBillTbox);
 
         partyCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        partyCbox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                partyCboxItemStateChanged(evt);
+            }
+        });
         partyCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -215,12 +454,12 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(partyCbox);
 
-        barrelfromTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+        barrelFromTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
             }
         });
-        rightInerPannel.add(barrelfromTbox);
+        rightInerPannel.add(barrelFromTbox);
 
         barrelToTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -238,6 +477,11 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         rightInerPannel.add(quantityTbox);
 
         drcTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.000"))));
+        drcTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                drcTboxFocusLost(evt);
+            }
+        });
         drcTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 drcTboxActionPerformed(evt);
@@ -245,15 +489,21 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(drcTbox);
 
-        dryrubberTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.000"))));
-        dryrubberTbox.addActionListener(new java.awt.event.ActionListener() {
+        dryRubberTbox.setEditable(false);
+        dryRubberTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.000"))));
+        dryRubberTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                dryrubberTboxActionPerformed(evt);
+                dryRubberTboxActionPerformed(evt);
             }
         });
-        rightInerPannel.add(dryrubberTbox);
+        rightInerPannel.add(dryRubberTbox);
 
         rateTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        rateTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                rateTboxFocusLost(evt);
+            }
+        });
         rateTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rateTboxActionPerformed(evt);
@@ -261,6 +511,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(rateTbox);
 
+        valueTbox.setEditable(false);
         valueTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         valueTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -311,9 +562,9 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         // TODO add your handling code here:
     }//GEN-LAST:event_drcTboxActionPerformed
 
-    private void dryrubberTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dryrubberTboxActionPerformed
+    private void dryRubberTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dryRubberTboxActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_dryrubberTboxActionPerformed
+    }//GEN-LAST:event_dryRubberTboxActionPerformed
 
     private void rateTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rateTboxActionPerformed
         // TODO add your handling code here:
@@ -323,11 +574,41 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         // TODO add your handling code here:
     }//GEN-LAST:event_valueTboxActionPerformed
 
+    private void prBillTboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_prBillTboxFocusLost
+        this.chechPrBill();
+    }//GEN-LAST:event_prBillTboxFocusLost
+
+    private void branchCboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_branchCboxItemStateChanged
+        this.loadParty();
+    }//GEN-LAST:event_branchCboxItemStateChanged
+
+    private void branchCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_branchCboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+             this.doDefaultCloseAction();
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.checkBranchChangedItem();
+        }
+    }//GEN-LAST:event_branchCboxKeyPressed
+
+    private void drcTboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_drcTboxFocusLost
+        this.calculateDryRubber();
+    }//GEN-LAST:event_drcTboxFocusLost
+
+    private void rateTboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_rateTboxFocusLost
+        this.calculateValue();
+    }//GEN-LAST:event_rateTboxFocusLost
+
+    private void partyCboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_partyCboxItemStateChanged
+        this.showPartyAddress();
+        this.checkPartyChangedItem();
+    }//GEN-LAST:event_partyCboxItemStateChanged
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField barrelFromTbox;
     private javax.swing.JTextField barrelToTbox;
     private javax.swing.JLabel barrelfromLabel;
-    private javax.swing.JTextField barrelfromTbox;
     private javax.swing.JLabel barreltoLabel;
     private javax.swing.JLabel billnumberLabel;
     private javax.swing.JComboBox<String> branchCbox;
@@ -337,8 +618,8 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
     private javax.swing.JFormattedTextField dateTbox;
     private javax.swing.JLabel drcLabel;
     private javax.swing.JFormattedTextField drcTbox;
+    private javax.swing.JFormattedTextField dryRubberTbox;
     private javax.swing.JLabel dryrubberLabel;
-    private javax.swing.JFormattedTextField dryrubberTbox;
     private javax.swing.JButton enterButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel labelsPanel;
@@ -347,7 +628,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
     private javax.swing.JPanel outerPanel;
     private javax.swing.JComboBox<String> partyCbox;
     private javax.swing.JLabel partyLabel;
-    private javax.swing.JTextField prbillTbox;
+    private javax.swing.JTextField prBillTbox;
     private javax.swing.JLabel quantityLabel;
     private javax.swing.JFormattedTextField quantityTbox;
     private javax.swing.JLabel rateLabel;
@@ -357,8 +638,4 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
     private javax.swing.JFormattedTextField valueTbox;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void refreshContents(int REFRESH_ALL) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

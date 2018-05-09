@@ -98,4 +98,17 @@ public final class SalesDB {
         }
         return rs1;
     }
+    
+    public static boolean checkExistingBillNo(Statement stmt, String billNo){
+        String check = "select * from sales where billNo='"+billNo+"';";
+        try{
+            ResultSet rs = stmt.executeQuery(check);
+            if(rs.next()){
+                return true;
+            }
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return false;
+    }
 }

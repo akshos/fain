@@ -75,14 +75,15 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         if(partyData  == null){
             len =  0;
             cboxData = new String[1];
-            cboxData[0] = "None";
+            cboxData[0] = "Add New";
             this.partyCbox.setToolTipText("No customers available for branch");
         }else{
             len = partyData[0].length;
-            cboxData = new String[len];
+            cboxData = new String[len+1];
             for(int i = 0; i < len; i++){
                 cboxData[i] = partyData[1][i] + "  (" + partyData[0][i] +")"  ;
             }
+            cboxData[len] = "Add New";
             String address = this.partyData[2][0];
             this.partyCbox.setToolTipText(address);
         }
@@ -92,7 +93,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
     
     private void showPartyAddress(){
        String item = this.partyCbox.getSelectedItem().toString();
-       if(item.compareTo("None") == 0){
+       if(item.compareTo("Add New") == 0){
            this.partyCbox.setToolTipText("No customers available for branch");
            return;
        }
@@ -140,7 +141,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
             this.prbillLabel.setText("<html>Pr. Bill <span style=\"color:red\">Empty</span></html>");
             return false;
         }
-        if(PurchaseDB.checkExistingBillNo(dbConnection.getStatement(), billNo)){
+        if(PurchaseLatexDB.checkExistingBillNo(dbConnection.getStatement(), billNo)){
             this.prbillLabel.setText("<html>Pr. Bill <span style=\"color:red\">Duplicate</span></html>");
             return false;
         }
@@ -148,9 +149,25 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         return true;
     }
     
+    private boolean validateFields(){
+        if(this.quantityTbox.getText().trim().compareTo("") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Please specify Quantity", "No Quantity", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        if(this.drcTbox.getText().trim().compareTo("") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Please specify DRC", "No DRC", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        if(this.rateTbox.getText().trim().compareTo("") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Please specify Rate", "No Rate", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+    
     private void insertData(){
         Statement stmt=dbConnection.getStatement();
-        String branch     ="";
+        String branch = "";
         String item = branchCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
             int ret = JOptionPane.showConfirmDialog(this, "Please select a valid branch", "No branch selected", JOptionPane.WARNING_MESSAGE);
@@ -168,6 +185,9 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         }
         index = partyCbox.getSelectedIndex();
         party = partyData[0][index];
+        if( !validateFields() ){
+            return;
+        }
         double quantity=Double.parseDouble(quantityTbox.getText());
         double drc      =Double.parseDouble(drcTbox.getText());
         double dryrubber=Double.parseDouble(dryRubberTbox.getText());
@@ -177,7 +197,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         
         PurchaseLatexDB.insert(stmt, branch, date, prBill, party, quantity, drc, dryrubber, rate, value, tid);
         
-        String purchaseAccount = StockDB.getPurchaseAccount(dbConnection.getStatement(), "1");
+        String purchaseAccount = StockDB.getLatexPurchaseAccount(dbConnection.getStatement());
         if(purchaseAccount.compareTo("none") == 0){
             int ret = JOptionPane.showConfirmDialog(this, "Item 'Latex' was not found in stock", "No stock Latex", JOptionPane.WARNING_MESSAGE);
             return;
@@ -221,6 +241,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         double value = rate * dryRubber;
         this.valueTbox.setText(String.valueOf(value));
     }
+    
     private void addNewBranch(){
         ABranches item = new ABranches(dbConnection, Codes.NEW_ENTRY, null, mainFrame, this.level+1, this);
         Dimension dim = Preferences.getInternalFrameDimension(item);
@@ -236,6 +257,25 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         String item = this.branchCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
             addNewBranch();
+        }
+    }
+    
+    private void addNewMasterAccount(){
+        AMaster item = new AMaster(dbConnection, Codes.NEW_ENTRY, null, mainFrame, this.level+1, this);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            System.out.println("setting size");
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 300);
+        }
+        mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }
+    
+    private void checkPartyChangedItem(){
+        String item = this.partyCbox.getSelectedItem().toString();
+        if(item.compareTo("Add New") == 0){
+            addNewMasterAccount();
         }
     }
     /**
@@ -515,6 +555,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
 
     private void partyCboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_partyCboxItemStateChanged
         showPartyAddress();
+        checkPartyChangedItem();
     }//GEN-LAST:event_partyCboxItemStateChanged
 
     private void partyCboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_partyCboxFocusGained

@@ -15,6 +15,7 @@ import database.TransactionDB;
 import java.awt.Dimension;
 import java.sql.Statement;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import utility.Codes;
 /**
  *
@@ -52,33 +53,53 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         refreshContents(Codes.REFRESH_ALL);
     }
     
+    private boolean validateFields(){
+        if(this.quantityTbox.getText().trim().compareTo("") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Please specify Quantity", "No Quantity", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        if(this.valueTbox.getText().trim().compareTo("") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Please specify Value", "No Value", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+    
     private void insertData(){
         Statement stmt=dbConnection.getStatement();
-        String branch     ="";
-        Object selectedItem = branchCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            branch = selectedItem.toString();
+        String branch = "";
+        String item = branchCbox.getSelectedItem().toString();
+        if(item.compareTo("Add New") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Please select a valid branch", "No branch selected", JOptionPane.WARNING_MESSAGE);
+            return;
         }
+        int index = this.branchCbox.getSelectedIndex();
+        branch = this.branchData[0][index];
         String date = dateTbox.getText();
         String bill = billNumberTbox.getText();
         String party      ="";
-        selectedItem = partyCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            party = selectedItem.toString();
+        item = partyCbox.getSelectedItem().toString();
+        if(item.compareTo("None") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Please select a valid branch", "No branch selected", JOptionPane.WARNING_MESSAGE);
+            return;
         }
-        String itemcode      ="";
-        selectedItem = itemCodeCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            itemcode = selectedItem.toString();
+        index = partyCbox.getSelectedIndex();
+        party = partyData[0][index];
+        item = this.itemCodeCbox.getSelectedItem().toString();
+        if(item.compareTo("Add New") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Please select a valid item", "No item selected", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        index = this.itemCodeCbox.getSelectedIndex();
+        String itemCode = this.itemData[0][index];
+        if( !validateFields() ){
+            return;
         }
         String itemname= itemnameTbox.getText();
         double quantity=Double.parseDouble(quantityTbox.getText());
         double value    =Double.parseDouble(valueTbox.getText());
         String tid = TransactionDB.generateTid();
-        PurchaseDB.insert(stmt, branch, date, bill, party, itemcode, itemname, quantity, value, tid);
+        PurchaseDB.insert(stmt, branch, date, bill, party, itemCode, itemname, quantity, value, tid);
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_POTHERS);
         }
@@ -166,7 +187,7 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
     
     private void showPartyAddress(){
        String item = this.partyCbox.getSelectedItem().toString();
-       if(item.compareTo("None") == 0){
+       if(item.compareTo("Add New") == 0){
            this.partyCbox.setToolTipText("No customers available for branch");
            return;
        }
@@ -200,14 +221,14 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
     private boolean chechPrBill(){
         String billNo = this.billNumberTbox.getText();
         if(billNo.compareTo("") == 0){
-            this.billNumberTbox.setText("<html>Pr. Bill <span style=\"color:red\">Empty</span></html>");
+            this.billNumberTbox.setText("<html>Bill No. <span style=\"color:red\">Empty</span></html>");
             return false;
         }
         if(PurchaseDB.checkExistingBillNo(dbConnection.getStatement(), billNo)){
-            this.billNumberTbox.setText("<html>Pr. Bill <span style=\"color:red\">Duplicate</span></html>");
+            this.billNumberTbox.setText("<html>Bill No. <span style=\"color:red\">Duplicate</span></html>");
             return false;
         }
-        this.billNumberTbox.setText("<html>Pr. Bill</html>");
+        this.billNumberTbox.setText("<html>Bill No.</html>");
         return true;
     }
     
@@ -309,7 +330,7 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         dateLabel.setText("Date");
         labelsPanel.add(dateLabel);
 
-        billnumberLabel.setText("Bill Number");
+        billnumberLabel.setText("Bill No.");
         labelsPanel.add(billnumberLabel);
 
         partyLabel.setText("Party");

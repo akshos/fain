@@ -59,7 +59,7 @@ public final class PurchaseLatexDB {
     }
     
     public static boolean checkExistingBillNo(Statement stmt, String bill){
-        String check = "select * from purchase where prBill='"+bill+"';";
+        String check = "select * from purchaseLatex where prBill='"+bill+"';";
         try{
             ResultSet rs = stmt.executeQuery(check);
             if(rs.next()){

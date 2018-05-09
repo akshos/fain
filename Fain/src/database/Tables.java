@@ -73,7 +73,7 @@ public final class Tables {
             + "party        varchar(20),"
             + "barrelNoFrom interger,"
             + "barrelNoTo   integer,"
-            + "diff         integer"
+            + "diff         integer,"
             + "quantity     real,"
             + "drc          real,"
             + "dryRubber    real,"
