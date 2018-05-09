@@ -67,6 +67,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
             resetParty();
             return;
         }
+        this.partyCbox.setEnabled(true);
         int index = this.branchCbox.getSelectedIndex();
         String branchCode = this.branchData[0][index];
         partyData = CustomerDB.getCustomersInBranch(this.dbConnection.getStatement(), branchCode);
@@ -131,6 +132,12 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
     public void refreshContents(int type) {
         if(type == Codes.REFRESH_ALL){
             loadBranch();
+            loadParty();
+        }
+        else if(type == Codes.REFRESH_BRANCHES){
+            loadBranch();
+        }
+        else if(type == Codes.REFRESH_MASTER){
             loadParty();
         }
     }
@@ -428,7 +435,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         partyCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
+                partyCboxKeyPressed(evt);
             }
         });
         rightInerPannel.add(partyCbox);
@@ -517,7 +524,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
     }// </editor-fold>//GEN-END:initComponents
 
     private void keyPressedHandler(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyPressedHandler
-
+            
     }//GEN-LAST:event_keyPressedHandler
 
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
@@ -555,7 +562,6 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
 
     private void partyCboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_partyCboxItemStateChanged
         showPartyAddress();
-        checkPartyChangedItem();
     }//GEN-LAST:event_partyCboxItemStateChanged
 
     private void partyCboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_partyCboxFocusGained
@@ -583,6 +589,10 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         }
         
     }//GEN-LAST:event_branchCboxKeyPressed
+
+    private void partyCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_partyCboxKeyPressed
+        checkPartyChangedItem();        // TODO add your handling code here:
+    }//GEN-LAST:event_partyCboxKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
