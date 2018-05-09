@@ -85,7 +85,7 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
             return;
         }
         index = this.stockCbox.getSelectedIndex();
-        sales = this.stockData[0][index];
+        stock = this.stockData[0][index];
         StockDB.insert(stmt, iname, currentStock, rate, purchase, sales, stock);
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_STOCK);
