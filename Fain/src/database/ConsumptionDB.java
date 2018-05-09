@@ -77,17 +77,17 @@ public static void delete(Statement stmt,String id){
         return rs;
     }
     
-    public static ResultSet selectOneId(Statement stmt, String id){
+    public static String[] selectOneId(Statement stmt, String id){
         String sql="select * from consumption where consumptionId="+id+";";
         ResultSet rs=null;
-        ResultSet rs1=null;
+        
         try{
             rs=stmt.executeQuery(sql);
-            rs1=rs;
+            return ResultSetToStringArray.getRowAsStringArray(rs);
         }
         catch(SQLException se){
             se.printStackTrace();
         }
-        return rs1;
+        return null;
     }
 }
