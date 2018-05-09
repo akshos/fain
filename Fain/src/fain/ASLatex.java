@@ -87,10 +87,11 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
             this.partyCbox.setToolTipText("No customers available for branch");
         }else{
             len = partyData[0].length;
-            cboxData = new String[len];
+            cboxData = new String[len+1];
             for(int i = 0; i < len; i++){
                 cboxData[i] = partyData[1][i] + "  (" + partyData[0][i] +")"  ;
             }
+            cboxData[len] = "Add New";
             String address = this.partyData[2][0];
             this.partyCbox.setToolTipText(address);
         }
@@ -214,7 +215,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         SalesDB.insert(stmt, branch, date, bill, party, bnfrom, bnto, quantity, drc, dryrubber, rate, value, tid);
         
         
-        String narration = "PURCHASE OF LATEX (BILL #" + bill +")";
+        String narration = "SALE OF LATEX (BILL #" + bill +")";
         
         TransactionDB.insert(stmt, date, branch, party, purchaseAccount, value, narration, tid);
         
@@ -454,7 +455,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         partyCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
+                partyCboxKeyPressed(evt);
             }
         });
         rightInerPannel.add(partyCbox);
@@ -631,7 +632,6 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
 
     private void partyCboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_partyCboxItemStateChanged
         this.showPartyAddress();
-        this.checkPartyChangedItem();
     }//GEN-LAST:event_partyCboxItemStateChanged
 
     private void dateTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dateTboxKeyPressed
@@ -669,6 +669,15 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
             this.doDefaultCloseAction();
         }        // TODO add your handling code here:
     }//GEN-LAST:event_valueTboxKeyPressed
+
+    private void partyCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_partyCboxKeyPressed
+       if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+             this.doDefaultCloseAction();
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.checkPartyChangedItem();
+        }
+    }//GEN-LAST:event_partyCboxKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
