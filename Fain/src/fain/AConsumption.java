@@ -315,9 +315,19 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
                 dateTboxActionPerformed(evt);
             }
         });
+        dateTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                dateTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(dateTbox);
 
         referenceNumberTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        referenceNumberTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                referenceNumberTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(referenceNumberTbox);
 
         itemCodeCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -339,13 +349,29 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
                 itemNameTboxActionPerformed(evt);
             }
         });
+        itemNameTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                itemNameTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(itemNameTbox);
+
+        narrationTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                narrationTboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(narrationTbox);
 
         quantityTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.000"))));
         quantityTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 quantityTboxActionPerformed(evt);
+            }
+        });
+        quantityTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                quantityTboxKeyPressed(evt);
             }
         });
         rightInerPannel.add(quantityTbox);
@@ -383,11 +409,17 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             checkBranchChangedItem();
         }
+                if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
     }//GEN-LAST:event_branchCboxKeyPressed
 
     private void itemCodeCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_itemCodeCboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             checkItemChangedItem();
+        }
+                if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
         }
     }//GEN-LAST:event_itemCodeCboxKeyPressed
 
@@ -402,6 +434,36 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
     private void itemCodeCboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_itemCodeCboxItemStateChanged
         changeItemName();
     }//GEN-LAST:event_itemCodeCboxItemStateChanged
+
+    private void dateTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dateTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_dateTboxKeyPressed
+
+    private void referenceNumberTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_referenceNumberTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_referenceNumberTboxKeyPressed
+
+    private void itemNameTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_itemNameTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_itemNameTboxKeyPressed
+
+    private void narrationTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_narrationTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_narrationTboxKeyPressed
+
+    private void quantityTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_quantityTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_quantityTboxKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

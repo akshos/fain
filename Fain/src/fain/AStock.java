@@ -60,8 +60,8 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         Statement stmt=dbConnection.getStatement();
         //String icode        =itemCodeTbox.getText();
         String iname        =itemNameTbox.getText();
-        int currentStock    =Integer.parseInt(currentStockTbox.getText());
-        double rate         =Double.parseDouble(rateTbox.getText());
+        int currentStock    =Integer.parseInt(currentStockTbox.getText().replace(",",""));
+        double rate         =Double.parseDouble(rateTbox.getText().replace(",",""));
         String purchase     ="";
         String item = this.purchasesCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
