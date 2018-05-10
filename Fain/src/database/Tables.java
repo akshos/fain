@@ -14,6 +14,13 @@ import java.sql.Statement;
  * @author akshos
  */
 public final class Tables {
+    public static final String infoTable = "create table info("
+            + "id       integer primary key autoincrement,"
+            + "name     varchar(50),"
+            + "address  varchar(100),"
+            + "phone1   varchar(20),"
+            + "phone2   varchar(20));"; 
+    
     public static final String masterTable = "create table master("
             + "accountNo    varchar(20) primary key,"
             + "accountHead  varchar(50) ,"
@@ -113,6 +120,7 @@ public final class Tables {
     public static void createTables(Statement stmt){
         System.out.println("Creating tables");
         try{
+            stmt.execute(infoTable);
             stmt.execute(masterTable);
             stmt.execute(transactionTable);
             
