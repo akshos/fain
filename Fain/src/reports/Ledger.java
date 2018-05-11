@@ -23,7 +23,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
-
 /**
  *
  * @author akshos
@@ -44,7 +43,7 @@ public class Ledger {
         }
     }
     
-    public static String createReport(DBConnection con, String paper, String orientation,  String branch, String accFrom, String accTo){
+    public static void createReport(DBConnection con, String paper, String orientation,  String branch, String accFrom, String accTo){
         Document doc = new Document();
         CommonFuncs.setDocumentSizeOrientation(doc, paper, orientation);
         try{
@@ -67,7 +66,7 @@ public class Ledger {
         }catch(Exception e){
             e.printStackTrace();
         }
-        return null;
+        ViewPdf.openPdfViewer(PREFIX + ".pdf");
     }
     
     private static void addAccountHead(DBConnection con, Document doc, String accId){
