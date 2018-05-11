@@ -5,6 +5,8 @@
  */
 package reports;
 
+import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,10 +27,19 @@ public class ViewPdf {
         
         
     }
+    
+    public static void openPdfViewer(String filePath){
+        Desktop desktop = Desktop.getDesktop();
+        File file = new File(filePath);
+        try{
+            desktop.open(file);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
     /*
     public static void main(String args[]){
         viewPdf("C:\\Users\\lenovo\\Documents\\Projects\\fain\\Fain\\ledger.pdf");
     }
-    */
-    
+    */    
 }
