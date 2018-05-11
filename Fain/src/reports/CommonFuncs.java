@@ -22,6 +22,8 @@ public class CommonFuncs {
     public static final Font titleFont = new Font(Font.FontFamily.COURIER, 14, Font.BOLD);
     public static final Font subTitleFont = new Font(Font.FontFamily.COURIER, 12);
     
+    public static final Font accountHeadFont = new Font(Font.FontFamily.COURIER, 12 , Font.BOLD);
+    
     public static final Font spacingFont = new Font(Font.FontFamily.COURIER, 12);
     public static final Font tableHeaderFont = new Font(Font.FontFamily.COURIER, 12, Font.BOLD);
     public static final Font tableContentFont = new Font(Font.FontFamily.COURIER, 12);

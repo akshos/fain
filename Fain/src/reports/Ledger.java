@@ -13,6 +13,7 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import database.BranchDB;
 import database.CustomerDB;
 import database.DBConnection;
 import database.MasterDB;
@@ -51,9 +52,6 @@ public class Ledger {
             doc.open();
             
             CommonFuncs.addMetaData(doc);
-            CommonFuncs.addHeader(con, doc);
-            addTitle(doc, branch, accFrom, accTo);
-            CommonFuncs.addEmptyLine(doc, 2);
             String accountData[][] = CustomerDB.getCustomersInBranch(con.getStatement(), branch);
             int startIndex = Arrays.asList(accountData[0]).indexOf(accFrom);
             int endIndex = startIndex;
@@ -62,7 +60,7 @@ public class Ledger {
             }
             
             for(int i = startIndex; i <= endIndex; i++){
-                addLedger(con, doc, accountData[0][i]);
+                addLedger(con, doc, accountData[0][i], branch, accFrom, accTo);
             }
             
             doc.close();
@@ -72,11 +70,33 @@ public class Ledger {
         return null;
     }
     
+    private static void addAccountHead(DBConnection con, Document doc, String accId){
+        try{
+            String accountHead = MasterDB.getAccountHead(con.getStatement(), accId);
+            Paragraph para = new Paragraph();
+            para.add(CommonFuncs.alignCenter("ACCOUNT : " + accountHead + " (" + accId + ")", CommonFuncs.accountHeadFont));
+            doc.add(para);
+            CommonFuncs.addEmptyLine(doc, 1);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
     private static void addHeaderCell(PdfPTable table, String header){
         PdfPCell cell;
         cell = new PdfPCell(new Phrase(header, CommonFuncs.tableHeaderFont));
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
+    }
+    
+    private static void addLedger(DBConnection con, Document doc, String accId, String branch, String accFrom, String accTo){
+        CommonFuncs.addHeader(con, doc);
+        String branchTitle = (branch.compareTo("All")!=0)?BranchDB.getBranchName(con.getStatement(), branch):"All";
+        addTitle(doc, branchTitle, accFrom, accTo);
+        CommonFuncs.addEmptyLine(doc, 1);
+        addAccountHead(con, doc, accId);
+        addTable(con, doc, accId);
+        doc.newPage();
     }
     
     private static void addTableRow(PdfPTable table, String date, String branch, String nar, Double debit, Double credit){
@@ -105,7 +125,7 @@ public class Ledger {
         table.addCell(cell);
     }
     
-    private static void addLedger(DBConnection con, Document doc, String accId){
+    private static void addTable(DBConnection con, Document doc, String accId){
         float columns[] = {0.5f, 1, 2, 1, 1};
         PdfPTable table = new PdfPTable(columns);
         table.setWidthPercentage(90);
@@ -116,7 +136,9 @@ public class Ledger {
         addHeaderCell(table, "Credit");
         table.setHeaderRows(1);
         
-        String date, branch, nar;
+        String date, nar;
+        String branchId = CustomerDB.getBranch(con.getStatement(), accId);
+        String branchName = BranchDB.getBranchName(con.getStatement(), branchId);
         Double openingBal = Double.parseDouble(MasterDB.getOpeningBal(con.getStatement(), accId));
         Double creditTotal = 0.0, debitTotal = 0.0, amount, debit , credit;
         addTableRow(table, "", "", "Opening Balance", 0.0, openingBal);
@@ -125,7 +147,6 @@ public class Ledger {
         try{
             while(rs.next()){
                 date = rs.getString("date");
-                branch = rs.getString("branch");
                 amount = rs.getDouble("amount");
                 debit = credit = 0.0;
                 nar = rs.getString("narration");
@@ -134,7 +155,7 @@ public class Ledger {
                 }else if(rs.getString("credit").compareTo(accId) == 0){
                     credit = amount;
                 }
-                addTableRow(table, date, branch, nar, debit, credit);
+                addTableRow(table, date, branchName, nar, debit, credit);
                 debitTotal += debit;
                 creditTotal += credit;
             }

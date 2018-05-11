@@ -102,4 +102,17 @@ public final class CustomerDB {
         }
         return null;
     }
+    
+    public static String getBranch(Statement stmt, String id){
+        String sql = "select branch from customer where customerCode='"+id+"';";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            rs.next();
+            String branch = rs.getString(1);
+            return branch;
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
 }

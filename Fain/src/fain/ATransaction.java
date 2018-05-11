@@ -14,6 +14,7 @@ import java.sql.Statement;
 import java.util.Arrays;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import utility.Codes;
 /**
  *
@@ -130,23 +131,32 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         String date         =dateTbox.getText();
         
         String branch     ="";
-        Object selectedItem = branchCbox.getSelectedItem();
-        if (selectedItem != null)
-        {
-            branch = selectedItem.toString();
-        }      
+        String item = branchCbox.getSelectedItem().toString();
+        if(item.compareTo("Add New") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Please select a valid branch", "No branch selected", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        int index = this.branchCbox.getSelectedIndex();
+        branch = this.branchData[0][index];
+        
         String debit = "";
-        int index = debitCbox.getSelectedIndex();
-        if (selectedItem != null)
-        {
-            debit = this.accountData[0][index];
+        item = debitCbox.getSelectedItem().toString();
+        if(item.compareTo("Add New") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Please select a debit Account", "No debit account", JOptionPane.WARNING_MESSAGE);
+            return;
         }
+        index = this.debitCbox.getSelectedIndex();
+        debit = this.accountData[0][index];
+        
         String credit = "";
-        index = creditCbox.getSelectedIndex();
-        if (selectedItem != null)
-        {
-            credit = this.accountData[0][index];
+        item = creditCbox.getSelectedItem().toString();
+        if(item.compareTo("Add New") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Please select a credit Account", "No credit account", JOptionPane.WARNING_MESSAGE);
+            return;
         }
+        index = this.creditCbox.getSelectedIndex();
+        credit = this.accountData[0][index];
+        
         double amount         =Double.parseDouble(amountTbox.getText());
         String narration      =narrationTbox.getText();
         String tid = TransactionDB.generateTid();

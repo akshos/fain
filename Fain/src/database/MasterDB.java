@@ -163,4 +163,17 @@ public final class MasterDB {
         }
         return "0";
     }
+    
+    public static String getAccountHead(Statement stmt, String accId){
+        String sql = "select accountHead from master where accountNo='"+accId+"';";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            rs.next();
+            String head = rs.getString(1);
+            return head;
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
 }

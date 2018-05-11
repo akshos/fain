@@ -70,7 +70,7 @@ public final class TransactionDB {
     }
     
     public static TableModel getTable(Statement stmt){
-        String sqlQuery = "select transactionNo as 'Transaction No', date as 'Date', branch as 'Branch', debit as 'Debit', credit as 'Credit', amount as 'Amount', narration as 'Narration' from transactions;";
+        String sqlQuery = "select t.transactionNo as 'Transaction No', t.date as 'Date', b.name as 'Branch', mdebit.accountHead as 'Debit', mcredit.accountHead as 'Credit', t.amount as 'Amount', t.narration as 'Narration' from transactions as t, branch as b, master as mdebit, master mcredit where t.branch=b.branchId and t.credit=mcredit.accountNo and t.debit=mdebit.accountNo;";
 	TableModel table = null;
         ResultSet rs = null;
 	try{

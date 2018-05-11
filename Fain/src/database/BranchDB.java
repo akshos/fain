@@ -100,4 +100,17 @@ public final class BranchDB {
         }
         return null;
     }
+    
+    public static String getBranchName(Statement stmt, String id){
+        String sql = "select name from branch where branchId='"+id+"';";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            rs.next();
+            String name = rs.getString(1);
+            return name;
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
 }
