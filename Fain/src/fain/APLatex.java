@@ -264,6 +264,8 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         String item = this.branchCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
             addNewBranch();
+        }else{
+            this.branchCbox.transferFocus();
         }
     }
     
@@ -283,6 +285,8 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         String item = this.partyCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
             addNewMasterAccount();
+        }else{
+            this.partyCbox.transferFocus();
         }
     }
     /**
@@ -385,7 +389,6 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         rightInerPannel.setLayout(new java.awt.GridLayout(10, 0, 0, 10));
 
         branchCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        branchCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         branchCbox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 branchCboxItemStateChanged(evt);
@@ -432,7 +435,6 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         rightInerPannel.add(prBillTbox);
 
         partyCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        partyCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         partyCbox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 partyCboxItemStateChanged(evt);
@@ -559,7 +561,9 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
     }// </editor-fold>//GEN-END:initComponents
 
     private void keyPressedHandler(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyPressedHandler
-            
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.insertData();
+        }
     }//GEN-LAST:event_keyPressedHandler
 
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
@@ -621,15 +625,14 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         }
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             this.checkBranchChangedItem();
-        }
-        
+        }  
     }//GEN-LAST:event_branchCboxKeyPressed
 
     private void partyCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_partyCboxKeyPressed
-         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             checkPartyChangedItem();    
         }
-                 if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
         }
     }//GEN-LAST:event_partyCboxKeyPressed
@@ -637,43 +640,57 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
     private void dateTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dateTboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
+        }if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.dateTbox.transferFocus();
+        }
     }//GEN-LAST:event_dateTboxKeyPressed
 
     private void prBillTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_prBillTboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
+        }if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.prBillTbox.transferFocus();
+        }
     }//GEN-LAST:event_prBillTboxKeyPressed
 
     private void quantityTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_quantityTboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
+        }if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.quantityTbox.transferFocus();
+        }
     }//GEN-LAST:event_quantityTboxKeyPressed
 
     private void drcTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_drcTboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
+        }if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.drcTbox.transferFocus();
+        }
     }//GEN-LAST:event_drcTboxKeyPressed
 
     private void dryRubberTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dryRubberTboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
+        }if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.dryRubberTbox.transferFocus();
+        }
     }//GEN-LAST:event_dryRubberTboxKeyPressed
 
     private void rateTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rateTboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
+        }if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.rateTbox.transferFocus();
+        }
     }//GEN-LAST:event_rateTboxKeyPressed
 
     private void valueTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_valueTboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
+        }if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.valueTbox.transferFocus();
+        }
     }//GEN-LAST:event_valueTboxKeyPressed
 
 

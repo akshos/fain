@@ -271,6 +271,8 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         String item = this.partyCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
             addNewMasterAccount();
+        }else{
+            partyCbox.transferFocus();
         }
     }
     
@@ -289,6 +291,8 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         String item = this.itemCodeCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
             addNewStock();
+        }else{
+            itemCodeCbox.transferFocus();
         }
     }
 
@@ -347,27 +351,35 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
 
         labelsPanel.setLayout(new java.awt.GridLayout(9, 0, 0, 10));
 
+        branchLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         branchLabel.setText("Branch");
         labelsPanel.add(branchLabel);
 
+        dateLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         dateLabel.setText("Date");
         labelsPanel.add(dateLabel);
 
+        billnumberLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         billnumberLabel.setText("Bill No.");
         labelsPanel.add(billnumberLabel);
 
+        partyLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         partyLabel.setText("Party");
         labelsPanel.add(partyLabel);
 
+        itemcodeLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         itemcodeLabel.setText("Item Code");
         labelsPanel.add(itemcodeLabel);
 
+        itemnameLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         itemnameLabel.setText("Item Name");
         labelsPanel.add(itemnameLabel);
 
+        quantityLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         quantityLabel.setText("Quantity");
         labelsPanel.add(quantityLabel);
 
+        valueLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         valueLabel.setText("Value");
         labelsPanel.add(valueLabel);
 
@@ -377,7 +389,7 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
 
         rightInerPannel.setLayout(new java.awt.GridLayout(9, 0, 0, 10));
 
-        branchCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        branchCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         branchCbox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 branchCboxItemStateChanged(evt);
@@ -395,6 +407,7 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        dateTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         dateTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 dateTboxActionPerformed(evt);
@@ -402,11 +415,12 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         });
         dateTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                dateTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(dateTbox);
 
+        billNumberTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         billNumberTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 billNumberTboxActionPerformed(evt);
@@ -419,7 +433,7 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         });
         rightInerPannel.add(billNumberTbox);
 
-        partyCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        partyCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         partyCbox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 partyCboxItemStateChanged(evt);
@@ -432,7 +446,7 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         });
         rightInerPannel.add(partyCbox);
 
-        itemCodeCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        itemCodeCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         itemCodeCbox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 itemCodeCboxItemStateChanged(evt);
@@ -446,6 +460,7 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         rightInerPannel.add(itemCodeCbox);
 
         itemnameTbox.setEditable(false);
+        itemnameTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         itemnameTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -454,6 +469,7 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         rightInerPannel.add(itemnameTbox);
 
         quantityTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.000"))));
+        quantityTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         quantityTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 quantityTboxActionPerformed(evt);
@@ -461,12 +477,13 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         });
         quantityTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                quantityTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(quantityTbox);
 
         valueTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        valueTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         valueTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 valueTboxActionPerformed(evt);
@@ -474,7 +491,7 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         });
         valueTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                valueTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(valueTbox);
@@ -482,10 +499,16 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 60, 2, 60));
         buttonPanel.setLayout(new java.awt.BorderLayout());
 
+        enterButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         enterButton.setText("ENTER");
         enterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 enterButtonActionPerformed(evt);
+            }
+        });
+        enterButton.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                enterButtonKeyPressed(evt);
             }
         });
         buttonPanel.add(enterButton, java.awt.BorderLayout.CENTER);
@@ -504,7 +527,8 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
             this.doDefaultCloseAction();
         }
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
         }
     }//GEN-LAST:event_keyPressedHandler
 
@@ -549,29 +573,20 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         this.setItemName();
     }//GEN-LAST:event_itemCodeCboxItemStateChanged
 
-    private void dateTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dateTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
-    }//GEN-LAST:event_dateTboxKeyPressed
-
-    private void quantityTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_quantityTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
-    }//GEN-LAST:event_quantityTboxKeyPressed
-
-    private void valueTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_valueTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
-    }//GEN-LAST:event_valueTboxKeyPressed
-
     private void itemCodeCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_itemCodeCboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             this.checkItemChangedItem();
         }
     }//GEN-LAST:event_itemCodeCboxKeyPressed
+
+    private void enterButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterButtonKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            insertData();
+        }
+    }//GEN-LAST:event_enterButtonKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

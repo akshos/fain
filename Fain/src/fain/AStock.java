@@ -196,6 +196,8 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         String item = this.purchasesCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
             addNewMasterAccount();
+        }else{
+            this.purchasesCbox.transferFocus();
         }
     }
     
@@ -203,12 +205,16 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         String item = this.salesCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
             addNewMasterAccount();
+        }else{
+            this.salesCbox.transferFocus();
         }
     }
     private void checkStockChangedItem(){
         String item = this.stockCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
             addNewMasterAccount();
+        }else{
+            this.stockCbox.transferFocus();
         }
     }
     /**
@@ -262,21 +268,27 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
 
         labelsPanel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
 
+        itemNameLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         itemNameLabel.setText("Item Name");
         labelsPanel.add(itemNameLabel);
 
+        currentStockLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         currentStockLabel.setText("Current Stock");
         labelsPanel.add(currentStockLabel);
 
+        rateLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         rateLabel.setText("Rate");
         labelsPanel.add(rateLabel);
 
+        purchasesLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         purchasesLabel.setText("Purchases A/c");
         labelsPanel.add(purchasesLabel);
 
+        SalesLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         SalesLabel.setText("Sales A/c");
         labelsPanel.add(SalesLabel);
 
+        stockLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         stockLabel.setText("Stock A/c");
         labelsPanel.add(stockLabel);
 
@@ -286,14 +298,16 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
 
         rightInerPannel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
 
+        itemNameTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         itemNameTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                itemNameTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(itemNameTbox);
 
         currentStockTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat(""))));
+        currentStockTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         currentStockTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 currentStockTboxActionPerformed(evt);
@@ -301,12 +315,13 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         });
         currentStockTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                currentStockTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(currentStockTbox);
 
         rateTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        rateTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         rateTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rateTboxActionPerformed(evt);
@@ -314,12 +329,12 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         });
         rateTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                rateTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(rateTbox);
 
-        purchasesCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        purchasesCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         purchasesCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 purchasesCboxKeyPressed(evt);
@@ -327,7 +342,7 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         });
         rightInerPannel.add(purchasesCbox);
 
-        salesCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        salesCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         salesCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 salesCboxKeyPressed(evt);
@@ -335,7 +350,7 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         });
         rightInerPannel.add(salesCbox);
 
-        stockCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        stockCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         stockCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 stockCboxKeyPressed(evt);
@@ -346,10 +361,16 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 60, 2, 60));
         buttonPanel.setLayout(new java.awt.BorderLayout());
 
+        enterButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         enterButton.setText("ENTER");
         enterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 enterButtonActionPerformed(evt);
+            }
+        });
+        enterButton.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                enterButtonKeyPressed(evt);
             }
         });
         buttonPanel.add(enterButton, java.awt.BorderLayout.CENTER);
@@ -362,7 +383,7 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
         // TODO add your handling code here:
         insertData();
@@ -403,23 +424,24 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         }
     }//GEN-LAST:event_stockCboxKeyPressed
 
-    private void itemNameTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_itemNameTboxKeyPressed
+    private void keyPressedHandler(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyPressedHandler
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
-    }//GEN-LAST:event_itemNameTboxKeyPressed
+        }
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }
+    }//GEN-LAST:event_keyPressedHandler
 
-    private void currentStockTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_currentStockTboxKeyPressed
+    private void enterButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterButtonKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
-    }//GEN-LAST:event_currentStockTboxKeyPressed
-
-    private void rateTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rateTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
-    }//GEN-LAST:event_rateTboxKeyPressed
+        }
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            insertData();
+        }
+    }//GEN-LAST:event_enterButtonKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

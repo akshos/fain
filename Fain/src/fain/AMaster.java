@@ -112,7 +112,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
             }
         }
         else{
-            this.enterButton.requestFocus();
+            this.categoryCbox.transferFocus();
         }
     }
     
@@ -240,6 +240,11 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         setResizable(true);
         setTitle("Data Entry (Master)");
         setPreferredSize(new java.awt.Dimension(450, 410));
+        addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                formFocusLost(evt);
+            }
+        });
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
             }
@@ -275,18 +280,23 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
 
         labelsPanel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
 
+        accountCodeLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         accountCodeLabel.setText("Account Code");
         labelsPanel.add(accountCodeLabel);
 
+        accountHeadLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         accountHeadLabel.setText("Account Head");
         labelsPanel.add(accountHeadLabel);
 
+        yopBalLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         yopBalLabel.setText("YOP-Balance");
         labelsPanel.add(yopBalLabel);
 
+        currBalLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         currBalLabel.setText("Current Balance");
         labelsPanel.add(currBalLabel);
 
+        categoryLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         categoryLabel.setText("Category");
         labelsPanel.add(categoryLabel);
 
@@ -296,6 +306,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
 
         rightInerPannel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
 
+        accountCodeTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         accountCodeTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 accountCodeTboxFocusGained(evt);
@@ -311,6 +322,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(accountCodeTbox);
 
+        accountHeadTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         accountHeadTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 accountHeadTboxFocusGained(evt);
@@ -324,6 +336,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         rightInerPannel.add(accountHeadTbox);
 
         yopBalanceTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
+        yopBalanceTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         yopBalanceTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 yopBalanceTboxFocusGained(evt);
@@ -337,6 +350,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         rightInerPannel.add(yopBalanceTbox);
 
         currentBalanceTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
+        currentBalanceTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         currentBalanceTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 currentBalanceTboxFocusGained(evt);
@@ -349,7 +363,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(currentBalanceTbox);
 
-        categoryCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        categoryCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         categoryCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 categoryCboxKeyPressed(evt);
@@ -360,10 +374,16 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 60, 2, 60));
         buttonPanel.setLayout(new java.awt.BorderLayout());
 
+        enterButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         enterButton.setText("ENTER");
         enterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 enterButtonActionPerformed(evt);
+            }
+        });
+        enterButton.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                enterButtonKeyPressed(evt);
             }
         });
         buttonPanel.add(enterButton, java.awt.BorderLayout.CENTER);
@@ -386,7 +406,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
             this.doDefaultCloseAction();
         }
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.accountHeadTbox.requestFocus();
+            this.accountCodeTbox.transferFocus();
         }
     }//GEN-LAST:event_accountCodeTboxKeyPressed
 
@@ -395,7 +415,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
             this.doDefaultCloseAction();
         }
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.yopBalanceTbox.requestFocus();
+            this.accountHeadTbox.transferFocus();
         }
     }//GEN-LAST:event_accountHeadTboxKeyPressed
 
@@ -409,7 +429,6 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
     }//GEN-LAST:event_categoryCboxKeyPressed
 
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
-    // TODO add your handling code here:
         insertData();
     }//GEN-LAST:event_enterButtonActionPerformed
 
@@ -422,7 +441,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
             this.doDefaultCloseAction();
         }
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.currentBalanceTbox.requestFocus();
+            this.yopBalanceTbox.transferFocus();
         }
     }//GEN-LAST:event_yopBalanceTboxKeyPressed
 
@@ -431,7 +450,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
             this.doDefaultCloseAction();
         }
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.categoryCbox.requestFocus();
+            this.currentBalanceTbox.transferFocus();
         }
     }//GEN-LAST:event_currentBalanceTboxKeyPressed
 
@@ -450,6 +469,19 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
     private void currentBalanceTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_currentBalanceTboxFocusGained
         this.currentBalanceTbox.selectAll();        // TODO add your handling code here:
     }//GEN-LAST:event_currentBalanceTboxFocusGained
+
+    private void enterButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterButtonKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.insertData();
+        }
+    }//GEN-LAST:event_enterButtonKeyPressed
+
+    private void formFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formFocusLost
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel accountCodeLabel;

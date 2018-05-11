@@ -517,6 +517,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        pLedgerMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         pLedgerMenuItem.setText("Ledgers");
         pLedgerMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

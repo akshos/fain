@@ -127,21 +127,26 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         setResizable(true);
         setTitle("Branches");
         setPreferredSize(new java.awt.Dimension(450, 410));
-        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+        addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                formFocusLost(evt);
             }
-            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+        });
+        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameClosing(evt);
             }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
         });
         addKeyListener(new java.awt.event.KeyAdapter() {
@@ -270,7 +275,7 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
             else input.transferFocus(); 
             evt.consume();
         }
-                if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
         }
     }//GEN-LAST:event_addressTareaKeyPressed
@@ -280,28 +285,40 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
     }//GEN-LAST:event_formInternalFrameClosing
 
     private void nameTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameTboxKeyPressed
-             if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
-        }   // TODO add your handling code here:
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.nameTbox.transferFocus();
+        }
     }//GEN-LAST:event_nameTboxKeyPressed
 
     private void kgstTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_kgstTboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.kgstTbox.transferFocus();
+        }
     }//GEN-LAST:event_kgstTboxKeyPressed
 
     private void rbregnoTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rbregnoTboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.rbregnoTbox.transferFocus();
+        }
     }//GEN-LAST:event_rbregnoTboxKeyPressed
 
     private void enterButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterButtonKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            insertData();
+        }
     }//GEN-LAST:event_enterButtonKeyPressed
+
+    private void formFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusLost
+
+    }//GEN-LAST:event_formFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

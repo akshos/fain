@@ -284,6 +284,8 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         String item = this.branchCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
             addNewBranch();
+        }else{
+            this.branchCbox.transferFocus();
         }
     }
     
@@ -303,6 +305,8 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         String item = this.partyCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
             addNewMasterAccount();
+        }else{
+            this.partyCbox.transferFocus();
         }
     }
     /**
@@ -366,36 +370,47 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
 
         labelsPanel.setLayout(new java.awt.GridLayout(12, 0, 0, 10));
 
+        branchLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         branchLabel.setText("Branch");
         labelsPanel.add(branchLabel);
 
+        dateLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         dateLabel.setText("Date");
         labelsPanel.add(dateLabel);
 
+        billnumberLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         billnumberLabel.setText("Bill No.");
         labelsPanel.add(billnumberLabel);
 
+        partyLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         partyLabel.setText("Party");
         labelsPanel.add(partyLabel);
 
+        barrelfromLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         barrelfromLabel.setText("Barrel # From");
         labelsPanel.add(barrelfromLabel);
 
+        barreltoLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         barreltoLabel.setText("Barrel # To");
         labelsPanel.add(barreltoLabel);
 
+        quantityLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         quantityLabel.setText("Quantity Kgs.");
         labelsPanel.add(quantityLabel);
 
+        drcLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         drcLabel.setText("D R C");
         labelsPanel.add(drcLabel);
 
+        dryrubberLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         dryrubberLabel.setText("Dry Rubber Kgs.");
         labelsPanel.add(dryrubberLabel);
 
+        rateLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         rateLabel.setText("Rate");
         labelsPanel.add(rateLabel);
 
+        valueLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         valueLabel.setText("Value");
         labelsPanel.add(valueLabel);
 
@@ -405,7 +420,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
 
         rightInerPannel.setLayout(new java.awt.GridLayout(12, 0, 0, 10));
 
-        branchCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        branchCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         branchCbox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 branchCboxItemStateChanged(evt);
@@ -423,6 +438,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        dateTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         dateTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 dateTboxActionPerformed(evt);
@@ -430,11 +446,12 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         dateTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                dateTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(dateTbox);
 
+        prBillTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         prBillTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 prBillTboxFocusLost(evt);
@@ -447,7 +464,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(prBillTbox);
 
-        partyCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        partyCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         partyCbox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 partyCboxItemStateChanged(evt);
@@ -460,6 +477,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(partyCbox);
 
+        barrelFromTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         barrelFromTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -467,6 +485,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(barrelFromTbox);
 
+        barrelToTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         barrelToTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -475,6 +494,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         rightInerPannel.add(barrelToTbox);
 
         quantityTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.000"))));
+        quantityTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         quantityTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 quantityTboxActionPerformed(evt);
@@ -482,12 +502,13 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         quantityTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                quantityTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(quantityTbox);
 
         drcTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.000"))));
+        drcTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         drcTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 drcTboxFocusLost(evt);
@@ -500,13 +521,14 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         drcTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                drcTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(drcTbox);
 
         dryRubberTbox.setEditable(false);
         dryRubberTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.000"))));
+        dryRubberTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         dryRubberTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 dryRubberTboxActionPerformed(evt);
@@ -514,12 +536,13 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         dryRubberTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                dryRubberTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(dryRubberTbox);
 
         rateTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        rateTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         rateTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 rateTboxFocusLost(evt);
@@ -532,13 +555,14 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rateTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                rateTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(rateTbox);
 
         valueTbox.setEditable(false);
         valueTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        valueTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         valueTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 valueTboxActionPerformed(evt);
@@ -546,7 +570,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         valueTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                valueTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(valueTbox);
@@ -554,10 +578,16 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 60, 2, 60));
         buttonPanel.setLayout(new java.awt.BorderLayout());
 
+        enterButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         enterButton.setText("ENTER");
         enterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 enterButtonActionPerformed(evt);
+            }
+        });
+        enterButton.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                enterButtonKeyPressed(evt);
             }
         });
         buttonPanel.add(enterButton, java.awt.BorderLayout.CENTER);
@@ -574,6 +604,10 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
     private void keyPressedHandler(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyPressedHandler
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
+        }
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
         }
     }//GEN-LAST:event_keyPressedHandler
 
@@ -634,50 +668,23 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         this.showPartyAddress();
     }//GEN-LAST:event_partyCboxItemStateChanged
 
-    private void dateTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dateTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
-    }//GEN-LAST:event_dateTboxKeyPressed
-
-    private void quantityTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_quantityTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
-    }//GEN-LAST:event_quantityTboxKeyPressed
-
-    private void drcTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_drcTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
-    }//GEN-LAST:event_drcTboxKeyPressed
-
-    private void dryRubberTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dryRubberTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
-    }//GEN-LAST:event_dryRubberTboxKeyPressed
-
-    private void rateTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rateTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
-    }//GEN-LAST:event_rateTboxKeyPressed
-
-    private void valueTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_valueTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
-    }//GEN-LAST:event_valueTboxKeyPressed
-
     private void partyCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_partyCboxKeyPressed
-       if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
              this.doDefaultCloseAction();
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             this.checkPartyChangedItem();
         }
     }//GEN-LAST:event_partyCboxKeyPressed
+
+    private void enterButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterButtonKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+             this.doDefaultCloseAction();
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.insertData();
+        }
+    }//GEN-LAST:event_enterButtonKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

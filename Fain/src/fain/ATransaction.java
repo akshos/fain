@@ -181,6 +181,8 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         String item = this.branchCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
             addNewBranch();
+        }else{
+            this.branchCbox.transferFocus();
         }
     }
     
@@ -200,6 +202,8 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         String item = this.debitCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
             addNewMasterAccount();
+        }else{
+            this.debitCbox.transferFocus();
         }
     }
     
@@ -207,6 +211,8 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         String item = this.debitCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
             addNewMasterAccount();
+        }else{
+            this.creditCbox.transferFocus();
         }
     }
 
@@ -304,13 +310,12 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         });
         dateTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                dateTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(dateTbox);
 
         branchCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        branchCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         branchCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 branchCboxKeyPressed(evt);
@@ -319,7 +324,6 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         rightInerPannel.add(branchCbox);
 
         debitCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        debitCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         debitCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 debitCboxKeyPressed(evt);
@@ -328,7 +332,6 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         rightInerPannel.add(debitCbox);
 
         creditCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        creditCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         creditCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 creditCboxKeyPressed(evt);
@@ -340,7 +343,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         amountTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         amountTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                amountTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(amountTbox);
@@ -348,7 +351,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         narrationTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         narrationTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                narrationTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(narrationTbox);
@@ -397,7 +400,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             this.checkBranchChangedItem();
         }
-                if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
         }
     }//GEN-LAST:event_branchCboxKeyPressed
@@ -420,24 +423,6 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         }
     }//GEN-LAST:event_creditCboxKeyPressed
 
-    private void dateTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dateTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
-    }//GEN-LAST:event_dateTboxKeyPressed
-
-    private void amountTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_amountTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
-    }//GEN-LAST:event_amountTboxKeyPressed
-
-    private void narrationTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_narrationTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
-    }//GEN-LAST:event_narrationTboxKeyPressed
-
     private void buttonPanelKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buttonPanelKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
@@ -449,6 +434,16 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
             this.doDefaultCloseAction();
         }        // TODO add your handling code here:
     }//GEN-LAST:event_enterButtonKeyPressed
+
+    private void keyPressedHandler(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyPressedHandler
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }
+    }//GEN-LAST:event_keyPressedHandler
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

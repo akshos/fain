@@ -135,6 +135,9 @@ public class Login extends javax.swing.JInternalFrame {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 usernameTboxKeyTyped(evt);
             }
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                keyPressedHandler(evt);
+            }
         });
         entryPanel.add(usernameTbox);
 
@@ -165,6 +168,11 @@ public class Login extends javax.swing.JInternalFrame {
         loginButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loginButtonActionPerformed(evt);
+            }
+        });
+        loginButton.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                loginButtonKeyPressed(evt);
             }
         });
         buttonPanel.add(loginButton);
@@ -221,6 +229,23 @@ public class Login extends javax.swing.JInternalFrame {
     private void passwordPboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordPboxActionPerformed
         attemptLogin();
     }//GEN-LAST:event_passwordPboxActionPerformed
+
+    private void loginButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_loginButtonKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            exit();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            attemptLogin();
+        }
+    }//GEN-LAST:event_loginButtonKeyPressed
+
+    private void keyPressedHandler(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyPressedHandler
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            exit();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }
+    }//GEN-LAST:event_keyPressedHandler
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

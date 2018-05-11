@@ -174,6 +174,11 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         setResizable(true);
         setTitle("Customer");
         setPreferredSize(new java.awt.Dimension(450, 410));
+        addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                formFocusLost(evt);
+            }
+        });
 
         outerPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
         outerPanel.setLayout(new java.awt.GridLayout(1, 2));
@@ -192,21 +197,27 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
 
         labelsPanel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
 
+        accountCodeLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         accountCodeLabel.setText("Code");
         labelsPanel.add(accountCodeLabel);
 
+        accountHeadLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         accountHeadLabel.setText("Name");
         labelsPanel.add(accountHeadLabel);
 
+        yopBalLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         yopBalLabel.setText("Address");
         labelsPanel.add(yopBalLabel);
 
+        categoryLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         categoryLabel.setText("Branch");
         labelsPanel.add(categoryLabel);
 
+        jLabel2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel2.setText("KGST");
         labelsPanel.add(jLabel2);
 
+        jLabel3.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel3.setText("RB Registration Number");
         labelsPanel.add(jLabel3);
 
@@ -216,6 +227,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
 
         rightInerPannel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
 
+        codeTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         codeTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 codeTboxKeyPressed(evt);
@@ -223,6 +235,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         });
         rightInerPannel.add(codeTbox);
 
+        nameTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         nameTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 nameTboxKeyPressed(evt);
@@ -237,6 +250,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         });
 
         addressTarea.setColumns(20);
+        addressTarea.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         addressTarea.setRows(5);
         addressTarea.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -247,7 +261,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
 
         rightInerPannel.add(jScrollPane1);
 
-        branchCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        branchCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         branchCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 branchCboxKeyPressed(evt);
@@ -255,6 +269,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         });
         rightInerPannel.add(branchCbox);
 
+        kgstTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         kgstTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 kgstTboxKeyPressed(evt);
@@ -262,6 +277,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         });
         rightInerPannel.add(kgstTbox);
 
+        rbregnoTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         rbregnoTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 rbregnoTboxKeyPressed(evt);
@@ -272,6 +288,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 60, 2, 60));
         buttonPanel.setLayout(new java.awt.BorderLayout());
 
+        enterButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         enterButton.setText("ENTER");
         enterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -321,38 +338,54 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
     private void codeTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_codeTboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.codeTbox.transferFocus();
+        }
     }//GEN-LAST:event_codeTboxKeyPressed
 
     private void nameTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameTboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.nameTbox.transferFocus();
+        }
     }//GEN-LAST:event_nameTboxKeyPressed
 
     private void jScrollPane1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jScrollPane1KeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.jScrollPane1.transferFocus();
+        }
     }//GEN-LAST:event_jScrollPane1KeyPressed
 
     private void kgstTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_kgstTboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.kgstTbox.transferFocus();
+        }
     }//GEN-LAST:event_kgstTboxKeyPressed
 
     private void rbregnoTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rbregnoTboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.rbregnoTbox.transferFocus();
+        }
     }//GEN-LAST:event_rbregnoTboxKeyPressed
 
     private void enterButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterButtonKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.insertData();
+        }
     }//GEN-LAST:event_enterButtonKeyPressed
+
+    private void formFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusLost
+
+    }//GEN-LAST:event_formFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
