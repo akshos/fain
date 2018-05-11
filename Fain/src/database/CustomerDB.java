@@ -91,7 +91,9 @@ public final class CustomerDB {
     }
     
     public static String[][] getCustomersInBranch(Statement stmt, String branchId){
-        String sql = "select customerCode, name, address from customer where branch='"+branchId+"';";
+        String sql = "select customerCode, name, address from customer";
+        if(branchId.compareTo("All") == 0) sql += ";";
+        else sql += " where branch='"+branchId+"';";
         try{
             ResultSet rs = stmt.executeQuery(sql);
             return ResultSetToStringArray.getStringArray3col(rs);

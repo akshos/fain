@@ -16,12 +16,16 @@ import database.DBConnection;
  * @author akshos
  */
 public class CommonFuncs {
-    private static final Font nameFont = new Font(Font.FontFamily.TIMES_ROMAN, 18);
-    private static final Font addressFont = new Font(Font.FontFamily.TIMES_ROMAN, 13);
+    private static final Font nameFont = new Font(Font.FontFamily.COURIER, 18);
+    private static final Font addressFont = new Font(Font.FontFamily.COURIER, 13);
     
-    public static final Font titleFont = new Font(Font.FontFamily.TIMES_ROMAN, 14);
+    public static final Font titleFont = new Font(Font.FontFamily.COURIER, 14, Font.BOLD);
+    public static final Font subTitleFont = new Font(Font.FontFamily.COURIER, 12);
     
-    public static final Font spacingFont = new Font(Font.FontFamily.TIMES_ROMAN, 12);
+    public static final Font spacingFont = new Font(Font.FontFamily.COURIER, 12);
+    public static final Font tableHeaderFont = new Font(Font.FontFamily.COURIER, 12, Font.BOLD);
+    public static final Font tableContentFont = new Font(Font.FontFamily.COURIER, 12);
+    public static final Font tableBoldFont = new Font(Font.FontFamily.COURIER, 12 , Font.BOLD);
     
     public static Paragraph alignCenter(String str, Font f){
         Paragraph para = new Paragraph(str, f);
@@ -58,6 +62,7 @@ public class CommonFuncs {
                     doc.setPageSize(PageSize.LEGAL.rotate());
                 }
             }
+            doc.setMargins(1, 1, 1, 1);
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -71,9 +76,21 @@ public class CommonFuncs {
         return prefix + ".pdf";
     }
     
-    private static void addEmptyLine(Paragraph paragraph, int number) {
+    public static void addEmptyLine(Paragraph paragraph, int number) {
         for (int i = 0; i < number; i++) {
             paragraph.add(new Paragraph(" ", spacingFont));
+        }
+    }
+    
+    public static void addEmptyLine(Document doc, int number){
+        try{
+            Paragraph paragraph = new Paragraph();
+            for (int i = 0; i < number; i++) {
+                paragraph.add(new Paragraph(" ", spacingFont));
+            }
+            doc.add(paragraph);
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
 }

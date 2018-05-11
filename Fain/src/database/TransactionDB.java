@@ -124,4 +124,14 @@ public final class TransactionDB {
         String id = uuid.toString().substring(0, 20);
         return id;
     }
+    
+    public static ResultSet getContainingAccount(Statement stmt, String accId){
+        String sql = "select * from transactions where debit='"+accId+"' or credit='"+accId+"' ;";
+        try{
+            return stmt.executeQuery(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
 }

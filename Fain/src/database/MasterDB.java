@@ -66,7 +66,8 @@ public final class MasterDB {
             se.printStackTrace();
 	}
 	return table;
-}
+    }
+    
     public static ResultSet selectAll(Statement stmt){
         String sql="select * from master;";
         ResultSet rs = null;
@@ -150,4 +151,16 @@ public final class MasterDB {
         return null;
     } 
     
+    public static String getOpeningBal(Statement stmt, String accId){
+        String sql = "select openingBal from master where accountNo='"+accId+"';";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            rs.next();
+            String bal = rs.getString(1);
+            return bal;
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return "0";
+    }
 }

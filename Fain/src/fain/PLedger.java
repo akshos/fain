@@ -5,6 +5,8 @@
  */
 package fain;
 
+import database.BranchDB;
+import javax.swing.JOptionPane;
 import database.CategoryDB;
 import database.CustomerDB;
 import database.DBConnection;
@@ -16,6 +18,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
 import utility.ValidationChecks;
+import reports.Ledger;
 /**
  *
  * @author akshos
@@ -25,6 +28,8 @@ public class PLedger extends javax.swing.JInternalFrame{
     DBConnection dbConnection;
     int level;
     Main mainFrame;
+    String branchData[][];
+    String accountData[][];
     /**
      * Creates new form MasterEntry
      */
@@ -37,9 +42,84 @@ public class PLedger extends javax.swing.JInternalFrame{
         this.level = level;
         this.mainFrame = frame;
         initComponents();
+        loadBranch();
+        loadAccounts();
     }
     
-
+    private void loadBranch(){
+        System.out.println("loading branchcbox");
+        branchData = BranchDB.getBranch(this.dbConnection.getStatement());
+        int len;
+        if(branchData  == null){
+            len =  0;
+        }else{
+            len = branchData[0].length;
+        }
+        String[] cboxData = new String[len+1];
+        for(int i = 0; i < len; i++){
+            cboxData[i] = branchData[1][i] + " (" + branchData[0][i] + ")";
+        }
+        cboxData[len] = "All";
+        this.branchCbox.setModel(new DefaultComboBoxModel(cboxData));
+        this.branchCbox.setSelectedIndex(len);
+    }
+    
+    private void loadAccounts(){
+        String item = this.branchCbox.getSelectedItem().toString();
+        String branchCode = "All";
+        if(item.compareTo("All") != 0){
+            int index = this.branchCbox.getSelectedIndex();
+            branchCode = this.branchData[0][index];
+        }
+        accountData = CustomerDB.getCustomersInBranch(this.dbConnection.getStatement(), branchCode);
+        int len;
+        String[] cboxData = null;
+        if(accountData  == null){
+            len =  0;
+            cboxData = new String[1];
+            cboxData[0] = "None";
+            this.accountFromCbox.setToolTipText("No Customers Available");
+            this.accountToCbox.setToolTipText("No Customers Available");
+        }else{
+            len = accountData[0].length;
+            cboxData = new String[len+1];
+            for(int i = 0; i < len; i++){
+                cboxData[i] = accountData[1][i] + "  (" + accountData[0][i] +")"  ;
+            }
+        }
+        this.accountFromCbox.setModel(new DefaultComboBoxModel(cboxData));
+        cboxData[len] = "None";
+        this.accountToCbox.setModel(new DefaultComboBoxModel(cboxData));
+        this.accountToCbox.setSelectedIndex(len);
+    }
+    
+    private void generateReport(){
+        if(branchData == null){
+            int ret = JOptionPane.showConfirmDialog(this, "No Available Branches", "No Branches", JOptionPane.WARNING_MESSAGE);
+        }
+        if(accountFromCbox.getSelectedItem().toString().compareTo("None") == 0){
+            int ret = JOptionPane.showConfirmDialog(this, "Please select atleast one Account", "No Account selected", JOptionPane.WARNING_MESSAGE);
+        }
+        int index;
+        String item = this.branchCbox.getSelectedItem().toString();
+        String branchCode = "All";
+        if(item.compareTo("All") != 0){
+            index = this.branchCbox.getSelectedIndex();
+            branchCode = this.branchData[0][index];
+        }
+        index = this.accountFromCbox.getSelectedIndex();
+        String accFrom = this.accountData[0][index];
+        item = this.accountToCbox.getSelectedItem().toString();
+        String accTo = "";
+        if(item.compareTo("None") != 0){
+            index = this.accountToCbox.getSelectedIndex();
+            accTo = this.accountData[0][index];
+        }
+        String paper = this.paperCbox.getSelectedItem().toString();
+        String orientation = this.orientationCbox.getSelectedItem().toString();
+        Ledger.createReport(dbConnection, paper, orientation, branchCode, accFrom, accTo);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -133,6 +213,11 @@ public class PLedger extends javax.swing.JInternalFrame{
         rightInerPannel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
 
         branchCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        branchCbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                branchCboxFocusLost(evt);
+            }
+        });
         rightInerPannel.add(branchCbox);
 
         accountFromCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
@@ -175,8 +260,12 @@ public class PLedger extends javax.swing.JInternalFrame{
     }//GEN-LAST:event_formInternalFrameClosed
 
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
-
+        generateReport();
     }//GEN-LAST:event_enterButtonActionPerformed
+
+    private void branchCboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_branchCboxFocusLost
+        this.loadAccounts();
+    }//GEN-LAST:event_branchCboxFocusLost
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel accountCodeLabel;

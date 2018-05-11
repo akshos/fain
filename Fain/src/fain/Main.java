@@ -276,6 +276,7 @@ public class Main extends javax.swing.JFrame {
         eCustomersMenuItem = new javax.swing.JMenuItem();
         eConsumptionMenuItem = new javax.swing.JMenuItem();
         printingMenu = new javax.swing.JMenu();
+        pLedgerMenuItem = new javax.swing.JMenuItem();
         optionsMenu = new javax.swing.JMenu();
         startNewSessionMenuItem = new javax.swing.JMenuItem();
         loadSessionMenuItem = new javax.swing.JMenuItem();
@@ -515,6 +516,15 @@ public class Main extends javax.swing.JFrame {
                 printingMenuMouseEntered(evt);
             }
         });
+
+        pLedgerMenuItem.setText("Ledgers");
+        pLedgerMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pLedgerMenuItemActionPerformed(evt);
+            }
+        });
+        printingMenu.add(pLedgerMenuItem);
+
         fainMainMenu.add(printingMenu);
 
         optionsMenu.setMnemonic('o');
@@ -804,6 +814,17 @@ public class Main extends javax.swing.JFrame {
         }
         addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_aBranchesMenuItemActionPerformed
+
+    private void pLedgerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pLedgerMenuItemActionPerformed
+        PLedger item = new PLedger(dbConnection, this, this.level+1);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }//GEN-LAST:event_pLedgerMenuItemActionPerformed
     
     /**
      * @param item the internal frame to be added to desktop pane
@@ -893,6 +914,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem loadSessionMenuItem;
     private javax.swing.JDesktopPane mainDesktopPane;
     private javax.swing.JMenu optionsMenu;
+    private javax.swing.JMenuItem pLedgerMenuItem;
     private javax.swing.JMenu printingMenu;
     private javax.swing.JMenuItem startNewSessionMenuItem;
     private javax.swing.JPanel statusPanel;
