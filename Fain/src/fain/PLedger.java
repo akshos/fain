@@ -11,6 +11,7 @@ import database.CategoryDB;
 import database.CustomerDB;
 import database.DBConnection;
 import database.MasterDB;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.sql.Statement;
 import java.util.Arrays;
@@ -93,7 +94,8 @@ public class PLedger extends javax.swing.JInternalFrame{
         this.accountToCbox.setSelectedIndex(len);
     }
     
-    private void generateReport(){
+    private void generateReport(){    
+        setBusy();
         if(branchData == null){
             int ret = JOptionPane.showConfirmDialog(this, "No Available Branches", "No Branches", JOptionPane.WARNING_MESSAGE);
         }
@@ -118,6 +120,19 @@ public class PLedger extends javax.swing.JInternalFrame{
         String paper = this.paperCbox.getSelectedItem().toString();
         String orientation = this.orientationCbox.getSelectedItem().toString();
         Ledger.createReport(dbConnection, paper, orientation, branchCode, accFrom, accTo);
+        resetBusy();
+    }
+    
+    private void setBusy(){
+        this.enterButton.setEnabled(false);
+        this.enterButton.setText("Please Wait");
+        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+    }
+    
+    private void resetBusy(){
+        this.enterButton.setEnabled(true);
+        this.enterButton.setText("ENTER");
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
     
     /**
@@ -149,6 +164,7 @@ public class PLedger extends javax.swing.JInternalFrame{
         enterButton = new javax.swing.JButton();
 
         setClosable(true);
+        setResizable(true);
         setTitle("Ledger");
         setPreferredSize(new java.awt.Dimension(450, 410));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
@@ -212,26 +228,56 @@ public class PLedger extends javax.swing.JInternalFrame{
 
         rightInerPannel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
 
+        branchCbox.setBackground(java.awt.Color.white);
         branchCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         branchCbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 branchCboxFocusLost(evt);
             }
         });
+        branchCbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                branchCboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(branchCbox);
 
+        accountFromCbox.setBackground(java.awt.Color.white);
         accountFromCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        accountFromCbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                accountFromCboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(accountFromCbox);
 
+        accountToCbox.setBackground(java.awt.Color.white);
         accountToCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        accountToCbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                accountToCboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(accountToCbox);
 
+        paperCbox.setBackground(java.awt.Color.white);
         paperCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         paperCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A4", "Legal" }));
+        paperCbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                paperCboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(paperCbox);
 
+        orientationCbox.setBackground(java.awt.Color.white);
         orientationCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         orientationCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Landscape", "Portrait" }));
+        orientationCbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                orientationCboxKeyPressed(evt);
+            }
+        });
         rightInerPannel.add(orientationCbox);
 
         buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 60, 2, 60));
@@ -242,6 +288,11 @@ public class PLedger extends javax.swing.JInternalFrame{
         enterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 enterButtonActionPerformed(evt);
+            }
+        });
+        enterButton.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                enterButtonKeyPressed(evt);
             }
         });
         buttonPanel.add(enterButton, java.awt.BorderLayout.CENTER);
@@ -266,6 +317,57 @@ public class PLedger extends javax.swing.JInternalFrame{
     private void branchCboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_branchCboxFocusLost
         this.loadAccounts();
     }//GEN-LAST:event_branchCboxFocusLost
+
+    private void branchCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_branchCboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            branchCbox.transferFocus();
+        }
+    }//GEN-LAST:event_branchCboxKeyPressed
+
+    private void accountFromCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_accountFromCboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            accountFromCbox.transferFocus();
+        }
+    }//GEN-LAST:event_accountFromCboxKeyPressed
+
+    private void accountToCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_accountToCboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            accountToCbox.transferFocus();
+        }
+    }//GEN-LAST:event_accountToCboxKeyPressed
+
+    private void paperCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_paperCboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            paperCbox.transferFocus();
+        }
+    }//GEN-LAST:event_paperCboxKeyPressed
+
+    private void orientationCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_orientationCboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            orientationCbox.transferFocus();
+        }
+    }//GEN-LAST:event_orientationCboxKeyPressed
+
+    private void enterButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterButtonKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.generateReport();
+        }
+    }//GEN-LAST:event_enterButtonKeyPressed
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel accountCodeLabel;
