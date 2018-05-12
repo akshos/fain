@@ -16,11 +16,11 @@ import javax.swing.table.TableModel;
  * @author lenovo
  */
 public final class CustomerDB {
-    public static boolean insert(Statement stmt, String code, String name, String address,String customer, String kgst,String rbno ){
+    public static boolean insert(Statement stmt, String code, String name, String address,String branch, String kgst,String rbno ){
         String in ="insert into customer values('"      +code           +"','"
                                                         +name           + "','"
                                                         +address        + "','"
-                                                        +customer       +"','"
+                                                        +branch       +"','"
                                                         +kgst           + "','"
                                                         +rbno           + "')";
         try{
@@ -30,8 +30,25 @@ public final class CustomerDB {
             se.printStackTrace();
             return false;
         }
-            return true;
+        return true;
     }
+    
+    public static boolean update(Statement stmt, String code, String name, String address, String branch, String kgst,String rbno ){
+        String sql = "update customer set name='" + name + "', "
+                + "address='" + address + "', "
+                + "branch='" + branch + "', "
+                + "kgst='" + kgst + "', "
+                + "rbno='" + rbno + "' "
+                + "where customerCode='" + code + "';";
+        try{
+            stmt.execute(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    
     public static void delete(Statement stmt,String id){
         String del="delete from customer where customerCode='"+id+"';";
         try {
