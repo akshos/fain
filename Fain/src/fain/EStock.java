@@ -56,16 +56,17 @@ public class EStock extends javax.swing.JInternalFrame implements RefreshOption{
     }
     
     private void addEntry(){
-        EStock item = new EStock(dbConnection, this.mainFrame, this.level+1);
+        ASLatex item = new ASLatex(dbConnection, Codes.NEW_ENTRY, null, this.mainFrame, this.level+1, this);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
         }else{
-            item.setSize(790, 470);
+            item.setSize(790, 530);
         }
         mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }
-        private void editEntry(){
+    
+    private void editEntry(){
         int index = this.dataTable.getSelectedRow();
         String id = this.dataTable.getModel().getValueAt(index, 0).toString();
         AStock item = new AStock(dbConnection, Codes.EDIT, id, mainFrame, this.level+1, this);
@@ -404,8 +405,27 @@ public class EStock extends javax.swing.JInternalFrame implements RefreshOption{
 
     private void dataTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dataTableKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.editEntry();}
-        // TODO add your handling code here:
+            this.editEntry();
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F2){
+            addEntry();
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F2){
+        
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F3){
+        
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F5){
+        
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F6){
+            this.dataTable.setRowSelectionInterval(0, 0);
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F7){
+            int lastRowIndex = this.dataTable.getRowCount() - 1;
+            this.dataTable.setRowSelectionInterval(lastRowIndex, lastRowIndex);
+        }
     }//GEN-LAST:event_dataTableKeyPressed
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed

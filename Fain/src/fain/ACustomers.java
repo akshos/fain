@@ -111,6 +111,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         CustomerDB.insert(stmt, code, name, address, branch, kgst, rbregno);
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.CUSTOMER_ADDED);
+            this.doDefaultCloseAction();
         }
     }
     
@@ -252,6 +253,11 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         addressTarea.setColumns(20);
         addressTarea.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         addressTarea.setRows(5);
+        addressTarea.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                addressTareaFocusGained(evt);
+            }
+        });
         addressTarea.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 addressTareaKeyPressed(evt);
@@ -270,6 +276,11 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         rightInerPannel.add(branchCbox);
 
         kgstTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        kgstTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                kgstTboxFocusGained(evt);
+            }
+        });
         kgstTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -278,6 +289,11 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         rightInerPannel.add(kgstTbox);
 
         rbregnoTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        rbregnoTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                rbregnoTboxFocusGained(evt);
+            }
+        });
         rbregnoTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -364,6 +380,18 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
             cmp.transferFocus();
         }
     }//GEN-LAST:event_keyPressedHandler
+
+    private void addressTareaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_addressTareaFocusGained
+        this.addressTarea.selectAll();
+    }//GEN-LAST:event_addressTareaFocusGained
+
+    private void kgstTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_kgstTboxFocusGained
+        this.kgstTbox.selectAll();
+    }//GEN-LAST:event_kgstTboxFocusGained
+
+    private void rbregnoTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_rbregnoTboxFocusGained
+        this.rbregnoTbox.selectAll();
+    }//GEN-LAST:event_rbregnoTboxFocusGained
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

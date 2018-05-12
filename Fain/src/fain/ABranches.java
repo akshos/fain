@@ -93,7 +93,13 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_BRANCHES);
             this.doDefaultCloseAction();
+        }else{
+            nextEntry();
         }
+    }
+    
+    private void nextEntry(){
+        this.nameTbox.requestFocus();
     }
     
     /**
@@ -195,6 +201,11 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         rightInerPannel.setLayout(new java.awt.GridLayout(5, 0, 0, 10));
 
         nameTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        nameTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                nameTboxFocusGained(evt);
+            }
+        });
         nameTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -206,6 +217,11 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         addressTarea.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         addressTarea.setRows(5);
         addressTarea.setTabSize(0);
+        addressTarea.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                addressTareaFocusGained(evt);
+            }
+        });
         addressTarea.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 addressTareaKeyPressed(evt);
@@ -216,6 +232,11 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         rightInerPannel.add(jScrollPane1);
 
         kgstTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        kgstTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                kgstTboxFocusGained(evt);
+            }
+        });
         kgstTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -224,6 +245,11 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         rightInerPannel.add(kgstTbox);
 
         rbregnoTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        rbregnoTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                rbregnoTboxFocusGained(evt);
+            }
+        });
         rbregnoTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -305,6 +331,22 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
             cmp.transferFocus();
         }
     }//GEN-LAST:event_keyPressedHandler
+
+    private void nameTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_nameTboxFocusGained
+        this.nameTbox.selectAll();
+    }//GEN-LAST:event_nameTboxFocusGained
+
+    private void addressTareaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_addressTareaFocusGained
+        this.addressTarea.selectAll();
+    }//GEN-LAST:event_addressTareaFocusGained
+
+    private void kgstTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_kgstTboxFocusGained
+        this.kgstTbox.selectAll();
+    }//GEN-LAST:event_kgstTboxFocusGained
+
+    private void rbregnoTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_rbregnoTboxFocusGained
+        this.rbregnoTbox.selectAll();
+    }//GEN-LAST:event_rbregnoTboxFocusGained
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

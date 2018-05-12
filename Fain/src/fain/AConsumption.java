@@ -167,7 +167,15 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_CONSUMPTION);
+            this.doDefaultCloseAction();
+        }else{
+            nextEntry();
         }
+    }
+    
+    private void nextEntry(){
+        this.branchCbox.requestFocus();
+        this.referenceNumberTbox.setText("");
     }
     
     private void addNewBranch(){
@@ -341,6 +349,11 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
 
         referenceNumberTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         referenceNumberTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        referenceNumberTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                referenceNumberTboxFocusGained(evt);
+            }
+        });
         referenceNumberTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -377,6 +390,11 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         rightInerPannel.add(itemNameTbox);
 
         narrationTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        narrationTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                narrationTboxFocusGained(evt);
+            }
+        });
         narrationTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -386,6 +404,11 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
 
         quantityTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.000"))));
         quantityTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        quantityTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                quantityTboxFocusGained(evt);
+            }
+        });
         quantityTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 quantityTboxActionPerformed(evt);
@@ -484,6 +507,18 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
             cmp.transferFocus();
         }
     }//GEN-LAST:event_keyPressedHandler
+
+    private void referenceNumberTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_referenceNumberTboxFocusGained
+        this.referenceNumberTbox.selectAll();
+    }//GEN-LAST:event_referenceNumberTboxFocusGained
+
+    private void narrationTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_narrationTboxFocusGained
+        this.narrationTbox.selectAll();
+    }//GEN-LAST:event_narrationTboxFocusGained
+
+    private void quantityTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_quantityTboxFocusGained
+        this.quantityTbox.selectAll();
+    }//GEN-LAST:event_quantityTboxFocusGained
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

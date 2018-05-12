@@ -163,7 +163,15 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         TransactionDB.insert(stmt, date, branch, debit, credit, amount, narration, tid);
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_TRANSACTION);
+            this.doDefaultCloseAction();
+        }else{
+            nextEntry();
         }
+    }
+    
+    private void nextEntry(){
+        this.dateTbox.requestFocus();
+        this.amountTbox.setText("");
     }
     
     private void addNewBranch(){
@@ -341,6 +349,11 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
 
         amountTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("###0.00"))));
         amountTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        amountTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                amountTboxFocusGained(evt);
+            }
+        });
         amountTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -349,6 +362,11 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         rightInerPannel.add(amountTbox);
 
         narrationTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        narrationTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                narrationTboxFocusGained(evt);
+            }
+        });
         narrationTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -444,6 +462,14 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
             cmp.transferFocus();
         }
     }//GEN-LAST:event_keyPressedHandler
+
+    private void amountTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_amountTboxFocusGained
+        this.amountTbox.selectAll();
+    }//GEN-LAST:event_amountTboxFocusGained
+
+    private void narrationTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_narrationTboxFocusGained
+        this.narrationTbox.selectAll();
+    }//GEN-LAST:event_narrationTboxFocusGained
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

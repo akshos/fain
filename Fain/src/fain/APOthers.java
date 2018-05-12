@@ -102,7 +102,13 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         PurchaseDB.insert(stmt, branch, date, bill, party, itemCode, itemname, quantity, value, tid);
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_POTHERS);
+            this.doDefaultCloseAction();
         }
+    }
+    
+    private void nextEntry(){
+        this.branchCbox.requestFocus();
+        this.billNumberTbox.setText("");
     }
     
     private void setItemName(){
@@ -421,6 +427,11 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         rightInerPannel.add(dateTbox);
 
         billNumberTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        billNumberTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                billNumberTboxFocusGained(evt);
+            }
+        });
         billNumberTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 billNumberTboxActionPerformed(evt);
@@ -470,6 +481,11 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
 
         quantityTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.000"))));
         quantityTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        quantityTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                quantityTboxFocusGained(evt);
+            }
+        });
         quantityTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 quantityTboxActionPerformed(evt);
@@ -484,6 +500,11 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
 
         valueTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         valueTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        valueTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                valueTboxFocusGained(evt);
+            }
+        });
         valueTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 valueTboxActionPerformed(evt);
@@ -587,6 +608,18 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
             insertData();
         }
     }//GEN-LAST:event_enterButtonKeyPressed
+
+    private void billNumberTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_billNumberTboxFocusGained
+        this.billNumberTbox.selectAll();
+    }//GEN-LAST:event_billNumberTboxFocusGained
+
+    private void quantityTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_quantityTboxFocusGained
+        this.quantityTbox.selectAll();
+    }//GEN-LAST:event_quantityTboxFocusGained
+
+    private void valueTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_valueTboxFocusGained
+        this.valueTbox.selectAll();
+    }//GEN-LAST:event_valueTboxFocusGained
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

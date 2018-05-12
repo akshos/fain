@@ -40,7 +40,7 @@ public class Main extends javax.swing.JFrame {
         this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         initComponents();
         createLogoutMenu();
-        this.activeInternalFrame = new javax.swing.JInternalFrame[5];
+        this.activeInternalFrame = new javax.swing.JInternalFrame[10];
         this.level = 0;
         Preferences.loadAllProperties();
     }

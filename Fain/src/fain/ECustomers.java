@@ -52,17 +52,18 @@ public class ECustomers extends javax.swing.JInternalFrame implements RefreshOpt
     }
     
     private void addEntry(){
-        ECustomers item = new ECustomers(dbConnection, this.mainFrame, this.level+1);
+        AMaster item = new AMaster(dbConnection, Codes.NEW_ENTRY, null, this.mainFrame, this.level+1, this);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
+            System.out.println("setting size");
             item.setSize(dim);
         }else{
-            item.setSize(790, 470);
+            item.setSize(790, 300);
         }
         mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }
     
-        private void editEntry(){
+    private void editEntry(){
         int index = this.dataTable.getSelectedRow();
         String id = this.dataTable.getModel().getValueAt(index, 0).toString();
         ACustomers item = new ACustomers(dbConnection, Codes.EDIT, id, mainFrame, this.level+1, this, null,null);
@@ -401,8 +402,27 @@ public class ECustomers extends javax.swing.JInternalFrame implements RefreshOpt
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void dataTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dataTableKeyPressed
-    if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             this.editEntry();
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F2){
+            addEntry();
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F2){
+        
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F3){
+        
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F5){
+        
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F6){
+            this.dataTable.setRowSelectionInterval(0, 0);
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F7){
+            int lastRowIndex = this.dataTable.getRowCount() - 1;
+            this.dataTable.setRowSelectionInterval(lastRowIndex, lastRowIndex);
         }
     }//GEN-LAST:event_dataTableKeyPressed
 

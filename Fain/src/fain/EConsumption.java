@@ -65,12 +65,12 @@ public class EConsumption extends javax.swing.JInternalFrame implements RefreshO
     
 
     private void addEntry(){
-        EConsumption item = new EConsumption(dbConnection, this.mainFrame, this.level+1);
+        AConsumption item = new AConsumption(dbConnection, Codes.NEW_ENTRY, null, this.mainFrame, this.level+1, this);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
         }else{
-            item.setSize(790, 470);
+            item.setSize(790, 380);
         }
         mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }
@@ -399,9 +399,28 @@ public class EConsumption extends javax.swing.JInternalFrame implements RefreshO
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void dataTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dataTableKeyPressed
-              if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             this.editEntry();  // TODO add your handling code here:
-              }
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F2){
+            addEntry();
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F2){
+        
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F3){
+        
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F5){
+        
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F6){
+            this.dataTable.setRowSelectionInterval(0, 0);
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F7){
+            int lastRowIndex = this.dataTable.getRowCount() - 1;
+            this.dataTable.setRowSelectionInterval(lastRowIndex, lastRowIndex);
+        }
     }//GEN-LAST:event_dataTableKeyPressed
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed

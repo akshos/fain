@@ -215,7 +215,15 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         
         if(prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_PLATEX);
+            this.doDefaultCloseAction();
+        }else{
+            nextEntry();
         }
+    }
+    
+    private void nextEntry(){
+        this.branchCbox.requestFocus();
+        this.prBillTbox.setText("");
     }
     
     private void calculateDryRubber(){
@@ -423,6 +431,9 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         prBillTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         prBillTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         prBillTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                prBillTboxFocusGained(evt);
+            }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 prBillTboxFocusLost(evt);
             }
@@ -454,6 +465,11 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
 
         quantityTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat(""))));
         quantityTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        quantityTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                quantityTboxFocusGained(evt);
+            }
+        });
         quantityTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 quantityTboxActionPerformed(evt);
@@ -468,6 +484,11 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
 
         drcTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat(""))));
         drcTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        drcTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                drcTboxFocusGained(evt);
+            }
+        });
         drcTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 drcTboxActionPerformed(evt);
@@ -502,6 +523,11 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
 
         rateTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         rateTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        rateTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                rateTboxFocusGained(evt);
+            }
+        });
         rateTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rateTboxActionPerformed(evt);
@@ -640,6 +666,22 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
             this.doDefaultCloseAction();
         }
     }//GEN-LAST:event_partyCboxKeyPressed
+
+    private void prBillTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_prBillTboxFocusGained
+        this.prBillTbox.selectAll();
+    }//GEN-LAST:event_prBillTboxFocusGained
+
+    private void quantityTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_quantityTboxFocusGained
+        this.quantityTbox.selectAll();
+    }//GEN-LAST:event_quantityTboxFocusGained
+
+    private void drcTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_drcTboxFocusGained
+        this.drcTbox.selectAll();
+    }//GEN-LAST:event_drcTboxFocusGained
+
+    private void rateTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_rateTboxFocusGained
+        this.rateTbox.selectAll();
+    }//GEN-LAST:event_rateTboxFocusGained
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

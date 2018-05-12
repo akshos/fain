@@ -221,7 +221,15 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         
         if(prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_SLATEX);
+            this.doDefaultCloseAction();
+        }else{
+            nextEntry();
         }
+    }
+    
+    private void nextEntry(){
+        this.branchCbox.requestFocus();
+        this.prBillTbox.setText("");
     }
     
     private boolean chechPrBill(){
@@ -453,6 +461,9 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
 
         prBillTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         prBillTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                prBillTboxFocusGained(evt);
+            }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 prBillTboxFocusLost(evt);
             }
@@ -478,6 +489,11 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         rightInerPannel.add(partyCbox);
 
         barrelFromTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        barrelFromTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                barrelFromTboxFocusGained(evt);
+            }
+        });
         barrelFromTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -486,6 +502,11 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         rightInerPannel.add(barrelFromTbox);
 
         barrelToTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        barrelToTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                barrelToTboxFocusGained(evt);
+            }
+        });
         barrelToTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -495,6 +516,11 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
 
         quantityTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.000"))));
         quantityTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        quantityTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                quantityTboxFocusGained(evt);
+            }
+        });
         quantityTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 quantityTboxActionPerformed(evt);
@@ -510,6 +536,9 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         drcTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.000"))));
         drcTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         drcTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                drcTboxFocusGained(evt);
+            }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 drcTboxFocusLost(evt);
             }
@@ -529,6 +558,11 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         dryRubberTbox.setEditable(false);
         dryRubberTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.000"))));
         dryRubberTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        dryRubberTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                dryRubberTboxFocusGained(evt);
+            }
+        });
         dryRubberTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 dryRubberTboxActionPerformed(evt);
@@ -544,6 +578,9 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         rateTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         rateTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         rateTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                rateTboxFocusGained(evt);
+            }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 rateTboxFocusLost(evt);
             }
@@ -563,6 +600,11 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         valueTbox.setEditable(false);
         valueTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         valueTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        valueTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                valueTboxFocusGained(evt);
+            }
+        });
         valueTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 valueTboxActionPerformed(evt);
@@ -685,6 +727,38 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
             this.insertData();
         }
     }//GEN-LAST:event_enterButtonKeyPressed
+
+    private void prBillTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_prBillTboxFocusGained
+        this.prBillTbox.selectAll();
+    }//GEN-LAST:event_prBillTboxFocusGained
+
+    private void barrelFromTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_barrelFromTboxFocusGained
+        this.barrelFromTbox.selectAll();
+    }//GEN-LAST:event_barrelFromTboxFocusGained
+
+    private void barrelToTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_barrelToTboxFocusGained
+        this.barrelToTbox.selectAll();
+    }//GEN-LAST:event_barrelToTboxFocusGained
+
+    private void quantityTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_quantityTboxFocusGained
+        this.quantityTbox.selectAll();
+    }//GEN-LAST:event_quantityTboxFocusGained
+
+    private void drcTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_drcTboxFocusGained
+        this.drcTbox.selectAll();
+    }//GEN-LAST:event_drcTboxFocusGained
+
+    private void dryRubberTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_dryRubberTboxFocusGained
+        this.dryRubberTbox.selectAll();
+    }//GEN-LAST:event_dryRubberTboxFocusGained
+
+    private void rateTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_rateTboxFocusGained
+        this.rateTbox.selectAll();
+    }//GEN-LAST:event_rateTboxFocusGained
+
+    private void valueTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_valueTboxFocusGained
+        this.valueTbox.selectAll();
+    }//GEN-LAST:event_valueTboxFocusGained
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

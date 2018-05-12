@@ -117,7 +117,7 @@
               <Font name="Dialog" size="14" style="1"/>
             </Property>
             <Property name="mnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="java.awt.event.KeyEvent.VK_F2" type="code"/>
+              <Connection code="java.awt.event.KeyEvent.VK_A" type="code"/>
             </Property>
             <Property name="text" type="java.lang.String" value="F2: Add"/>
           </Properties>

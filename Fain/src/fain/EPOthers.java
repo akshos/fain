@@ -56,14 +56,18 @@ public class EPOthers extends javax.swing.JInternalFrame implements RefreshOptio
     }
     
     private void addEntry(){
-        EPOthers item = new EPOthers(dbConnection, this.mainFrame, this.level+1);
+        APLatex item = new APLatex(dbConnection, Codes.NEW_ENTRY, null, this.mainFrame, this.level+1, this);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
         }else{
-            item.setSize(790, 470);
+            item.setSize(790, 450);
         }
         mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }
+    
+    private void editEntry(){
+        
     }
     
     /**
@@ -328,6 +332,11 @@ public class EPOthers extends javax.swing.JInternalFrame implements RefreshOptio
                 return canEdit [columnIndex];
             }
         });
+        dataTable.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                dataTableKeyPressed(evt);
+            }
+        });
         tableScrollPane.setViewportView(dataTable);
 
         upperPanel.add(tableScrollPane, java.awt.BorderLayout.CENTER);
@@ -379,6 +388,31 @@ public class EPOthers extends javax.swing.JInternalFrame implements RefreshOptio
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         addEntry();        // TODO add your handling code here:
     }//GEN-LAST:event_addButtonActionPerformed
+
+    private void dataTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dataTableKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.editEntry();
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F2){
+            addEntry(); 
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F2){
+        
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F3){
+        
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F5){
+        
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F6){
+            this.dataTable.setRowSelectionInterval(0, 0);
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F7){
+            int lastRowIndex = this.dataTable.getRowCount() - 1;
+            this.dataTable.setRowSelectionInterval(lastRowIndex, lastRowIndex);
+        }
+    }//GEN-LAST:event_dataTableKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

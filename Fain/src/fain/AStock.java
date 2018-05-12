@@ -89,7 +89,15 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         StockDB.insert(stmt, iname, currentStock, rate, purchase, sales, stock);
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_STOCK);
+            this.doDefaultCloseAction();
+        }else{
+            nextEntry();
         }
+    }
+    
+    private void nextEntry(){
+        this.itemNameTbox.setText("");
+        this.itemNameTbox.requestFocus();
     }
     
     private void loadPurchaseAccounts(){
@@ -299,6 +307,11 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         rightInerPannel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
 
         itemNameTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        itemNameTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                itemNameTboxFocusGained(evt);
+            }
+        });
         itemNameTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -308,6 +321,11 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
 
         currentStockTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat(""))));
         currentStockTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        currentStockTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                currentStockTboxFocusGained(evt);
+            }
+        });
         currentStockTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 currentStockTboxActionPerformed(evt);
@@ -322,6 +340,11 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
 
         rateTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         rateTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        rateTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                rateTboxFocusGained(evt);
+            }
+        });
         rateTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rateTboxActionPerformed(evt);
@@ -442,6 +465,18 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
             insertData();
         }
     }//GEN-LAST:event_enterButtonKeyPressed
+
+    private void itemNameTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_itemNameTboxFocusGained
+        this.itemNameTbox.selectAll();
+    }//GEN-LAST:event_itemNameTboxFocusGained
+
+    private void currentStockTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_currentStockTboxFocusGained
+        this.currentStockTbox.selectAll();
+    }//GEN-LAST:event_currentStockTboxFocusGained
+
+    private void rateTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_rateTboxFocusGained
+        this.rateTbox.selectAll();
+    }//GEN-LAST:event_rateTboxFocusGained
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
