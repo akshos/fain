@@ -334,7 +334,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         });
         dateTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                dateTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(dateTbox);
@@ -343,7 +343,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         referenceNumberTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         referenceNumberTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                referenceNumberTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(referenceNumberTbox);
@@ -371,7 +371,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         });
         itemNameTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                itemNameTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(itemNameTbox);
@@ -379,7 +379,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         narrationTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         narrationTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                narrationTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(narrationTbox);
@@ -393,7 +393,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         });
         quantityTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                quantityTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(quantityTbox);
@@ -463,46 +463,6 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         changeItemName();
     }//GEN-LAST:event_itemCodeCboxItemStateChanged
 
-    private void dateTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dateTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.dateTbox.transferFocus();
-        }
-    }//GEN-LAST:event_dateTboxKeyPressed
-
-    private void referenceNumberTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_referenceNumberTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.referenceNumberTbox.transferFocus();
-        }
-    }//GEN-LAST:event_referenceNumberTboxKeyPressed
-
-    private void itemNameTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_itemNameTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.itemNameTbox.transferFocus();
-        }
-    }//GEN-LAST:event_itemNameTboxKeyPressed
-
-    private void narrationTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_narrationTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.narrationTbox.transferFocus();
-        }
-    }//GEN-LAST:event_narrationTboxKeyPressed
-
-    private void quantityTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_quantityTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.quantityTbox.transferFocus();
-        }
-    }//GEN-LAST:event_quantityTboxKeyPressed
-
     private void enterButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterButtonKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
@@ -514,6 +474,16 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
     private void formFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusLost
 
     }//GEN-LAST:event_formFocusLost
+
+    private void keyPressedHandler(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyPressedHandler
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }
+    }//GEN-LAST:event_keyPressedHandler
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

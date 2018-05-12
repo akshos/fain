@@ -197,7 +197,7 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         nameTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         nameTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                nameTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(nameTbox);
@@ -218,7 +218,7 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         kgstTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         kgstTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                kgstTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(kgstTbox);
@@ -226,7 +226,7 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         rbregnoTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         rbregnoTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                rbregnoTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(rbregnoTbox);
@@ -284,30 +284,6 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         Preferences.storeInternalFrameDimension(this);
     }//GEN-LAST:event_formInternalFrameClosing
 
-    private void nameTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.nameTbox.transferFocus();
-        }
-    }//GEN-LAST:event_nameTboxKeyPressed
-
-    private void kgstTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_kgstTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.kgstTbox.transferFocus();
-        }
-    }//GEN-LAST:event_kgstTboxKeyPressed
-
-    private void rbregnoTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rbregnoTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.rbregnoTbox.transferFocus();
-        }
-    }//GEN-LAST:event_rbregnoTboxKeyPressed
-
     private void enterButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterButtonKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
@@ -319,6 +295,16 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
     private void formFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusLost
 
     }//GEN-LAST:event_formFocusLost
+
+    private void keyPressedHandler(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyPressedHandler
+           if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }
+    }//GEN-LAST:event_keyPressedHandler
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -415,7 +415,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         dateTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                dateTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(dateTbox);
@@ -429,7 +429,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         prBillTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                prBillTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(prBillTbox);
@@ -461,7 +461,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         quantityTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                quantityTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(quantityTbox);
@@ -475,7 +475,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         drcTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                drcTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(drcTbox);
@@ -495,7 +495,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         dryRubberTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                dryRubberTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(dryRubberTbox);
@@ -509,7 +509,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rateTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                rateTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(rateTbox);
@@ -529,7 +529,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         valueTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                valueTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(valueTbox);
@@ -561,8 +561,12 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
     }// </editor-fold>//GEN-END:initComponents
 
     private void keyPressedHandler(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyPressedHandler
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.insertData();
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
         }
     }//GEN-LAST:event_keyPressedHandler
 
@@ -636,62 +640,6 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
             this.doDefaultCloseAction();
         }
     }//GEN-LAST:event_partyCboxKeyPressed
-
-    private void dateTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dateTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.dateTbox.transferFocus();
-        }
-    }//GEN-LAST:event_dateTboxKeyPressed
-
-    private void prBillTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_prBillTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.prBillTbox.transferFocus();
-        }
-    }//GEN-LAST:event_prBillTboxKeyPressed
-
-    private void quantityTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_quantityTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.quantityTbox.transferFocus();
-        }
-    }//GEN-LAST:event_quantityTboxKeyPressed
-
-    private void drcTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_drcTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.drcTbox.transferFocus();
-        }
-    }//GEN-LAST:event_drcTboxKeyPressed
-
-    private void dryRubberTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dryRubberTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.dryRubberTbox.transferFocus();
-        }
-    }//GEN-LAST:event_dryRubberTboxKeyPressed
-
-    private void rateTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rateTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.rateTbox.transferFocus();
-        }
-    }//GEN-LAST:event_rateTboxKeyPressed
-
-    private void valueTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_valueTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.valueTbox.transferFocus();
-        }
-    }//GEN-LAST:event_valueTboxKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -317,7 +317,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         });
         accountCodeTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                accountCodeTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(accountCodeTbox);
@@ -330,7 +330,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         });
         accountHeadTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                accountHeadTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(accountHeadTbox);
@@ -344,7 +344,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         });
         yopBalanceTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                yopBalanceTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(yopBalanceTbox);
@@ -358,7 +358,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         });
         currentBalanceTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                currentBalanceTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(currentBalanceTbox);
@@ -401,24 +401,6 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         Preferences.storeInternalFrameDimension(this);
     }//GEN-LAST:event_formInternalFrameClosed
 
-    private void accountCodeTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_accountCodeTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.accountCodeTbox.transferFocus();
-        }
-    }//GEN-LAST:event_accountCodeTboxKeyPressed
-
-    private void accountHeadTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_accountHeadTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.accountHeadTbox.transferFocus();
-        }
-    }//GEN-LAST:event_accountHeadTboxKeyPressed
-
     private void categoryCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_categoryCboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
@@ -435,24 +417,6 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
     private void accountCodeTboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_accountCodeTboxFocusLost
         checkCode();
     }//GEN-LAST:event_accountCodeTboxFocusLost
-
-    private void yopBalanceTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_yopBalanceTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.yopBalanceTbox.transferFocus();
-        }
-    }//GEN-LAST:event_yopBalanceTboxKeyPressed
-
-    private void currentBalanceTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_currentBalanceTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.currentBalanceTbox.transferFocus();
-        }
-    }//GEN-LAST:event_currentBalanceTboxKeyPressed
 
     private void accountCodeTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_accountCodeTboxFocusGained
         this.accountCodeTbox.selectAll();
@@ -482,6 +446,16 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
     private void formFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusLost
         // TODO add your handling code here:
     }//GEN-LAST:event_formFocusLost
+
+    private void keyPressedHandler(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyPressedHandler
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }
+    }//GEN-LAST:event_keyPressedHandler
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel accountCodeLabel;

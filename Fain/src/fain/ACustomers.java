@@ -230,7 +230,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         codeTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         codeTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                codeTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(codeTbox);
@@ -238,7 +238,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         nameTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         nameTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                nameTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(nameTbox);
@@ -272,7 +272,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         kgstTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         kgstTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                kgstTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(kgstTbox);
@@ -280,7 +280,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         rbregnoTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         rbregnoTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                rbregnoTboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(rbregnoTbox);
@@ -335,22 +335,6 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         }
     }//GEN-LAST:event_addressTareaKeyPressed
 
-    private void codeTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_codeTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.codeTbox.transferFocus();
-        }
-    }//GEN-LAST:event_codeTboxKeyPressed
-
-    private void nameTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.nameTbox.transferFocus();
-        }
-    }//GEN-LAST:event_nameTboxKeyPressed
-
     private void jScrollPane1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jScrollPane1KeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
@@ -358,22 +342,6 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
             this.jScrollPane1.transferFocus();
         }
     }//GEN-LAST:event_jScrollPane1KeyPressed
-
-    private void kgstTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_kgstTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.kgstTbox.transferFocus();
-        }
-    }//GEN-LAST:event_kgstTboxKeyPressed
-
-    private void rbregnoTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rbregnoTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.rbregnoTbox.transferFocus();
-        }
-    }//GEN-LAST:event_rbregnoTboxKeyPressed
 
     private void enterButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterButtonKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
@@ -386,6 +354,16 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
     private void formFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusLost
 
     }//GEN-LAST:event_formFocusLost
+
+    private void keyPressedHandler(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyPressedHandler
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }
+    }//GEN-LAST:event_keyPressedHandler
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
