@@ -8,6 +8,7 @@ package fain;
 import database.DBConnection;
 import database.TransactionDB;
 import java.awt.Dimension;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import utility.Codes;
 
@@ -24,7 +25,6 @@ public class ETransaction extends javax.swing.JInternalFrame implements RefreshO
      */
     public ETransaction() {
         initComponents();
-        initTable();
     }
     
     public ETransaction(DBConnection db, Main frame, int level) {
@@ -33,19 +33,20 @@ public class ETransaction extends javax.swing.JInternalFrame implements RefreshO
         this.dbConnection = db;
         initComponents();
         updateTable();
-        initTable();
     }
     
-    private void initTable(){
-        this.dataTable.getColumnModel().getColumn(0).setMinWidth(200);
-        this.dataTable.getColumnModel().getColumn(1).setMinWidth(200);
-        this.dataTable.getColumnModel().getColumn(2).setMinWidth(200);
-        this.dataTable.getColumnModel().getColumn(3).setMinWidth(200);
+    private void setMinWidth(){
+        TableColumnModel col = this.dataTable.getColumnModel();
+        int n = this.dataTable.getColumnCount();
+        for(int i = 0; i < n; i++){
+            col.getColumn(i).setMinWidth(100);
+        }
     }
     
     public void updateTable(){
         TableModel table = TransactionDB.getTable(dbConnection.getStatement());
         this.dataTable.setModel(table);
+        setMinWidth();
     }
     
     public void refreshContents(int code){
@@ -105,26 +106,27 @@ public class ETransaction extends javax.swing.JInternalFrame implements RefreshO
         setTitle("Transaction Browse");
         setMinimumSize(new java.awt.Dimension(785, 450));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameClosing(evt);
             }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
         });
 
         upperPanel.setLayout(new java.awt.BorderLayout());
 
         dataTable.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        dataTable.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         dataTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
@@ -355,6 +357,7 @@ public class ETransaction extends javax.swing.JInternalFrame implements RefreshO
         lowerPanel.setPreferredSize(new java.awt.Dimension(639, 50));
         lowerPanel.setLayout(new java.awt.GridLayout(1, 6, 20, 0));
 
+        editButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         editButton.setText("ENT: Edit");
         editButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -363,6 +366,7 @@ public class ETransaction extends javax.swing.JInternalFrame implements RefreshO
         });
         lowerPanel.add(editButton);
 
+        addButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         addButton.setText("F2: Add");
         addButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -371,15 +375,19 @@ public class ETransaction extends javax.swing.JInternalFrame implements RefreshO
         });
         lowerPanel.add(addButton);
 
+        deleteButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         deleteButton.setText("F3: Delete");
         lowerPanel.add(deleteButton);
 
+        findButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         findButton.setText("F5: Find");
         lowerPanel.add(findButton);
 
+        topButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         topButton.setText("F6: Top");
         lowerPanel.add(topButton);
 
+        bottomButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         bottomButton.setText("F7: Bottom");
         lowerPanel.add(bottomButton);
 
