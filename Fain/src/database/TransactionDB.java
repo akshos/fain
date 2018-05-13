@@ -34,6 +34,25 @@ public final class TransactionDB {
         return true;
             
     }
+    
+    public static boolean update(Statement stmt, String code,String date, String branch, String debit, String credit, double amount, String narration, String tid){
+        String sql = "update transaction set date        ='"+date       + "',"
+                                           +"branch='"      +branch     + "',"
+                                           +"debit='"       +debit      + "',"
+                                           +"credit='"      +credit     + "',"
+                                           +"amount="       +amount     + ","
+                                           +"narration='"   +narration  + "',"
+                                           +"tid='"         +tid        +"'"
+                               + "where transactionNo=" + code + ";";
+        try{
+            stmt.execute(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    
     public static void delete(Statement stmt,String tNo){
         String del="delete from transactions where transactionNo="+tNo+";";
         try {

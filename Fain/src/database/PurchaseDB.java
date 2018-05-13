@@ -35,7 +35,25 @@ public final class PurchaseDB {
         }
         return true;
     }
-    
+    public static boolean update(Statement stmt, String code,String branch, String date, String billNo, String party, String itemCode, String itemName, double quantity, double value, String tid ){
+        String sql = "update purchase set branch='"          +branch         + "',"
+                                            +"date='"           +date           + "',"
+                                            +"billNo='"          +billNo         + "',"
+                                            +"party='"           +party          + "',"
+                                            +"itemCode='"        +itemCode       + "',"
+                                            +"itemName='"        +itemName       + "',"
+                                            +"quantity="        +quantity       + ","
+                                            +"value="            +value          + ","
+                                            +"tid='"            +tid            + "'"
+                               + "where purchaseId=" + code + ";";
+        try{
+            stmt.execute(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+            return false;
+        }
+        return true;
+    }       
     public static void delete(Statement stmt,String id){
         String del="delete from purchase where purchaseId="+id+";";
         try {

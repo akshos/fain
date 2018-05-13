@@ -36,6 +36,26 @@ public final class PurchaseLatexDB {
         }
         return true;
     }
+    public static boolean update(Statement stmt, String code,String branch, String date, String prBill,String party,double quantity, double drc, double dryRubber, double rate, double value, String tid){
+        String sql = "update purchaseLatex set branch='"          +branch         + "',"
+                                            +"date='"           +date           + "',"
+                                            +"prBill='"          +prBill         + "',"
+                                            +"party='"           +party          + "',"
+                                            +"quantity="        +quantity       + ","
+                                            +"drc="                  +drc            + ","
+                                            +"dryRubber="        +dryRubber      + ","
+                                            +"rate="            +rate           + ","
+                                            +"value="            +value          + ","
+                                            +"tid='"            +tid            + "'"
+                               + "where purchaseLatexId=" + code + ";";
+        try{
+            stmt.execute(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+            return false;
+        }
+        return true;
+    } 
     public static void delete(Statement stmt,String id){
         String del="delete from purchaseLatex where purchaseLatexId="+id+";";
         try {

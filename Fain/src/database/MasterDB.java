@@ -32,7 +32,20 @@ public final class MasterDB {
         }
         return true;       
     }
-    
+    public static boolean update(Statement stmt, String code,String accountHead, double openingBal, double closingBal, String category){
+        String sql = "update master set accountHead='"+accountHead+ "',"
+                                                +"openingBal=" +openingBal + ","
+                                                +"closingBal=" +closingBal + ","
+                                                +"category='"  +category   + "'"
+                               + "where accountNo='" + code + "';";
+        try{
+            stmt.execute(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+            return false;
+        }
+        return true;
+    }       
     public static void delete(Statement stmt,String id){
         String del="delete from master where accountNo='"+id+"';";
         try {

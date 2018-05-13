@@ -30,6 +30,20 @@ public final class BranchDB {
         }
             return true;
     }
+    public static boolean update(Statement stmt, String code,String name, String address, String kgst,String rbno ){
+        String sql = "update branch set name='"           +name   + "','"
+                                                +"address='"+address  + "',"
+                                                +"kgst='"    +kgst + "',"
+                                                +"rbno='"  +rbno   + "'"
+                                        + "where branchId=" + code + ";";
+        try{
+            stmt.execute(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+            return false;
+        }
+        return true;
+    }    
     public static void delete(Statement stmt,String id){
         String del="delete from branch where branchId="+id+";";
         try {

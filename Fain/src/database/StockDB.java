@@ -32,6 +32,22 @@ public final class StockDB {
         }
             return true;
     }
+    public static boolean update(Statement stmt, String code,String itemName,int currentStock, double rate, String purchaseAC, String saleAC, String stockAC){
+        String sql = "update stock set itemName     ='"+itemName      + "',"
+                                     +"currentStock="  +currentStock  + ","
+                                     +"rate="          +rate          + ","
+                                     +"purchaseAC='"   +purchaseAC    + "',"
+                                     +"saleAC='"       +saleAC        + "',"
+                                     +"stockAC='"      +stockAC       + "'"
+                               + "where itemCode=" + code + ";";
+        try{
+            stmt.execute(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+            return false;
+        }
+        return true;
+    }     
     public static void delete(Statement stmt,String id){
         String del="delete from stock where itemCode="+id+";";
         try {
