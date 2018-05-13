@@ -106,7 +106,7 @@ public final class MasterDB {
         return null;
     }
     public static String[][] getAccountHead(Statement stmt){
-        String sql="select accountNo,accountHead from master;";
+        String sql="select accountNo,accountHead from master order by accountHead asc;";
         try {
             ResultSet rs=stmt.executeQuery(sql);
             return ResultSetToStringArray.getStringArray2col(rs);

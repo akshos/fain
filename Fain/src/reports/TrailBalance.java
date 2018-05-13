@@ -17,23 +17,25 @@ import java.io.FileOutputStream;
 public class TrailBalance {
     private static String PREFIX = "trialBal";
     
-    public static void addTitle(Document doc, String branch, String acFrom, String acTo){
+    public static void addTitle(Document doc, String branch, String date){
         try{
             Paragraph title = new Paragraph();
             title.add(CommonFuncs.alignCenter("TRIAL BALANCE", CommonFuncs.titleFont));
+            String subTitle = "Branch : " + branch + "  |  ";
+            subTitle += "Date : " + date;
+            title.add(CommonFuncs.alignCenter(subTitle, CommonFuncs.subTitleFont));
             doc.add(title);
         }catch(Exception e){
             e.printStackTrace();
         }
     }
     
-    public static String createReport(DBConnection con, String branch, String acFrom, String acTo){
+    public static String createReport(DBConnection con, String branch, String date){
         Document doc = new Document();
         try{
             PdfWriter.getInstance(doc, new FileOutputStream(CommonFuncs.generateFileName(PREFIX)));
             doc.open();
             CommonFuncs.addMetaData(doc);
-            CommonFuncs.addHeader(con, doc);
             doc.close();
         }catch(Exception e){
             e.printStackTrace();
@@ -42,6 +44,6 @@ public class TrailBalance {
     }
     
     public static void main(String[] args){
-        createReport(null, null, null, null);
+        createReport(null, null, null);
     }
 }

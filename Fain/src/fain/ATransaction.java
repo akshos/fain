@@ -86,6 +86,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         cboxData[len] = "Add New";
         this.branchCbox.setModel(new DefaultComboBoxModel(cboxData));
     }
+    
     private void loadContents(){
         String[] data = TransactionDB.selectOneId(dbConnection.getStatement(), editId);
         if(data == null){
@@ -104,6 +105,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         this.amountTbox.setText(data[5]);
         this.narrationTbox.setText(data[6]);
     }
+    
     private void loadCreditDebit(){
         int creditSelected = this.creditCbox.getSelectedIndex();
         int debitSelected = this.debitCbox.getSelectedIndex();

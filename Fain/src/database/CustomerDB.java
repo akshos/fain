@@ -108,9 +108,11 @@ public final class CustomerDB {
     }
     
     public static String[][] getCustomersInBranch(Statement stmt, String branchId){
-        String sql = "select customerCode, name, address from customer";
-        if(branchId.compareTo("All") == 0) sql += ";";
-        else sql += " where branch='"+branchId+"';";
+        String sql = "select customerCode, name, address from customer ";
+        if(branchId.compareTo("All") != 0){
+            sql += " where branch='"+branchId+"' ";
+        }
+        sql += "order by name asc;";
         try{
             ResultSet rs = stmt.executeQuery(sql);
             return ResultSetToStringArray.getStringArray3col(rs);
@@ -124,9 +126,10 @@ public final class CustomerDB {
         String sql = "select branch from customer where customerCode='"+id+"';";
         try{
             ResultSet rs = stmt.executeQuery(sql);
-            rs.next();
-            String branch = rs.getString(1);
-            return branch;
+            if( rs.next() ){
+                String branch = rs.getString(1);
+                return branch;
+            }
         }catch(SQLException se){
             se.printStackTrace();
         }

@@ -24,7 +24,7 @@ import reports.Ledger;
  *
  * @author akshos
  */
-public class PLedger extends javax.swing.JInternalFrame{
+public class PTrialBalance extends javax.swing.JInternalFrame{
     
     DBConnection dbConnection;
     int level;
@@ -34,17 +34,16 @@ public class PLedger extends javax.swing.JInternalFrame{
     /**
      * Creates new form MasterEntry
      */
-    public PLedger() {
+    public PTrialBalance() {
         initComponents();
     }
     
-    public PLedger(DBConnection db, Main frame, int level){
+    public PTrialBalance(DBConnection db, Main frame, int level){
         this.dbConnection = db;
         this.level = level;
         this.mainFrame = frame;
         initComponents();
         loadBranch();
-        loadAccounts();
     }
     
     private void loadBranch(){
@@ -56,54 +55,13 @@ public class PLedger extends javax.swing.JInternalFrame{
         }else{
             len = branchData[0].length;
         }
-        String[] cboxData = new String[len+2];
+        String[] cboxData = new String[len+1];
         for(int i = 0; i < len; i++){
             cboxData[i] = branchData[1][i] + " (" + branchData[0][i] + ")";
         }
         cboxData[len] = "All";
-        cboxData[len+1] = "None";
         this.branchCbox.setModel(new DefaultComboBoxModel(cboxData));
         this.branchCbox.setSelectedIndex(len);
-    }
-    
-    private void loadAccounts(){
-        String item = this.branchCbox.getSelectedItem().toString();
-        
-        if(item.compareTo("None") != 0){
-            String branchCode = "All";
-            if(item.compareTo("All") != 0){
-                int index = this.branchCbox.getSelectedIndex();
-                branchCode = this.branchData[0][index];
-            }
-            accountData = CustomerDB.getCustomersInBranch(this.dbConnection.getStatement(), branchCode);
-        }else{
-            accountData = MasterDB.getAccountHead(dbConnection.getStatement());
-        }
-        int len;
-        String[] cboxDataFrom = null;
-        String[] cboxDataTo = null;
-        if(accountData  == null){
-            len =  0;
-            cboxDataFrom = new String[1];
-            cboxDataFrom[0] = "None";
-            cboxDataTo = new String[1];
-            cboxDataTo[0] = "None";
-            this.accountFromCbox.setToolTipText("No Customers Available");
-            this.accountToCbox.setToolTipText("No Customers Available");
-        }else{
-            len = accountData[0].length;
-            cboxDataFrom = new String[len];
-            cboxDataTo = new String[len+2];
-            for(int i = 0; i < len; i++){
-                cboxDataFrom[i] = accountData[1][i] + "  (" + accountData[0][i] +")"  ;
-                cboxDataTo[i] = accountData[1][i] + "  (" + accountData[0][i] +")"  ;
-            }
-        }
-        this.accountFromCbox.setModel(new DefaultComboBoxModel(cboxDataFrom));
-        cboxDataTo[len] = "All";
-        cboxDataTo[len+1] = "None";
-        this.accountToCbox.setModel(new DefaultComboBoxModel(cboxDataTo));
-        this.accountToCbox.setSelectedIndex(len);
     }
     
     private void generateReport(){    
@@ -111,31 +69,18 @@ public class PLedger extends javax.swing.JInternalFrame{
         if(branchData == null){
             int ret = JOptionPane.showConfirmDialog(this, "No Available Branches", "No Branches", JOptionPane.WARNING_MESSAGE);
         }
-        if(accountFromCbox.getSelectedItem().toString().compareTo("None") == 0){
-            int ret = JOptionPane.showConfirmDialog(this, "Please select atleast one Account", "No Account selected", JOptionPane.WARNING_MESSAGE);
-        }
+
         int index;
         String item = this.branchCbox.getSelectedItem().toString();
-        String branchCode = "";
-        if(item.compareTo("All") == 0 || item.compareTo("None") == 0){
-            branchCode = item;
-        }else{
+        String branchCode = "All";
+        if(item.compareTo("All") != 0){
             index = this.branchCbox.getSelectedIndex();
             branchCode = this.branchData[0][index];
         }
-        index = this.accountFromCbox.getSelectedIndex();
-        String accFrom = this.accountData[0][index];
-        item = this.accountToCbox.getSelectedItem().toString();
-        String accTo = "";
-        if(item.compareTo("None") == 0 || item.compareTo("All") == 0){
-            accTo = item;
-        }else{
-            index = this.accountToCbox.getSelectedIndex();
-            accTo = this.accountData[0][index];
-        }
         String paper = this.paperCbox.getSelectedItem().toString();
         String orientation = this.orientationCbox.getSelectedItem().toString();
-        Ledger.createReport(dbConnection, paper, orientation, branchCode, accFrom, accTo);
+
+        
         resetBusy();
     }
     
@@ -166,14 +111,12 @@ public class PLedger extends javax.swing.JInternalFrame{
         logoLabel = new javax.swing.JLabel();
         labelsPanel = new javax.swing.JPanel();
         accountCodeLabel = new javax.swing.JLabel();
-        accountHeadLabel = new javax.swing.JLabel();
-        yopBalLabel = new javax.swing.JLabel();
+        asOnLabel = new javax.swing.JLabel();
         paperLabel = new javax.swing.JLabel();
         orientationLabel = new javax.swing.JLabel();
         rightInerPannel = new javax.swing.JPanel();
         branchCbox = new javax.swing.JComboBox<>();
-        accountFromCbox = new javax.swing.JComboBox<>();
-        accountToCbox = new javax.swing.JComboBox<>();
+        asOnTbox = new javax.swing.JFormattedTextField();
         paperCbox = new javax.swing.JComboBox<>();
         orientationCbox = new javax.swing.JComboBox<>();
         buttonPanel = new javax.swing.JPanel();
@@ -216,19 +159,15 @@ public class PLedger extends javax.swing.JInternalFrame{
 
         leftInerPannel.add(logoPanel);
 
-        labelsPanel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
+        labelsPanel.setLayout(new java.awt.GridLayout(5, 0, 0, 10));
 
         accountCodeLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         accountCodeLabel.setText("Branch");
         labelsPanel.add(accountCodeLabel);
 
-        accountHeadLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        accountHeadLabel.setText("Account From");
-        labelsPanel.add(accountHeadLabel);
-
-        yopBalLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        yopBalLabel.setText("Account To");
-        labelsPanel.add(yopBalLabel);
+        asOnLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        asOnLabel.setText("As on");
+        labelsPanel.add(asOnLabel);
 
         paperLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         paperLabel.setText("Paper");
@@ -242,7 +181,7 @@ public class PLedger extends javax.swing.JInternalFrame{
 
         outerPanel.add(leftInerPannel);
 
-        rightInerPannel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
+        rightInerPannel.setLayout(new java.awt.GridLayout(5, 0, 0, 10));
 
         branchCbox.setBackground(java.awt.Color.white);
         branchCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
@@ -258,23 +197,8 @@ public class PLedger extends javax.swing.JInternalFrame{
         });
         rightInerPannel.add(branchCbox);
 
-        accountFromCbox.setBackground(java.awt.Color.white);
-        accountFromCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        accountFromCbox.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                accountFromCboxKeyPressed(evt);
-            }
-        });
-        rightInerPannel.add(accountFromCbox);
-
-        accountToCbox.setBackground(java.awt.Color.white);
-        accountToCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        accountToCbox.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                accountToCboxKeyPressed(evt);
-            }
-        });
-        rightInerPannel.add(accountToCbox);
+        asOnTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        rightInerPannel.add(asOnTbox);
 
         paperCbox.setBackground(java.awt.Color.white);
         paperCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
@@ -331,7 +255,7 @@ public class PLedger extends javax.swing.JInternalFrame{
     }//GEN-LAST:event_enterButtonActionPerformed
 
     private void branchCboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_branchCboxFocusLost
-        this.loadAccounts();
+
     }//GEN-LAST:event_branchCboxFocusLost
 
     private void branchCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_branchCboxKeyPressed
@@ -342,23 +266,6 @@ public class PLedger extends javax.swing.JInternalFrame{
             branchCbox.transferFocus();
         }
     }//GEN-LAST:event_branchCboxKeyPressed
-
-    private void accountFromCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_accountFromCboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }
-        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            accountFromCbox.transferFocus();
-        }
-    }//GEN-LAST:event_accountFromCboxKeyPressed
-
-    private void accountToCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_accountToCboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            accountToCbox.transferFocus();
-        }
-    }//GEN-LAST:event_accountToCboxKeyPressed
 
     private void paperCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_paperCboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
@@ -387,9 +294,8 @@ public class PLedger extends javax.swing.JInternalFrame{
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel accountCodeLabel;
-    private javax.swing.JComboBox<String> accountFromCbox;
-    private javax.swing.JLabel accountHeadLabel;
-    private javax.swing.JComboBox<String> accountToCbox;
+    private javax.swing.JLabel asOnLabel;
+    private javax.swing.JFormattedTextField asOnTbox;
     private javax.swing.JComboBox<String> branchCbox;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JButton enterButton;
@@ -403,6 +309,5 @@ public class PLedger extends javax.swing.JInternalFrame{
     private javax.swing.JComboBox<String> paperCbox;
     private javax.swing.JLabel paperLabel;
     private javax.swing.JPanel rightInerPannel;
-    private javax.swing.JLabel yopBalLabel;
     // End of variables declaration//GEN-END:variables
 }

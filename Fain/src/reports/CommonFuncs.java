@@ -23,12 +23,15 @@ public class CommonFuncs {
     public static final Font subTitleFont = new Font(Font.FontFamily.COURIER, 12);
     
     public static final Font accountHeadFont = new Font(Font.FontFamily.COURIER, 12 , Font.BOLD);
+    public static final Font branchFont = new Font(Font.FontFamily.COURIER, 12);
     
     public static final Font spacingFont = new Font(Font.FontFamily.COURIER, 12);
     public static final Font tableHeaderFont = new Font(Font.FontFamily.COURIER, 12, Font.BOLD);
     public static final Font tableContentFont = new Font(Font.FontFamily.COURIER, 12);
     public static final Font tableBoldFont = new Font(Font.FontFamily.COURIER, 12 , Font.BOLD);
     
+    public static final Font footerFont = new Font(Font.FontFamily.COURIER, 12);
+    public static final Font footerFontBold = new Font(Font.FontFamily.COURIER, 12, Font.BOLD);
     public static Paragraph alignCenter(String str, Font f){
         Paragraph para = new Paragraph(str, f);
         para.setAlignment(Element.ALIGN_CENTER);
@@ -64,7 +67,7 @@ public class CommonFuncs {
                     doc.setPageSize(PageSize.LEGAL.rotate());
                 }
             }
-            doc.setMargins(1, 1, 1, 1);
+            doc.setMargins(1, 1, 1, 15);
         }catch(Exception e){
             e.printStackTrace();
         }
