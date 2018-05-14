@@ -239,6 +239,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
 
         rightInerPannel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
 
+        codeTbox.setBackground(java.awt.Color.white);
         codeTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         codeTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -247,6 +248,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         });
         rightInerPannel.add(codeTbox);
 
+        nameTbox.setBackground(java.awt.Color.white);
         nameTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         nameTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -278,6 +280,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
 
         rightInerPannel.add(jScrollPane1);
 
+        branchCbox.setBackground(java.awt.Color.white);
         branchCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         branchCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
