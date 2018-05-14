@@ -32,6 +32,7 @@ public final class MasterDB {
         }
         return true;       
     }
+    
     public static boolean update(Statement stmt, String code,String accountHead, double openingBal, double closingBal, String category){
         String sql = "update master set accountHead='"+accountHead+ "',"
                                                 +"openingBal=" +openingBal + ","
@@ -45,7 +46,8 @@ public final class MasterDB {
             return false;
         }
         return true;
-    }       
+    }
+    
     public static void delete(Statement stmt,String id){
         String del="delete from master where accountNo='"+id+"';";
         try {
@@ -105,6 +107,7 @@ public final class MasterDB {
         }
         return null;
     }
+    
     public static String[][] getAccountHead(Statement stmt){
         String sql="select accountNo,accountHead from master order by accountHead asc;";
         try {
@@ -188,5 +191,16 @@ public final class MasterDB {
             se.printStackTrace();
         }
         return null;
+    }
+    
+    public static String[][] getIdHeadOpBal(Statement stmt){
+        String sql = "select accountNo, accountHead,  openingBal from master";
+       try{
+           ResultSet rs = stmt.executeQuery(sql);
+           return ResultSetToStringArray.getStringArray3col(rs);
+       }catch(SQLException se){
+           se.printStackTrace();
+       }
+       return null;
     }
 }

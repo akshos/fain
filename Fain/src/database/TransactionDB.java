@@ -153,4 +153,14 @@ public final class TransactionDB {
         }
         return null;
     }
+    
+    public static ResultSet getAllTransactionsRS(Statement stmt){
+        String sql = "select * from transactions";
+        try{
+            return stmt.executeQuery(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
 }

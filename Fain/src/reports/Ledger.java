@@ -7,6 +7,7 @@ package reports;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.ColumnText;
@@ -23,6 +24,7 @@ import database.MasterDB;
 import database.TransactionDB;
 import java.io.FileOutputStream;
 import java.sql.ResultSet;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 /**
  *
@@ -95,9 +97,12 @@ public class Ledger {
             }
             
             int startIndex = Arrays.asList(accountData[0]).indexOf(accFrom);
-            int endIndex = startIndex;
+            int endIndex = 0;
             if(accTo.compareTo("All") == 0){
                 endIndex = accountData[0].length-1;                
+            }else if(accTo.compareTo("None") == 0)
+            {
+                endIndex = startIndex;
             }else if(!accTo.isEmpty()){
                 endIndex = Arrays.asList(accountData[0]).indexOf(accTo);
             }
@@ -131,7 +136,7 @@ public class Ledger {
         addTable(con, doc, accId);
     }
     
-    private static void addTableRow(PdfPTable table, int border, String date, String nar, String debit, String credit){
+    private static void addTableRow(PdfPTable table, int border, Font font, String date, String nar, String debit, String credit){
         PdfPCell cell;
         
         cell = new PdfPCell(new Phrase(date, CommonFuncs.tableContentFont));
@@ -145,12 +150,12 @@ public class Ledger {
         cell.setBorder(border);
         table.addCell(cell);
         
-        cell = new PdfPCell(new Phrase(debit, CommonFuncs.tableContentFont));
+        cell = new PdfPCell(new Phrase(debit, font));
         cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         cell.setBorder(border);
         table.addCell(cell);
         
-        cell = new PdfPCell(new Phrase(credit, CommonFuncs.tableContentFont));
+        cell = new PdfPCell(new Phrase(credit, font));
         cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         cell.setBorder(border);
         table.addCell(cell);
@@ -169,9 +174,21 @@ public class Ledger {
         String date, nar;
         Double openingBal = Double.parseDouble(MasterDB.getOpeningBal(con.getStatement(), accId));
         Double creditTotal = 0.0, debitTotal = 0.0, amount, debit , credit;
-        addTableRow(table, (PdfPCell.RECTANGLE), "", "Opening Balance", "", String.format("%.2f",openingBal));
+        if(openingBal > 0){
+            addTableRow(table, (PdfPCell.RECTANGLE), 
+                    CommonFuncs.tableBoldFont, "", "Opening Balance", 
+                    new DecimalFormat("##,##,##0.00").format(openingBal), "" );
+            
+            debitTotal = openingBal;
+        }else{
+            addTableRow(table, (PdfPCell.RECTANGLE), 
+                    CommonFuncs.tableBoldFont, "", "Opening Balance", 
+                    "", new DecimalFormat("##,##,##0.00").format(-1*openingBal));
+            
+            creditTotal = Math.abs(openingBal);
+        }
+        
         ResultSet rs = TransactionDB.getContainingAccount(con.getStatement(), accId);
-        creditTotal = openingBal;
         try{
             while(rs.next()){
                 date = rs.getString("date");
@@ -179,20 +196,49 @@ public class Ledger {
                 debit = credit = 0.0;
                 nar = rs.getString("narration");
                 if(rs.getString("debit").compareTo(accId) == 0){
-                    debit = amount;
+                    if(nar.isEmpty()){
+                        nar = MasterDB.getAccountHead(con.getStatement(), rs.getString("credit"));
+                    }
+                    addTableRow(table, (PdfPCell.LEFT|PdfPCell.RIGHT), 
+                            CommonFuncs.tableContentFont,
+                            date, nar, 
+                            new DecimalFormat("##,##,##0.00").format(amount), "");
+                    
+                    debitTotal += amount;
+                    pageDebitTotal += amount;                    
                 }else if(rs.getString("credit").compareTo(accId) == 0){
-                    credit = amount;
+                    if(nar.isEmpty()){
+                        nar = MasterDB.getAccountHead(con.getStatement(), rs.getString("debit"));
+                    }
+                    addTableRow(table, (PdfPCell.LEFT|PdfPCell.RIGHT), 
+                            CommonFuncs.tableContentFont, 
+                            date, nar, 
+                            "", new DecimalFormat("##,##,##0.00").format(amount));
+                    
+                    creditTotal += amount;
+                    pageCreditTotal += amount;
                 }
-                addTableRow(table, (PdfPCell.LEFT|PdfPCell.RIGHT), date, nar, String.format("%.2f",debit), String.format("%.2f",credit));
-                debitTotal += debit;
-                pageDebitTotal += debit;
-                creditTotal += credit;
-                pageCreditTotal += credit;
-                
             }
             Double closingBal  = creditTotal - debitTotal;
-            addTableRow(table, (PdfPCell.RECTANGLE|PdfPCell.TOP), "", "Closing Balance", String.format("%.2f",closingBal), "");
+            addTableRow(table, (PdfPCell.RECTANGLE|PdfPCell.TOP), 
+                    CommonFuncs.tableBoldFont,"", "TOTALS : ", 
+                    new DecimalFormat("##,##,##0.00").format(debitTotal), 
+                    new DecimalFormat("##,##,##0.00").format(creditTotal));
+            
+            if(closingBal > 0){
+                addTableRow(table, (PdfPCell.RECTANGLE|PdfPCell.TOP), 
+                        CommonFuncs.tableBoldFont, "", "Closing Balance", 
+                        "", new DecimalFormat("##,##,##0.00").format(closingBal));
+            
+            }else{
+                addTableRow(table, (PdfPCell.RECTANGLE),
+                        CommonFuncs.tableBoldFont, "", "Closing Balance", 
+                        new DecimalFormat("##,##,##0.00").format(Math.abs(closingBal)), "");
+            
+            }
+            
             doc.add(table);
+            
         }catch(Exception se){
             se.printStackTrace();
         }

@@ -11,6 +11,7 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import database.DBConnection;
+import java.util.HashMap;
 /**
  *
  * @author akshos
@@ -97,5 +98,17 @@ public class CommonFuncs {
         }catch(Exception e){
             e.printStackTrace();
         }
+    }
+    
+    public static HashMap<String, Account> addToHashMap(String[][] data){
+        HashMap<String, Account> accountData = new HashMap();
+        if(data == null){
+            System.out.println("ERROR : addToHashMap : data received is null");
+        }
+        int len = data[0].length;
+        for( int i = 0; i < len; i++ ){
+            accountData.put(data[0][i], new Account(data[1][i], data[2][i]));
+        }
+        return accountData;
     }
 }

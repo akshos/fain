@@ -119,7 +119,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         }
         String[] cboxData = new String[len+1];
         for(int i = 0; i < len; i++){
-            cboxData[i] = accountData[0][i] + " : " + accountData[1][i];
+            cboxData[i] = accountData[1][i] + " (" + accountData[0][i] + ")";
         }
         cboxData[len] = "Add New";
         this.creditCbox.setModel(new DefaultComboBoxModel(cboxData));
