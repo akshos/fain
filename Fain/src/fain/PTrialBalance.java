@@ -98,20 +98,20 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
         setTitle("Ledger");
         setPreferredSize(new java.awt.Dimension(450, 410));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameClosed(evt);
             }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
             }
         });
 
@@ -150,10 +150,14 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
 
         rightInerPannel.setLayout(new java.awt.GridLayout(4, 0, 0, 10));
 
+        try {
+            asOnTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/##")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
         asOnTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         rightInerPannel.add(asOnTbox);
 
-        paperCbox.setBackground(java.awt.Color.white);
         paperCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         paperCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A4", "Legal" }));
         paperCbox.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -163,7 +167,6 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
         });
         rightInerPannel.add(paperCbox);
 
-        orientationCbox.setBackground(java.awt.Color.white);
         orientationCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         orientationCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Landscape", "Portrait" }));
         orientationCbox.addKeyListener(new java.awt.event.KeyAdapter() {
