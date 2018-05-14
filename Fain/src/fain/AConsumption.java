@@ -166,10 +166,26 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         if(!validateFields(date, refno, narration)){
             return;
         }
+        
+        boolean ret;
+        
         if(mode==Codes.EDIT){
-            ConsumptionDB.update(stmt, this.editId, branch, date, refno, itemCode, itemName, narration, quantity);
-        }else
-            ConsumptionDB.insert(stmt, branch, date, refno, itemCode, itemName, narration, quantity);
+            ret = ConsumptionDB.update(stmt, this.editId, branch, date, refno, itemCode, itemName, narration, quantity);
+            if(ret){
+                JOptionPane.showMessageDialog(this, "The entry has been updated", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(this, "Failed to update", "Failed", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }else{
+            ret = ConsumptionDB.insert(stmt, branch, date, refno, itemCode, itemName, narration, quantity);
+            if(ret){
+                JOptionPane.showMessageDialog(this, "New entry has been successfully added", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(this, "Failed to add the new entry", "Failed", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
         
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_CONSUMPTION);

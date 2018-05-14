@@ -182,12 +182,30 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
             return;
         }
         category = categoryData[0][index];
+        
+        boolean ret;
+        
         if(mode==Codes.EDIT){
-            MasterDB.update(stmt, editId, accountHead, yopBalance, currBalance, category);
+            ret = MasterDB.update(stmt, editId, accountHead, yopBalance, currBalance, category);
+            if(ret){
+                JOptionPane.showMessageDialog(this, "The entry has been updated", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(this, "Failed to update", "Failed", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
             CustomerDB.modifyName(stmt,editId,accountHead);
         }
-        else
-            MasterDB.insert(stmt, accountCode, accountHead, yopBalance, currBalance, category);
+        else{
+            ret = MasterDB.insert(stmt, accountCode, accountHead, yopBalance, currBalance, category);
+            if(ret){
+                JOptionPane.showMessageDialog(this, "New entry has been successfully added", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(this, "Failed to add the new entry", "Failed", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+        
         if(prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_MASTER);
             this.doDefaultCloseAction();

@@ -129,11 +129,28 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         double quantity=Double.parseDouble(quantityTbox.getText());
         double value    =Double.parseDouble(valueTbox.getText());
         String tid = TransactionDB.generateTid();
+        
+        boolean ret;
+        
         if(mode==Codes.EDIT){
-            PurchaseDB.update(stmt, editId, branch, date, bill, party, itemCode, itemname, quantity, value, tid);
+            ret = PurchaseDB.update(stmt, editId, branch, date, bill, party, itemCode, itemname, quantity, value, tid);
+            if(ret){
+                JOptionPane.showMessageDialog(this, "The entry has been updated", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(this, "Failed to update", "Failed", JOptionPane.ERROR_MESSAGE);
+                return;
+            } 
         }
-        else
-            PurchaseDB.insert(stmt, branch, date, bill, party, itemCode, itemname, quantity, value, tid);
+        else{
+            ret = PurchaseDB.insert(stmt, branch, date, bill, party, itemCode, itemname, quantity, value, tid);
+            if(ret){
+                JOptionPane.showMessageDialog(this, "New entry has been successfully added", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(this, "Failed to add the new entry", "Failed", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+        
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_POTHERS);
             this.doDefaultCloseAction();

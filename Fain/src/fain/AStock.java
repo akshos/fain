@@ -90,11 +90,28 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         }
         index = this.stockCbox.getSelectedIndex();
         stock = this.stockData[0][index];
+        
+        boolean ret;
+        
         if(mode==Codes.EDIT){
-            StockDB.update(stmt, editId, iname, currentStock, rate, purchase, sales, stock);
+            ret = StockDB.update(stmt, editId, iname, currentStock, rate, purchase, sales, stock);
+            if(ret){
+                JOptionPane.showMessageDialog(this, "The entry has been updated", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(this, "Failed to update", "Failed", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
         }
-        else
-        StockDB.insert(stmt, iname, currentStock, rate, purchase, sales, stock);
+        else{
+            ret = StockDB.insert(stmt, iname, currentStock, rate, purchase, sales, stock);
+            if(ret){
+                JOptionPane.showMessageDialog(this, "New entry has been successfully added", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(this, "Failed to add the new entry", "Failed", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+        
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_STOCK);
             this.doDefaultCloseAction();

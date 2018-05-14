@@ -115,11 +115,28 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         branch = branchData[0][selectedIndex];
         String kgst = kgstTbox.getText();
         String rbregno = rbregnoTbox.getText();
+        
+        boolean ret;
+        
         if(mode==Codes.EDIT){
-            CustomerDB.update(stmt, code, name, address, branch, kgst, rbregno);
+            ret = CustomerDB.update(stmt, code, name, address, branch, kgst, rbregno);
+            if(ret){
+                JOptionPane.showMessageDialog(this, "The entry has been updated", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(this, "Failed to update", "Failed", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
         }
-        else
-            CustomerDB.insert(stmt, code, name, address, branch, kgst, rbregno);
+        else{
+            ret = CustomerDB.insert(stmt, code, name, address, branch, kgst, rbregno);
+            if(ret){
+                JOptionPane.showMessageDialog(this, "New entry has been successfully added", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(this, "Failed to add the new entry", "Failed", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+        
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_CUSTOMERS);
             this.doDefaultCloseAction();
