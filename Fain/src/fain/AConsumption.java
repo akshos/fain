@@ -321,6 +321,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
 
         rightInerPannel.setLayout(new java.awt.GridLayout(8, 0, 0, 10));
 
+        branchCbox.setBackground(java.awt.Color.white);
         branchCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         branchCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -361,6 +362,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         });
         rightInerPannel.add(referenceNumberTbox);
 
+        itemCodeCbox.setBackground(java.awt.Color.white);
         itemCodeCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         itemCodeCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " " }));
         itemCodeCbox.addItemListener(new java.awt.event.ItemListener() {
