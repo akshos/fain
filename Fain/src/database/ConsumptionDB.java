@@ -34,16 +34,16 @@ public final class ConsumptionDB {
             return true;
     }
     public static boolean update(Statement stmt, String code,String branch, String date, String refNo,String itemCode,String itemName,String narration,double quantity){
-        String sql = "update consumption set branch='"               +branch         + "','"
+        String sql = "update consumption set branch='"               +branch         + "',"
                                                 +"date='"        +date           + "',"
                                                 +"refNo='"       +refNo          + "',"
                                                 +"itemCode='"    +itemCode       + "',"
                                                 +"itemName='"    +itemName       + "',"
                                                 +"narration='"   +narration      + "',"
-                                                +"quantity="     +quantity       + ""
+                                                +"quantity="     +quantity       + " "
                                + "where consumptionId=" + code + ";";
         try{
-            stmt.execute(sql);
+            stmt.executeUpdate(sql);
         }catch(SQLException se){
             se.printStackTrace();
             return false;

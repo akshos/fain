@@ -31,13 +31,13 @@ public final class BranchDB {
             return true;
     }
     public static boolean update(Statement stmt, String code,String name, String address, String kgst,String rbno ){
-        String sql = "update branch set name='"           +name   + "','"
+        String sql = "update branch set name='"           +name   + "',"
                                                 +"address='"+address  + "',"
                                                 +"kgst='"    +kgst + "',"
                                                 +"rbno='"  +rbno   + "'"
                                         + "where branchId=" + code + ";";
         try{
-            stmt.execute(sql);
+            stmt.executeUpdate(sql);
         }catch(SQLException se){
             se.printStackTrace();
             return false;

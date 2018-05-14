@@ -65,6 +65,18 @@ public class EPLatex extends javax.swing.JInternalFrame implements RefreshOption
         }
         mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }
+    private void editEntry(){
+        int index = this.dataTable.getSelectedRow();
+        String id = this.dataTable.getModel().getValueAt(index, 0).toString();
+        APLatex item = new APLatex(dbConnection, Codes.EDIT, id, mainFrame, this.level+1, this);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -387,7 +399,7 @@ public class EPLatex extends javax.swing.JInternalFrame implements RefreshOption
 
     private void dataTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dataTableKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            
+            editEntry();
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F2){
             addEntry();
