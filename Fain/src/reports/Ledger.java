@@ -120,6 +120,7 @@ public class Ledger {
             doc.close();
         }catch(Exception e){
             e.printStackTrace();
+            return;
         }
         ViewPdf.openPdfViewer(PREFIX + ".pdf");
     }
@@ -131,8 +132,7 @@ public class Ledger {
         table.addCell(cell);
     }
     
-    private static void addLedger(DBConnection con, Document doc, String accId, String branch, String accFrom, String accTo){
-        
+    private static void addLedger(DBConnection con, Document doc, String accId, String branch, String accFrom, String accTo){        
         addTable(con, doc, accId);
     }
     

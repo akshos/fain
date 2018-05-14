@@ -376,6 +376,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(currentBalanceTbox);
 
+        categoryCbox.setBackground(java.awt.Color.white);
         categoryCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         categoryCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {

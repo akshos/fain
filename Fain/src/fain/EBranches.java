@@ -39,6 +39,19 @@ public class EBranches extends javax.swing.JInternalFrame implements RefreshOpti
         }
     }
     
+    private void resizeColumns(){
+        int screenWidth = this.getWidth();
+        int colCount = this.dataTable.getColumnCount();
+        if(colCount == 0) return;
+        int colWidth  = screenWidth / (colCount-1) - (100/colCount);
+        if(colWidth > 100){
+            TableColumnModel col = this.dataTable.getColumnModel();
+            for(int i = 1; i < colCount; i++){
+                col.getColumn(i).setPreferredWidth(colWidth);
+            }
+        }
+    }
+    
     public void updateTable(){
         TableModel table = BranchDB.getTable(dbConnection.getStatement());
         this.dataTable.setModel(table);
@@ -117,8 +130,16 @@ public class EBranches extends javax.swing.JInternalFrame implements RefreshOpti
             public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
         });
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
 
         upperPanel.setLayout(new java.awt.BorderLayout());
+
+        tableScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        tableScrollPane.setAutoscrolls(true);
 
         dataTable.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         dataTable.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
@@ -337,6 +358,7 @@ public class EBranches extends javax.swing.JInternalFrame implements RefreshOpti
                 return canEdit [columnIndex];
             }
         });
+        dataTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         dataTable.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 dataTableKeyPressed(evt);
@@ -430,6 +452,10 @@ public class EBranches extends javax.swing.JInternalFrame implements RefreshOpti
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
         editEntry();
     }//GEN-LAST:event_editButtonActionPerformed
+
+    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+        resizeColumns();
+    }//GEN-LAST:event_formComponentResized
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
