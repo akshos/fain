@@ -30,6 +30,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
     String[][] branchData;
     String[][] itemData;
     String editId;
+    int mode;
     /**
      * Creates new form MasterEntry
      */
@@ -41,6 +42,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         this.mainFrame = frame;
         this.level = level;
         this.dbConnection = db;
+        this.mode=mode;
         initComponents();
         refreshContents(Codes.REFRESH_ALL);
         prevFrame = null;
@@ -52,6 +54,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         this.level = level;
         this.dbConnection = db;
         this.editId=id;
+        this.mode=mode;
         initComponents();
         if(mode == Codes.EDIT) this.loadContents();
         else refreshContents(Codes.REFRESH_ALL);
@@ -163,7 +166,10 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         if(!validateFields(date, refno, narration)){
             return;
         }
-        ConsumptionDB.insert(stmt, branch, date, refno, itemCode, itemName, narration, quantity);
+        if(mode==Codes.EDIT){
+            ConsumptionDB.update(stmt, this.editId, branch, date, refno, itemCode, itemName, narration, quantity);
+        }else
+            ConsumptionDB.insert(stmt, branch, date, refno, itemCode, itemName, narration, quantity);
         
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_CONSUMPTION);

@@ -41,7 +41,7 @@ public final class CustomerDB {
                 + "rbno='" + rbno + "' "
                 + "where customerCode='" + code + "';";
         try{
-            stmt.execute(sql);
+            stmt.executeUpdate(sql);
         }catch(SQLException se){
             se.printStackTrace();
             return false;
@@ -49,6 +49,16 @@ public final class CustomerDB {
         return true;
     }
     
+    public static boolean modifyName(Statement stmt, String code, String name){
+        String sql = "update customer set name='"+name+"' where customerCode='"+code+"'";
+        try{
+            stmt.executeUpdate(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+            return false;
+        }
+        return true;
+    }
     public static void delete(Statement stmt,String id){
         String del="delete from customer where customerCode='"+id+"';";
         try {

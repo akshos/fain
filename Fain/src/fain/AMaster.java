@@ -27,6 +27,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
     int level;
     RefreshOption prevFrame;
     Main mainFrame;
+    int mode;
     String[][] categoryData;
     boolean customerAdded = false;
     boolean existing = false;
@@ -43,6 +44,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         this.id = id;
         this.level = level;
         this.mainFrame = frame;
+        this.mode=mode;
         this.editId=id;
         initComponents();
         if(mode == Codes.EDIT) this.loadContents();
@@ -54,6 +56,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         this.dbConnection = db;
         this.editId = id;
         this.level = level;
+        this.mode=mode;
         this.prevFrame = prevFrame;
         this.mainFrame = frame;
         initComponents();
@@ -70,7 +73,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         if(code == Codes.REFRESH_ALL){
             loadCategory();
         }
-        else if(code == Codes.CUSTOMER_ADDED){
+        else if(code == Codes.REFRESH_CUSTOMERS){
             this.customerAdded = true;
             this.enterButton.requestFocus();
         }
@@ -82,6 +85,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
             return;
         }
         this.accountCodeTbox.setText(data[0]);
+        accountCodeTbox.setEditable(false);
         this.accountHeadTbox.setText(data[1]);
         this.yopBalanceTbox.setText(data[2]);
         this.currentBalanceTbox.setText(data[3]);
@@ -152,13 +156,14 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
                 return false;
         }
         if( categoryData[0][categoryIndex].compareTo("CR")==0 || categoryData[0][categoryIndex].compareTo("DB")==0 ){
-            if(this.customerAdded == false){
+            if(this.customerAdded == false && mode == Codes.NEW_ENTRY){
                 int ret = JOptionPane.showConfirmDialog(this, "Please add a customer first", "No customer", JOptionPane.WARNING_MESSAGE);
                 if(ret == JOptionPane.CANCEL_OPTION){
                     this.doDefaultCloseAction();
                 }
                 return false;
             }
+            
         }
         return true;
     }
@@ -167,16 +172,22 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         Statement stmt=dbConnection.getStatement();
         String accountCode  =accountCodeTbox.getText();
         String accountHead  =accountHeadTbox.getText();
-        double currBalance  =Double.parseDouble(yopBalanceTbox.getText().replace(",", ""));
+        double currBalance  =Double.parseDouble(currentBalanceTbox.getText().replace(",", ""));
         double yopBalance   =Double.parseDouble(yopBalanceTbox.getText().replace(",", ""));
         String category     ="";
         int index = this.categoryCbox.getSelectedIndex();
         String item = this.categoryCbox.getSelectedItem().toString();
         if(!validateFields(accountHead, index, item)){
+            System.out.println("Not validated.");
             return;
         }
         category = categoryData[0][index];
-        MasterDB.insert(stmt, accountCode, accountHead, yopBalance, currBalance, category);
+        if(mode==Codes.EDIT){
+            MasterDB.update(stmt, editId, accountHead, yopBalance, currBalance, category);
+            CustomerDB.modifyName(stmt,editId,accountHead);
+        }
+        else
+            MasterDB.insert(stmt, accountCode, accountHead, yopBalance, currBalance, category);
         if(prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_MASTER);
             this.doDefaultCloseAction();
@@ -191,6 +202,8 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
     
     private boolean checkCode(){
         String code = this.accountCodeTbox.getText();
+        if (code.compareTo(editId)==0)
+            return true;
         if(ValidationChecks.validateCode(code.trim())){
             if(MasterDB.checkExisting(dbConnection.getStatement(), code)){
                 this.existing = true;

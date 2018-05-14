@@ -13,6 +13,7 @@ import database.DBConnection;
 import database.MasterDB;
 import java.awt.Dimension;
 import java.sql.Statement;
+import java.util.Arrays;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
@@ -28,6 +29,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
     RefreshOption prevFrame;
     String[][] branchData;
     String editId;
+    int mode;
     /**
      * Creates new form MasterEntry
      */
@@ -39,6 +41,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         this.level = level;
         this.mainFrame = frame;
         this.dbConnection = db;
+        this.mode=mode;
         initComponents();
         refreshContents(Codes.REFRESH_BRANCHES);
     }
@@ -49,6 +52,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         this.dbConnection = db;
         this.prevFrame = prevFrame;
         this.editId=id;
+        this.mode=mode;
         initComponents();
         refreshContents(Codes.REFRESH_BRANCHES);
         if (mode==Codes.EDIT){
@@ -85,11 +89,14 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
             return;
         }
         loadBranch();
+        int indexValP=Arrays.asList(branchData[0]).indexOf(data[3]);
+        this.branchCbox.setSelectedIndex(indexValP);
+        //branchCbox.setEnabled(false);
         this.codeTbox.setText(data[0]);
         this.nameTbox.setText(data[1]);
         this.addressTarea.setText(data[2]);
-        this.kgstTbox.setText(data[3]);
-        this.rbregnoTbox.setText(data[4]);
+        this.kgstTbox.setText(data[4]);
+        this.rbregnoTbox.setText(data[5]);
     }
     
     private void insertData(){
@@ -108,9 +115,13 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         branch = branchData[0][selectedIndex];
         String kgst = kgstTbox.getText();
         String rbregno = rbregnoTbox.getText();
-        CustomerDB.insert(stmt, code, name, address, branch, kgst, rbregno);
+        if(mode==Codes.EDIT){
+            CustomerDB.update(stmt, code, name, address, branch, kgst, rbregno);
+        }
+        else
+            CustomerDB.insert(stmt, code, name, address, branch, kgst, rbregno);
         if(this.prevFrame != null){
-            prevFrame.refreshContents(Codes.CUSTOMER_ADDED);
+            prevFrame.refreshContents(Codes.REFRESH_CUSTOMERS);
             this.doDefaultCloseAction();
         }
     }

@@ -28,6 +28,7 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
     Main mainFrame;
     RefreshOption prevFrame;
     String editId;
+    int mode;
     
     public ABranches() {
         initComponents();
@@ -39,6 +40,7 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         this.mainFrame = frame;
         this.prevFrame = null;
         this.editId = id;
+        this.mode=mode;
         initComponents();
         refreshContents(Codes.REFRESH_ALL);
     }
@@ -49,6 +51,7 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         this.mainFrame = frame;
         this.prevFrame = prevFrame;
         this.editId = id;
+        this.mode=mode;
         initComponents();
         if(mode == Codes.EDIT) this.loadContents();
         else refreshContents(Codes.REFRESH_ALL);
@@ -89,7 +92,12 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
             return;
         }
         Statement stmt=dbConnection.getStatement();
-        BranchDB.insert(stmt, name, addr, kgst, rbno);
+        if(mode==Codes.EDIT){
+            BranchDB.update(stmt, editId, name, addr, kgst, rbno);
+        }
+        else{
+            BranchDB.insert(stmt, name, addr, kgst, rbno);
+        }
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_BRANCHES);
             this.doDefaultCloseAction();
