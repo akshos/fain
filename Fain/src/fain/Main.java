@@ -277,6 +277,7 @@ public class Main extends javax.swing.JFrame {
         eConsumptionMenuItem = new javax.swing.JMenuItem();
         printingMenu = new javax.swing.JMenu();
         pLedgerMenuItem = new javax.swing.JMenuItem();
+        pTrialBalanceMenuItem = new javax.swing.JMenuItem();
         optionsMenu = new javax.swing.JMenu();
         startNewSessionMenuItem = new javax.swing.JMenuItem();
         loadSessionMenuItem = new javax.swing.JMenuItem();
@@ -525,6 +526,15 @@ public class Main extends javax.swing.JFrame {
             }
         });
         printingMenu.add(pLedgerMenuItem);
+
+        pTrialBalanceMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        pTrialBalanceMenuItem.setText("Trial Balance");
+        pTrialBalanceMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pTrialBalanceMenuItemActionPerformed(evt);
+            }
+        });
+        printingMenu.add(pTrialBalanceMenuItem);
 
         fainMainMenu.add(printingMenu);
 
@@ -826,6 +836,17 @@ public class Main extends javax.swing.JFrame {
         }
         addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_pLedgerMenuItemActionPerformed
+
+    private void pTrialBalanceMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pTrialBalanceMenuItemActionPerformed
+        PTrialBalance item = new PTrialBalance(dbConnection, this, this.level+1);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }//GEN-LAST:event_pTrialBalanceMenuItemActionPerformed
     
     /**
      * @param item the internal frame to be added to desktop pane
@@ -916,6 +937,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JDesktopPane mainDesktopPane;
     private javax.swing.JMenu optionsMenu;
     private javax.swing.JMenuItem pLedgerMenuItem;
+    private javax.swing.JMenuItem pTrialBalanceMenuItem;
     private javax.swing.JMenu printingMenu;
     private javax.swing.JMenuItem startNewSessionMenuItem;
     private javax.swing.JPanel statusPanel;

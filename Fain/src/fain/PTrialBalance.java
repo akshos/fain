@@ -19,7 +19,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
 import utility.ValidationChecks;
-import reports.Ledger;
+import reports.TrialBalance;
 /**
  *
  * @author akshos
@@ -43,44 +43,17 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
         this.level = level;
         this.mainFrame = frame;
         initComponents();
-        loadBranch();
-    }
-    
-    private void loadBranch(){
-        System.out.println("loading branchcbox");
-        branchData = BranchDB.getBranch(this.dbConnection.getStatement());
-        int len;
-        if(branchData  == null){
-            len =  0;
-        }else{
-            len = branchData[0].length;
-        }
-        String[] cboxData = new String[len+1];
-        for(int i = 0; i < len; i++){
-            cboxData[i] = branchData[1][i] + " (" + branchData[0][i] + ")";
-        }
-        cboxData[len] = "All";
-        this.branchCbox.setModel(new DefaultComboBoxModel(cboxData));
-        this.branchCbox.setSelectedIndex(len);
     }
     
     private void generateReport(){    
         setBusy();
-        if(branchData == null){
-            int ret = JOptionPane.showConfirmDialog(this, "No Available Branches", "No Branches", JOptionPane.WARNING_MESSAGE);
-        }
-
-        int index;
-        String item = this.branchCbox.getSelectedItem().toString();
-        String branchCode = "All";
-        if(item.compareTo("All") != 0){
-            index = this.branchCbox.getSelectedIndex();
-            branchCode = this.branchData[0][index];
-        }
+        
+        String date = this.asOnTbox.getText();
+        
         String paper = this.paperCbox.getSelectedItem().toString();
         String orientation = this.orientationCbox.getSelectedItem().toString();
 
-        
+        boolean ret = TrialBalance.createReport(dbConnection, paper, orientation, date);
         resetBusy();
     }
     
@@ -110,12 +83,10 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
         logoPanel = new javax.swing.JPanel();
         logoLabel = new javax.swing.JLabel();
         labelsPanel = new javax.swing.JPanel();
-        accountCodeLabel = new javax.swing.JLabel();
         asOnLabel = new javax.swing.JLabel();
         paperLabel = new javax.swing.JLabel();
         orientationLabel = new javax.swing.JLabel();
         rightInerPannel = new javax.swing.JPanel();
-        branchCbox = new javax.swing.JComboBox<>();
         asOnTbox = new javax.swing.JFormattedTextField();
         paperCbox = new javax.swing.JComboBox<>();
         orientationCbox = new javax.swing.JComboBox<>();
@@ -159,11 +130,7 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
 
         leftInerPannel.add(logoPanel);
 
-        labelsPanel.setLayout(new java.awt.GridLayout(5, 0, 0, 10));
-
-        accountCodeLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        accountCodeLabel.setText("Branch");
-        labelsPanel.add(accountCodeLabel);
+        labelsPanel.setLayout(new java.awt.GridLayout(4, 0, 0, 10));
 
         asOnLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         asOnLabel.setText("As on");
@@ -181,21 +148,7 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
 
         outerPanel.add(leftInerPannel);
 
-        rightInerPannel.setLayout(new java.awt.GridLayout(5, 0, 0, 10));
-
-        branchCbox.setBackground(java.awt.Color.white);
-        branchCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        branchCbox.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                branchCboxFocusLost(evt);
-            }
-        });
-        branchCbox.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                branchCboxKeyPressed(evt);
-            }
-        });
-        rightInerPannel.add(branchCbox);
+        rightInerPannel.setLayout(new java.awt.GridLayout(4, 0, 0, 10));
 
         asOnTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         rightInerPannel.add(asOnTbox);
@@ -254,19 +207,6 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
         generateReport();
     }//GEN-LAST:event_enterButtonActionPerformed
 
-    private void branchCboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_branchCboxFocusLost
-
-    }//GEN-LAST:event_branchCboxFocusLost
-
-    private void branchCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_branchCboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }
-        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            branchCbox.transferFocus();
-        }
-    }//GEN-LAST:event_branchCboxKeyPressed
-
     private void paperCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_paperCboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
@@ -293,10 +233,8 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
     }//GEN-LAST:event_enterButtonKeyPressed
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel accountCodeLabel;
     private javax.swing.JLabel asOnLabel;
     private javax.swing.JFormattedTextField asOnTbox;
-    private javax.swing.JComboBox<String> branchCbox;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JButton enterButton;
     private javax.swing.JPanel labelsPanel;

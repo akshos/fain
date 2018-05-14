@@ -76,4 +76,8 @@ public class Account{
         closingBal = credit - debit;
         return closingBal;
     }
+    
+    public String getAccountHead(){
+        return accountHead;
+    }
 }
