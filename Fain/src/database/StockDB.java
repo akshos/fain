@@ -41,7 +41,7 @@ public final class StockDB {
                                      +"stockAC='"      +stockAC       + "'"
                                + "where itemCode=" + code + ";";
         try{
-            stmt.execute(sql);
+            stmt.executeUpdate(sql);
         }catch(SQLException se){
             se.printStackTrace();
             return false;

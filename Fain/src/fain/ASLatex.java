@@ -15,6 +15,7 @@ import database.StockDB;
 import database.TransactionDB;
 import java.awt.Dimension;
 import java.sql.Statement;
+import java.util.Arrays;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
@@ -30,6 +31,9 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
     RefreshOption prevFrame;
     String[][] branchData;
     String[][] partyData;
+    int mode;
+    String editId;
+    
     /**
      * Creates new form MasterEntry
      */
@@ -42,6 +46,8 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         this.mainFrame = frame;
         this.dbConnection = db;
         initComponents();
+        this.mode=mode;
+        this.editId=id;
         refreshContents(Codes.REFRESH_ALL);
         prevFrame = null;
     }
@@ -51,6 +57,8 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         this.level = level;
         this.mainFrame = frame;
         this.dbConnection = db;
+        this.mode=mode;
+        this.editId=id;
         initComponents();
         if(mode == Codes.EDIT)  this.loadContents();
         else refreshContents(Codes.REFRESH_ALL);
@@ -64,8 +72,28 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
     }
     
     private void loadContents(){
+        String[] data = SalesDB.selectOneId(dbConnection.getStatement(), editId);
+        if(data == null){
+            System.out.println("Load Contents : selectedOneId has returned null");
+            return;
+        }
+        this.loadBranch();
+        int indexValB=Arrays.asList(branchData[0]).indexOf(data[1]);
+        this.branchCbox.setSelectedIndex(indexValB);
+        this.dateTbox.setText(data[2]);
+        this.prBillTbox.setText(data[3]);
+        this.loadParty();
+        int indexValP=Arrays.asList(partyData[0]).indexOf(data[4]);
+        this.partyCbox.setSelectedIndex(indexValP);
+        this.barrelFromTbox.setText(data[5]);
+        this.barrelToTbox.setText(data[6]);
         
-    }    
+        this.quantityTbox.setText(data[8]);
+        this.drcTbox.setText(data[9]);
+        this.dryRubberTbox.setText(data[10]);
+        this.rateTbox.setText(data[11]);
+        this.valueTbox.setText(data[12]);
+    }
         
         
     private void loadParty(){
@@ -212,6 +240,10 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
             return;
         }
         
+        if(mode==Codes.EDIT){
+            SalesDB.update(stmt, editId, branch, date, bill, party, bnfrom, bnto, quantity, drc, dryrubber, rate, value, tid);
+        }
+        else
         SalesDB.insert(stmt, branch, date, bill, party, bnfrom, bnto, quantity, drc, dryrubber, rate, value, tid);
         
         

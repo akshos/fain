@@ -10,10 +10,12 @@ import database.CustomerDB;
 import database.DBConnection;
 import database.MasterDB;
 import database.PurchaseDB;
+import database.PurchaseLatexDB;
 import database.StockDB;
 import database.TransactionDB;
 import java.awt.Dimension;
 import java.sql.Statement;
+import java.util.Arrays;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
@@ -28,6 +30,8 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
     RefreshOption prevFrame;
     String branchData[][];
     String partyData[][];
+    int mode;
+    String editId;
     String itemData[][];
     /**
      * Creates new form MasterEntry
@@ -41,6 +45,8 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         this.mainFrame  = frame;
         this.dbConnection = db;
         initComponents();
+        this.mode=mode;
+        this.editId=id;
         refreshContents(Codes.REFRESH_ALL);
     }
     
@@ -49,10 +55,34 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         this.level =  level;
         this.mainFrame  = frame;
         this.dbConnection = db;
+        this.mode=mode;
+        this.editId=id;
         initComponents();
-        refreshContents(Codes.REFRESH_ALL);
+        if(mode == Codes.EDIT) this.loadContents();
+        else refreshContents(Codes.REFRESH_ALL);
     }
-    
+    private void loadContents(){
+        String[] data = PurchaseDB.selectOneId(dbConnection.getStatement(), editId);
+        if(data == null){
+            System.out.println("Load Contents : selectedOneId has returned null");
+            return;
+        }
+        this.loadBranch();
+        int indexValB=Arrays.asList(branchData[0]).indexOf(data[1]);
+        this.branchCbox.setSelectedIndex(indexValB);
+        this.dateTbox.setText(data[2]);
+        this.billNumberTbox.setText(data[3]);
+        this.loadParty();
+        int indexValP=Arrays.asList(partyData[0]).indexOf(data[4]);
+        this.partyCbox.setSelectedIndex(indexValP);
+        this.loadItems();
+        int indexValI=Arrays.asList(itemData[0]).indexOf(data[5]);
+        this.itemCodeCbox.setSelectedIndex(indexValI);
+        this.itemnameTbox.setText(data[6]);
+        this.quantityTbox.setText(data[7]);
+        
+        this.valueTbox.setText(data[8]);
+    }
     private boolean validateFields(){
         if(this.quantityTbox.getText().trim().compareTo("") == 0){
             int ret = JOptionPane.showConfirmDialog(this, "Please specify Quantity", "No Quantity", JOptionPane.WARNING_MESSAGE);
@@ -99,7 +129,11 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         double quantity=Double.parseDouble(quantityTbox.getText());
         double value    =Double.parseDouble(valueTbox.getText());
         String tid = TransactionDB.generateTid();
-        PurchaseDB.insert(stmt, branch, date, bill, party, itemCode, itemname, quantity, value, tid);
+        if(mode==Codes.EDIT){
+            PurchaseDB.update(stmt, editId, branch, date, bill, party, itemCode, itemname, quantity, value, tid);
+        }
+        else
+            PurchaseDB.insert(stmt, branch, date, bill, party, itemCode, itemname, quantity, value, tid);
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_POTHERS);
             this.doDefaultCloseAction();
@@ -113,6 +147,8 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
     
     private void setItemName(){
         int index = this.itemCodeCbox.getSelectedIndex();
+        if (index==-1)
+            return;
         String curr = this.itemCodeCbox.getSelectedItem().toString();
         String itemName = "";
         if(curr.compareTo("Add New") != 0){

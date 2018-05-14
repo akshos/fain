@@ -28,6 +28,7 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
     String salesData[][];
     String stockData[][];
     String editId;
+    int mode;
     /**
      * Creates new form MasterEntry
      */
@@ -40,7 +41,9 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         this.mainFrame = frame;
         this.dbConnection = db;
         this.editId=id;
+        this.mode=mode;
         initComponents();
+        
         refreshContents(Codes.REFRESH_ALL);
         this.prevFrame = null;
     }
@@ -51,6 +54,7 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         this.mainFrame = frame;
         this.dbConnection = db;
         this.editId=id;
+        this.mode=mode;
         initComponents();
         if(mode == Codes.EDIT) this.loadContents();
         else refreshContents(Codes.REFRESH_ALL);
@@ -86,6 +90,10 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         }
         index = this.stockCbox.getSelectedIndex();
         stock = this.stockData[0][index];
+        if(mode==Codes.EDIT){
+            StockDB.update(stmt, editId, iname, currentStock, rate, purchase, sales, stock);
+        }
+        else
         StockDB.insert(stmt, iname, currentStock, rate, purchase, sales, stock);
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_STOCK);
