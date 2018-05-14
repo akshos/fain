@@ -154,8 +154,8 @@ public final class TransactionDB {
         return null;
     }
     
-    public static ResultSet getAllTransactionsRS(Statement stmt){
-        String sql = "select * from transactions";
+    public static ResultSet getTransactionsBeforeDateRS(Statement stmt, String date){
+        String sql = "select * from transactions where date<='"+date+"';";
         try{
             return stmt.executeQuery(sql);
         }catch(SQLException se){
