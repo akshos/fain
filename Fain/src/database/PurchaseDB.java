@@ -47,7 +47,7 @@ public final class PurchaseDB {
                                             +"tid='"            +tid            + "'"
                                + "where purchaseId=" + code + ";";
         try{
-            stmt.execute(sql);
+            stmt.executeUpdate(sql);
         }catch(SQLException se){
             se.printStackTrace();
             return false;

@@ -61,7 +61,7 @@ public final class Tables {
             + "tid                  varchar(30) );";
     
     public static final String purchaseTable = "create table purchase("
-            + "purch    aseId       integer primary key autoincrement,"
+            + "purchaseId       integer primary key autoincrement,"
             + "branch           varchar(20),"
             + "date             varchar(20),"
             + "billNo           varchar(20),"

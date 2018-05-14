@@ -67,9 +67,17 @@ public class EPOthers extends javax.swing.JInternalFrame implements RefreshOptio
     }
     
     private void editEntry(){
-        
+        int index = this.dataTable.getSelectedRow();
+        String id = this.dataTable.getModel().getValueAt(index, 0).toString();
+        APOthers item = new APOthers(dbConnection, Codes.EDIT, id, mainFrame, this.level+1, this);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

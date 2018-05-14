@@ -36,7 +36,7 @@ public final class TransactionDB {
     }
     
     public static boolean update(Statement stmt, String code,String date, String branch, String debit, String credit, double amount, String narration, String tid){
-        String sql = "update transaction set date        ='"+date       + "',"
+        String sql = "update transactions set date='"       +date       + "',"
                                            +"branch='"      +branch     + "',"
                                            +"debit='"       +debit      + "',"
                                            +"credit='"      +credit     + "',"
@@ -45,7 +45,7 @@ public final class TransactionDB {
                                            +"tid='"         +tid        +"'"
                                + "where transactionNo=" + code + ";";
         try{
-            stmt.execute(sql);
+            stmt.executeUpdate(sql);
         }catch(SQLException se){
             se.printStackTrace();
             return false;

@@ -28,6 +28,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
     String[][] accountData;
     String branchData[][];
     String editId;
+    int mode;
     /**
      * Creates new form MasterEntry
      */
@@ -43,6 +44,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         refreshContents(Codes.REFRESH_ALL);
         this.prevFrame = null;
         this.editId=id;
+        this.mode=mode;
     }
     
     public ATransaction(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame){
@@ -51,6 +53,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         this.mainFrame = frame;
         this.dbConnection = db;
         this.editId=id;
+        this.mode=mode;
         initComponents();
         if(mode == Codes.EDIT) this.loadContents();
         else refreshContents(Codes.REFRESH_ALL);
@@ -162,7 +165,11 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         double amount         =Double.parseDouble(amountTbox.getText());
         String narration      =narrationTbox.getText();
         String tid = TransactionDB.generateTid();
-        TransactionDB.insert(stmt, date, branch, debit, credit, amount, narration, tid);
+        if(mode==Codes.EDIT){
+            TransactionDB.update(stmt, editId, date, branch, debit, credit, amount, narration, tid);
+        }
+        else 
+            TransactionDB.insert(stmt, date, branch, debit, credit, amount, narration, tid);
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_TRANSACTION);
             this.doDefaultCloseAction();

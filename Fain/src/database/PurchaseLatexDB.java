@@ -49,7 +49,7 @@ public final class PurchaseLatexDB {
                                             +"tid='"            +tid            + "'"
                                + "where purchaseLatexId=" + code + ";";
         try{
-            stmt.execute(sql);
+            stmt.executeUpdate(sql);
         }catch(SQLException se){
             se.printStackTrace();
             return false;
