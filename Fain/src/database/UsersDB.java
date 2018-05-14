@@ -36,7 +36,7 @@ public final class UsersDB {
             return Codes.SUCCESS;
         }catch(SQLException se){
             se.printStackTrace();
-            return Codes.FAIL;
+            return se.getErrorCode();
         }
     }
     
@@ -54,7 +54,7 @@ public final class UsersDB {
             }
         }catch(SQLException se){
             se.printStackTrace();
-            return Codes.FAIL;
+            return se.getErrorCode();
         }
     }
     

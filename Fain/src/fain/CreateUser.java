@@ -63,8 +63,8 @@ public class CreateUser extends javax.swing.JInternalFrame {
         if(ret == Codes.EXISTING_USER){
             JOptionPane.showMessageDialog(this, "Username already exists", "Warning", JOptionPane.WARNING_MESSAGE);
             return;
-        }else if(ret == Codes.FAIL){
-            JOptionPane.showMessageDialog(this, "Failed to check username", "Warning", JOptionPane.WARNING_MESSAGE);
+        }else{
+            JOptionPane.showMessageDialog(this, "Failed to check username ("+ret+")", "Warning", JOptionPane.WARNING_MESSAGE);
         }
         String password = this.passwordPbox.getText();
         String rePassword = this.rePasswodPbox.getText();
@@ -79,8 +79,8 @@ public class CreateUser extends javax.swing.JInternalFrame {
         mainFrame.initLogin();
         if(ret == Codes.SUCCESS){
             JOptionPane.showMessageDialog(this, "Account " + username + " created.", "SUCCESS", JOptionPane.INFORMATION_MESSAGE);
-        }else if(ret == Codes.FAIL){
-            JOptionPane.showMessageDialog(this, "Account creation Failed", "FAILED", JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            JOptionPane.showMessageDialog(this, "Account creation Failed ("+ret+")", "FAILED", JOptionPane.INFORMATION_MESSAGE);
         }
         this.doDefaultCloseAction();
     }
