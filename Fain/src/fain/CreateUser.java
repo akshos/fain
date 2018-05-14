@@ -59,9 +59,12 @@ public class CreateUser extends javax.swing.JInternalFrame {
             return;
         }
         String username = this.usernameTbox.getText();
-        if(UsersDB.existingUser(username)){
+        int ret = UsersDB.existingUser(username);
+        if(ret == Codes.EXISTING_USER){
             JOptionPane.showMessageDialog(this, "Username already exists", "Warning", JOptionPane.WARNING_MESSAGE);
             return;
+        }else if(ret == Codes.FAIL){
+            JOptionPane.showMessageDialog(this, "Failed to check username", "Warning", JOptionPane.WARNING_MESSAGE);
         }
         String password = this.passwordPbox.getText();
         String rePassword = this.rePasswodPbox.getText();
@@ -72,8 +75,13 @@ public class CreateUser extends javax.swing.JInternalFrame {
         if(this.typeCbox.getSelectedItem().toString().compareTo("Administrator") == 0){
             type = Codes.ADMIN_USER;
         }
-        UsersDB.addUser(username, password, type);
+        ret = UsersDB.addUser(username, password, type);
         mainFrame.initLogin();
+        if(ret == Codes.SUCCESS){
+            JOptionPane.showMessageDialog(this, "Account " + username + " created.", "SUCCESS", JOptionPane.INFORMATION_MESSAGE);
+        }else if(ret == Codes.FAIL){
+            JOptionPane.showMessageDialog(this, "Account creation Failed", "FAILED", JOptionPane.INFORMATION_MESSAGE);
+        }
         this.doDefaultCloseAction();
     }
     

@@ -14,8 +14,10 @@ public final class Codes {
     public static int FAIL = -1;
     public static int AUTHORIZED = 2;
     public static int UNAUTHORIZED = 3;
-    public static int LOGIN = 5;
-    public static int AUTHENTICATE = 6;
+    public static int EXISTING_USER = 4;
+    public static int NOT_EXISTS = 5;
+    public static int LOGIN = 6;
+    public static int AUTHENTICATE = 7;
     
     public static int ADMIN_USER = 10;
     public static int STANDARD_USER = 11;
