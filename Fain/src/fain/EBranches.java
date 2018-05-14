@@ -8,6 +8,8 @@ package fain;
 import database.DBConnection;
 import database.BranchDB;
 import java.awt.Dimension;
+import javax.swing.JLabel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import utility.Codes;
@@ -37,6 +39,19 @@ public class EBranches extends javax.swing.JInternalFrame implements RefreshOpti
         for(int i = 0; i < n; i++){
             col.getColumn(i).setMinWidth(100);
         }
+        this.dataTable.setRowHeight(30);
+    }
+    
+    private void setColumnAlignment(){
+        DefaultTableCellRenderer alignRenderer = new DefaultTableCellRenderer();
+        alignRenderer.setHorizontalAlignment(JLabel.RIGHT);
+        int[] rightIndex = {3, 4};
+        for( int i = 0; i < rightIndex.length; i++){
+            this.dataTable.getColumnModel().getColumn(rightIndex[i]).setCellRenderer(alignRenderer);
+        }
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        this.dataTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
     }
     
     private void resizeColumns(){
@@ -56,6 +71,8 @@ public class EBranches extends javax.swing.JInternalFrame implements RefreshOpti
         TableModel table = BranchDB.getTable(dbConnection.getStatement());
         this.dataTable.setModel(table);
         setMinWidth();
+        resizeColumns();
+        setColumnAlignment();
     }
     
     private void addEntry(){
@@ -140,6 +157,11 @@ public class EBranches extends javax.swing.JInternalFrame implements RefreshOpti
 
         tableScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         tableScrollPane.setAutoscrolls(true);
+        tableScrollPane.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                keyPressedHandler(evt);
+            }
+        });
 
         dataTable.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         dataTable.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
@@ -447,6 +469,9 @@ public class EBranches extends javax.swing.JInternalFrame implements RefreshOpti
             int lastRowIndex = this.dataTable.getRowCount() - 1;
             this.dataTable.setRowSelectionInterval(lastRowIndex, lastRowIndex);
         }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
     }//GEN-LAST:event_dataTableKeyPressed
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
@@ -456,6 +481,10 @@ public class EBranches extends javax.swing.JInternalFrame implements RefreshOpti
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
         resizeColumns();
     }//GEN-LAST:event_formComponentResized
+
+    private void keyPressedHandler(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyPressedHandler
+
+    }//GEN-LAST:event_keyPressedHandler
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

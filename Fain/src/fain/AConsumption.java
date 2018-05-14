@@ -352,6 +352,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         });
         rightInerPannel.add(branchCbox);
 
+        dateTbox.setBackground(java.awt.Color.white);
         try {
             dateTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/##")));
         } catch (java.text.ParseException ex) {
@@ -370,6 +371,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         });
         rightInerPannel.add(dateTbox);
 
+        referenceNumberTbox.setBackground(java.awt.Color.white);
         referenceNumberTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         referenceNumberTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         referenceNumberTbox.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -400,6 +402,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         rightInerPannel.add(itemCodeCbox);
 
         itemNameTbox.setEditable(false);
+        itemNameTbox.setBackground(java.awt.Color.white);
         itemNameTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         itemNameTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -413,6 +416,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         });
         rightInerPannel.add(itemNameTbox);
 
+        narrationTbox.setBackground(java.awt.Color.white);
         narrationTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         narrationTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -426,6 +430,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         });
         rightInerPannel.add(narrationTbox);
 
+        quantityTbox.setBackground(java.awt.Color.white);
         quantityTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.000"))));
         quantityTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         quantityTbox.addFocusListener(new java.awt.event.FocusAdapter() {

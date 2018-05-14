@@ -16,7 +16,7 @@ import javax.swing.table.TableModel;
  * @author lenovo
  */
 public final class StockDB {
-    public static boolean insert(Statement stmt, String itemName,int currentStock, double rate, String purchaseAC, String saleAC, String stockAC ){
+    public static boolean insert(Statement stmt, String itemName,double currentStock, double rate, String purchaseAC, String saleAC, String stockAC ){
         String in ="insert into stock values(NULL,'" +itemName      + "',"
                                                      +currentStock  + ","
                                                      +rate          + ",'"
@@ -32,7 +32,7 @@ public final class StockDB {
         }
             return true;
     }
-    public static boolean update(Statement stmt, String code,String itemName,int currentStock, double rate, String purchaseAC, String saleAC, String stockAC){
+    public static boolean update(Statement stmt, String code,String itemName,double currentStock, double rate, String purchaseAC, String saleAC, String stockAC){
         String sql = "update stock set itemName     ='"+itemName      + "',"
                                      +"currentStock="  +currentStock  + ","
                                      +"rate="          +rate          + ","

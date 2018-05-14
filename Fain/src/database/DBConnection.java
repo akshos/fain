@@ -11,6 +11,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import fain.Preferences;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import utility.Codes;
@@ -117,5 +120,16 @@ public class DBConnection {
         }
         System.out.println("Database : " + databaseName + " found");
         return Codes.DATABASE_FOUND;
+    }
+    
+    public static void checkDBFolder(){
+        Path path = Paths.get("db");
+        try{
+            if(Files.notExists(path)){
+                new File("db").mkdir();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 }

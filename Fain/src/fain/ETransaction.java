@@ -8,6 +8,8 @@ package fain;
 import database.DBConnection;
 import database.TransactionDB;
 import java.awt.Dimension;
+import javax.swing.JLabel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import utility.Codes;
@@ -43,6 +45,18 @@ public class ETransaction extends javax.swing.JInternalFrame implements RefreshO
         }
     }
     
+    private void setColumnAlignment(){
+        DefaultTableCellRenderer alignRenderer = new DefaultTableCellRenderer();
+        alignRenderer.setHorizontalAlignment(JLabel.RIGHT);
+        int[] rightIndex = {5};
+        for( int i = 0; i < rightIndex.length; i++){
+            this.dataTable.getColumnModel().getColumn(rightIndex[i]).setCellRenderer(alignRenderer);
+        }
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        this.dataTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+    }
+    
     private void resizeColumns(){
         int screenWidth = this.getWidth();
         int colCount = this.dataTable.getColumnCount();
@@ -54,12 +68,15 @@ public class ETransaction extends javax.swing.JInternalFrame implements RefreshO
                 col.getColumn(i).setPreferredWidth(colWidth);
             }
         }
+        this.dataTable.setRowHeight(30);
     }
     
     public void updateTable(){
         TableModel table = TransactionDB.getTable(dbConnection.getStatement());
         this.dataTable.setModel(table);
         setMinWidth();
+        resizeColumns();
+        setColumnAlignment();
     }
     
     public void refreshContents(int code){
@@ -443,6 +460,8 @@ public class ETransaction extends javax.swing.JInternalFrame implements RefreshO
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F7){
             int lastRowIndex = this.dataTable.getRowCount() - 1;
             this.dataTable.setRowSelectionInterval(lastRowIndex, lastRowIndex);
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
         } 
     }//GEN-LAST:event_dataTableKeyPressed
 

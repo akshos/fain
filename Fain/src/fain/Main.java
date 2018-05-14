@@ -149,6 +149,7 @@ public class Main extends javax.swing.JFrame {
         if(dbFound == true){
             return;
         }
+        DBConnection.checkDBFolder();
         dbConnection = new DBConnection();
         int ret = dbConnection.checkDatabaseAvailability();
         if(ret == Codes.DATABASE_FOUND){
