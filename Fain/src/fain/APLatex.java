@@ -203,11 +203,11 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
     }
     
     private void insertData(){
-        Statement stmt=dbConnection.getStatement();
+        Statement stmt = dbConnection.getStatement();
         String branch = "";
         String item = branchCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
-            int ret = JOptionPane.showConfirmDialog(this, "Please select a valid branch", "No branch selected", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please select a valid branch", "No branch selected", JOptionPane.WARNING_MESSAGE);
             return;
         }
         int index = this.branchCbox.getSelectedIndex();
@@ -217,7 +217,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         String party      ="";
         item = partyCbox.getSelectedItem().toString();
         if(item.compareTo("None") == 0){
-            int ret = JOptionPane.showConfirmDialog(this, "Please select a valid branch", "No branch selected", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please select a valid branch", "No branch selected", JOptionPane.WARNING_MESSAGE);
             return;
         }
         index = partyCbox.getSelectedIndex();
@@ -231,20 +231,49 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         double rate     =Double.parseDouble(rateTbox.getText());
         double value    =Double.parseDouble(valueTbox.getText());
         String tid = TransactionDB.generateTid();
-        if(mode==Codes.EDIT){
-            PurchaseLatexDB.update(stmt, this.editId, branch, date, prBill, party, quantity, drc, dryrubber, rate, value, tid);
-        }
-        else
-        PurchaseLatexDB.insert(stmt, branch, date, prBill, party, quantity, drc, dryrubber, rate, value, tid);
         
         String purchaseAccount = StockDB.getLatexPurchaseAccount(dbConnection.getStatement());
         if(purchaseAccount.compareTo("none") == 0){
-            int ret = JOptionPane.showConfirmDialog(this, "Item 'Latex' was not found in stock", "No stock Latex", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Item 'Latex' was not found in stock", "No stock Latex", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        String narration = "PURCHASE OF LATEX (BILL #" + prBill +")";
         
-        TransactionDB.insert(stmt, date, branch, purchaseAccount, party, value, narration, tid);
+        boolean ret;
+        
+        if(mode==Codes.EDIT){
+            ret = PurchaseLatexDB.update(stmt, this.editId, branch, date, prBill, party, quantity, drc, dryrubber, rate, value, tid);
+            if(ret){
+                JOptionPane.showMessageDialog(this, "The entry has been updated", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(this, "Failed to update", "Failed", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            String narration = "PURCHASE OF LATEX (BILL #" + prBill +")";
+            
+            ret = TransactionDB.update(stmt, editId, date, branch, purchaseAccount, party, value, narration, tid);
+            if(!ret){
+                JOptionPane.showMessageDialog(this, "Failed to update Transaction", "Failed", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+        else{
+            ret = PurchaseLatexDB.insert(stmt, branch, date, prBill, party, quantity, drc, dryrubber, rate, value, tid);
+            if(ret){
+                JOptionPane.showMessageDialog(this, "New entry has been successfully added", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(this, "Failed to add the new entry", "Failed", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            String narration = "PURCHASE OF LATEX (BILL #" + prBill +")";
+        
+            ret = TransactionDB.insert(stmt, date, branch, purchaseAccount, party, value, narration, tid);
+            if(!ret){
+                JOptionPane.showMessageDialog(this, "Failed to add Transaction", "Failed", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
         
         if(prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_PLATEX);
@@ -588,7 +617,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         valueTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
+                valueTboxKeyPressed(evt);
             }
         });
         rightInerPannel.add(valueTbox);
@@ -715,6 +744,15 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
     private void rateTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_rateTboxFocusGained
         this.rateTbox.selectAll();
     }//GEN-LAST:event_rateTboxFocusGained
+
+    private void valueTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_valueTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.insertData();
+        }
+    }//GEN-LAST:event_valueTboxKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

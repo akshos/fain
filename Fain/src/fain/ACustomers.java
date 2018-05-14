@@ -310,7 +310,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         });
         rbregnoTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
+                rbregnoTboxKeyPressed(evt);
             }
         });
         rightInerPannel.add(rbregnoTbox);
@@ -406,6 +406,15 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
     private void rbregnoTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_rbregnoTboxFocusGained
         this.rbregnoTbox.selectAll();
     }//GEN-LAST:event_rbregnoTboxFocusGained
+
+    private void rbregnoTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rbregnoTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.insertData();
+        }
+    }//GEN-LAST:event_rbregnoTboxKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

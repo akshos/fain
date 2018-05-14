@@ -331,7 +331,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         branchCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         branchCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                branchCboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(branchCbox);
@@ -424,7 +424,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         });
         quantityTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
+                quantityTboxKeyPressed(evt);
             }
         });
         rightInerPannel.add(quantityTbox);
@@ -463,15 +463,6 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
     private void itemNameTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemNameTboxActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_itemNameTboxActionPerformed
-
-    private void branchCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_branchCboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            checkBranchChangedItem();
-        }
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }
-    }//GEN-LAST:event_branchCboxKeyPressed
 
     private void itemCodeCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_itemCodeCboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
@@ -527,6 +518,15 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
     private void quantityTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_quantityTboxFocusGained
         this.quantityTbox.selectAll();
     }//GEN-LAST:event_quantityTboxFocusGained
+
+    private void quantityTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_quantityTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.insertData();
+        }
+    }//GEN-LAST:event_quantityTboxKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

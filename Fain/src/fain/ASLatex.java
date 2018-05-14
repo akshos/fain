@@ -33,7 +33,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
     String[][] partyData;
     int mode;
     String editId;
-    
+    String prevBillNo;
     /**
      * Creates new form MasterEntry
      */
@@ -82,6 +82,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         this.branchCbox.setSelectedIndex(indexValB);
         this.dateTbox.setText(data[2]);
         this.prBillTbox.setText(data[3]);
+        this.prevBillNo = data[3];
         this.loadParty();
         int indexValP=Arrays.asList(partyData[0]).indexOf(data[4]);
         this.partyCbox.setSelectedIndex(indexValP);
@@ -240,16 +241,42 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
             return;
         }
         
+        boolean ret;
+        
         if(mode==Codes.EDIT){
-            SalesDB.update(stmt, editId, branch, date, bill, party, bnfrom, bnto, quantity, drc, dryrubber, rate, value, tid);
+            ret = SalesDB.update(stmt, editId, branch, date, bill, party, bnfrom, bnto, quantity, drc, dryrubber, rate, value, tid);
+            if(ret){
+                JOptionPane.showMessageDialog(this, "The entry has been updated", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(this, "Failed to update", "Failed", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            String narration = "SALE OF LATEX (BILL #" + bill +")";
+            
+            ret = TransactionDB.update(stmt, editId, date, branch, party, purchaseAccount, value, narration, tid);
+            if(!ret){
+                JOptionPane.showMessageDialog(this, "Failed to update Transaction", "Failed", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
         }
-        else
-        SalesDB.insert(stmt, branch, date, bill, party, bnfrom, bnto, quantity, drc, dryrubber, rate, value, tid);
+        else{
+            ret = SalesDB.insert(stmt, branch, date, bill, party, bnfrom, bnto, quantity, drc, dryrubber, rate, value, tid);
+            if(ret){
+                JOptionPane.showMessageDialog(this, "New entry has been successfully added", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(this, "Failed to add the new entry", "Failed", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
         
+            String narration = "SALE OF LATEX (BILL #" + bill +")";
         
-        String narration = "SALE OF LATEX (BILL #" + bill +")";
-        
-        TransactionDB.insert(stmt, date, branch, party, purchaseAccount, value, narration, tid);
+            ret = TransactionDB.insert(stmt, date, branch, party, purchaseAccount, value, narration, tid);
+            if(!ret){
+                JOptionPane.showMessageDialog(this, "Failed to add Transaction", "Failed", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
         
         if(prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_SLATEX);
@@ -266,6 +293,9 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
     
     private boolean chechPrBill(){
         String billNo = this.prBillTbox.getText();
+        if(this.mode == Codes.EDIT && billNo.compareTo(this.prevBillNo) == 0){
+            return true;
+        }
         if(billNo.compareTo("") == 0){
             this.billnumberLabel.setText("<html>Bill No. <span style=\"color:red\">Empty</span></html>");
             return false;

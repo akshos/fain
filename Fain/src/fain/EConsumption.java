@@ -39,6 +39,23 @@ public class EConsumption extends javax.swing.JInternalFrame implements RefreshO
         }
     }
     
+    private void setColumnAlignment(){
+        
+    }
+    
+    private void resizeColumns(){
+        int screenWidth = this.getWidth();
+        int colCount = this.dataTable.getColumnCount();
+        if(colCount == 0) return;
+        int colWidth  = screenWidth / (colCount-1) - (100/colCount);
+        if(colWidth > 100){
+            TableColumnModel col = this.dataTable.getColumnModel();
+            for(int i = 1; i < colCount; i++){
+                col.getColumn(i).setPreferredWidth(colWidth);
+            }
+        }
+    }
+    
     public void updateTable(){
         TableModel table = ConsumptionDB.getTable(dbConnection.getStatement());
         this.dataTable.setModel(table);
@@ -114,6 +131,11 @@ public class EConsumption extends javax.swing.JInternalFrame implements RefreshO
             public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+        });
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
             }
         });
 
@@ -426,6 +448,10 @@ public class EConsumption extends javax.swing.JInternalFrame implements RefreshO
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
         editEntry();        // TODO add your handling code here:
     }//GEN-LAST:event_editButtonActionPerformed
+
+    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+        this.resizeColumns();
+    }//GEN-LAST:event_formComponentResized
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
