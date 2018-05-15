@@ -76,6 +76,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         else if(code == Codes.REFRESH_CUSTOMERS){
             this.customerAdded = true;
             this.enterButton.requestFocus();
+            this.categoryCbox.transferFocus();
         }
     }
     private void loadContents(){
@@ -172,8 +173,14 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         Statement stmt=dbConnection.getStatement();
         String accountCode  =accountCodeTbox.getText();
         String accountHead  =accountHeadTbox.getText();
-        double currBalance  =Double.parseDouble(currentBalanceTbox.getText().replace(",", ""));
-        double yopBalance   =Double.parseDouble(yopBalanceTbox.getText().replace(",", ""));
+        double currBalance = 0.0;
+        if(!currentBalanceTbox.getText().isEmpty()){
+             currBalance =Double.parseDouble(currentBalanceTbox.getText().replace(",", ""));
+        }
+        double yopBalance = 0.0;
+        if(!yopBalanceTbox.getText().isEmpty()){
+            yopBalance = Double.parseDouble(yopBalanceTbox.getText().replace(",", ""));
+        }
         String category     ="";
         int index = this.categoryCbox.getSelectedIndex();
         String item = this.categoryCbox.getSelectedItem().toString();
@@ -182,12 +189,30 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
             return;
         }
         category = categoryData[0][index];
+        
+        boolean ret;
+        
         if(mode==Codes.EDIT){
-            MasterDB.update(stmt, editId, accountHead, yopBalance, currBalance, category);
+            ret = MasterDB.update(stmt, editId, accountHead, yopBalance, currBalance, category);
+            if(ret){
+                JOptionPane.showMessageDialog(this, "The entry has been updated", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(this, "Failed to update", "Failed", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
             CustomerDB.modifyName(stmt,editId,accountHead);
         }
-        else
-            MasterDB.insert(stmt, accountCode, accountHead, yopBalance, currBalance, category);
+        else{
+            ret = MasterDB.insert(stmt, accountCode, accountHead, yopBalance, currBalance, category);
+            if(ret){
+                JOptionPane.showMessageDialog(this, "New entry has been successfully added", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(this, "Failed to add the new entry", "Failed", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+        
         if(prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_MASTER);
             this.doDefaultCloseAction();
@@ -202,7 +227,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
     
     private boolean checkCode(){
         String code = this.accountCodeTbox.getText();
-        if (code.compareTo(editId)==0)
+        if (mode == Codes.EDIT && code.compareTo(editId)==0)
             return true;
         if(ValidationChecks.validateCode(code.trim())){
             if(MasterDB.checkExisting(dbConnection.getStatement(), code)){
@@ -348,7 +373,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(accountHeadTbox);
 
-        yopBalanceTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
+        yopBalanceTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,##0.00"))));
         yopBalanceTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         yopBalanceTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -362,7 +387,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(yopBalanceTbox);
 
-        currentBalanceTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
+        currentBalanceTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,##0.00"))));
         currentBalanceTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         currentBalanceTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {

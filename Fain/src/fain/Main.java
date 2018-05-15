@@ -149,6 +149,7 @@ public class Main extends javax.swing.JFrame {
         if(dbFound == true){
             return;
         }
+        DBConnection.checkDBFolder();
         dbConnection = new DBConnection();
         int ret = dbConnection.checkDatabaseAvailability();
         if(ret == Codes.DATABASE_FOUND){
@@ -636,7 +637,6 @@ public class Main extends javax.swing.JFrame {
         }else{
             item.setSize(785, 470);
         }
-        item.setSize(785, 470);
         addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_eMasterMenuItemActionPerformed
 

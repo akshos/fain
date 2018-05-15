@@ -8,6 +8,9 @@ package fain;
 import database.DBConnection;
 import database.StockDB;
 import java.awt.Dimension;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import utility.Codes;
@@ -43,23 +46,39 @@ public class EStock extends javax.swing.JInternalFrame implements RefreshOption{
         }
     }
     
+    private void setColumnAlignment(){
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 30));
+        rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
+        int[] rightIndex = {2, 3};
+        for( int i = 0; i < rightIndex.length; i++){
+            this.dataTable.getColumnModel().getColumn(rightIndex[i]).setCellRenderer(rightRenderer);
+        }
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        this.dataTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+    }
+    
     private void resizeColumns(){
         int screenWidth = this.getWidth();
         int colCount = this.dataTable.getColumnCount();
         if(colCount == 0) return;
-        int colWidth  = screenWidth / (colCount-1) - (100/colCount);
+        int colWidth  = (screenWidth / (colCount-1)) - ((100/(colCount))+5);
         if(colWidth > 100){
             TableColumnModel col = this.dataTable.getColumnModel();
             for(int i = 1; i < colCount; i++){
                 col.getColumn(i).setPreferredWidth(colWidth);
             }
         }
+        this.dataTable.setRowHeight(30);
     }
     
     public void updateTable(){
         TableModel table = StockDB.getTable(dbConnection.getStatement());
         this.dataTable.setModel(table);
         setMinWidth();
+        resizeColumns();
+        setColumnAlignment();
     }
     
     public void refreshContents(int code){
@@ -69,7 +88,7 @@ public class EStock extends javax.swing.JInternalFrame implements RefreshOption{
     }
     
     private void addEntry(){
-        ASLatex item = new ASLatex(dbConnection, Codes.NEW_ENTRY, null, this.mainFrame, this.level+1, this);
+        AStock item = new AStock(dbConnection, Codes.NEW_ENTRY, null, this.mainFrame, this.level+1, this);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -444,6 +463,8 @@ public class EStock extends javax.swing.JInternalFrame implements RefreshOption{
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F7){
             int lastRowIndex = this.dataTable.getRowCount() - 1;
             this.dataTable.setRowSelectionInterval(lastRowIndex, lastRowIndex);
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
         }
     }//GEN-LAST:event_dataTableKeyPressed
 

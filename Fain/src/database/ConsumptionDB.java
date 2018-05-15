@@ -71,7 +71,10 @@ public static void delete(Statement stmt,String id){
         return false;
     }
     public static TableModel getTable(Statement stmt){
-        String sqlQuery = "select consumptionId as 'ID', branch as 'Branch', date as 'Date', refNo as 'Ref. No:', itemCode as 'Item Code', itemName as 'Item Name',narration as 'Narration', quantity as 'Quantity' from consumption;";
+        String sqlQuery = "select c.consumptionId as 'ID', b.name as 'Branch', c.date as 'Date', "
+                + "c.refNo as 'Ref. No:', c.itemCode as 'Item Code', c.itemName as 'Item Name', "
+                + "c.narration as 'Narration', printf(\"%.3f\", c.quantity) as 'Quantity' from "
+                + "consumption as c, branch as b where c.branch=b.branchId;";
 	TableModel table = null;
         ResultSet rs = null;
 	try{

@@ -71,7 +71,10 @@ public final class MasterDB {
     }
     
     public static TableModel getTable(Statement stmt){
-        String sqlQuery = "select accountNo as 'Account Number', accountHead as 'Account Head', openingBal as 'Opening Balance', closingBal as 'Closing Balance', category as 'Category' from master;";
+        String sqlQuery = "select accountNo as 'Account Number', accountHead as 'Account Head', "
+                + "printf(\"%.2f\", openingBal) as 'Opening Balance', "
+                + "printf(\"%.2f\", closingBal) as 'Closing Balance', "
+                + "category as 'Category' from master;";
 	TableModel table = null;
         ResultSet rs = null;
 	try{

@@ -8,6 +8,8 @@ package fain;
 import database.DBConnection;
 import database.ConsumptionDB;
 import java.awt.Dimension;
+import javax.swing.JLabel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import utility.Codes;
@@ -40,27 +42,42 @@ public class EConsumption extends javax.swing.JInternalFrame implements RefreshO
     }
     
     private void setColumnAlignment(){
-        
+        DefaultTableCellRenderer alignRenderer = new DefaultTableCellRenderer();
+        alignRenderer.setHorizontalAlignment(JLabel.RIGHT);
+        int[] rightIndex = {7};
+        for( int i = 0; i < rightIndex.length; i++){
+            this.dataTable.getColumnModel().getColumn(rightIndex[i]).setCellRenderer(alignRenderer);
+        }
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        int[] centerIndex = {0, 2, 3, 4};
+        for( int i = 0; i < centerIndex.length; i++){
+            this.dataTable.getColumnModel().getColumn(centerIndex[i]).setCellRenderer(centerRenderer);
+        }
     }
     
     private void resizeColumns(){
         int screenWidth = this.getWidth();
         int colCount = this.dataTable.getColumnCount();
         if(colCount == 0) return;
-        int colWidth  = screenWidth / (colCount-1) - (100/colCount);
+        int colWidth  = (screenWidth / (colCount-1)) - (100/(colCount)+10);
         if(colWidth > 100){
             TableColumnModel col = this.dataTable.getColumnModel();
             for(int i = 1; i < colCount; i++){
                 col.getColumn(i).setPreferredWidth(colWidth);
             }
         }
+        this.dataTable.setRowHeight(30);
     }
     
     public void updateTable(){
         TableModel table = ConsumptionDB.getTable(dbConnection.getStatement());
         this.dataTable.setModel(table);
         setMinWidth();
+        resizeColumns();
+        setColumnAlignment();
     }
+    
     public void refreshContents(int code){
         if(code == Codes.REFRESH_CONSUMPTION){
             this.updateTable();
@@ -442,6 +459,8 @@ public class EConsumption extends javax.swing.JInternalFrame implements RefreshO
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F7){
             int lastRowIndex = this.dataTable.getRowCount() - 1;
             this.dataTable.setRowSelectionInterval(lastRowIndex, lastRowIndex);
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
         }
     }//GEN-LAST:event_dataTableKeyPressed
 

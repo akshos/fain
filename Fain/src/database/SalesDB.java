@@ -86,7 +86,13 @@ public final class SalesDB {
         return false;
     }
     public static TableModel getTable(Statement stmt){
-        String sqlQuery = "select salesId as 'ID', branch as 'Branch', date as 'Date', billNo as 'Bill No:', party as 'Party',barrelNoFrom as 'Barrel # From', barrelNoTo as 'Barrel # To',diff as 'Nos:', quantity as 'Quantity', drc as 'DRC', dryRubber as 'Dry Rubber', rate as 'Rate' , value as 'Value' from sales;";
+        String sqlQuery = "select s.salesId as 'ID', b.name as 'Branch', s.date as 'Date', "
+                + "s.billNo as 'Bill No:', c.name as 'Party',s.barrelNoFrom as 'Barrel # From', "
+                + "s.barrelNoTo as 'Barrel # To', s.diff as 'Nos:', "
+                + "printf(\"%.3f\", s.quantity) as 'Quantity', printf(\"%.3f\", s.drc) as 'DRC', "
+                + "printf(\"%.3f\", s.dryRubber) as 'Dry Rubber', printf(\"%.2f\", s.rate) as 'Rate', "
+                + "printf(\"%.2f\", s.value) as 'Value' from sales as s, branch as b, customer as c where "
+                + "s.branch=b.branchId and s.party=c.customerCode;";
 	TableModel table = null;
         ResultSet rs = null;
 	try{

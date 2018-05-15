@@ -80,7 +80,9 @@ public final class CustomerDB {
         return false;
     }
     public static TableModel getTable(Statement stmt){
-        String sqlQuery = "select customerCode as 'ID', name as 'Name', address as 'Address',branch AS 'Branch', kgst as 'GST', rbno as 'RBNO' from customer;";
+        String sqlQuery = "select c.customerCode as 'ID', c.name as 'Name', c.address as 'Address', "
+                + "b.name AS 'Branch', c.kgst as 'GST', c.rbno as 'RBNO' from customer as c, branch as b "
+                + "where c.branch=b.branchId;";
 	TableModel table = null;
         ResultSet rs = null;
 	try{

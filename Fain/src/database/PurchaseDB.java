@@ -90,7 +90,11 @@ public final class PurchaseDB {
     }
     
     public static TableModel getTable(Statement stmt){
-        String sqlQuery = "select purchaseId as 'ID', branch as 'Branch', date as 'Date', billNo as 'Bill No:', party as 'Party', itemCode as 'Item Code', itemName as 'Item Name', quantity as 'Quantity',  value as 'Value' from purchase;";
+        String sqlQuery = "select p.purchaseId as 'ID', b.name as 'Branch', p.date as 'Date', "
+                + "p.billNo as 'Bill No:', c.name as 'Party', p.itemCode as 'Item Code', "
+                + "p.itemName as 'Item Name', printf(\"%.3f\",p.quantity) as 'Quantity',  "
+                + "printf(\"%.2f\", p.value) as 'Value' from purchase as p, customer as c, branch as b where "
+                + "p.party=c.customerCode and p.branch=b.branchId;";
 	TableModel table = null;
         ResultSet rs = null;
 	try{

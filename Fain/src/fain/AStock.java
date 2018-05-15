@@ -63,13 +63,13 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
     private void insertData(){
         Statement stmt=dbConnection.getStatement();
         //String icode        =itemCodeTbox.getText();
-        String iname        =itemNameTbox.getText();
-        int currentStock    =Integer.parseInt(currentStockTbox.getText().replace(",",""));
-        double rate         =Double.parseDouble(rateTbox.getText().replace(",",""));
+        String iname        = itemNameTbox.getText();
+        double currentStock = Double.parseDouble(currentStockTbox.getText().replace(",",""));
+        double rate         = Double.parseDouble(rateTbox.getText().replace(",",""));
         String purchase     ="";
         String item = this.purchasesCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
-            int ret = JOptionPane.showConfirmDialog(this, "Please select a purchase account", "No Purchase Account", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please select a purchase account", "No Purchase Account", JOptionPane.WARNING_MESSAGE);
             return;
         }
         int index = this.purchasesCbox.getSelectedIndex();
@@ -77,7 +77,7 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         String sales     ="";
         item = this.salesCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
-            int ret = JOptionPane.showConfirmDialog(this, "Please select a sales account", "No Purchase Account", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please select a sales account", "No Purchase Account", JOptionPane.WARNING_MESSAGE);
             return;
         }
         index = this.salesCbox.getSelectedIndex();
@@ -85,16 +85,33 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         String stock     ="";
         item = this.stockCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
-            int ret = JOptionPane.showConfirmDialog(this, "Please select a stock account", "No Purchase Account", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please select a stock account", "No Purchase Account", JOptionPane.WARNING_MESSAGE);
             return;
         }
         index = this.stockCbox.getSelectedIndex();
         stock = this.stockData[0][index];
+        
+        boolean ret;
+        
         if(mode==Codes.EDIT){
-            StockDB.update(stmt, editId, iname, currentStock, rate, purchase, sales, stock);
+            ret = StockDB.update(stmt, editId, iname, currentStock, rate, purchase, sales, stock);
+            if(ret){
+                JOptionPane.showMessageDialog(this, "The entry has been updated", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(this, "Failed to update", "Failed", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
         }
-        else
-        StockDB.insert(stmt, iname, currentStock, rate, purchase, sales, stock);
+        else{
+            ret = StockDB.insert(stmt, iname, currentStock, rate, purchase, sales, stock);
+            if(ret){
+                JOptionPane.showMessageDialog(this, "New entry has been successfully added", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(this, "Failed to add the new entry", "Failed", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+        
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_STOCK);
             this.doDefaultCloseAction();
@@ -327,7 +344,7 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         });
         rightInerPannel.add(itemNameTbox);
 
-        currentStockTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat(""))));
+        currentStockTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##0.000"))));
         currentStockTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         currentStockTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -346,7 +363,7 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         });
         rightInerPannel.add(currentStockTbox);
 
-        rateTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        rateTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##0.00"))));
         rateTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         rateTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {

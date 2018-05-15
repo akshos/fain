@@ -66,7 +66,8 @@ public final class BranchDB {
         return false;
     }
     public static TableModel getTable(Statement stmt){
-        String sqlQuery = "select branchId as 'ID', name as 'Name', address as 'Address', kgst as 'GST', rbno as 'RBNO' from branch;";
+        String sqlQuery = "select branchId as 'ID', name as 'Name', address as 'Address', "
+                + "kgst as 'GST', rbno as 'RBNO' from branch;";
 	TableModel table = null;
         ResultSet rs = null;
 	try{

@@ -165,11 +165,28 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         double amount         =Double.parseDouble(amountTbox.getText());
         String narration      =narrationTbox.getText();
         String tid = TransactionDB.generateTid();
+        
+        boolean ret;
+        
         if(mode==Codes.EDIT){
-            TransactionDB.update(stmt, editId, date, branch, debit, credit, amount, narration, tid);
+            ret = TransactionDB.update(stmt, editId, date, branch, debit, credit, amount, narration, tid);
+            if(ret){
+                JOptionPane.showMessageDialog(this, "The entry has been updated", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(this, "Failed to update", "Failed", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
         }
-        else 
-            TransactionDB.insert(stmt, date, branch, debit, credit, amount, narration, tid);
+        else{ 
+            ret = TransactionDB.insert(stmt, date, branch, debit, credit, amount, narration, tid);
+            if(ret){
+                JOptionPane.showMessageDialog(this, "New entry has been successfully added", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(this, "Failed to add the new entry", "Failed", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+        
         if(this.prevFrame != null){
             prevFrame.refreshContents(Codes.REFRESH_TRANSACTION);
             this.doDefaultCloseAction();
@@ -356,7 +373,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         });
         rightInerPannel.add(creditCbox);
 
-        amountTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("###0.00"))));
+        amountTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,##0.00"))));
         amountTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         amountTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {

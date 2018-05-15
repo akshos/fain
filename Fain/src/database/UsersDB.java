@@ -36,11 +36,11 @@ public final class UsersDB {
             return Codes.SUCCESS;
         }catch(SQLException se){
             se.printStackTrace();
-            return Codes.FAIL;
+            return se.getErrorCode();
         }
     }
     
-    public static boolean existingUser(String username){
+    public static int existingUser(String username){
         try{
             Connection conn = DriverManager.getConnection(url);
             Statement stmt = conn.createStatement();
@@ -48,12 +48,14 @@ public final class UsersDB {
             ResultSet rs = stmt.executeQuery(query);
             conn.close();
             if (!rs.next()){
-                return false;
+                return Codes.NOT_EXISTS;
+            }else{
+                return Codes.EXISTING_USER;
             }
         }catch(SQLException se){
             se.printStackTrace();
+            return se.getErrorCode();
         }
-        return true;
     }
     
     public static void createUsersDB(){
