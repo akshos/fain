@@ -242,7 +242,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
     }
     
     private void checkCreditChangedItem(){
-        String item = this.debitCbox.getSelectedItem().toString();
+        String item = this.creditCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
             addNewMasterAccount();
         }else{
