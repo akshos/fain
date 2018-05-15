@@ -10,6 +10,7 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.TableModel;
+import utility.Codes;
 
 /**
  *
@@ -166,5 +167,20 @@ public final class TransactionDB {
             se.printStackTrace();
         }
         return null;
+    }
+    
+    public static int checkAccountIdPresent(Statement stmt, String id){
+        try{
+            ResultSet rs = getContainingAccount(stmt, id);
+            if(rs.next()){
+                return Codes.EXISTING_ENTRY;
+            }else{
+                return Codes.NOT_EXISTS;
+            }
+        }catch(SQLException se){
+            se.printStackTrace();
+            
+        }
+        return Codes.FAIL;
     }
 }

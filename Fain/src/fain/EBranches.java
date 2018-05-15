@@ -91,6 +91,7 @@ public class EBranches extends javax.swing.JInternalFrame implements RefreshOpti
     
     private void editEntry(){
         int index = this.dataTable.getSelectedRow();
+        if(index == -1 ) return;
         String id = this.dataTable.getModel().getValueAt(index, 0).toString();
         ABranches item = new ABranches(dbConnection, Codes.EDIT, id, mainFrame, this.level+1, this);
         Dimension dim = Preferences.getInternalFrameDimension(item);

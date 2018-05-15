@@ -110,8 +110,13 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
     }
     
     private void loadCreditDebit(){
-        int creditSelected = this.creditCbox.getSelectedIndex();
-        int debitSelected = this.debitCbox.getSelectedIndex();
+        String creditSelected = "", debitSelected = "";
+        if(this.creditCbox.getSelectedIndex() != -1){
+            creditSelected = this.creditCbox.getSelectedItem().toString();
+        }
+        if(this.debitCbox.getSelectedIndex() != -1){
+            debitSelected = this.debitCbox.getSelectedItem().toString();
+        }
         System.out.println("loading credit and debit cbox");
         accountData = MasterDB.getAccountHead(this.dbConnection.getStatement());
         int len;
@@ -127,8 +132,8 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         cboxData[len] = "Add New";
         this.creditCbox.setModel(new DefaultComboBoxModel(cboxData));
         this.debitCbox.setModel(new DefaultComboBoxModel(cboxData));
-        this.creditCbox.setSelectedIndex(creditSelected);
-        this.debitCbox.setSelectedIndex(debitSelected);
+        if(!creditSelected.isEmpty() ) this.creditCbox.setSelectedItem(creditSelected);
+        if(!debitSelected.isEmpty()) this.debitCbox.setSelectedItem(debitSelected);
     }
     
     private void insertData(){
@@ -476,14 +481,16 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
     private void enterButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterButtonKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
-        }        // TODO add your handling code here:
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.insertData();
+        }
     }//GEN-LAST:event_enterButtonKeyPressed
 
     private void keyPressedHandler(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyPressedHandler
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
         }
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
             cmp.transferFocus();
         }

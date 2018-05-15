@@ -59,6 +59,18 @@ public final class CustomerDB {
         }
         return true;
     }
+    
+    public static boolean modifyId(Statement stmt, String prevId, String newId){
+        String sql = "update customer set customerCode='"+newId+"' where customerCode='"+prevId+"';";
+        try{
+            stmt.executeUpdate(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    
     public static void delete(Statement stmt,String id){
         String del="delete from customer where customerCode='"+id+"';";
         try {
@@ -67,7 +79,8 @@ public final class CustomerDB {
             Logger.getLogger(CustomerDB.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-        public static boolean checkExisting(Statement stmt,String id){
+    
+    public static boolean checkExisting(Statement stmt,String id){
         String check="select * from customer where customerCode='"+id+"';";
         try {
             ResultSet rs=stmt.executeQuery(check);
@@ -79,6 +92,7 @@ public final class CustomerDB {
         }
         return false;
     }
+    
     public static TableModel getTable(Statement stmt){
         String sqlQuery = "select c.customerCode as 'ID', c.name as 'Name', c.address as 'Address', "
                 + "b.name AS 'Branch', c.kgst as 'GST', c.rbno as 'RBNO' from customer as c, branch as b "
@@ -92,7 +106,8 @@ public final class CustomerDB {
             se.printStackTrace();
 	}
 	return table;
-}
+    }
+    
     public static ResultSet selectAll(Statement stmt){
         String sql="select * from customer;";
         ResultSet rs = null;

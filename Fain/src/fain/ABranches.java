@@ -8,6 +8,7 @@ package fain;
 import database.BranchDB;
 import database.DBConnection;
 import database.MasterDB;
+import java.awt.Toolkit;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
 import utility.Codes;
@@ -208,12 +209,6 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
 
         rightInerPannel.setLayout(new java.awt.GridLayout(5, 0, 0, 10));
 
-        nameTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        nameTbox.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                nameTboxFocusGained(evt);
-            }
-        });
         nameTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -339,10 +334,6 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
             cmp.transferFocus();
         }
     }//GEN-LAST:event_keyPressedHandler
-
-    private void nameTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_nameTboxFocusGained
-        this.nameTbox.selectAll();
-    }//GEN-LAST:event_nameTboxFocusGained
 
     private void addressTareaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_addressTareaFocusGained
         this.addressTarea.selectAll();
