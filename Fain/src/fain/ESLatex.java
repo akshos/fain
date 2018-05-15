@@ -48,20 +48,23 @@ public class ESLatex extends javax.swing.JInternalFrame implements RefreshOption
     private void setColumnAlignment(){
         DefaultTableCellRenderer alignRenderer = new DefaultTableCellRenderer();
         alignRenderer.setHorizontalAlignment(JLabel.RIGHT);
-        int[] rightIndex = {2, 3, 5, 6, 7, 8, 9, 10, 11, 12};
+        int[] rightIndex = {8, 9, 10, 11, 12};
         for( int i = 0; i < rightIndex.length; i++){
             this.dataTable.getColumnModel().getColumn(rightIndex[i]).setCellRenderer(alignRenderer);
         }
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        this.dataTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        int[] centerIndex = {0, 2, 3, 5, 6, 7};
+        for( int i = 0; i < centerIndex.length; i++){
+            this.dataTable.getColumnModel().getColumn(centerIndex[i]).setCellRenderer(centerRenderer);
+        }
     }
     
     private void resizeColumns(){
         int screenWidth = this.getWidth();
         int colCount = this.dataTable.getColumnCount();
         if(colCount == 0) return;
-        int colWidth  = screenWidth / (colCount-1) - (100/colCount);
+        int colWidth  = (screenWidth / (colCount-1)) - ((100/(colCount))+3);
         if(colWidth > 100){
             TableColumnModel col = this.dataTable.getColumnModel();
             for(int i = 1; i < colCount; i++){

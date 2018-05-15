@@ -54,14 +54,17 @@ public class ETransaction extends javax.swing.JInternalFrame implements RefreshO
         }
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        this.dataTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        int[] centerIndex = {0, 1, 6};
+        for( int i = 0; i < centerIndex.length; i++){
+            this.dataTable.getColumnModel().getColumn(centerIndex[i]).setCellRenderer(centerRenderer);
+        }
     }
     
     private void resizeColumns(){
         int screenWidth = this.getWidth();
         int colCount = this.dataTable.getColumnCount();
         if(colCount == 0) return;
-        int colWidth  = screenWidth / (colCount-1) - (100/colCount);
+        int colWidth  = (screenWidth / (colCount-1)) - (100/(colCount)+5);
         if(colWidth > 100){
             TableColumnModel col = this.dataTable.getColumnModel();
             for(int i = 1; i < colCount; i++){

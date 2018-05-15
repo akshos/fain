@@ -54,13 +54,14 @@ public class EMaster extends javax.swing.JInternalFrame implements RefreshOption
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         this.dataTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        this.dataTable.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
     }
     
     private void resizeColumns(){
         int screenWidth = this.getWidth();
         int colCount = this.dataTable.getColumnCount();
         if(colCount == 0) return;
-        int colWidth  = screenWidth / (colCount-1) - (100/colCount);
+        int colWidth  = (screenWidth / (colCount-1)) - (100/(colCount)+8);
         if(colWidth > 100){
             TableColumnModel col = this.dataTable.getColumnModel();
             for(int i = 1; i < colCount; i++){

@@ -637,7 +637,6 @@ public class Main extends javax.swing.JFrame {
         }else{
             item.setSize(785, 470);
         }
-        item.setSize(785, 470);
         addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_eMasterMenuItemActionPerformed
 

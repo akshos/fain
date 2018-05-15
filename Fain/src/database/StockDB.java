@@ -71,7 +71,12 @@ public final class StockDB {
     }
     
     public static TableModel getTable(Statement stmt){
-        String sqlQuery = "select itemCode as 'Item Code', itemName as 'Item Name', currentStock as 'Current Stock', rate as 'Rate', m1.accountHead as 'Purchase A/C', m2. accountHead as 'Sales A/C',m3.accountHead as 'Stock A/C' from stock, master m1, master m2, master m3 where purchaseAC=m1.accountNo and saleAC=m2.accountNo and stockAC=m3.accountNo;";
+        String sqlQuery = "select itemCode as 'Item Code', itemName as 'Item Name', "
+                + "printf(\"%.3f\", currentStock) as 'Current Stock', "
+                + "printf(\"%.2f\", rate) as 'Rate', m1.accountHead as 'Purchase A/C', "
+                + "m2. accountHead as 'Sales A/C',m3.accountHead as 'Stock A/C' "
+                + "from stock, master m1, master m2, master m3 where purchaseAC=m1.accountNo "
+                + "and saleAC=m2.accountNo and stockAC=m3.accountNo;";
 	TableModel table = null;
         ResultSet rs = null;
 	try{
