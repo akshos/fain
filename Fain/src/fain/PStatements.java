@@ -58,11 +58,10 @@ public class PStatements extends javax.swing.JInternalFrame{
         }else{
             len = branchData[0].length;
         }
-        String[] cboxData = new String[len+1];
+        String[] cboxData = new String[len];
         for(int i = 0; i < len; i++){
             cboxData[i] = branchData[1][i] + " (" + branchData[0][i] + ")";
         }
-        cboxData[len] = "Add New";
         this.branchCbox.setModel(new DefaultComboBoxModel(cboxData));
     }
     
@@ -81,15 +80,14 @@ public class PStatements extends javax.swing.JInternalFrame{
         if(accountData  == null){
             len =  0;
             cboxData = new String[1];
-            cboxData[0] = "Add New";
+            cboxData[0] = "None";
             this.accountCbox.setToolTipText("No customers available for branch");
         }else{
             len = accountData[0].length;
-            cboxData = new String[len+1];
+            cboxData = new String[len];
             for(int i = 0; i < len; i++){
                 cboxData[i] = accountData[1][i] + "  (" + accountData[0][i] +")"  ;
             }
-            cboxData[len] = "Add New";
             String address = this.accountData[2][0];
             this.accountCbox.setToolTipText(address);
         }
