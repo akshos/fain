@@ -282,6 +282,7 @@ public class Main extends javax.swing.JFrame {
         cashBookMenuItem = new javax.swing.JMenuItem();
         bankBookMenuItem = new javax.swing.JMenuItem();
         pLedgerMenuItem = new javax.swing.JMenuItem();
+        statementsMenuItem = new javax.swing.JMenuItem();
         pTrialBalanceMenuItem = new javax.swing.JMenuItem();
         optionsMenu = new javax.swing.JMenu();
         startNewSessionMenuItem = new javax.swing.JMenuItem();
@@ -559,6 +560,14 @@ public class Main extends javax.swing.JFrame {
             }
         });
         printingMenu.add(pLedgerMenuItem);
+
+        statementsMenuItem.setText("Statements");
+        statementsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                statementsMenuItemActionPerformed(evt);
+            }
+        });
+        printingMenu.add(statementsMenuItem);
 
         pTrialBalanceMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         pTrialBalanceMenuItem.setText("Trial Balance");
@@ -912,6 +921,17 @@ public class Main extends javax.swing.JFrame {
         }
         addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_bankBookMenuItemActionPerformed
+
+    private void statementsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statementsMenuItemActionPerformed
+        PStatements item = new PStatements(dbConnection, this, this.level+1);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }//GEN-LAST:event_statementsMenuItemActionPerformed
     
     /**
      * @param item the internal frame to be added to desktop pane
@@ -1009,6 +1029,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem pTrialBalanceMenuItem;
     private javax.swing.JMenu printingMenu;
     private javax.swing.JMenuItem startNewSessionMenuItem;
+    private javax.swing.JMenuItem statementsMenuItem;
     private javax.swing.JPanel statusPanel;
     // End of variables declaration//GEN-END:variables
 }
