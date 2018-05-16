@@ -11,7 +11,13 @@ import database.MasterDB;
 import database.TransactionDB;
 import java.awt.Dimension;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -96,7 +102,12 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
             System.out.println("Load Contents : selectedOneId has returned null");
             return;
         }
-        this.dateTbox.setText(data[1]);
+        DateFormat df = new SimpleDateFormat("dd/MM/yy");
+        try {
+            this.dateTbox.setDate(df.parse(data[1]));
+        } catch (ParseException ex) {
+            Logger.getLogger(ATransaction.class.getName()).log(Level.SEVERE, null, ex);
+        }
         loadBranch();
         loadCreditDebit();
         int indexValB=Arrays.asList(branchData[0]).indexOf(data[2]);
@@ -138,7 +149,13 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
     
     private void insertData(){
         Statement stmt=dbConnection.getStatement();
-        String date         =dateTbox.getText();
+        DateFormat df = new SimpleDateFormat("dd/MM/yy");
+        
+        String date         =df.format(dateTbox.getDate());
+        if(date == null){
+            JOptionPane.showMessageDialog(this, "Please enter Date From", "NO DATE", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         
         String branch     ="";
         String item = branchCbox.getSelectedItem().toString();
@@ -276,7 +293,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         amountLabel = new javax.swing.JLabel();
         narrationLabel = new javax.swing.JLabel();
         rightInerPannel = new javax.swing.JPanel();
-        dateTbox = new javax.swing.JFormattedTextField();
+        dateTbox = new org.jdesktop.swingx.JXDatePicker();
         branchCbox = new javax.swing.JComboBox<>();
         debitCbox = new javax.swing.JComboBox<>();
         creditCbox = new javax.swing.JComboBox<>();
@@ -335,23 +352,6 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         outerPanel.add(leftInerPannel);
 
         rightInerPannel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
-
-        try {
-            dateTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/##")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
-        dateTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        dateTbox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                dateTboxActionPerformed(evt);
-            }
-        });
-        dateTbox.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
-            }
-        });
         rightInerPannel.add(dateTbox);
 
         branchCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
@@ -441,10 +441,6 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         insertData();
     }//GEN-LAST:event_enterButtonActionPerformed
 
-    private void dateTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dateTboxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_dateTboxActionPerformed
-
     private void branchCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_branchCboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             this.checkBranchChangedItem();
@@ -514,7 +510,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
     private javax.swing.JComboBox<String> creditCbox;
     private javax.swing.JLabel creditLabel;
     private javax.swing.JLabel dateLabel;
-    private javax.swing.JFormattedTextField dateTbox;
+    private org.jdesktop.swingx.JXDatePicker dateTbox;
     private javax.swing.JComboBox<String> debitCbox;
     private javax.swing.JLabel debitLabel;
     private javax.swing.JButton enterButton;
