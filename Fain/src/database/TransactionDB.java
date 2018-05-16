@@ -205,7 +205,7 @@ public final class TransactionDB {
     }
     
     public static String[] getTrasnsationDatesBetweenIncDatesIdRS(Statement stmt, String from, String to, String id){
-        String sql = "select distinct date from transaction where date>='"+from+"' and date<='"+to+"' and "
+        String sql = "select distinct date from transactions where date>='"+from+"' and date<='"+to+"' and "
                 + "(credit='"+id+"' or debit='"+id+"') order by date asc;";
         try{
             ResultSet rs = stmt.executeQuery(sql);
@@ -217,7 +217,7 @@ public final class TransactionDB {
     }
     
     public static ResultSet getNetCreditsOnDateForId(Statement stmt, String date, String creditId){
-        String sql = "select date, narration, debit, sum(amount) from transaction where credit='"+creditId+"' group by debit;";
+        String sql = "select date, narration, debit, sum(amount) as amount from transactions where credit='"+creditId+"' group by debit;";
         try{
             return stmt.executeQuery(sql);
         }catch(SQLException se){
@@ -227,7 +227,7 @@ public final class TransactionDB {
     }
     
     public static ResultSet getNetDebitsOnDateForId(Statement stmt, String date, String debitId){
-        String sql = "select date, narration, credit, sum(amount) from transaction where debit='"+debitId+"' group by credit;";
+        String sql = "select date, narration, credit, sum(amount) as amount from transactions where debit='"+debitId+"' group by credit;";
         try{
             return stmt.executeQuery(sql);
         }catch(SQLException se){
