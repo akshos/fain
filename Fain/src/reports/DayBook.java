@@ -47,7 +47,7 @@ public class DayBook {
     public static void addTitle(DBConnection con, Document doc, String fromDate, String toDate){
         try{
             Paragraph title = new Paragraph();
-            title.add(CommonFuncs.alignCenter("TRIAL BALANCE", CommonFuncs.titleFont));
+            title.add(CommonFuncs.alignCenter("DAY BOOK", CommonFuncs.titleFont));
             String subTitle = "From : " + fromDate + "  To : " + toDate;
             title.add(CommonFuncs.alignCenter(subTitle, CommonFuncs.subTitleFont));
             doc.add(title);
@@ -92,7 +92,7 @@ public class DayBook {
             }
             
             double balance = calculatePreviousBalance(con, fromDate, cashAccountId);
-            createTable(con, fromDate, toDate, cashAccountId, balance);
+            createTable(con, doc, fromDate, toDate, cashAccountId, balance);
             doc.close();
         }catch(Exception e){
             e.printStackTrace();
@@ -155,7 +155,7 @@ public class DayBook {
     private static void endDay(double debit, double credit, double balance){
     }
     
-    private static void createTable(DBConnection con, String fromDate, String toDate, String cashAccountId, double prevBalance){
+    private static void createTable(DBConnection con, Document doc, String fromDate, String toDate, String cashAccountId, double prevBalance){
         float columns[] = {0.7f, 2, 1, 1};
         PdfPTable table = new PdfPTable(columns);
         table.setWidthPercentage(90);
@@ -242,6 +242,9 @@ public class DayBook {
                     debitTotal = 0.0;
                 }
             }
+            
+            doc.add(table);
+            
         }catch(Exception e){
             e.printStackTrace();
         }
