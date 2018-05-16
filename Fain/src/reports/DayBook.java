@@ -184,10 +184,10 @@ public class DayBook {
         try{
             for (String date : transactionDates){
                 prtDate = date;
-                if(prevBalance != 0.0){
+                if(debitTotal != 0.0){
                     addTableRow(table, (PdfPCell.BOTTOM),
                                 CommonFuncs.tableContentFont, prtDate, "Opening Balance",
-                                new DecimalFormat("##,##,##0.00").format(Math.abs(prevBalance)), "");
+                                new DecimalFormat("##,##,##0.00").format(Math.abs(debitTotal)), "");
                     
                     prtDate = "";
                     prevBalance = 0.0;
