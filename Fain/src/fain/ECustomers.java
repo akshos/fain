@@ -92,6 +92,7 @@ public class ECustomers extends javax.swing.JInternalFrame implements RefreshOpt
     
     private void editEntry(){
         int index = this.dataTable.getSelectedRow();
+        if(index == -1 ) return;
         String id = this.dataTable.getModel().getValueAt(index, 0).toString();
         ACustomers item = new ACustomers(dbConnection, Codes.EDIT, id, mainFrame, this.level+1, this, null,null);
         Dimension dim = Preferences.getInternalFrameDimension(item);

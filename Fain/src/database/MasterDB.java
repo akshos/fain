@@ -48,6 +48,17 @@ public final class MasterDB {
         return true;
     }
     
+    public static boolean modifyId(Statement stmt, String prevId, String newId){
+        String sql = "update master set accountNo='"+newId+"' where accountNo='"+prevId+"';";
+        try{
+            stmt.executeUpdate(sql);  
+        }catch(SQLException se){
+            se.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    
     public static void delete(Statement stmt,String id){
         String del="delete from master where accountNo='"+id+"';";
         try {
@@ -74,7 +85,7 @@ public final class MasterDB {
         String sqlQuery = "select accountNo as 'Account Number', accountHead as 'Account Head', "
                 + "printf(\"%.2f\", openingBal) as 'Opening Balance', "
                 + "printf(\"%.2f\", closingBal) as 'Closing Balance', "
-                + "category as 'Category' from master;";
+                + "category as 'Category' from master order by accountNo asc;";
 	TableModel table = null;
         ResultSet rs = null;
 	try{

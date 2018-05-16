@@ -9,6 +9,7 @@ import database.CategoryDB;
 import database.CustomerDB;
 import database.DBConnection;
 import database.MasterDB;
+import database.TransactionDB;
 import java.awt.Dimension;
 import java.sql.Statement;
 import java.util.Arrays;
@@ -79,6 +80,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
             this.categoryCbox.transferFocus();
         }
     }
+    
     private void loadContents(){
         String[] data = MasterDB.selectOneId(dbConnection.getStatement(), editId);
         if(data == null){
@@ -86,7 +88,10 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
             return;
         }
         this.accountCodeTbox.setText(data[0]);
-        accountCodeTbox.setEditable(false);
+        int ret = TransactionDB.checkAccountIdPresent(dbConnection.getStatement(), data[0]);
+        if(ret == Codes.EXISTING_ENTRY || ret == Codes.FAIL ){
+            accountCodeTbox.setEditable(false);
+        }
         this.accountHeadTbox.setText(data[1]);
         this.yopBalanceTbox.setText(data[2]);
         this.currentBalanceTbox.setText(data[3]);
@@ -184,6 +189,8 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         String category     ="";
         int index = this.categoryCbox.getSelectedIndex();
         String item = this.categoryCbox.getSelectedItem().toString();
+        
+        //Field validation
         if(!validateFields(accountHead, index, item)){
             System.out.println("Not validated.");
             return;
@@ -193,15 +200,38 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         boolean ret;
         
         if(mode==Codes.EDIT){
-            ret = MasterDB.update(stmt, editId, accountHead, yopBalance, currBalance, category);
+            dbConnection.startTransaction();
+            ret = MasterDB.update(dbConnection.getStatement(), editId, accountHead, yopBalance, currBalance, category);
             if(ret){
                 JOptionPane.showMessageDialog(this, "The entry has been updated", "Success", JOptionPane.INFORMATION_MESSAGE);
             }else{
                 JOptionPane.showMessageDialog(this, "Failed to update", "Failed", JOptionPane.ERROR_MESSAGE);
+                dbConnection.rollbackTransaction();
                 return;
             }
             
-            CustomerDB.modifyName(stmt,editId,accountHead);
+            ret = CustomerDB.modifyName(dbConnection.getStatement(),editId,accountHead);
+            if(!ret){
+                JOptionPane.showMessageDialog(this, "Failed to change Customer Name", "Failed", JOptionPane.ERROR_MESSAGE);
+                dbConnection.rollbackTransaction();
+                return;
+            }
+            if(this.accountCodeTbox.isEditable() && accountCode.compareTo(editId) != 0){
+                ret = MasterDB.modifyId(stmt, editId, accountCode);
+                if(!ret){
+                    JOptionPane.showMessageDialog(this, "Failed to change Account Code", "Failed", JOptionPane.ERROR_MESSAGE);
+                    dbConnection.rollbackTransaction();
+                    return;
+                }
+                
+                ret = CustomerDB.modifyId(dbConnection.getStatement(), editId, accountCode);
+                if(!ret){
+                    JOptionPane.showMessageDialog(this, "Failed to change Customer Code", "Failed", JOptionPane.ERROR_MESSAGE);
+                    dbConnection.rollbackTransaction();
+                    return;
+                }
+            }
+            dbConnection.endTransaction();
         }
         else{
             ret = MasterDB.insert(stmt, accountCode, accountHead, yopBalance, currBalance, category);

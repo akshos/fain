@@ -132,4 +132,38 @@ public class DBConnection {
             e.printStackTrace();
         }
     }
+    
+    public void startTransaction(){
+        try{
+            this.conn.setAutoCommit(false);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+    }
+    
+    public void rollbackTransaction(){
+        try{
+            this.conn.rollback();
+            this.conn.commit();
+            this.conn.setAutoCommit(true);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }finally{
+            try{
+                this.conn.commit();
+                this.conn.setAutoCommit(true);
+            }catch(SQLException se){
+                se.printStackTrace();
+            }
+        }
+    }
+    
+    public void endTransaction(){
+        try{
+            this.conn.commit();
+            this.conn.setAutoCommit(true);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+    }
 }
