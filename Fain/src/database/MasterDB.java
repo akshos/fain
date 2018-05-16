@@ -123,7 +123,19 @@ public final class MasterDB {
     }
     
     public static String[][] getAccountHead(Statement stmt){
-        String sql="select accountNo,accountHead from master order by accountHead asc;";
+        String sql="select accountNo,accountHead from master order by accountNo asc;";
+        try {
+            ResultSet rs=stmt.executeQuery(sql);
+            return ResultSetToStringArray.getStringArray2col(rs);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    public static String[][] getAccountHeadByCat(Statement stmt, String cat){
+        String sql="select accountNo,accountHead from master where category='" + cat +"' ;";
         try {
             ResultSet rs=stmt.executeQuery(sql);
             return ResultSetToStringArray.getStringArray2col(rs);
@@ -208,7 +220,7 @@ public final class MasterDB {
     }
     
     public static String[][] getIdHeadOpBal(Statement stmt){
-        String sql = "select accountNo, accountHead,  openingBal from master";
+       String sql = "select accountNo, accountHead,  openingBal from master";
        try{
            ResultSet rs = stmt.executeQuery(sql);
            return ResultSetToStringArray.getStringArray3col(rs);
@@ -216,5 +228,20 @@ public final class MasterDB {
            se.printStackTrace();
        }
        return null;
+    }
+    
+    public static String getAccountIdByCat(Statement stmt, String cat){
+        String sql = "select accountNo from master where category='"+cat+"';";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next()){
+                return rs.getString(1);
+            }else{
+                return null;
+            }
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
     }
 }

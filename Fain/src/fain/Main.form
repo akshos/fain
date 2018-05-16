@@ -250,6 +250,21 @@
             <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="printingMenuMouseEntered"/>
           </Events>
           <SubComponents>
+            <Menu class="javax.swing.JMenu" name="accountBooksMenu">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Account Books"/>
+              </Properties>
+              <SubComponents>
+                <MenuItem class="javax.swing.JMenuItem" name="dayBookMenuItem">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Day Book"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dayBookMenuItemActionPerformed"/>
+                  </Events>
+                </MenuItem>
+              </SubComponents>
+            </Menu>
             <MenuItem class="javax.swing.JMenuItem" name="pLedgerMenuItem">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
