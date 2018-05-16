@@ -41,6 +41,8 @@ public class CashBankAccount {
     private static double pageDebitTotal;
     private static double pageCreditTotal;
     private static int pageNum;
+    private static String prtDate;
+    private static String sdate;
     private static String scat;
     
     public static void addTitle(DBConnection con, Document doc, String fromDate, String toDate){
@@ -85,8 +87,13 @@ public class CashBankAccount {
         pageCreditTotal = 0.0;
         pageNum = 0;
         scat = category;
+        sdate = prtDate = "";
         boolean ret = false;
-        
+        if(category.compareTo("CH") == 0){
+            PREFIX = "cashbook";
+        }else if(category.compareTo("BK") == 0){
+            PREFIX = "bankbook";
+        }
         Document doc;
         try{
             doc = startDocument(paper, orientation);
@@ -184,7 +191,6 @@ public class CashBankAccount {
         ResultSet rs;
         String sql;
         String nar;
-        String prtDate = "";
         
         HashMap<String, String> accountHeads = MasterDB.getAccountHeadHashMap(con.getStatement());
         if(accountHeads == null){
@@ -194,7 +200,10 @@ public class CashBankAccount {
         
         try{
             for (String date : transactionDates){
+                
                 prtDate = date;
+                sdate = date;
+                
                 if(openingBalance != 0.0){
                     addTableRow(table, (PdfPCell.BOTTOM),
                                 CommonFuncs.tableContentFont, prtDate, "Opening Balance",
@@ -211,7 +220,9 @@ public class CashBankAccount {
                     String creditAcc = rs.getString("credit");
                     if(creditAcc.compareTo(accountId) == 0){
                         amount = rs.getDouble("amount");
-                        nar = accountHeads.get(rs.getString("debit")) + " ( " + rs.getString("narration") + " )";
+                        nar = accountHeads.get(rs.getString("debit"));
+                        if(!rs.getString("narration").isEmpty())
+                            nar += " ( " + rs.getString("narration") + " )";
                         addTableRow(table, (PdfPCell.NO_BORDER), //Start the day
                             CommonFuncs.tableContentFont, prtDate, nar,
                             "", new DecimalFormat("##,##,##0.00").format(Math.abs(amount)));
@@ -219,7 +230,9 @@ public class CashBankAccount {
                         creditTotal += amount;
                     }else if(debitAcc.compareTo(accountId) == 0){
                         amount = rs.getDouble("amount");
-                        nar = accountHeads.get(rs.getString("credit")) + "(" + rs.getString("narration") + " )";
+                        nar = accountHeads.get(rs.getString("credit"));
+                        if(!rs.getString("narration").isEmpty())
+                            nar += " ( " + rs.getString("narration") + " )";
                         addTableRow(table, (PdfPCell.NO_BORDER), //Start the day
                             CommonFuncs.tableContentFont, prtDate, nar,
                             new DecimalFormat("##,##,##0.00").format(Math.abs(amount)), "");
@@ -294,6 +307,7 @@ public class CashBankAccount {
             pageNum = pageNum + 1;
             pageCreditTotal = 0;
             pageDebitTotal = 0;
+            prtDate = sdate;
             ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
                     footer,
                     (document.right() - document.left()) / 2 + document.leftMargin(),

@@ -40,6 +40,8 @@ public class DayBook {
     private static DBConnection scon;
     private static String sfromDate;
     private static String stoDate;
+    private static String prtDate;
+    private static String sdate;
     private static double pageDebitTotal;
     private static double pageCreditTotal;
     private static int pageNum;
@@ -79,6 +81,7 @@ public class DayBook {
         pageDebitTotal = 0.0;
         pageCreditTotal = 0.0;
         pageNum = 0;
+        sdate = prtDate = "";
         boolean ret = false;
         
         Document doc;
@@ -181,10 +184,10 @@ public class DayBook {
         ResultSet rs;
         String sql;
         String nar;
-        String prtDate = "";
         try{
             for (String date : transactionDates){
                 prtDate = date;
+                sdate = date;
                 if(openingBalance != 0.0){
                     addTableRow(table, (PdfPCell.BOTTOM),
                                 CommonFuncs.tableContentFont, prtDate, "Opening Balance",
@@ -194,8 +197,6 @@ public class DayBook {
                     openingBalance = 0.0;
                 }               
                 
-                //sql = "select date, narration, debit, sum(amount) as amount from transactions where date='"+date+"' and credit='"+cashAccountId+"' group by debit;";
-                //rs = con.getStatement().executeQuery(sql);
                 rs = TransactionDB.getNetCreditsOnDateForId(con.getStatement(), date, cashAccountId);
                 while(rs.next()){
                     credit = rs.getDouble("amount");
@@ -208,8 +209,6 @@ public class DayBook {
                      prtDate = "";
                 }
                 
-                //sql = "select date, narration, credit, sum(amount) as amount from transactions where date='"+date+"' and debit='"+cashAccountId+"' group by credit;";
-                //rs = con.getStatement().executeQuery(sql);
                 rs = TransactionDB.getNetDebitsOnDateForId(con.getStatement(), date, cashAccountId);
                 while(rs.next()){
                     debit = rs.getDouble("amount");
@@ -287,6 +286,7 @@ public class DayBook {
             pageNum = pageNum + 1;
             pageCreditTotal = 0;
             pageDebitTotal = 0;
+            prtDate = sdate;
             ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
                     footer,
                     (document.right() - document.left()) / 2 + document.leftMargin(),
