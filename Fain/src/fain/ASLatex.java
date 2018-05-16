@@ -15,7 +15,12 @@ import database.StockDB;
 import database.TransactionDB;
 import java.awt.Dimension;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
@@ -80,7 +85,12 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         this.loadBranch();
         int indexValB=Arrays.asList(branchData[0]).indexOf(data[1]);
         this.branchCbox.setSelectedIndex(indexValB);
-        this.dateTbox.setText(data[2]);
+        DateFormat df = new SimpleDateFormat("dd/MM/yy");
+        try {
+            this.dateTbox.setDate(df.parse(data[2]));
+        } catch (ParseException ex) {
+            Logger.getLogger(ASLatex.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.prBillTbox.setText(data[3]);
         this.prevBillNo = data[3];
         this.loadParty();
@@ -214,7 +224,13 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         }
         int index = this.branchCbox.getSelectedIndex();
         branch = this.branchData[0][index];
-        String date = dateTbox.getText();
+        DateFormat df = new SimpleDateFormat("dd/MM/yy");
+        
+        String date         =df.format(dateTbox.getDate());
+        if(date == null){
+            JOptionPane.showMessageDialog(this, "Please enter Date From", "NO DATE", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         String bill = prBillTbox.getText();
         String party      ="";
         item = partyCbox.getSelectedItem().toString();
@@ -406,7 +422,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         valueLabel = new javax.swing.JLabel();
         rightInerPannel = new javax.swing.JPanel();
         branchCbox = new javax.swing.JComboBox<>();
-        dateTbox = new javax.swing.JFormattedTextField();
+        dateTbox = new org.jdesktop.swingx.JXDatePicker();
         prBillTbox = new javax.swing.JTextField();
         partyCbox = new javax.swing.JComboBox<>();
         barrelFromTbox = new javax.swing.JTextField();
@@ -502,23 +518,6 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
             }
         });
         rightInerPannel.add(branchCbox);
-
-        try {
-            dateTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/##")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
-        dateTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        dateTbox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                dateTboxActionPerformed(evt);
-            }
-        });
-        dateTbox.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
-            }
-        });
         rightInerPannel.add(dateTbox);
 
         prBillTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
@@ -719,10 +718,6 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         insertData();
     }//GEN-LAST:event_enterButtonActionPerformed
 
-    private void dateTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dateTboxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_dateTboxActionPerformed
-
     private void quantityTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quantityTboxActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_quantityTboxActionPerformed
@@ -833,7 +828,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
     private javax.swing.JLabel branchLabel;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JLabel dateLabel;
-    private javax.swing.JFormattedTextField dateTbox;
+    private org.jdesktop.swingx.JXDatePicker dateTbox;
     private javax.swing.JLabel drcLabel;
     private javax.swing.JFormattedTextField drcTbox;
     private javax.swing.JFormattedTextField dryRubberTbox;
