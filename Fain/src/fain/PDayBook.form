@@ -151,9 +151,12 @@
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
             </Component>
-            <Component class="org.jdesktop.swingx.JXDatePicker" name="fromDatePicker">
+            <Component class="javax.swing.JTextField" name="fromDatePicker">
             </Component>
-            <Component class="org.jdesktop.swingx.JXDatePicker" name="toDatePicker">
+            <Component class="javax.swing.JTextField" name="toDatePicker">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="jTextField2"/>
+              </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="paperCbox">
               <Properties>
