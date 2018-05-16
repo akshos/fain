@@ -189,8 +189,9 @@ public class DayBook {
                 ResultSet creditTransactions = TransactionDB.getNetCreditsOnDateForId(con.getStatement(), date, cashAccountId);
                 while(creditTransactions.next()){
                     credit = creditTransactions.getDouble("amount");
-                    addTableRow(table, (PdfPCell.BOTTOM), //Start the day
-                            CommonFuncs.tableContentFont, date, "Opening Balance",
+                    String debitAccountName = MasterDB.getAccountHead(con.getStatement(), creditTransactions.getString("debit"));
+                    addTableRow(table, (PdfPCell.NO_BORDER), //Start the day
+                            CommonFuncs.tableContentFont, date, debitAccountName,
                             "", new DecimalFormat("##,##,##0.00").format(Math.abs(credit)));
                     
                     creditTotal += credit;
@@ -199,8 +200,9 @@ public class DayBook {
                 ResultSet debitTransactions = TransactionDB.getNetDebitsOnDateForId(con.getStatement(), date, cashAccountId);
                 while(debitTransactions.next()){
                     debit = debitTransactions.getDouble("amount");
-                    addTableRow(table, (PdfPCell.BOTTOM), //Start the day
-                            CommonFuncs.tableContentFont, date, "Opening Balance",
+                    String creditAccountName = MasterDB.getAccountHead(con.getStatement(), creditTransactions.getString("credit"));
+                    addTableRow(table, (PdfPCell.NO_BORDER), //Start the day
+                            CommonFuncs.tableContentFont, date, creditAccountName,
                             new DecimalFormat("##,##,##0.00").format(Math.abs(debit)), "");
                     
                     debitTotal += debit;
@@ -222,7 +224,7 @@ public class DayBook {
                 }
                 //Total debit credit
                 addTableRow(table, (PdfPCell.BOTTOM|PdfPCell.TOP), //Start the day
-                            CommonFuncs.tableContentFont, date, "Balance C/F",
+                            CommonFuncs.tableContentFont, date, "TOTALS",
                             new DecimalFormat("##,##,##0.00").format(Math.abs(debitTotal)),
                             new DecimalFormat("##,##,##0.00").format(Math.abs(creditTotal)));
                 
