@@ -24,7 +24,6 @@ import utility.ValidationChecks;
 public class AMaster extends javax.swing.JInternalFrame implements RefreshOption{
     
     DBConnection dbConnection;
-    String id;
     int level;
     RefreshOption prevFrame;
     Main mainFrame;
@@ -42,7 +41,6 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
     
     public AMaster(DBConnection db, int mode, String id, Main frame, int level){
         this.dbConnection = db;
-        this.id = id;
         this.level = level;
         this.mainFrame = frame;
         this.mode=mode;
@@ -76,8 +74,8 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         }
         else if(code == Codes.REFRESH_CUSTOMERS){
             this.customerAdded = true;
-            this.enterButton.requestFocus();
             this.categoryCbox.transferFocus();
+            this.insertData();
         }
     }
     
@@ -117,7 +115,8 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
     private void checkChangedItem(){
         int index = this.categoryCbox.getSelectedIndex();
         if(categoryData[0][index].compareTo("CR")==0 || categoryData[0][index].compareTo("DB")==0){
-            if(!this.existing){
+            String id = this.accountCodeTbox.getText();
+            if(!CustomerDB.checkExisting(dbConnection.getStatement(), id)){
                 addCustomer();
             }
         }
@@ -196,6 +195,11 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
             return;
         }
         category = categoryData[0][index];
+        
+        if(!CustomerDB.checkExisting(dbConnection.getStatement(), accountCode)){
+            JOptionPane.showMessageDialog(this, "Please add a customer first", "No Customer", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         
         boolean ret;
         
