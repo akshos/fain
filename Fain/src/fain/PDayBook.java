@@ -74,7 +74,7 @@ public class PDayBook extends javax.swing.JInternalFrame{
         }
         int index = this.cashAccountCbox.getSelectedIndex();
         String cashAccount = this.accountData[0][index];
-        
+        /*
         DateFormat df = new SimpleDateFormat("dd/MM/yy");
         
         Date date = this.fromDatePicker.getDate() ;
@@ -90,11 +90,12 @@ public class PDayBook extends javax.swing.JInternalFrame{
             return;
         }       
         String toDate = df.format(this.toDatePicker.getDate());
-        
+        */
         String paper = this.paperCbox.getSelectedItem().toString();
         String orientation = this.orientationCbox.getSelectedItem().toString();
         
-        boolean ret = DayBook.createReport(dbConnection, paper, orientation, fromDate, toDate, cashAccount);
+        //boolean ret = DayBook.createReport(dbConnection, paper, orientation, fromDate, toDate, cashAccount);
+        DayBook.createReport(dbConnection, paper, orientation, this.fromDatePicker.getText(), this.toDatePicker.getText(), cashAccount);
         resetBusy();
     }
     
@@ -131,8 +132,8 @@ public class PDayBook extends javax.swing.JInternalFrame{
         orientationLabel = new javax.swing.JLabel();
         rightInerPannel = new javax.swing.JPanel();
         cashAccountCbox = new javax.swing.JComboBox<>();
-        fromDatePicker = new org.jdesktop.swingx.JXDatePicker();
-        toDatePicker = new org.jdesktop.swingx.JXDatePicker();
+        fromDatePicker = new javax.swing.JTextField();
+        toDatePicker = new javax.swing.JTextField();
         paperCbox = new javax.swing.JComboBox<>();
         orientationCbox = new javax.swing.JComboBox<>();
         buttonPanel = new javax.swing.JPanel();
@@ -205,6 +206,8 @@ public class PDayBook extends javax.swing.JInternalFrame{
         cashAccountCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         rightInerPannel.add(cashAccountCbox);
         rightInerPannel.add(fromDatePicker);
+
+        toDatePicker.setText("jTextField2");
         rightInerPannel.add(toDatePicker);
 
         paperCbox.setBackground(java.awt.Color.white);
@@ -293,7 +296,7 @@ public class PDayBook extends javax.swing.JInternalFrame{
     private javax.swing.JLabel cashAccountLabel;
     private javax.swing.JLabel dateFromLabel;
     private javax.swing.JButton enterButton;
-    private org.jdesktop.swingx.JXDatePicker fromDatePicker;
+    private javax.swing.JTextField fromDatePicker;
     private javax.swing.JPanel labelsPanel;
     private javax.swing.JPanel leftInerPannel;
     private javax.swing.JLabel logoLabel;
@@ -304,6 +307,6 @@ public class PDayBook extends javax.swing.JInternalFrame{
     private javax.swing.JComboBox<String> paperCbox;
     private javax.swing.JLabel paperLabel;
     private javax.swing.JPanel rightInerPannel;
-    private org.jdesktop.swingx.JXDatePicker toDatePicker;
+    private javax.swing.JTextField toDatePicker;
     // End of variables declaration//GEN-END:variables
 }
