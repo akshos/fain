@@ -161,7 +161,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
                 return false;
         }
         if( categoryData[0][categoryIndex].compareTo("CR")==0 || categoryData[0][categoryIndex].compareTo("DB")==0 ){
-            if(this.customerAdded == false && mode == Codes.NEW_ENTRY){
+            if(!CustomerDB.checkExisting(dbConnection.getStatement(), this.accountCodeTbox.getText())){
                 int ret = JOptionPane.showConfirmDialog(this, "Please add a customer first", "No customer", JOptionPane.WARNING_MESSAGE);
                 if(ret == JOptionPane.CANCEL_OPTION){
                     this.doDefaultCloseAction();
@@ -192,14 +192,10 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         //Field validation
         if(!validateFields(accountHead, index, item)){
             System.out.println("Not validated.");
+            cancelInsert();
             return;
         }
         category = categoryData[0][index];
-        
-        if(!CustomerDB.checkExisting(dbConnection.getStatement(), accountCode)){
-            JOptionPane.showMessageDialog(this, "Please add a customer first", "No Customer", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
         
         boolean ret;
         
@@ -243,6 +239,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
                 JOptionPane.showMessageDialog(this, "New entry has been successfully added", "Success", JOptionPane.INFORMATION_MESSAGE);
             }else{
                 JOptionPane.showMessageDialog(this, "Failed to add the new entry", "Failed", JOptionPane.ERROR_MESSAGE);
+                cancelInsert();
                 return;
             }
         }
@@ -252,6 +249,15 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
             this.doDefaultCloseAction();
         }else{
             nextEntry();
+        }
+    }
+    
+    private void cancelInsert(){
+        int index = this.categoryCbox.getSelectedIndex();
+        if( categoryData[0][index].compareTo("CR")==0 || categoryData[0][index].compareTo("DB")==0 ){
+            if(CustomerDB.checkExisting(dbConnection.getStatement(), this.accountCodeTbox.getText())){
+                CustomerDB.delete(dbConnection.getStatement(), this.accountCodeTbox.getText());
+            }
         }
     }
     
