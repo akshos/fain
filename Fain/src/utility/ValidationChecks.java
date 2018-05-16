@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  */
 public class ValidationChecks {
     private static final String codePattern = "^[a-zA-Z0-9_-]{3,30}$";
-    private static final String namePattern = "^[a-zA-Z_',.:; -]{3,30}$";
+    private static final String namePattern = "^[a-zA-Z0-9_',.:; -]{3,30}$";
     private static final String idPattern = "^[0-9_-]{3,30}$";
     
     final static String DATE_FORMAT = "dd/MM/yy";
