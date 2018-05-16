@@ -167,6 +167,7 @@ public class DayBook {
         
         double openingBalance = Double.parseDouble(MasterDB.getOpeningBal(con.getStatement(), cashAccountId));
         double debitTotal = prevBalance + openingBalance;
+        openingBalance = debitTotal;
         double creditTotal = 0.0;
         double credit, debit;
         double dailyBal = 0.0;
@@ -184,10 +185,10 @@ public class DayBook {
         try{
             for (String date : transactionDates){
                 prtDate = date;
-                if(debitTotal != 0.0){
+                if(openingBalance != 0.0){
                     addTableRow(table, (PdfPCell.BOTTOM),
                                 CommonFuncs.tableContentFont, prtDate, "Opening Balance",
-                                new DecimalFormat("##,##,##0.00").format(Math.abs(debitTotal)), "");
+                                new DecimalFormat("##,##,##0.00").format(Math.abs(openingBalance)), "");
                     
                     prtDate = "";
                     prevBalance = 0.0;
