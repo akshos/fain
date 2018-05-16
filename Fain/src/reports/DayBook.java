@@ -191,7 +191,7 @@ public class DayBook {
                                 new DecimalFormat("##,##,##0.00").format(Math.abs(openingBalance)), "");
                     
                     prtDate = "";
-                    prevBalance = 0.0;
+                    openingBalance = 0.0;
                 }               
                 
                 //sql = "select date, narration, debit, sum(amount) as amount from transactions where date='"+date+"' and credit='"+cashAccountId+"' group by debit;";
