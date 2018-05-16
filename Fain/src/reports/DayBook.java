@@ -176,68 +176,80 @@ public class DayBook {
             JOptionPane.showMessageDialog(null, "No Transactions between the selected dates", "No Transaction", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        ResultSet rs;
+        String sql;
+        String nar;
+        String prtDate = "";
         try{
             for (String date : transactionDates){
+                prtDate = date;
                 if(prevBalance != 0.0){
                     addTableRow(table, (PdfPCell.BOTTOM),
-                                CommonFuncs.tableContentFont, date, "Opening Balance",
+                                CommonFuncs.tableContentFont, prtDate, "Opening Balance",
                                 new DecimalFormat("##,##,##0.00").format(Math.abs(prevBalance)), "");
                     
+                    prtDate = "";
                     prevBalance = 0.0;
                 }               
                 
-                ResultSet creditTransactions = TransactionDB.getNetCreditsOnDateForId(con.getStatement(), date, cashAccountId);
-                while(creditTransactions.next()){
-                    credit = creditTransactions.getDouble("amount");
-                    String debitAccountName = MasterDB.getAccountHead(con.getStatement(), creditTransactions.getString("debit"));
+                //sql = "select date, narration, debit, sum(amount) as amount from transactions where date='"+date+"' and credit='"+cashAccountId+"' group by debit;";
+                //rs = con.getStatement().executeQuery(sql);
+                rs = TransactionDB.getNetCreditsOnDateForId(con.getStatement(), date, cashAccountId);
+                while(rs.next()){
+                    credit = rs.getDouble("amount");
+                    nar = rs.getString("accountHead");
                     addTableRow(table, (PdfPCell.NO_BORDER), //Start the day
-                            CommonFuncs.tableContentFont, date, debitAccountName,
+                            CommonFuncs.tableContentFont, prtDate, nar,
                             "", new DecimalFormat("##,##,##0.00").format(Math.abs(credit)));
                     
                     creditTotal += credit;
+                     prtDate = "";
                 }
                 
-                ResultSet debitTransactions = TransactionDB.getNetDebitsOnDateForId(con.getStatement(), date, cashAccountId);
-                while(debitTransactions.next()){
-                    debit = debitTransactions.getDouble("amount");
-                    String creditAccountName = MasterDB.getAccountHead(con.getStatement(), creditTransactions.getString("credit"));
+                //sql = "select date, narration, credit, sum(amount) as amount from transactions where date='"+date+"' and debit='"+cashAccountId+"' group by credit;";
+                //rs = con.getStatement().executeQuery(sql);
+                rs = TransactionDB.getNetDebitsOnDateForId(con.getStatement(), date, cashAccountId);
+                while(rs.next()){
+                    debit = rs.getDouble("amount");
+                    nar = rs.getString("accountHead");
                     addTableRow(table, (PdfPCell.NO_BORDER), //Start the day
-                            CommonFuncs.tableContentFont, date, creditAccountName,
+                            CommonFuncs.tableContentFont, prtDate, nar,
                             new DecimalFormat("##,##,##0.00").format(Math.abs(debit)), "");
                     
                     debitTotal += debit;
+                    prtDate = "";
                 }
                 
                 dailyBal = debitTotal - creditTotal;
                 if(dailyBal > 0){ //Balance C/F
-                    addTableRow(table, (PdfPCell.BOTTOM), //Start the day
-                            CommonFuncs.tableContentFont, date, "Balance C/F",
+                    addTableRow(table, (PdfPCell.NO_BORDER), //Start the day
+                            CommonFuncs.tableContentFont, "", "Balance C/F",
                             "", new DecimalFormat("##,##,##0.00").format(Math.abs(dailyBal)));
                     
                     creditTotal += dailyBal;
                 }else{
-                    addTableRow(table, (PdfPCell.BOTTOM|PdfPCell.TOP), //Start the day
-                            CommonFuncs.tableContentFont, date, "Balance C/F",
+                    addTableRow(table, (PdfPCell.NO_BORDER), //Start the day
+                            CommonFuncs.tableContentFont, "", "Balance C/F",
                             new DecimalFormat("##,##,##0.00").format(Math.abs(dailyBal)), "");
                     
                     debitTotal += Math.abs(dailyBal);
                 }
                 //Total debit credit
                 addTableRow(table, (PdfPCell.BOTTOM|PdfPCell.TOP), //Start the day
-                            CommonFuncs.tableContentFont, date, "TOTALS",
+                            CommonFuncs.tableContentFont, "", "TOTALS",
                             new DecimalFormat("##,##,##0.00").format(Math.abs(debitTotal)),
                             new DecimalFormat("##,##,##0.00").format(Math.abs(creditTotal)));
                 
                 if(dailyBal > 0){ //Balance B/F
                     addTableRow(table, (PdfPCell.TOP), //Start the day
-                            CommonFuncs.tableContentFont, date, "Balance B/F",
+                            CommonFuncs.tableContentFont, "", "Balance B/F",
                             new DecimalFormat("##,##,##0.00").format(Math.abs(dailyBal)), "");
                     
                     debitTotal = dailyBal;
                     creditTotal = 0.0;
                 }else{
                     addTableRow(table, (PdfPCell.TOP), //Start the day
-                            CommonFuncs.tableContentFont, date, "Balance B/F",
+                            CommonFuncs.tableContentFont, "", "Balance B/F",
                             "", new DecimalFormat("##,##,##0.00").format(Math.abs(dailyBal)));
                     
                     creditTotal = Math.abs(dailyBal);

@@ -217,7 +217,9 @@ public final class TransactionDB {
     }
     
     public static ResultSet getNetCreditsOnDateForId(Statement stmt, String date, String creditId){
-        String sql = "select date, narration, debit, sum(amount) as amount from transactions where credit='"+creditId+"' group by debit;";
+        String sql = "select t.date, t.narration, m.accountHead as accountHead, sum(t.amount) as amount "
+                + "from transactions as t, master as m where t.date='"+date+"' and "
+                + "t.credit='"+creditId+"' and t.debit=m.accountNo group by t.debit;";
         try{
             return stmt.executeQuery(sql);
         }catch(SQLException se){
@@ -227,7 +229,9 @@ public final class TransactionDB {
     }
     
     public static ResultSet getNetDebitsOnDateForId(Statement stmt, String date, String debitId){
-        String sql = "select date, narration, credit, sum(amount) as amount from transactions where debit='"+debitId+"' group by credit;";
+        String sql = "select t.date, t.narration, m.accountHead as accountHead, sum(t.amount) as amount "
+                + "from transactions as t, master as m where t.date='"+date+"' and "
+                + "t.debit='"+debitId+"' and t.credit=m.accountNo group by t.credit;";
         try{
             return stmt.executeQuery(sql);
         }catch(SQLException se){
