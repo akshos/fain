@@ -279,6 +279,8 @@ public class Main extends javax.swing.JFrame {
         printingMenu = new javax.swing.JMenu();
         accountBooksMenu = new javax.swing.JMenu();
         dayBookMenuItem = new javax.swing.JMenuItem();
+        cashBookMenuItem = new javax.swing.JMenuItem();
+        bankBookMenuItem = new javax.swing.JMenuItem();
         pLedgerMenuItem = new javax.swing.JMenuItem();
         pTrialBalanceMenuItem = new javax.swing.JMenuItem();
         optionsMenu = new javax.swing.JMenu();
@@ -530,6 +532,22 @@ public class Main extends javax.swing.JFrame {
             }
         });
         accountBooksMenu.add(dayBookMenuItem);
+
+        cashBookMenuItem.setText("Cash Book");
+        cashBookMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cashBookMenuItemActionPerformed(evt);
+            }
+        });
+        accountBooksMenu.add(cashBookMenuItem);
+
+        bankBookMenuItem.setText("Bank Book");
+        bankBookMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bankBookMenuItemActionPerformed(evt);
+            }
+        });
+        accountBooksMenu.add(bankBookMenuItem);
 
         printingMenu.add(accountBooksMenu);
 
@@ -863,7 +881,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_pTrialBalanceMenuItemActionPerformed
 
     private void dayBookMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dayBookMenuItemActionPerformed
-        PDayBook item = new PDayBook(dbConnection, this, this.level+1);
+        PAccountBooks item = new PAccountBooks(dbConnection, this, this.level+1, "DAY");
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -872,6 +890,28 @@ public class Main extends javax.swing.JFrame {
         }
         addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_dayBookMenuItemActionPerformed
+
+    private void cashBookMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cashBookMenuItemActionPerformed
+        PAccountBooks item = new PAccountBooks(dbConnection, this, this.level+1, "CH");
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }//GEN-LAST:event_cashBookMenuItemActionPerformed
+
+    private void bankBookMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bankBookMenuItemActionPerformed
+        PAccountBooks item = new PAccountBooks(dbConnection, this, this.level+1, "BK");
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }//GEN-LAST:event_bankBookMenuItemActionPerformed
     
     /**
      * @param item the internal frame to be added to desktop pane
@@ -946,6 +986,8 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem aTransactionMenuItem;
     private javax.swing.JMenu accountBooksMenu;
     private javax.swing.JMenuItem addUserMenuItem;
+    private javax.swing.JMenuItem bankBookMenuItem;
+    private javax.swing.JMenuItem cashBookMenuItem;
     private javax.swing.JLabel databaseNameStatus;
     private javax.swing.JMenuItem dayBookMenuItem;
     private javax.swing.JMenuItem eBranchesMenuItem;

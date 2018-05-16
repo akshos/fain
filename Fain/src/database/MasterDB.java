@@ -8,6 +8,7 @@ package database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.TableModel;
@@ -130,6 +131,17 @@ public final class MasterDB {
             
         } catch (SQLException ex) {
             Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    public static HashMap<String, String> getAccountHeadHashMap(Statement stmt){
+        String sql="select accountNo, accountHead from master order by accountNo asc;";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            return ResultSetToHashMap.getHashMap(rs);
+        }catch(SQLException se){
+            se.printStackTrace();
         }
         return null;
     }

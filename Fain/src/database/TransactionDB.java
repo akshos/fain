@@ -239,5 +239,16 @@ public final class TransactionDB {
         }
         return null;
     }
+    
+    public static ResultSet getTransactionsOnDateForId(Statement stmt, String date, String id){
+        String sql = "select date, debit, credit, amount, narration from "
+                + "transactions where date='"+date+"' and (credit='"+id+"' or debit='"+id+"');";
+        try{
+            return stmt.executeQuery(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
  
 }
