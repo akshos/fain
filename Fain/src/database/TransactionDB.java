@@ -159,8 +159,28 @@ public final class TransactionDB {
         return null;
     }
     
-    public static ResultSet getTransactionsBeforeDateRS(Statement stmt, String date){
+    public static ResultSet getTransactionsBeforeInclDateRS(Statement stmt, String date){
         String sql = "select * from transactions where date<='"+date+"';";
+        try{
+            return stmt.executeQuery(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static ResultSet getTransactionsBeforeDateRS(Statement stmt, String date){
+        String sql = "select * from transactions where date<'"+date+"' order by date asc;";
+        try{
+            return stmt.executeQuery(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static ResultSet getTransactionsBetweenInclDateRS(Statement stmt, String from, String to){
+        String sql = "select * from transactions where date>='"+from+"' and date<='"+to+"' order by date asc;";
         try{
             return stmt.executeQuery(sql);
         }catch(SQLException se){
@@ -183,4 +203,37 @@ public final class TransactionDB {
         }
         return Codes.FAIL;
     }
+    
+    public static String[] getTrasnsationDatesBetweenIncDatesIdRS(Statement stmt, String from, String to, String id){
+        String sql = "select distinct date from transaction where date>='"+from+"' and date<='"+to+"' and "
+                + "(credit='"+id+"' or debit='"+id+"') order by date asc;";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            return ResultSetToStringArray.getStringArray1col(rs);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static ResultSet getNetCreditsOnDateForId(Statement stmt, String date, String creditId){
+        String sql = "select date, narration, debit, sum(amount) from transaction where credit='"+creditId+"' group by debit;";
+        try{
+            return stmt.executeQuery(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static ResultSet getNetDebitsOnDateForId(Statement stmt, String date, String debitId){
+        String sql = "select date, narration, credit, sum(amount) from transaction where debit='"+debitId+"' group by credit;";
+        try{
+            return stmt.executeQuery(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
+ 
 }

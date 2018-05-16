@@ -105,7 +105,7 @@ public class TrialBalance {
             return null;
         }
         
-        ResultSet rs = TransactionDB.getTransactionsBeforeDateRS(con.getStatement(), date);
+        ResultSet rs = TransactionDB.getTransactionsBeforeInclDateRS(con.getStatement(), date);
         String debitAcc, creditAcc;
         Account acc;
         double amount;
@@ -130,7 +130,7 @@ public class TrialBalance {
         return accountData;
     }
     
-     private static void addHeaderCell(PdfPTable table, String header){
+    private static void addHeaderCell(PdfPTable table, String header){
         PdfPCell cell;
         cell = new PdfPCell(new Phrase(header, CommonFuncs.tableHeaderFont));
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);

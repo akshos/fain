@@ -26,6 +26,7 @@ import java.io.FileOutputStream;
 import java.sql.ResultSet;
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import javax.swing.JOptionPane;
 /**
  *
  * @author akshos
@@ -94,6 +95,10 @@ public class Ledger {
                 accountData = MasterDB.getAccountHead(con.getStatement());
             }else{
                 accountData = CustomerDB.getCustomersInBranch(con.getStatement(), branch);
+            }
+            if(accountData == null){
+                JOptionPane.showMessageDialog(null, "No Accounts Available", "NO ACCOUNTS", JOptionPane.WARNING_MESSAGE);
+                return;
             }
             
             int startIndex = Arrays.asList(accountData[0]).indexOf(accFrom);
