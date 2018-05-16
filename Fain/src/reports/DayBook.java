@@ -165,7 +165,8 @@ public class DayBook {
         addHeaderCell(table, "Credit");
         table.setHeaderRows(1);
         
-        double debitTotal = prevBalance;
+        double openingBalance = Double.parseDouble(MasterDB.getOpeningBal(con.getStatement(), cashAccountId));
+        double debitTotal = prevBalance + openingBalance;
         double creditTotal = 0.0;
         double credit, debit;
         double dailyBal = 0.0;
@@ -276,11 +277,12 @@ public class DayBook {
             
             Phrase footer = new Phrase();
             footer.add(new Phrase("Page : " + pageNum + "    ", CommonFuncs.footerFont));
+            /*
             footer.add(new Phrase("Debit : ", CommonFuncs.footerFont));
             footer.add(new Phrase(String.format("%.2f", pageDebitTotal) + "    ", CommonFuncs.footerFontBold));
             footer.add(new Phrase("Credit : ", CommonFuncs.footerFont));
             footer.add(new Phrase(String.format("%.2f", pageCreditTotal), CommonFuncs.footerFontBold));
-            
+            */
             pageNum = pageNum + 1;
             pageCreditTotal = 0;
             pageDebitTotal = 0;
