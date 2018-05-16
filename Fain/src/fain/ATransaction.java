@@ -167,7 +167,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         index = this.creditCbox.getSelectedIndex();
         credit = this.accountData[0][index];
         
-        double amount         =Double.parseDouble(amountTbox.getText());
+        double amount         =Double.parseDouble(amountTbox.getText().replace(",",""));
         String narration      =narrationTbox.getText();
         String tid = TransactionDB.generateTid();
         
