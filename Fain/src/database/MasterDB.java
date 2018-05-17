@@ -303,4 +303,17 @@ public final class MasterDB {
         }
         return null;
     }
+    
+    public static boolean checkCategoryAvailable(Statement stmt, String cat){
+        String sql = "select * from master where category='"+cat+"';";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next()){
+                return true;
+            }
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return false;
+    }
 }
