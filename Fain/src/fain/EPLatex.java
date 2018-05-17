@@ -126,7 +126,7 @@ public class EPLatex extends javax.swing.JInternalFrame implements RefreshOption
         
         int ret;
         ret = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete Bill No. " + billNo, "SURE?", JOptionPane.WARNING_MESSAGE);
-        if(ret == JOptionPane.NO_OPTION){
+        if(ret != JOptionPane.YES_OPTION){
             return;
         }
         PurchaseLatexDB.delete(dbConnection.getStatement(), purchaseId);

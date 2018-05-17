@@ -143,7 +143,7 @@ public class ETransaction extends javax.swing.JInternalFrame implements RefreshO
         }
         
         ret = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete Transaction No. " + tno, "SURE?", JOptionPane.WARNING_MESSAGE);
-        if(ret == JOptionPane.NO_OPTION){
+        if(ret != JOptionPane.YES_OPTION){
             return;
         }
         TransactionDB.delete(dbConnection.getStatement(), tno);

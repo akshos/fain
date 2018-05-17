@@ -130,11 +130,13 @@ public class EMaster extends javax.swing.JInternalFrame implements RefreshOption
             return;
         }
         ret = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete " + accName, "SURE?", JOptionPane.WARNING_MESSAGE);
-        if(ret == JOptionPane.NO_OPTION){
+        if(ret != JOptionPane.YES_OPTION){
             return;
         }
         CustomerDB.delete(dbConnection.getStatement(), accCode);
         MasterDB.delete(dbConnection.getStatement(), accCode);
+        
+        this.updateTable();
     }
     /**
      * This method is called from within the constructor to initialize the form.

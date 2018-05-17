@@ -121,7 +121,7 @@ public class ECustomers extends javax.swing.JInternalFrame implements RefreshOpt
             return;
         }
         ret = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete " + accName, "SURE?", JOptionPane.WARNING_MESSAGE);
-        if(ret == JOptionPane.NO_OPTION){
+        if(ret != JOptionPane.YES_OPTION){
             return;
         }
         CustomerDB.delete(dbConnection.getStatement(), accCode);
