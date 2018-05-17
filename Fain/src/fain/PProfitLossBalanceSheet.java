@@ -58,14 +58,16 @@ public class PProfitLossBalanceSheet extends javax.swing.JInternalFrame{
     }
     
     private void setBusy(){
-        this.enterButton.setEnabled(false);
         this.enterButton.setText("Please Wait");
+        this.enterButton.setEnabled(false);
+        this.setEnabled(false);
         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
     }
     
     private void resetBusy(){
         this.enterButton.setEnabled(true);
         this.enterButton.setText("ENTER");
+        this.setEnabled(true);
         this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
     

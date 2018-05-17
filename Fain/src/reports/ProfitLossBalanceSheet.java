@@ -43,6 +43,18 @@ public class ProfitLossBalanceSheet {
     private static String sdate;
     private static String stitle;
     
+    private static String[][] liabilityCats =   {{"SH","SHARE CAPITAL"},
+                                                {"LI","LIABILITIES"},
+                                                {"LN","LOAN & ADVANCES"},
+                                                {"CR","CREDITORS"}};
+    
+    private static String[][] assetCats =   {{"AS","ASSETS"},
+                                            {"DP","DEPOSITS"},
+                                            {"DB","DEBTORS"},
+                                            {"CH","CASH IN HAND "},
+                                            {"BK","CASH AT BANK"},
+                                            {"SK","CLOSING STOCK"}};
+    
     public static void addTitle(DBConnection con, Document doc, String date, String titleStr){
         try{
             Paragraph title = new Paragraph();
@@ -90,13 +102,17 @@ public class ProfitLossBalanceSheet {
         }
         
         try{
-            doc = startDocument(paper, orientation);
             stitle = "TRADING ACCOUNT";
+            doc = startDocument(paper, orientation);
             double grossIncome = tradingAccount(con, doc);
             doc.newPage();
             
             stitle = "PROFIT AND LOSS ACCOUNT";
-            profitAndLoss(con, doc, grossIncome);
+            double profitLoss = profitAndLoss(con, doc, grossIncome);
+            doc.newPage();
+            
+            stitle = "BALANCE SHEET";
+            balanceSheet(con, doc, profitLoss);
             
             doc.close();
         }catch(Exception e){
@@ -116,6 +132,11 @@ public class ProfitLossBalanceSheet {
     
     private static void addTableRow(PdfPTable table, int border, Font font, String code, String accName, String debit, String credit){
         PdfPCell cell;
+        
+        cell = new PdfPCell(new Phrase(code, CommonFuncs.tableContentFont));
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setBorder(border);
+        table.addCell(cell);
         
         cell = new PdfPCell(new Phrase(accName, CommonFuncs.tableContentFont));
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -289,8 +310,94 @@ public class ProfitLossBalanceSheet {
                 addTableRow(table, (PdfPCell.TOP|PdfPCell.BOTTOM),
                             CommonFuncs.tableContentFont, "", "NET LOSS",
                             new DecimalFormat("##,##,##0.00").format(Math.abs(balance)), "");
-        }
+            }
             
+            doc.add(table);
+            return balance;
+            
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        
+        return 0.0;
+    }
+    
+    private static void balanceSheet(DBConnection con, Document doc, double profitLoss){
+        //Liability Calculation
+        calculateAssetLiability(con, doc, "LIABILITIES", liabilityCats, -1, profitLoss);
+        doc.newPage();
+        //Asset Calculation
+        calculateAssetLiability(con, doc, "ASSETS", assetCats, 1, profitLoss);
+    }
+    
+    private static double calculateAssetLiability(DBConnection con, Document doc, String rowHeader, String[][] categories, int mul, double profitLoss){
+        float columns[] = {1, 2, 1, 1};
+        PdfPTable table = new PdfPTable(columns);
+        table.setWidthPercentage(90);
+        addHeaderCell(table, "Code");
+        addHeaderCell(table, rowHeader);
+        addHeaderCell(table, "Amount");
+        addHeaderCell(table, "Total");
+        table.setHeaderRows(1);
+        
+        double amount = 0.0;
+        double netTotal = 0.0;
+        ResultSet rs;
+        String catCode, catName;
+        try{
+            for( int i = 0; i < categories.length; i++ ){
+                double catTotal = 0.0;
+                catCode = categories[i][0];
+                catName = categories[i][1];
+                
+                if(!MasterDB.checkCategoryAvailable(con.getStatement(), catCode)){
+                    continue;
+                }
+                
+                addTableRow(table, (PdfPCell.NO_BORDER), //print the category name
+                            CommonFuncs.tableContentFont, "", catName, "", "");
+                
+                
+                rs = MasterDB.getAccountsByCat(con.getStatement(), catCode);
+                while(rs.next()){
+                    amount = (mul * rs.getDouble("closingBal"));
+                    addTableRow(table, (PdfPCell.NO_BORDER),
+                            CommonFuncs.tableContentFont, rs.getString("accountNo"), rs.getString("accountHead"),
+                            new DecimalFormat("##,##,##0.00").format(amount), "");
+                    
+                    netTotal += amount;
+                    catTotal += amount;
+                }
+                
+                //print the category total
+                addTableRow(table, (PdfPCell.TOP),
+                            CommonFuncs.tableContentFont, "", "",
+                            "", new DecimalFormat("##,##,##0.00").format(catTotal));
+                
+                //print profit b/f or loss b/f
+                if(mul == -1 && profitLoss < 0){ //mul == -1 for Liabilities
+                    addTableRow(table, (PdfPCell.NO_BORDER),
+                            CommonFuncs.tableContentFont, "", "PROFIT C/F TO BALANCE SHEET",
+                            "", new DecimalFormat("##,##,##0.00").format(Math.abs(profitLoss)));
+                    
+                    netTotal += Math.abs(profitLoss);
+                }
+                else if(mul == 1 && profitLoss > 0){ //mul == 1 for Assets
+                    addTableRow(table, (PdfPCell.NO_BORDER),
+                            CommonFuncs.tableContentFont, "", "LOSS C/F TO BALANCE SHEET",
+                            "", new DecimalFormat("##,##,##0.00").format(profitLoss));
+                    
+                    netTotal += profitLoss;
+                }
+                
+                //print total liability or total asset
+                addTableRow(table, (PdfPCell.TOP|PdfPCell.BOTTOM),
+                            CommonFuncs.tableContentFont, "", "TOTAL",
+                            "", new DecimalFormat("##,##,##0.00").format(netTotal));
+            }
+            
+            doc.add(table);
+            return netTotal;
         }catch(Exception e){
             e.printStackTrace();
         }
