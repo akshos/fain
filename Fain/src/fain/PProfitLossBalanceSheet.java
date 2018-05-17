@@ -19,7 +19,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
 import utility.ValidationChecks;
-import reports.TrialBalance;
+import reports.ProfitLossBalanceSheet;
 /**
  *
  * @author akshos
@@ -53,7 +53,7 @@ public class PProfitLossBalanceSheet extends javax.swing.JInternalFrame{
         String paper = this.paperCbox.getSelectedItem().toString();
         String orientation = this.orientationCbox.getSelectedItem().toString();
 
-        boolean ret = TrialBalance.createReport(dbConnection, paper, orientation, date);
+        boolean ret = ProfitLossBalanceSheet.createReport(dbConnection, paper, orientation, date);
         resetBusy();
     }
     

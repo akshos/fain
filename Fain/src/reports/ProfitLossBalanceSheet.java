@@ -103,6 +103,7 @@ public class ProfitLossBalanceSheet {
             e.printStackTrace();
             return false;
         }
+        ViewPdf.openPdfViewer(PREFIX + ".pdf");
         return ret;
     }
     
