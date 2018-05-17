@@ -92,13 +92,15 @@ public class Expenses {
         try{
             doc = startDocument(paper, orientation);
             
-            createTable(con, doc, fromDate, toDate, branch);
+            ret = createTable(con, doc, fromDate, toDate, branch);
             
             doc.close();
         }catch(Exception e){
             e.printStackTrace();
+            return false;
         }
-        
+        if(ret)
+            ViewPdf.openPdfViewer(PREFIX + ".pdf");
         
         return ret;
     }
@@ -134,7 +136,7 @@ public class Expenses {
         table.addCell(cell);
     }
     
-    private static void createTable(DBConnection con, Document doc, String fromDate, String toDate, String branch){
+    private static boolean createTable(DBConnection con, Document doc, String fromDate, String toDate, String branch){
         float columns[] = {0.7f, 2, 1, 1};
         PdfPTable table = new PdfPTable(columns);
         table.setWidthPercentage(90);
@@ -151,6 +153,11 @@ public class Expenses {
         
         try{
             String expenseAccounts[][] = MasterDB.getAccountIdByCat(con.getStatement(), "EX");
+            if(expenseAccounts == null){
+                JOptionPane.showMessageDialog(null, "No Expense Accounts", "ERROR", JOptionPane.WARNING_MESSAGE);
+                return false;
+            }
+            
             ResultSet rs = TransactionDB.getTransactionsInBranchBetDatesIncl(con.getStatement(), branch, fromDate, toDate);
             while(rs.next()){
                 date = rs.getString("date");
@@ -179,7 +186,7 @@ public class Expenses {
                 }
             }
             
-            addTableRow(table, (PdfPCell.NO_BORDER), 
+            addTableRow(table, (PdfPCell.TOP|PdfPCell.BOTTOM), 
                             CommonFuncs.tableContentFont, "", "TOTALS",
                             new DecimalFormat("##,##,##0.00").format(debitTotal), 
                             new DecimalFormat("##,##,##0.00").format(creditTotal));
@@ -188,7 +195,9 @@ public class Expenses {
             
         }catch(Exception e){
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
         
     

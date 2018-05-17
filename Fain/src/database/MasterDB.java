@@ -293,11 +293,7 @@ public final class MasterDB {
         String sql = "select accountNo, accountHead from master where category='"+cat+"';";
         try{
             ResultSet rs = stmt.executeQuery(sql);
-            if(rs.next()){
-                return ResultSetToStringArray.getStringArray2col(rs);
-            }else{
-                return null;
-            }
+            return ResultSetToStringArray.getStringArray2col(rs);
         }catch(SQLException se){
             se.printStackTrace();
         }
