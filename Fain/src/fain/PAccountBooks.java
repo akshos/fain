@@ -212,9 +212,11 @@ public class PAccountBooks extends javax.swing.JInternalFrame{
 
         labelsPanel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
 
+        cashAccountLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         cashAccountLabel.setText("Account");
         labelsPanel.add(cashAccountLabel);
 
+        dateFromLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         dateFromLabel.setText("Date from");
         labelsPanel.add(dateFromLabel);
 
@@ -236,6 +238,7 @@ public class PAccountBooks extends javax.swing.JInternalFrame{
 
         rightInerPannel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
 
+        cashAccountCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         cashAccountCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         rightInerPannel.add(cashAccountCbox);
 

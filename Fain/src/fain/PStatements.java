@@ -229,12 +229,15 @@ public class PStatements extends javax.swing.JInternalFrame{
 
         labelsPanel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
 
+        Branch.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         Branch.setText("Branch");
         labelsPanel.add(Branch);
 
+        cashAccountLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         cashAccountLabel.setText("Account");
         labelsPanel.add(cashAccountLabel);
 
+        dateFromLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         dateFromLabel.setText("Date from");
         labelsPanel.add(dateFromLabel);
 
@@ -275,7 +278,6 @@ public class PStatements extends javax.swing.JInternalFrame{
         rightInerPannel.add(fromDatePicker);
         rightInerPannel.add(toDatePicker);
 
-        paperCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         paperCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A4", "Legal" }));
         paperCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -284,7 +286,6 @@ public class PStatements extends javax.swing.JInternalFrame{
         });
         rightInerPannel.add(paperCbox);
 
-        orientationCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         orientationCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Landscape", "Portrait" }));
         orientationCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {

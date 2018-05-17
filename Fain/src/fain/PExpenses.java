@@ -195,9 +195,11 @@ public class PExpenses extends javax.swing.JInternalFrame{
 
         labelsPanel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
 
+        Branch.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         Branch.setText("Branch");
         labelsPanel.add(Branch);
 
+        dateFromLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         dateFromLabel.setText("Date from");
         labelsPanel.add(dateFromLabel);
 
@@ -219,6 +221,7 @@ public class PExpenses extends javax.swing.JInternalFrame{
 
         rightInerPannel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
 
+        branchCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         branchCbox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 branchCboxItemStateChanged(evt);

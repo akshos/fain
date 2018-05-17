@@ -231,9 +231,11 @@ public class PDebtorCreditor extends javax.swing.JInternalFrame{
 
         labelsPanel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
 
+        Branch.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         Branch.setText("Branch");
         labelsPanel.add(Branch);
 
+        accountFromLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         accountFromLabel.setText("Account From");
         labelsPanel.add(accountFromLabel);
 
@@ -255,6 +257,7 @@ public class PDebtorCreditor extends javax.swing.JInternalFrame{
 
         rightInerPannel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
 
+        branchCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         branchCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         branchCbox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -263,9 +266,11 @@ public class PDebtorCreditor extends javax.swing.JInternalFrame{
         });
         rightInerPannel.add(branchCbox);
 
+        accountFromCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         accountFromCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         rightInerPannel.add(accountFromCbox);
 
+        accountToCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         accountToCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         rightInerPannel.add(accountToCbox);
 
