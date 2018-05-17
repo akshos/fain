@@ -252,7 +252,7 @@ public final class TransactionDB {
     }
     
     public static ResultSet getTransactionsInBranch(Statement stmt, String branch){
-        String sql = "select date, debit, credit, amount from transaction "
+        String sql = "select date, debit, credit, amount from transactions "
                 + "where branch='"+branch+"';";
         try{
             return stmt.executeQuery(sql);
@@ -263,7 +263,7 @@ public final class TransactionDB {
     }
     
     public static ResultSet getTransactionsInBranchBetDatesIncl(Statement stmt, String branch, String fromDate, String toDate){
-        String sql = "select date, debit, credit, amount from transaction "
+        String sql = "select date, debit, credit, amount from transactions "
                 + "where branch='"+branch+"' and date<='"+toDate+"' and date>='"+fromDate+"' ;";
         try{
             return stmt.executeQuery(sql);

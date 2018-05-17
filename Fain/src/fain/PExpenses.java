@@ -72,12 +72,16 @@ public class PExpenses extends javax.swing.JInternalFrame{
             JOptionPane.showMessageDialog(null, "No Available Branches", "No Branch", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        int index = this.branchCbox.getSelectedIndex();
-        if(index == -1 ){
-            JOptionPane.showMessageDialog(null, "No Branch Selected", "No Branch", JOptionPane.WARNING_MESSAGE);
-            return;
+        
+        String branch = "";
+        
+        String item = this.branchCbox.getSelectedItem().toString();
+        if(item.compareToIgnoreCase("All") == 0){
+            branch = item;
+        }else{
+            int index = this.branchCbox.getSelectedIndex();
+            branch = this.branchData[0][index];
         }
-        String branch = this.branchData[0][index];
         
         Date date = this.fromDatePicker.getDate() ;
         if(date == null){

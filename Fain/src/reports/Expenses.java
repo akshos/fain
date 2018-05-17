@@ -51,7 +51,7 @@ public class Expenses {
             Paragraph title = new Paragraph();
             title.add(CommonFuncs.alignCenter("EXPENSE LEDGER", CommonFuncs.titleFont));
             String subTitle = "";
-            subTitle += "Branch : " + branchName;
+            subTitle += "Branch : " + branchName + "  ";
             subTitle += "From : " + fromDate + "  To : " + toDate;
             title.add(CommonFuncs.alignCenter(subTitle, CommonFuncs.subTitleFont));
             doc.add(title);
