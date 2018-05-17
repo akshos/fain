@@ -32,6 +32,10 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
     boolean customerAdded = false;
     boolean existing = false;
     String editId;
+    
+    String negativeCat="LI_IN_SL_SH_LN";
+    String positiveCat="AS_EX_PR_SK_SE_DP";
+    
     /**
      * Creates new form MasterEntry
      */
@@ -196,7 +200,12 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
             return;
         }
         category = categoryData[0][index];
-        
+        if(negativeCat.contains(category)){
+            yopBalance=Math.abs(yopBalance)*-1;
+        }
+        else if(positiveCat.contains(category)){
+            yopBalance=Math.abs(yopBalance);
+        }
         boolean ret;
         
         if(mode==Codes.EDIT){

@@ -14,46 +14,77 @@ import database.MasterDB;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
-import utility.ValidationChecks;
-import reports.TrialBalance;
+import reports.Statements;
 /**
  *
  * @author akshos
  */
-public class PTrialBalance extends javax.swing.JInternalFrame{
+public class PExpenses extends javax.swing.JInternalFrame{
     
     DBConnection dbConnection;
     int level;
     Main mainFrame;
     String branchData[][];
-    String accountData[][];
     /**
      * Creates new form MasterEntry
      */
-    public PTrialBalance() {
+    public PExpenses() {
         initComponents();
     }
     
-    public PTrialBalance(DBConnection db, Main frame, int level){
+    public PExpenses(DBConnection db, Main frame, int level){
         this.dbConnection = db;
         this.level = level;
         this.mainFrame = frame;
         initComponents();
+        loadBranch();
     }
     
+    private void loadBranch(){
+        System.out.println("loading branchcbox");
+        branchData = BranchDB.getBranch(this.dbConnection.getStatement());
+        int len;
+        if(branchData  == null){
+            len =  0;
+        }else{
+            len = branchData[0].length;
+        }
+        String[] cboxData = new String[len];
+        for(int i = 0; i < len; i++){
+            cboxData[i] = branchData[1][i] + " (" + branchData[0][i] + ")";
+        }
+        this.branchCbox.setModel(new DefaultComboBoxModel(cboxData));
+    }    
     private void generateReport(){    
-        setBusy();
+        setBusy();        
+        DateFormat df = new SimpleDateFormat("dd/MM/yy");
         
-        String date = this.asOnTbox.getDate().toString();
+        Date date = this.fromDatePicker.getDate() ;
+        if(date == null){
+            JOptionPane.showMessageDialog(this, "Please enter Date From", "NO DATE", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        String fromDate = df.format(date);
+        
+        date = this.toDatePicker.getDate();
+        if(date == null){
+            JOptionPane.showMessageDialog(this, "Please enter Date From", "NO DATE", JOptionPane.WARNING_MESSAGE);
+            return;
+        }       
+        String toDate = df.format(this.toDatePicker.getDate());
         
         String paper = this.paperCbox.getSelectedItem().toString();
         String orientation = this.orientationCbox.getSelectedItem().toString();
-
-        boolean ret = TrialBalance.createReport(dbConnection, paper, orientation, date);
+        
+        boolean ret = Expenses.createReport(dbConnection, paper, orientation, fromDate, toDate);
+        
         resetBusy();
     }
     
@@ -83,11 +114,15 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
         logoPanel = new javax.swing.JPanel();
         logoLabel = new javax.swing.JLabel();
         labelsPanel = new javax.swing.JPanel();
+        Branch = new javax.swing.JLabel();
+        dateFromLabel = new javax.swing.JLabel();
         asOnLabel = new javax.swing.JLabel();
         paperLabel = new javax.swing.JLabel();
         orientationLabel = new javax.swing.JLabel();
         rightInerPannel = new javax.swing.JPanel();
-        asOnTbox = new org.jdesktop.swingx.JXDatePicker();
+        branchCbox = new javax.swing.JComboBox<>();
+        fromDatePicker = new org.jdesktop.swingx.JXDatePicker();
+        toDatePicker = new org.jdesktop.swingx.JXDatePicker();
         paperCbox = new javax.swing.JComboBox<>();
         orientationCbox = new javax.swing.JComboBox<>();
         buttonPanel = new javax.swing.JPanel();
@@ -96,7 +131,7 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
-        setTitle("Trial Balance");
+        setTitle("Statements");
         setPreferredSize(new java.awt.Dimension(450, 410));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
@@ -131,10 +166,16 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
 
         leftInerPannel.add(logoPanel);
 
-        labelsPanel.setLayout(new java.awt.GridLayout(4, 0, 0, 10));
+        labelsPanel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
+
+        Branch.setText("Branch");
+        labelsPanel.add(Branch);
+
+        dateFromLabel.setText("Date from");
+        labelsPanel.add(dateFromLabel);
 
         asOnLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        asOnLabel.setText("As on");
+        asOnLabel.setText("Date To");
         labelsPanel.add(asOnLabel);
 
         paperLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -149,8 +190,23 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
 
         outerPanel.add(leftInerPannel);
 
-        rightInerPannel.setLayout(new java.awt.GridLayout(4, 0, 0, 10));
-        rightInerPannel.add(asOnTbox);
+        rightInerPannel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
+
+        branchCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        branchCbox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                branchCboxItemStateChanged(evt);
+            }
+        });
+        rightInerPannel.add(branchCbox);
+
+        fromDatePicker.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fromDatePickerActionPerformed(evt);
+            }
+        });
+        rightInerPannel.add(fromDatePicker);
+        rightInerPannel.add(toDatePicker);
 
         paperCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         paperCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A4", "Legal" }));
@@ -228,12 +284,23 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
             this.generateReport();
         }
     }//GEN-LAST:event_enterButtonKeyPressed
+
+    private void fromDatePickerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fromDatePickerActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fromDatePickerActionPerformed
+
+    private void branchCboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_branchCboxItemStateChanged
+                // TODO add your handling code here:
+    }//GEN-LAST:event_branchCboxItemStateChanged
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel Branch;
     private javax.swing.JLabel asOnLabel;
-    private org.jdesktop.swingx.JXDatePicker asOnTbox;
+    private javax.swing.JComboBox<String> branchCbox;
     private javax.swing.JPanel buttonPanel;
+    private javax.swing.JLabel dateFromLabel;
     private javax.swing.JButton enterButton;
+    private org.jdesktop.swingx.JXDatePicker fromDatePicker;
     private javax.swing.JPanel labelsPanel;
     private javax.swing.JPanel leftInerPannel;
     private javax.swing.JLabel logoLabel;
@@ -244,5 +311,6 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
     private javax.swing.JComboBox<String> paperCbox;
     private javax.swing.JLabel paperLabel;
     private javax.swing.JPanel rightInerPannel;
+    private org.jdesktop.swingx.JXDatePicker toDatePicker;
     // End of variables declaration//GEN-END:variables
 }

@@ -48,7 +48,7 @@ public class PProfitLossBalanceSheet extends javax.swing.JInternalFrame{
     private void generateReport(){    
         setBusy();
         
-        String date = this.asOnTbox.getText();
+        String date = this.asOnTbox.getDate().toString();
         
         String paper = this.paperCbox.getSelectedItem().toString();
         String orientation = this.orientationCbox.getSelectedItem().toString();
@@ -89,7 +89,7 @@ public class PProfitLossBalanceSheet extends javax.swing.JInternalFrame{
         paperLabel = new javax.swing.JLabel();
         orientationLabel = new javax.swing.JLabel();
         rightInerPannel = new javax.swing.JPanel();
-        asOnTbox = new javax.swing.JFormattedTextField();
+        asOnTbox = new org.jdesktop.swingx.JXDatePicker();
         paperCbox = new javax.swing.JComboBox<>();
         orientationCbox = new javax.swing.JComboBox<>();
         buttonPanel = new javax.swing.JPanel();
@@ -101,20 +101,20 @@ public class PProfitLossBalanceSheet extends javax.swing.JInternalFrame{
         setTitle("P&L and Balance Sheet");
         setPreferredSize(new java.awt.Dimension(450, 410));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameClosed(evt);
             }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
             }
         });
 
@@ -152,13 +152,6 @@ public class PProfitLossBalanceSheet extends javax.swing.JInternalFrame{
         outerPanel.add(leftInerPannel);
 
         rightInerPannel.setLayout(new java.awt.GridLayout(4, 0, 0, 10));
-
-        try {
-            asOnTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/##")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
-        asOnTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         rightInerPannel.add(asOnTbox);
 
         paperCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
@@ -240,7 +233,7 @@ public class PProfitLossBalanceSheet extends javax.swing.JInternalFrame{
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel asOnLabel;
-    private javax.swing.JFormattedTextField asOnTbox;
+    private org.jdesktop.swingx.JXDatePicker asOnTbox;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JButton enterButton;
     private javax.swing.JPanel labelsPanel;
