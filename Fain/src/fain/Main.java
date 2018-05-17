@@ -612,6 +612,7 @@ public class Main extends javax.swing.JFrame {
         });
         printingMenu.add(pTrialBalanceMenuItem);
 
+        pProfitLossBLMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         pProfitLossBLMenuItem.setText("P&L and B/S");
         pProfitLossBLMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
