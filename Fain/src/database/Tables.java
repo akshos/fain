@@ -18,6 +18,8 @@ public final class Tables {
             + "id       integer primary key autoincrement,"
             + "name     varchar(50),"
             + "address  varchar(100),"
+            + "gst      varchar(50),"
+            + "rbreg    varchar(50),"
             + "phone1   varchar(20),"
             + "phone2   varchar(20));"; 
     
