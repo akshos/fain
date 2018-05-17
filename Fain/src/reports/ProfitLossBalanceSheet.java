@@ -105,13 +105,13 @@ public class ProfitLossBalanceSheet {
             stitle = "TRADING ACCOUNT";
             doc = startDocument(paper, orientation);
             double grossIncome = tradingAccount(con, doc);
-            doc.newPage();
             
             stitle = "PROFIT AND LOSS ACCOUNT";
-            double profitLoss = profitAndLoss(con, doc, grossIncome);
             doc.newPage();
+            double profitLoss = profitAndLoss(con, doc, grossIncome);
             
             stitle = "BALANCE SHEET";
+            doc.newPage();
             balanceSheet(con, doc, profitLoss);
             
             doc.close();
@@ -373,28 +373,29 @@ public class ProfitLossBalanceSheet {
                 addTableRow(table, (PdfPCell.TOP),
                             CommonFuncs.tableContentFont, "", "",
                             "", new DecimalFormat("##,##,##0.00").format(catTotal));
-                
-                //print profit b/f or loss b/f
-                if(mul == -1 && profitLoss < 0){ //mul == -1 for Liabilities
-                    addTableRow(table, (PdfPCell.NO_BORDER),
-                            CommonFuncs.tableContentFont, "", "PROFIT C/F TO BALANCE SHEET",
-                            "", new DecimalFormat("##,##,##0.00").format(Math.abs(profitLoss)));
-                    
-                    netTotal += Math.abs(profitLoss);
-                }
-                else if(mul == 1 && profitLoss > 0){ //mul == 1 for Assets
-                    addTableRow(table, (PdfPCell.NO_BORDER),
-                            CommonFuncs.tableContentFont, "", "LOSS C/F TO BALANCE SHEET",
-                            "", new DecimalFormat("##,##,##0.00").format(profitLoss));
-                    
-                    netTotal += profitLoss;
-                }
-                
-                //print total liability or total asset
-                addTableRow(table, (PdfPCell.TOP|PdfPCell.BOTTOM),
-                            CommonFuncs.tableContentFont, "", "TOTAL",
-                            "", new DecimalFormat("##,##,##0.00").format(netTotal));
+   
             }
+            
+            //print profit b/f or loss b/f
+            if(mul == -1 && profitLoss < 0){ //mul == -1 for Liabilities
+                addTableRow(table, (PdfPCell.NO_BORDER),
+                        CommonFuncs.tableContentFont, "", "PROFIT C/F TO BALANCE SHEET",
+                        "", new DecimalFormat("##,##,##0.00").format(Math.abs(profitLoss)));
+
+                netTotal += Math.abs(profitLoss);
+            }
+            else if(mul == 1 && profitLoss > 0){ //mul == 1 for Assets
+                addTableRow(table, (PdfPCell.NO_BORDER),
+                        CommonFuncs.tableContentFont, "", "LOSS C/F TO BALANCE SHEET",
+                        "", new DecimalFormat("##,##,##0.00").format(profitLoss));
+
+                netTotal += profitLoss;
+            }
+
+            //print total liability or total asset
+            addTableRow(table, (PdfPCell.TOP|PdfPCell.BOTTOM),
+                        CommonFuncs.tableContentFont, "", "TOTAL",
+                        "", new DecimalFormat("##,##,##0.00").format(netTotal));
             
             doc.add(table);
             return netTotal;
