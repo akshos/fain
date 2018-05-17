@@ -261,5 +261,16 @@ public final class TransactionDB {
         }
         return null;
     }
- 
+    
+    public static ResultSet getTransactionsInBranchBetDatesIncl(Statement stmt, String branch, String fromDate, String toDate){
+        String sql = "select date, debit, credit, amount from transaction "
+                + "where branch='"+branch+"' and date<='"+toDate+"' and date>='"+fromDate+"' ;";
+        try{
+            return stmt.executeQuery(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
+    
 }

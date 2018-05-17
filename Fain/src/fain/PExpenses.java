@@ -21,7 +21,7 @@ import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
-import reports.Statements;
+import reports.Expenses;
 /**
  *
  * @author akshos
@@ -56,15 +56,28 @@ public class PExpenses extends javax.swing.JInternalFrame{
         }else{
             len = branchData[0].length;
         }
-        String[] cboxData = new String[len];
+        String[] cboxData = new String[len+1];
         for(int i = 0; i < len; i++){
             cboxData[i] = branchData[1][i] + " (" + branchData[0][i] + ")";
         }
+        cboxData[len] = "All";
         this.branchCbox.setModel(new DefaultComboBoxModel(cboxData));
-    }    
+    }
+    
     private void generateReport(){    
         setBusy();        
         DateFormat df = new SimpleDateFormat("dd/MM/yy");
+        
+        if(branchData == null){
+            JOptionPane.showMessageDialog(null, "No Available Branches", "No Branch", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        int index = this.branchCbox.getSelectedIndex();
+        if(index == -1 ){
+            JOptionPane.showMessageDialog(null, "No Branch Selected", "No Branch", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        String branch = this.branchData[0][index];
         
         Date date = this.fromDatePicker.getDate() ;
         if(date == null){
@@ -83,7 +96,7 @@ public class PExpenses extends javax.swing.JInternalFrame{
         String paper = this.paperCbox.getSelectedItem().toString();
         String orientation = this.orientationCbox.getSelectedItem().toString();
         
-        boolean ret = Expenses.createReport(dbConnection, paper, orientation, fromDate, toDate);
+        boolean ret = Expenses.createReport(dbConnection, paper, orientation, branch, fromDate, toDate);
         
         resetBusy();
     }
@@ -134,20 +147,20 @@ public class PExpenses extends javax.swing.JInternalFrame{
         setTitle("Statements");
         setPreferredSize(new java.awt.Dimension(450, 410));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameClosed(evt);
             }
-            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
         });
 
@@ -192,7 +205,6 @@ public class PExpenses extends javax.swing.JInternalFrame{
 
         rightInerPannel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
 
-        branchCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         branchCbox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 branchCboxItemStateChanged(evt);

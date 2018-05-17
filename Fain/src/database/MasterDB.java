@@ -289,12 +289,12 @@ public final class MasterDB {
        return null;
     }
     
-    public static String getAccountIdByCat(Statement stmt, String cat){
-        String sql = "select accountNo from master where category='"+cat+"';";
+    public static String[][] getAccountIdByCat(Statement stmt, String cat){
+        String sql = "select accountNo, accountHead from master where category='"+cat+"';";
         try{
             ResultSet rs = stmt.executeQuery(sql);
             if(rs.next()){
-                return rs.getString(1);
+                return ResultSetToStringArray.getStringArray2col(rs);
             }else{
                 return null;
             }
