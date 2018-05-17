@@ -39,6 +39,7 @@ public class DebtorCreditor {
     private static String sbranch = "";
     private static String saccFrom = "";
     private static String saccTo = "";
+    private static String stype = "";
     private static DBConnection scon = null;
     private static String currAcc = "";
     private static int pageNum = 1;
@@ -92,6 +93,7 @@ public class DebtorCreditor {
         pageNum = 1;
         pageCreditTotal = 0;
         pageDebitTotal = 0;
+        stype = type;
         
         try{
             String accountData[][];
@@ -249,7 +251,7 @@ public class DebtorCreditor {
     private static class ShowHeader extends PdfPageEventHelper{        
         public void onStartPage(PdfWriter writer, Document docuement){
             CommonFuncs.addHeader(scon, docuement);
-            addTitle(scon, docuement, currAcc);
+            addTitle(scon, docuement, stype);
         }
 
         public void onEndPage(PdfWriter writer, Document document) {
