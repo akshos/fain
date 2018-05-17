@@ -27,12 +27,13 @@ import java.text.DecimalFormat;
 
 import java.util.Map;
 import java.util.HashMap;
+import javax.swing.JOptionPane;
 /**
  *
  * @author akshos
  */
 public class TrialBalance {
-    private static String PREFIX = "trialbalance";
+    private static String PREFIX = "trialbal";
     
     private static String currAcc;
     private static DBConnection scon;
@@ -74,60 +75,29 @@ public class TrialBalance {
         currAcc = "";
         pageDebitTotal = 0.0;
         pageCreditTotal = 0.0;
-        pageNum = 0;
+        pageNum = 1;
         sdate = date;
         boolean ret = false;
+        
+        ret = CommonFuncs.updateAllAccounts(con, date);
+         if(!ret){
+            JOptionPane.showMessageDialog(null, "Failed to Update Accounts", "FAILED", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
         
         Document doc;
         try{
             doc = startDocument(paper, orientation);
             
-            HashMap<String, Account> accountData = generateData(con, date);
-            if(accountData == null){
-                return false;
-            }
-            ret = addTable(doc, accountData);
+            ret = addTable(con, doc);
             
             doc.close();
         }catch(Exception e){
             e.printStackTrace();
             return false;
         }
+        ViewPdf.openPdfViewer(PREFIX + ".pdf");
         return ret;
-    }
-    
-    public static HashMap<String, Account> generateData(DBConnection con, String date){
-        HashMap<String, Account> accountData;
-        
-        String[][] accountStrs = MasterDB.getIdHeadOpBal(con.getStatement());
-        accountData = CommonFuncs.addToHashMap(accountStrs, true);
-        if(accountData.isEmpty()){
-            return null;
-        }
-        
-        ResultSet rs = TransactionDB.getTransactionsBeforeInclDateRS(con.getStatement(), date);
-        String debitAcc, creditAcc;
-        Account acc;
-        double amount;
-        try{
-            if(rs.next()){
-                do{
-                    debitAcc = rs.getString("debit");
-                    creditAcc = rs.getString("credit");
-                    amount = rs.getDouble("amount");
-                    acc = accountData.get(debitAcc);
-                    acc.addDebit(amount);
-                    acc = accountData.get(creditAcc);
-                    acc.addCredit(amount);
-                }while(rs.next());
-            }else{
-                return null;
-            }
-        }catch(SQLException se){
-            se.printStackTrace();
-            return null;
-        }
-        return accountData;
     }
     
     private static void addHeaderCell(PdfPTable table, String header){
@@ -156,7 +126,7 @@ public class TrialBalance {
         table.addCell(cell);
     }
     
-    private static boolean addTable(Document doc, HashMap<String, Account> accountData){
+    private static boolean addTable(DBConnection con, Document doc){
         float columns[] = {2, 1, 1};
         PdfPTable table = new PdfPTable(columns);
         table.setWidthPercentage(90);
@@ -166,47 +136,47 @@ public class TrialBalance {
         table.setHeaderRows(1);
         
         double creditTotal, debitTotal;
-        double closingBalance;
+        double currentBalance;
+        String accHead;
         creditTotal = debitTotal = 0.0;
-        Account acc;
+        String cat;
+        
         try{
-            for (Map.Entry<String, Account> entry : accountData.entrySet()){
-                acc = entry.getValue();
-                closingBalance = acc.calculateClosingBal();
-                if(closingBalance > 0){
-                    addTableRow(table, (PdfPCell.NO_BORDER),
-                            CommonFuncs.tableContentFont, acc.getAccountHead(), 
-                            "", new DecimalFormat("##,##,##0.00").format(closingBalance));
-
-                    creditTotal += closingBalance;
-                    pageCreditTotal += closingBalance;
+            ResultSet rs = MasterDB.selectAll(con.getStatement());
+            while(rs.next()){
+                accHead = rs.getString("accountHead");
+                cat = rs.getString("category");
+                if(cat.compareTo("SK") == 0){
+                    accHead = "Op. " + accHead;
+                    currentBalance = rs.getDouble("openingBal");
                 }else{
-                    addTableRow(table, (PdfPCell.NO_BORDER),
-                            CommonFuncs.tableContentFont, acc.getAccountHead(), 
-                            new DecimalFormat("##,##,##0.00").format(Math.abs(closingBalance)), "");
-
-                    debitTotal += Math.abs(closingBalance);
-                    pageDebitTotal += Math.abs(closingBalance);
+                    currentBalance = rs.getDouble("closingBal");
                 }
+                
+                if(currentBalance > 0){
+                    addTableRow(table, (PdfPCell.NO_BORDER),
+                        CommonFuncs.tableBoldFont, accHead, 
+                        new DecimalFormat("##,##,##0.00").format(Math.abs(currentBalance)), "");
+                    
+                    debitTotal += currentBalance;
+                    pageDebitTotal += currentBalance;
+                }else if(currentBalance < 0){
+                    addTableRow(table, (PdfPCell.NO_BORDER),
+                        CommonFuncs.tableBoldFont, accHead, 
+                        "", new DecimalFormat("##,##,##0.00").format(Math.abs(currentBalance)));
+                    
+                    creditTotal += Math.abs(currentBalance);
+                    pageCreditTotal += Math.abs(currentBalance);
+                }
+                
             }
-
-            double netBalance = creditTotal - debitTotal;
-            addTableRow(table, (PdfPCell.RECTANGLE|PdfPCell.TOP), 
-                        CommonFuncs.tableBoldFont, "TOTALS : ", 
+                
+            addTableRow(table, (PdfPCell.RECTANGLE|PdfPCell.TOP),
+                        CommonFuncs.tableBoldFont, "TOTALS", 
                         new DecimalFormat("##,##,##0.00").format(debitTotal), 
                         new DecimalFormat("##,##,##0.00").format(creditTotal));
 
-            if(netBalance > 0){
-                    addTableRow(table, (PdfPCell.RECTANGLE|PdfPCell.TOP), 
-                            CommonFuncs.tableBoldFont, "Net Balance", 
-                            "", new DecimalFormat("##,##,##0.00").format(netBalance));
 
-            }else{
-                addTableRow(table, (PdfPCell.RECTANGLE),
-                        CommonFuncs.tableBoldFont, "Net Balance", 
-                        new DecimalFormat("##,##,##0.00").format(Math.abs(netBalance)), "");
-
-            }
             
             doc.add(table);
             
@@ -214,7 +184,6 @@ public class TrialBalance {
             e.printStackTrace();
             return false;
         }
-        ViewPdf.openPdfViewer(PREFIX + ".pdf");
         return true;
     }
     
