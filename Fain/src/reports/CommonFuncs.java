@@ -15,6 +15,7 @@ import database.DBConnection;
 import database.MasterDB;
 import database.PurchaseLatexDB;
 import database.SalesDB;
+import database.SessionInfoDB;
 import database.StockDB;
 import database.TransactionDB;
 import java.sql.ResultSet;
@@ -28,7 +29,7 @@ import javax.swing.JOptionPane;
  */
 public class CommonFuncs {
     private static final Font nameFont = new Font(Font.FontFamily.COURIER, 18);
-    private static final Font addressFont = new Font(Font.FontFamily.COURIER, 13);
+    private static final Font addressFont = new Font(Font.FontFamily.COURIER, 11);
     
     public static final Font titleFont = new Font(Font.FontFamily.COURIER, 14, Font.BOLD);
     public static final Font subTitleFont = new Font(Font.FontFamily.COURIER, 12);
@@ -52,7 +53,16 @@ public class CommonFuncs {
     public static void addHeader(DBConnection dBConnection, Document doc){
         try{
             Paragraph header = new Paragraph();
-            header.add(alignCenter("BEENA RUBBERS", nameFont));
+            String name = SessionInfoDB.sessionDetails[1];
+            String address = SessionInfoDB.sessionDetails[2];
+            String gst = SessionInfoDB.sessionDetails[3];
+            String rbreg = SessionInfoDB.sessionDetails[4];
+            String phone1 = SessionInfoDB.sessionDetails[5];
+            String phone2 = SessionInfoDB.sessionDetails[6];
+            
+            header.add(alignCenter(name, nameFont));
+            header.add(alignCenter(address + "  Phone: " + phone1 + ", " + phone2, addressFont));
+            header.add(alignCenter("GST: " + gst + "  RB REG: " + rbreg, addressFont));
             addEmptyLine(header, 1);
             doc.add(header);
         }catch(Exception e){

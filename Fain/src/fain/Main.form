@@ -253,10 +253,16 @@
             <Menu class="javax.swing.JMenu" name="accountBooksMenu">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Account Books"/>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="14" style="1"/>
+                </Property>
               </Properties>
               <SubComponents>
                 <MenuItem class="javax.swing.JMenuItem" name="dayBookMenuItem">
                   <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Dialog" size="14" style="1"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="Day Book"/>
                   </Properties>
                   <Events>
@@ -265,6 +271,9 @@
                 </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="cashBookMenuItem">
                   <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Dialog" size="14" style="1"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="Cash Book"/>
                   </Properties>
                   <Events>
@@ -273,6 +282,9 @@
                 </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="bankBookMenuItem">
                   <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Dialog" size="14" style="1"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="Bank Book"/>
                   </Properties>
                   <Events>
@@ -283,6 +295,9 @@
             </Menu>
             <MenuItem class="javax.swing.JMenuItem" name="statementsMenuItem">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="14" style="1"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Statements"/>
               </Properties>
               <Events>
@@ -291,6 +306,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="debtorsMenuItem">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="14" style="1"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Debtors"/>
               </Properties>
               <Events>
@@ -299,6 +317,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="creditorsMenuItem">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="14" style="1"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Creditors"/>
               </Properties>
               <Events>
@@ -337,6 +358,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="expensesMenuItem">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="14" style="1"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Expenses"/>
               </Properties>
               <Events>
@@ -378,6 +402,17 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loadSessionMenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="sessionInfoMenuItem">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="14" style="1"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Session Details"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sessionInfoMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="addUserMenuItem">

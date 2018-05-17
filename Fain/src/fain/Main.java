@@ -17,6 +17,7 @@ import utility.Codes;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import database.InfoDB;
+import database.SessionInfoDB;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 
@@ -235,6 +236,7 @@ public class Main extends javax.swing.JFrame {
             String dbName = dbConnection.getDatabaseName();
             String status = "<html>Session : <span style=\"color:blue\">" + dbName + "</span></html>";
             this.databaseNameStatus.setText(status);
+            SessionInfoDB.loadSessionDetails(dbConnection.getStatement()); //loading session details
         }
         else{
             String status = "<html>Session : <span style=\"color:red\">NOT FOUND</span></html>";
@@ -291,6 +293,7 @@ public class Main extends javax.swing.JFrame {
         optionsMenu = new javax.swing.JMenu();
         startNewSessionMenuItem = new javax.swing.JMenuItem();
         loadSessionMenuItem = new javax.swing.JMenuItem();
+        sessionInfoMenuItem = new javax.swing.JMenuItem();
         addUserMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -529,7 +532,9 @@ public class Main extends javax.swing.JFrame {
         });
 
         accountBooksMenu.setText("Account Books");
+        accountBooksMenu.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
 
+        dayBookMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         dayBookMenuItem.setText("Day Book");
         dayBookMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -538,6 +543,7 @@ public class Main extends javax.swing.JFrame {
         });
         accountBooksMenu.add(dayBookMenuItem);
 
+        cashBookMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         cashBookMenuItem.setText("Cash Book");
         cashBookMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -546,6 +552,7 @@ public class Main extends javax.swing.JFrame {
         });
         accountBooksMenu.add(cashBookMenuItem);
 
+        bankBookMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         bankBookMenuItem.setText("Bank Book");
         bankBookMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -556,6 +563,7 @@ public class Main extends javax.swing.JFrame {
 
         printingMenu.add(accountBooksMenu);
 
+        statementsMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         statementsMenuItem.setText("Statements");
         statementsMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -564,6 +572,7 @@ public class Main extends javax.swing.JFrame {
         });
         printingMenu.add(statementsMenuItem);
 
+        debtorsMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         debtorsMenuItem.setText("Debtors");
         debtorsMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -572,6 +581,7 @@ public class Main extends javax.swing.JFrame {
         });
         printingMenu.add(debtorsMenuItem);
 
+        creditorsMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         creditorsMenuItem.setText("Creditors");
         creditorsMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -606,6 +616,7 @@ public class Main extends javax.swing.JFrame {
         });
         printingMenu.add(pProfitLossBLMenuItem);
 
+        expensesMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         expensesMenuItem.setText("Expenses");
         expensesMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -645,6 +656,15 @@ public class Main extends javax.swing.JFrame {
             }
         });
         optionsMenu.add(loadSessionMenuItem);
+
+        sessionInfoMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        sessionInfoMenuItem.setText("Session Details");
+        sessionInfoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sessionInfoMenuItemActionPerformed(evt);
+            }
+        });
+        optionsMenu.add(sessionInfoMenuItem);
 
         addUserMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         addUserMenuItem.setText("Add User");
@@ -1012,6 +1032,17 @@ public class Main extends javax.swing.JFrame {
         }
         addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_expensesMenuItemActionPerformed
+
+    private void sessionInfoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sessionInfoMenuItemActionPerformed
+        SessionInfo item = new SessionInfo(dbConnection, this, this.level+1);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }//GEN-LAST:event_sessionInfoMenuItemActionPerformed
     
     /**
      * @param item the internal frame to be added to desktop pane
@@ -1112,6 +1143,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem pProfitLossBLMenuItem;
     private javax.swing.JMenuItem pTrialBalanceMenuItem;
     private javax.swing.JMenu printingMenu;
+    private javax.swing.JMenuItem sessionInfoMenuItem;
     private javax.swing.JMenuItem startNewSessionMenuItem;
     private javax.swing.JMenuItem statementsMenuItem;
     private javax.swing.JPanel statusPanel;

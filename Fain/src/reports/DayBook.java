@@ -95,12 +95,13 @@ public class DayBook {
             }
             
             double balance = calculatePreviousBalance(con, fromDate, cashAccountId);
-            createTable(con, doc, fromDate, toDate, cashAccountId, balance);
+            ret = createTable(con, doc, fromDate, toDate, cashAccountId, balance);
             doc.close();
+            if(ret)
+                ViewPdf.openPdfViewer(PREFIX + ".pdf");
         }catch(Exception e){
             e.printStackTrace();
         }
-        
         
         return ret;
     }
@@ -155,10 +156,7 @@ public class DayBook {
         table.addCell(cell);
     }
     
-    private static void endDay(double debit, double credit, double balance){
-    }
-    
-    private static void createTable(DBConnection con, Document doc, String fromDate, String toDate, String cashAccountId, double prevBalance){
+    private static boolean createTable(DBConnection con, Document doc, String fromDate, String toDate, String cashAccountId, double prevBalance){
         float columns[] = {0.7f, 2, 1, 1};
         PdfPTable table = new PdfPTable(columns);
         table.setWidthPercentage(90);
@@ -179,7 +177,7 @@ public class DayBook {
         String[] transactionDates = TransactionDB.getTrasnsationDatesBetweenIncDatesIdRS(con.getStatement(), fromDate, toDate, cashAccountId);
         if(transactionDates == null){
             JOptionPane.showMessageDialog(null, "No Transactions between the selected dates", "No Transaction", JOptionPane.WARNING_MESSAGE);
-            return;
+            return false;
         }
         ResultSet rs;
         String sql;
@@ -262,8 +260,9 @@ public class DayBook {
             
         }catch(Exception e){
             e.printStackTrace();
+            return false;
         }
-        
+        return true;
     }
     
     private static class ShowHeader extends PdfPageEventHelper{        

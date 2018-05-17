@@ -16,8 +16,10 @@ import javax.swing.table.TableModel;
  * @author lenovo
  */
 public class SessionInfoDB {
+    public static String sessionDetails[] = null;
+    
     public static boolean insert(Statement stmt, String name, String address, String gst,String rbno, String phone1, String phone2 ){
-        String in ="insert into info values(NULL,'"      +name   + "','"
+        String in ="insert into info values(1, '"         +name   + "','"
                                                             +address  + "','"
                                                             +gst + "','"
                                                             +rbno   + "','"
@@ -32,14 +34,15 @@ public class SessionInfoDB {
         }
             return true;
     }
-    public static boolean update(Statement stmt, String code,String name, String address, String gst,String rbno, String phone1, String phone2 ){
+    
+    public static boolean update(Statement stmt,String name, String address, String gst,String rbno, String phone1, String phone2 ){
         String sql = "update info set name='"           +name   + "',"
                                                 +"address='"+address  + "',"
-                                                +"kgst='"    +gst + "',"
-                                                +"rbno='"  +rbno   + "',"
+                                                +"gst='"    +gst + "',"
+                                                +"rbreg='"  +rbno   + "',"
                                                 +"phone1='"+phone1+"',"
                                                 +"phone2='"+phone2+"' "
-                                        + "where id=" + code + ";";
+                                        + "where id=1 ;";
         try{
             stmt.executeUpdate(sql);
         }catch(SQLException se){
@@ -47,7 +50,8 @@ public class SessionInfoDB {
             return false;
         }
         return true;
-    }    
+    }
+    
     public static void delete(Statement stmt,String id){
         String del="delete from info where id="+id+";";
         try {
@@ -56,8 +60,9 @@ public class SessionInfoDB {
             Logger.getLogger(BranchDB.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
     public static String[] getDetails(Statement stmt){
-        String sql="select * from info";
+        String sql="select * from info where id=1";
         ResultSet rs;
         try{
             rs=stmt.executeQuery(sql);
@@ -66,5 +71,18 @@ public class SessionInfoDB {
             se.printStackTrace();
         }
         return null;
+    }
+    
+    public static boolean loadSessionDetails(Statement stmt){
+        String sql="select * from info where id=1";
+        ResultSet rs;
+        try{
+            rs=stmt.executeQuery(sql);
+            sessionDetails = ResultSetToStringArray.getRowAsStringArray(rs);
+            return true;
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return false;
     }
 }
