@@ -242,7 +242,7 @@ public class ProfitLossBalanceSheet {
             
             //print GROSS INCOME
             double balance = purchaseTotal + saleTotal;
-            addCreditDebit(table, (PdfPCell.TOP|PdfPCell.BOTTOM), "", "GROSS INCODE", balance);
+            addCreditDebit(table, (PdfPCell.TOP|PdfPCell.BOTTOM), "", "GROSS INCOME", balance);
             
             doc.add(table);
             
