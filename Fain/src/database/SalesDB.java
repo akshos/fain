@@ -140,4 +140,19 @@ public final class SalesDB {
         }
         return false;
     }
+    
+    public static double getTotalSaleQuantity(Statement stmt, String date){
+       String sql = "select sum(amount) from sales where date<='"+date+"' ;";
+       try{
+           ResultSet rs = stmt.executeQuery(sql);
+           if(rs.next()){
+               return rs.getDouble(1);
+           }else{
+               return 0.0;
+           }
+       }catch(SQLException se){
+           se.printStackTrace();
+           return 0.0;
+       }
+    }
 }

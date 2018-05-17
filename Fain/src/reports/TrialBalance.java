@@ -100,7 +100,7 @@ public class TrialBalance {
         HashMap<String, Account> accountData;
         
         String[][] accountStrs = MasterDB.getIdHeadOpBal(con.getStatement());
-        accountData = CommonFuncs.addToHashMap(accountStrs);
+        accountData = CommonFuncs.addToHashMap(accountStrs, true);
         if(accountData.isEmpty()){
             return null;
         }

@@ -14,88 +14,46 @@ import database.MasterDB;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
 import utility.ValidationChecks;
-import reports.DayBook;
+import reports.TrialBalance;
 /**
  *
  * @author akshos
  */
-public class PDayBook extends javax.swing.JInternalFrame{
+public class PProfitLossBalanceSheet extends javax.swing.JInternalFrame{
     
     DBConnection dbConnection;
     int level;
     Main mainFrame;
+    String branchData[][];
     String accountData[][];
     /**
      * Creates new form MasterEntry
      */
-    public PDayBook() {
+    public PProfitLossBalanceSheet() {
         initComponents();
     }
     
-    public PDayBook(DBConnection db, Main frame, int level){
+    public PProfitLossBalanceSheet(DBConnection db, Main frame, int level){
         this.dbConnection = db;
         this.level = level;
         this.mainFrame = frame;
         initComponents();
-        loadAccounts();
-    }
-    
-    private void loadAccounts(){
-        accountData = MasterDB.getAccountHeadByCat(this.dbConnection.getStatement(), "CH");
-        int len;
-        if(accountData == null){
-            len = 0;
-        }else{
-            len = accountData[0].length;
-        }
-        String[] cboxData = new String[len+1];
-        for(int i = 0; i < len; i++){
-            cboxData[i] = accountData[1][i] + " (" + accountData[0][i] + ")";
-        }
-        cboxData[len] = "None";
-        this.cashAccountCbox.setModel(new DefaultComboBoxModel(cboxData));
     }
     
     private void generateReport(){    
         setBusy();
         
-        String item = this.cashAccountCbox.getSelectedItem().toString();
-        if(item.compareTo("None") == 0){
-            JOptionPane.showMessageDialog(this, "Please select a cash Account", "No Cash Account", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        int index = this.cashAccountCbox.getSelectedIndex();
-        String cashAccount = this.accountData[0][index];
-        
-        DateFormat df = new SimpleDateFormat("dd/MM/yy");
-        
-        Date date = this.fromDatePicker.getDate() ;
-        if(date == null){
-            JOptionPane.showMessageDialog(this, "Please enter Date From", "NO DATE", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        String fromDate = df.format(date);
-        
-        date = this.toDatePicker.getDate();
-        if(date == null){
-            JOptionPane.showMessageDialog(this, "Please enter Date From", "NO DATE", JOptionPane.WARNING_MESSAGE);
-            return;
-        }       
-        String toDate = df.format(this.toDatePicker.getDate());
+        String date = this.asOnTbox.getText();
         
         String paper = this.paperCbox.getSelectedItem().toString();
         String orientation = this.orientationCbox.getSelectedItem().toString();
-        
-        boolean ret = DayBook.createReport(dbConnection, paper, orientation, fromDate, toDate, cashAccount);
-        //DayBook.createReport(dbConnection, paper, orientation, this.fromDatePicker.getText(), this.toDatePicker.getText(), cashAccount);
+
+        boolean ret = TrialBalance.createReport(dbConnection, paper, orientation, date);
         resetBusy();
     }
     
@@ -125,15 +83,11 @@ public class PDayBook extends javax.swing.JInternalFrame{
         logoPanel = new javax.swing.JPanel();
         logoLabel = new javax.swing.JLabel();
         labelsPanel = new javax.swing.JPanel();
-        cashAccountLabel = new javax.swing.JLabel();
-        dateFromLabel = new javax.swing.JLabel();
         asOnLabel = new javax.swing.JLabel();
         paperLabel = new javax.swing.JLabel();
         orientationLabel = new javax.swing.JLabel();
         rightInerPannel = new javax.swing.JPanel();
-        cashAccountCbox = new javax.swing.JComboBox<>();
-        fromDatePicker = new org.jdesktop.swingx.JXDatePicker();
-        toDatePicker = new org.jdesktop.swingx.JXDatePicker();
+        asOnTbox = new javax.swing.JFormattedTextField();
         paperCbox = new javax.swing.JComboBox<>();
         orientationCbox = new javax.swing.JComboBox<>();
         buttonPanel = new javax.swing.JPanel();
@@ -142,23 +96,23 @@ public class PDayBook extends javax.swing.JInternalFrame{
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
-        setTitle("Trial Balance");
+        setTitle("P&L and Balance Sheet");
         setPreferredSize(new java.awt.Dimension(450, 410));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameClosed(evt);
             }
-            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
         });
 
@@ -177,16 +131,10 @@ public class PDayBook extends javax.swing.JInternalFrame{
 
         leftInerPannel.add(logoPanel);
 
-        labelsPanel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
-
-        cashAccountLabel.setText("Cash Account");
-        labelsPanel.add(cashAccountLabel);
-
-        dateFromLabel.setText("Date from");
-        labelsPanel.add(dateFromLabel);
+        labelsPanel.setLayout(new java.awt.GridLayout(4, 0, 0, 10));
 
         asOnLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        asOnLabel.setText("Date To");
+        asOnLabel.setText("As on");
         labelsPanel.add(asOnLabel);
 
         paperLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -201,18 +149,15 @@ public class PDayBook extends javax.swing.JInternalFrame{
 
         outerPanel.add(leftInerPannel);
 
-        rightInerPannel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
+        rightInerPannel.setLayout(new java.awt.GridLayout(4, 0, 0, 10));
 
-        cashAccountCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        rightInerPannel.add(cashAccountCbox);
-
-        fromDatePicker.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fromDatePickerActionPerformed(evt);
-            }
-        });
-        rightInerPannel.add(fromDatePicker);
-        rightInerPannel.add(toDatePicker);
+        try {
+            asOnTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/##")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        asOnTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        rightInerPannel.add(asOnTbox);
 
         paperCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         paperCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A4", "Legal" }));
@@ -290,19 +235,12 @@ public class PDayBook extends javax.swing.JInternalFrame{
             this.generateReport();
         }
     }//GEN-LAST:event_enterButtonKeyPressed
-
-    private void fromDatePickerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fromDatePickerActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_fromDatePickerActionPerformed
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel asOnLabel;
+    private javax.swing.JFormattedTextField asOnTbox;
     private javax.swing.JPanel buttonPanel;
-    private javax.swing.JComboBox<String> cashAccountCbox;
-    private javax.swing.JLabel cashAccountLabel;
-    private javax.swing.JLabel dateFromLabel;
     private javax.swing.JButton enterButton;
-    private org.jdesktop.swingx.JXDatePicker fromDatePicker;
     private javax.swing.JPanel labelsPanel;
     private javax.swing.JPanel leftInerPannel;
     private javax.swing.JLabel logoLabel;
@@ -313,6 +251,5 @@ public class PDayBook extends javax.swing.JInternalFrame{
     private javax.swing.JComboBox<String> paperCbox;
     private javax.swing.JLabel paperLabel;
     private javax.swing.JPanel rightInerPannel;
-    private org.jdesktop.swingx.JXDatePicker toDatePicker;
     // End of variables declaration//GEN-END:variables
 }

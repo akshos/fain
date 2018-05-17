@@ -11,7 +11,7 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.ColumnText;
-import com.itextpdf.text.pdf.PdfContentByte;;
+import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfPageEventHelper;
@@ -25,14 +25,17 @@ import database.TransactionDB;
 import java.io.FileOutputStream;
 import java.sql.ResultSet;
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import javax.swing.JOptionPane;
+
 /**
  *
  * @author akshos
  */
-public class Ledger {
-    private static String PREFIX = "ledger";
+public class DebtorCreditor {
+    private static String PREFIX = "";
     private static String sbranch = "";
     private static String saccFrom = "";
     private static String saccTo = "";
@@ -43,18 +46,20 @@ public class Ledger {
     private static double pageDebitTotal = 0;
     
     
-    private static void addTitle(DBConnection con, Document doc, String accId){
+    private static void addTitle(DBConnection con, Document doc, String type){
         try{
             Paragraph title = new Paragraph();
-            title.add(CommonFuncs.alignCenter("LEDGER", CommonFuncs.titleFont));
+            
+            String str = (type.compareTo("DB") == 0)?"DEBTORS":"CREDITORS";
+            
+            title.add(CommonFuncs.alignCenter(str, CommonFuncs.titleFont));
             doc.add(title);
             
-            String accountHead = MasterDB.getAccountHead(con.getStatement(), accId);
             Paragraph para = new Paragraph();
-            para.add(CommonFuncs.alignCenter("ACCOUNT : " + accountHead + " (" + accId + ")", CommonFuncs.accountHeadFont));
-            String branch = CustomerDB.getBranch(con.getStatement(), accId);
-            if(branch != null && !branch.isEmpty()){
-                String branchName = BranchDB.getBranchName(con.getStatement(), branch);
+            para.add(CommonFuncs.alignCenter("ACCOUNT From: " + saccFrom + " To: " + saccTo , CommonFuncs.accountHeadFont));
+
+            if(sbranch != null && !sbranch.isEmpty()){
+                String branchName = BranchDB.getBranchName(con.getStatement(), sbranch);
                 para.add(CommonFuncs.alignCenter("BRANCH : " + branchName, CommonFuncs.branchFont));
             }
             doc.add(para);
@@ -79,7 +84,7 @@ public class Ledger {
         return null;
     }
     
-    public static void createReport(DBConnection con, String paper, String orientation,  String branch, String accFrom, String accTo){
+    public static boolean createReport(DBConnection con, String paper, String orientation,  String branch, String accFrom, String accTo, String type){
         sbranch = branch;
         scon = con;
         saccFrom = accFrom;
@@ -91,23 +96,21 @@ public class Ledger {
         try{
             String accountData[][];
             
-            if(branch.compareTo("None") == 0){
-                accountData = MasterDB.getAccountHead(con.getStatement());
-            }else{
-                accountData = CustomerDB.getCustomersInBranch(con.getStatement(), branch);
-            }
+            accountData = CustomerDB.getCustomersInBranch(con.getStatement(), branch);
+            
             if(accountData == null){
                 JOptionPane.showMessageDialog(null, "No Accounts Available", "NO ACCOUNTS", JOptionPane.WARNING_MESSAGE);
-                return;
+                return false;
             }
             
             int startIndex = Arrays.asList(accountData[0]).indexOf(accFrom);
+            int endIndex = startIndex;
+            
             if(startIndex == -1){
                 JOptionPane.showMessageDialog(null, "Cannot find From Account", "ERROR", JOptionPane.ERROR_MESSAGE);
-                return;
+                return false;
             }
             
-            int endIndex = 0;
             if(accTo.compareTo("All") == 0){
                 endIndex = accountData[0].length-1;                
             }else if(accTo.compareTo("None") == 0)
@@ -118,28 +121,31 @@ public class Ledger {
             }
             if(endIndex == -1){
                 JOptionPane.showMessageDialog(null, "Cannot find To Account", "ERROR", JOptionPane.ERROR_MESSAGE);
-                return;
+                return false;
             }
             if(endIndex < startIndex){
                 endIndex = startIndex;
             }
             
-            currAcc = accountData[0][startIndex];
-            Document doc = startDocument(paper, orientation);
-            for(int i = startIndex; i <= endIndex; i++){
-                addLedger(con, doc, accountData[0][i], branch, accFrom, accTo);
-                if(i < endIndex){
-                    currAcc = accountData[0][i+1];
-                    doc.newPage();
-                }
-            }
+            //calculate closing balance of all accounts
+            DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+            LocalDateTime now = LocalDateTime.now();  
+            CommonFuncs.updateMaster(con, df.format(now)); //pass current date
             
+            Document doc = startDocument(paper, orientation);
+            boolean ret = addTable(con, doc, accountData, startIndex, endIndex, type);
+            if(!ret){
+                JOptionPane.showMessageDialog(null, "Failed to Create Report", "FAILED", JOptionPane.WARNING_MESSAGE);
+                doc.close();
+                return false;
+            }
             doc.close();
         }catch(Exception e){
             e.printStackTrace();
-            return;
+            return false;
         }
         ViewPdf.openPdfViewer(PREFIX + ".pdf");
+        return true;
     }
        
     private static void addHeaderCell(PdfPTable table, String header){
@@ -149,9 +155,6 @@ public class Ledger {
         table.addCell(cell);
     }
     
-    private static void addLedger(DBConnection con, Document doc, String accId, String branch, String accFrom, String accTo){        
-        addTable(con, doc, accId);
-    }
     
     private static void addTableRow(PdfPTable table, int border, Font font, String date, String nar, String debit, String credit){
         PdfPCell cell;
@@ -178,88 +181,69 @@ public class Ledger {
         table.addCell(cell);
     }
     
-    private static void addTable(DBConnection con, Document doc, String accId){
+    private static boolean addTable(DBConnection con, Document doc, String[][] accountData, int start, int end, String type){
         float columns[] = {0.7f, 2, 1, 1};
         PdfPTable table = new PdfPTable(columns);
         table.setWidthPercentage(90);
-        addHeaderCell(table, "Date");
-        addHeaderCell(table, "Narration");
+        addHeaderCell(table, "Code");
+        addHeaderCell(table, "Account");
         addHeaderCell(table, "Debit");
         addHeaderCell(table, "Credit");
         table.setHeaderRows(1);
         
-        String date, nar;
-        Double openingBal = Double.parseDouble(MasterDB.getOpeningBal(con.getStatement(), accId));
-        Double creditTotal = 0.0, debitTotal = 0.0, amount, debit , credit;
-        if(openingBal > 0){
-            addTableRow(table, (PdfPCell.RECTANGLE), 
-                    CommonFuncs.tableBoldFont, "", "Opening Balance", 
-                    new DecimalFormat("##,##,##0.00").format(openingBal), "" );
-            
-            debitTotal = openingBal;
-        }else{
-            addTableRow(table, (PdfPCell.RECTANGLE), 
-                    CommonFuncs.tableBoldFont, "", "Opening Balance", 
-                    "", new DecimalFormat("##,##,##0.00").format(-1*openingBal));
-            
-            creditTotal = Math.abs(openingBal);
-        }
+        double debitTotal, creditTotal, closingBalance;
+        debitTotal = creditTotal = 0.0;
+        boolean print = false;
+        String accId, accName;
         
-        ResultSet rs = TransactionDB.getContainingAccount(con.getStatement(), accId);
+        
         try{
-            while(rs.next()){
-                date = rs.getString("date");
-                amount = rs.getDouble("amount");
-                debit = credit = 0.0;
-                nar = rs.getString("narration");
-                if(rs.getString("debit").compareTo(accId) == 0){
-                    if(nar.isEmpty()){
-                        nar = MasterDB.getAccountHead(con.getStatement(), rs.getString("credit"));
-                    }
-                    addTableRow(table, (PdfPCell.LEFT|PdfPCell.RIGHT), 
-                            CommonFuncs.tableContentFont,
-                            date, nar, 
-                            new DecimalFormat("##,##,##0.00").format(amount), "");
-                    
-                    debitTotal += amount;
-                    pageDebitTotal += amount;                    
-                }else if(rs.getString("credit").compareTo(accId) == 0){
-                    if(nar.isEmpty()){
-                        nar = MasterDB.getAccountHead(con.getStatement(), rs.getString("debit"));
-                    }
-                    addTableRow(table, (PdfPCell.LEFT|PdfPCell.RIGHT), 
-                            CommonFuncs.tableContentFont, 
-                            date, nar, 
-                            "", new DecimalFormat("##,##,##0.00").format(amount));
-                    
-                    creditTotal += amount;
-                    pageCreditTotal += amount;
+            for(int i = start; i <= end; i++){
+                accId = accountData[0][i];
+                accName = accountData[1][i];
+                
+                closingBalance = MasterDB.getClosingBalance(con.getStatement(), accId);
+                if(type.compareTo("DB") == 0 && closingBalance > 0){
+                    print = true;
+                }else if(type.compareTo("CR") == 0 && closingBalance < 0){
+                    print = true;
+                }else{
+                    print = false;
                 }
+                
+                if(print){
+                    if(closingBalance > 0){
+                        addTableRow(table, (PdfPCell.LEFT|PdfPCell.RIGHT), 
+                            CommonFuncs.tableContentFont,
+                            accId, accName, 
+                            new DecimalFormat("##,##,##0.00").format(closingBalance), "");
+                        
+                        debitTotal += closingBalance;
+                        pageDebitTotal += closingBalance;
+                    }else{
+                        addTableRow(table, (PdfPCell.LEFT|PdfPCell.RIGHT), 
+                            CommonFuncs.tableContentFont,
+                            accId, accName, 
+                            "", new DecimalFormat("##,##,##0.00").format(Math.abs(closingBalance)));
+                        
+                        creditTotal += Math.abs(closingBalance);
+                        pageCreditTotal += Math.abs(closingBalance);
+                    }
+                }
+                
             }
-            Double closingBal  = creditTotal - debitTotal;
             addTableRow(table, (PdfPCell.RECTANGLE|PdfPCell.TOP), 
                     CommonFuncs.tableBoldFont,"", "TOTALS : ", 
                     new DecimalFormat("##,##,##0.00").format(debitTotal), 
                     new DecimalFormat("##,##,##0.00").format(creditTotal));
-            
-            if(closingBal > 0){
-                addTableRow(table, (PdfPCell.RECTANGLE|PdfPCell.TOP), 
-                        CommonFuncs.tableBoldFont, "", "Closing Balance", 
-                        "", new DecimalFormat("##,##,##0.00").format(closingBal));
-            
-            }else{
-                addTableRow(table, (PdfPCell.RECTANGLE),
-                        CommonFuncs.tableBoldFont, "", "Closing Balance", 
-                        new DecimalFormat("##,##,##0.00").format(Math.abs(closingBal)), "");
-            
-            }
-            
+                        
             doc.add(table);
             
         }catch(Exception se){
             se.printStackTrace();
+            return false;
         }
-        
+        return true;
     }
        
     private static class ShowHeader extends PdfPageEventHelper{        

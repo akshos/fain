@@ -41,7 +41,7 @@ public final class Tables {
     public static final String stockTable = "create table stock("
             + "itemCode     integer primary key autoincrement,"
             + "itemName     varchar(20),"
-            + "currentStock integer,"
+            + "currentStock integer," //have to set this to real ************
             + "rate         real,"
             + "purchaseAC   varchar(20),"
             + "saleAC       varchar(20),"

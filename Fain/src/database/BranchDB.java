@@ -117,6 +117,9 @@ public final class BranchDB {
     }
     
     public static String getBranchName(Statement stmt, String id){
+        if(id.compareToIgnoreCase("all") == 0){
+            return "ALL";
+        }
         String sql = "select name from branch where branchId='"+id+"';";
         try{
             ResultSet rs = stmt.executeQuery(sql);

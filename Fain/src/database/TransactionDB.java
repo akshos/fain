@@ -250,5 +250,16 @@ public final class TransactionDB {
         }
         return null;
     }
+    
+    public static ResultSet getTransactionsInBranch(Statement stmt, String branch){
+        String sql = "select date, debit, credit, amount from transaction "
+                + "where branch='"+branch+"';";
+        try{
+            return stmt.executeQuery(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
  
 }

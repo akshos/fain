@@ -281,8 +281,10 @@ public class Main extends javax.swing.JFrame {
         dayBookMenuItem = new javax.swing.JMenuItem();
         cashBookMenuItem = new javax.swing.JMenuItem();
         bankBookMenuItem = new javax.swing.JMenuItem();
-        pLedgerMenuItem = new javax.swing.JMenuItem();
         statementsMenuItem = new javax.swing.JMenuItem();
+        debtorsMenuItem = new javax.swing.JMenuItem();
+        creditorsMenuItem = new javax.swing.JMenuItem();
+        pLedgerMenuItem = new javax.swing.JMenuItem();
         pTrialBalanceMenuItem = new javax.swing.JMenuItem();
         optionsMenu = new javax.swing.JMenu();
         startNewSessionMenuItem = new javax.swing.JMenuItem();
@@ -552,6 +554,30 @@ public class Main extends javax.swing.JFrame {
 
         printingMenu.add(accountBooksMenu);
 
+        statementsMenuItem.setText("Statements");
+        statementsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                statementsMenuItemActionPerformed(evt);
+            }
+        });
+        printingMenu.add(statementsMenuItem);
+
+        debtorsMenuItem.setText("Debtors");
+        debtorsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                debtorsMenuItemActionPerformed(evt);
+            }
+        });
+        printingMenu.add(debtorsMenuItem);
+
+        creditorsMenuItem.setText("Creditors");
+        creditorsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                creditorsMenuItemActionPerformed(evt);
+            }
+        });
+        printingMenu.add(creditorsMenuItem);
+
         pLedgerMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         pLedgerMenuItem.setText("Ledgers");
         pLedgerMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -560,14 +586,6 @@ public class Main extends javax.swing.JFrame {
             }
         });
         printingMenu.add(pLedgerMenuItem);
-
-        statementsMenuItem.setText("Statements");
-        statementsMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                statementsMenuItemActionPerformed(evt);
-            }
-        });
-        printingMenu.add(statementsMenuItem);
 
         pTrialBalanceMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         pTrialBalanceMenuItem.setText("Trial Balance");
@@ -932,6 +950,28 @@ public class Main extends javax.swing.JFrame {
         }
         addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_statementsMenuItemActionPerformed
+
+    private void debtorsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_debtorsMenuItemActionPerformed
+        PDebtorCreditor item = new PDebtorCreditor(dbConnection, this, this.level+1, "DB");
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }//GEN-LAST:event_debtorsMenuItemActionPerformed
+
+    private void creditorsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creditorsMenuItemActionPerformed
+        PDebtorCreditor item = new PDebtorCreditor(dbConnection, this, this.level+1, "CR");
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }//GEN-LAST:event_creditorsMenuItemActionPerformed
     
     /**
      * @param item the internal frame to be added to desktop pane
@@ -1008,8 +1048,10 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem addUserMenuItem;
     private javax.swing.JMenuItem bankBookMenuItem;
     private javax.swing.JMenuItem cashBookMenuItem;
+    private javax.swing.JMenuItem creditorsMenuItem;
     private javax.swing.JLabel databaseNameStatus;
     private javax.swing.JMenuItem dayBookMenuItem;
+    private javax.swing.JMenuItem debtorsMenuItem;
     private javax.swing.JMenuItem eBranchesMenuItem;
     private javax.swing.JMenuItem eConsumptionMenuItem;
     private javax.swing.JMenuItem eCustomersMenuItem;

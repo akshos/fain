@@ -136,7 +136,7 @@ public final class CustomerDB {
     
     public static String[][] getCustomersInBranch(Statement stmt, String branchId){
         String sql = "select customerCode, name, address from customer ";
-        if(branchId.compareTo("All") != 0){
+        if(branchId.compareToIgnoreCase("All") != 0){
             sql += " where branch='"+branchId+"' ";
         }
         sql += "order by name asc;";

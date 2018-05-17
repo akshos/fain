@@ -57,6 +57,47 @@ public final class StockDB {
         }
     }
     
+    public static double getRateByName(Statement stmt, String name){
+        String sql = "select rate from stock where itemName='"+name+"' ;";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next()){
+                return rs.getDouble(1);
+            }else{
+                return 0.0;
+            }
+        }catch(SQLException se){
+            se.printStackTrace();
+            return 0.0;
+        }
+    }
+    
+    public static double getCurrentStockByName(Statement stmt, String name){
+        String sql = "select currentStock from stock where itemName='"+name+"' ;";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next()){
+                return rs.getDouble(1);
+            }else{
+                return 0.0;
+            }
+        }catch(SQLException se){
+            se.printStackTrace();
+            return 0.0;
+        }
+    }
+    
+    public static boolean setCurrentStockByName(Statement stmt, double amt, String name){
+        String sql = "update stock set currentStock=" + amt + " where itemName='" + name + "' ;";
+        try{
+            stmt.executeUpdate(sql);
+            return true;
+        }catch(SQLException se){
+            se.printStackTrace();
+            return false;
+        }
+    }
+    
     public static boolean checkExisting(Statement stmt,String id){
         String check="select * from stock where itemCode="+id+";";
         try {
@@ -160,5 +201,20 @@ public final class StockDB {
             se.printStackTrace();
         }
         return null;
+    }
+    
+    public static String getStockAccByName(Statement stmt, String name){
+        String sql = "select stockAC from stock where itemName='"+name+"' ;";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next()){
+                return rs.getString(1);
+            }else{
+                return null;
+            }
+        }catch(SQLException se){
+            se.printStackTrace();
+            return null;
+        }
     }
 }

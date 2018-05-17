@@ -55,7 +55,8 @@ public final class PurchaseLatexDB {
             return false;
         }
         return true;
-    } 
+    }
+    
     public static void delete(Statement stmt,String id){
         String del="delete from purchaseLatex where purchaseLatexId="+id+";";
         try {
@@ -146,5 +147,21 @@ public final class PurchaseLatexDB {
             se.printStackTrace();
         }
         return null;
+    }
+    
+    public static double getTotalPurchaseQuantity(Statement stmt, String date){
+        String sql = "select sum(quantity) from purchaseLatex where date<='"+date+"' ;";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next()){
+                double sum = rs.getDouble(1);
+                return sum;
+            }else{
+                return 0.0;
+            }
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return 0.0;
     }
 }

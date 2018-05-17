@@ -165,7 +165,7 @@ public class PAccountBooks extends javax.swing.JInternalFrame{
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
-        setTitle("Trial Balance");
+        setTitle("Account Book");
         setPreferredSize(new java.awt.Dimension(450, 410));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {

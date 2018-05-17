@@ -17,23 +17,25 @@ public class Account{
     String accountHead;
 
     public Account(){
-        credit = debit = 0.0;
-        openingBal = credit = debit = 0.0;
+        openingBal = credit = debit = closingBal = 0.0;
         accountHead = "";
+    }
+    
+    public Account(String head){
+        accountHead = head;
+        openingBal = credit = debit = closingBal = 0.0;
     }
 
     public Account(String head, double opBal){
         accountHead = head;
         openingBal = opBal;
-        credit = debit = 0.0;
-        credit = debit = 0.0;
+        credit = debit = closingBal = 0.0;
     }
     
     public Account(String head, String opBal){
         accountHead = head;
         openingBal = Double.parseDouble(opBal);
-        credit = debit = 0.0;
-        credit = debit = 0.0;
+        credit = debit = closingBal = 0.0;
     }
 
     public double getCredit(){
@@ -73,7 +75,7 @@ public class Account{
         closingBal = value;
     }
     public double calculateClosingBal(){
-        closingBal = credit - debit;
+        closingBal = debit - credit;
         return closingBal;
     }
     

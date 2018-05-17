@@ -85,7 +85,7 @@ public final class MasterDB {
     public static TableModel getTable(Statement stmt){
         String sqlQuery = "select accountNo as 'Account Number', accountHead as 'Account Head', "
                 + "printf(\"%.2f\", openingBal) as 'Opening Balance', "
-                + "printf(\"%.2f\", closingBal) as 'Closing Balance', "
+                + "printf(\"%.2f\", closingBal) as 'Current Balance', "
                 + "category as 'Category' from master order by accountNo asc;";
 	TableModel table = null;
         ResultSet rs = null;
@@ -133,6 +133,43 @@ public final class MasterDB {
             Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+    
+    public static double getOpeningBalance(Statement stmt, String id){
+        String sql = "select openingBal from master where accountNo='"+id+"'; ";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next()){
+                return rs.getDouble(1);
+            }
+        }catch(SQLException se){
+            se.printStackTrace();  
+        }
+        return 0.0;
+    }
+    
+    public static double getClosingBalance(Statement stmt, String id){
+        String sql = "select closingBal from master where accountNo='"+id+"'; ";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next()){
+                return rs.getDouble(1);
+            }
+        }catch(SQLException se){
+            se.printStackTrace();  
+        }
+        return 0.0;
+    }
+    
+    public static boolean setClosingBalance(Statement stmt, String id, String closingBal){
+        String sql = "update master set closingBal="+closingBal+" where accountNo='"+id+"' ;";
+        try{
+            stmt.executeUpdate(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+            return false;
+        }
+        return true;
     }
     
     public static HashMap<String, String> getAccountHeadHashMap(Statement stmt){
