@@ -286,6 +286,7 @@ public class Main extends javax.swing.JFrame {
         creditorsMenuItem = new javax.swing.JMenuItem();
         pLedgerMenuItem = new javax.swing.JMenuItem();
         pTrialBalanceMenuItem = new javax.swing.JMenuItem();
+        pProfitLossBLMenuItem = new javax.swing.JMenuItem();
         optionsMenu = new javax.swing.JMenu();
         startNewSessionMenuItem = new javax.swing.JMenuItem();
         loadSessionMenuItem = new javax.swing.JMenuItem();
@@ -595,6 +596,14 @@ public class Main extends javax.swing.JFrame {
             }
         });
         printingMenu.add(pTrialBalanceMenuItem);
+
+        pProfitLossBLMenuItem.setText("P&L and B/S");
+        pProfitLossBLMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pProfitLossBLMenuItemActionPerformed(evt);
+            }
+        });
+        printingMenu.add(pProfitLossBLMenuItem);
 
         fainMainMenu.add(printingMenu);
 
@@ -972,6 +981,17 @@ public class Main extends javax.swing.JFrame {
         }
         addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_creditorsMenuItemActionPerformed
+
+    private void pProfitLossBLMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pProfitLossBLMenuItemActionPerformed
+        PProfitLossBalanceSheet item = new PProfitLossBalanceSheet(dbConnection, this, this.level+1);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }//GEN-LAST:event_pProfitLossBLMenuItemActionPerformed
     
     /**
      * @param item the internal frame to be added to desktop pane
@@ -1068,6 +1088,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JDesktopPane mainDesktopPane;
     private javax.swing.JMenu optionsMenu;
     private javax.swing.JMenuItem pLedgerMenuItem;
+    private javax.swing.JMenuItem pProfitLossBLMenuItem;
     private javax.swing.JMenuItem pTrialBalanceMenuItem;
     private javax.swing.JMenu printingMenu;
     private javax.swing.JMenuItem startNewSessionMenuItem;
