@@ -38,15 +38,15 @@ public class Statements {
     private static String sfromDate;
     private static String stoDate;
     private static String saccountId;
+    private static String saccountName;
     private static double pageDebitTotal;
     private static double pageCreditTotal;
     private static int pageNum;
     private static String scat;
     
-    public static void addTitle(DBConnection con, Document doc, String fromDate, String toDate, String account){
+    public static void addTitle(DBConnection con, Document doc, String fromDate, String toDate, String accountName){
         try{
             Paragraph title = new Paragraph();
-            String accountName = MasterDB.getAccountHead(con.getStatement(), account);
             title.add(CommonFuncs.alignCenter(accountName, CommonFuncs.titleFont));
             String subTitle = "From : " + fromDate + "  To : " + toDate;
             title.add(CommonFuncs.alignCenter(subTitle, CommonFuncs.subTitleFont));
@@ -85,6 +85,8 @@ public class Statements {
 
         Document doc;
         try{
+            saccountName = MasterDB.getAccountHead(con.getStatement(), accountId);
+            
             doc = startDocument(paper, orientation);
             
             double balance = calculatePreviousBalance(con, fromDate, accountId);
@@ -93,7 +95,7 @@ public class Statements {
         }catch(Exception e){
             e.printStackTrace();
         }
-        
+        ViewPdf.openPdfViewer(PREFIX + ".pdf");
         
         return ret;
     }
@@ -253,7 +255,7 @@ public class Statements {
     private static class ShowHeader extends PdfPageEventHelper{        
         public void onStartPage(PdfWriter writer, Document docuement){
             CommonFuncs.addHeader(scon, docuement);
-            addTitle(scon, docuement, sfromDate, stoDate, saccountId);
+            addTitle(scon, docuement, sfromDate, stoDate, saccountName);
         }
         
         public void onEndPage(PdfWriter writer, Document document) {

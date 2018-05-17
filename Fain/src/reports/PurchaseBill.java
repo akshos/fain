@@ -28,13 +28,12 @@ import javax.swing.JOptionPane;
 public class PurchaseBill {
     private static String PREFIX = "purchasebill";
     
-    private static void addTitle(DBConnection con, Document doc, String accId){
+    private static void addTitle(DBConnection con, Document doc, String accId, String accountHead){
         try{
             Paragraph title = new Paragraph();
             title.add(CommonFuncs.alignCenter("PURCHASE BILL", CommonFuncs.titleFont));
             doc.add(title);
             
-            String accountHead = MasterDB.getAccountHead(con.getStatement(), accId);
             Paragraph para = new Paragraph();
             para.add(CommonFuncs.alignCenter("CUSTOMER NAME : " + accountHead + " (" + accId + ")", CommonFuncs.accountHeadFont));
             String branch = CustomerDB.getBranch(con.getStatement(), accId);
@@ -84,7 +83,8 @@ public class PurchaseBill {
             
             CommonFuncs.addEmptyLine(doc, 2);
             CommonFuncs.addHeader(con, doc);
-            addTitle(con, doc, party);
+            String accountHead = MasterDB.getAccountHead(con.getStatement(), party);
+            addTitle(con, doc, party, accountHead);
             
             float columns[] = {1, 2};
             PdfPTable table = new PdfPTable(columns);

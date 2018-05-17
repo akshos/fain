@@ -36,6 +36,8 @@ public class Ledger {
     private static String sbranch = "";
     private static String saccFrom = "";
     private static String saccTo = "";
+    private static String saccountName = "";
+    
     private static DBConnection scon = null;
     private static String currAcc = "";
     private static int pageNum = 1;
@@ -43,13 +45,12 @@ public class Ledger {
     private static double pageDebitTotal = 0;
     
     
-    private static void addTitle(DBConnection con, Document doc, String accId){
+    private static void addTitle(DBConnection con, Document doc, String accId, String accountHead){
         try{
             Paragraph title = new Paragraph();
             title.add(CommonFuncs.alignCenter("LEDGER", CommonFuncs.titleFont));
             doc.add(title);
             
-            String accountHead = MasterDB.getAccountHead(con.getStatement(), accId);
             Paragraph para = new Paragraph();
             para.add(CommonFuncs.alignCenter("ACCOUNT : " + accountHead + " (" + accId + ")", CommonFuncs.accountHeadFont));
             String branch = CustomerDB.getBranch(con.getStatement(), accId);
@@ -125,11 +126,13 @@ public class Ledger {
             }
             
             currAcc = accountData[0][startIndex];
+            saccountName = MasterDB.getAccountHead(con.getStatement(), currAcc);
             Document doc = startDocument(paper, orientation);
             for(int i = startIndex; i <= endIndex; i++){
                 addLedger(con, doc, accountData[0][i], branch, accFrom, accTo);
                 if(i < endIndex){
                     currAcc = accountData[0][i+1];
+                    saccountName = MasterDB.getAccountHead(con.getStatement(), currAcc);
                     doc.newPage();
                 }
             }
@@ -265,7 +268,7 @@ public class Ledger {
     private static class ShowHeader extends PdfPageEventHelper{        
         public void onStartPage(PdfWriter writer, Document docuement){
             CommonFuncs.addHeader(scon, docuement);
-            addTitle(scon, docuement, currAcc);
+            addTitle(scon, docuement, currAcc, saccountName);
         }
 
         public void onEndPage(PdfWriter writer, Document document) {
