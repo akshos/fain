@@ -287,6 +287,7 @@ public class Main extends javax.swing.JFrame {
         pLedgerMenuItem = new javax.swing.JMenuItem();
         pTrialBalanceMenuItem = new javax.swing.JMenuItem();
         pProfitLossBLMenuItem = new javax.swing.JMenuItem();
+        expensesMenuItem = new javax.swing.JMenuItem();
         optionsMenu = new javax.swing.JMenu();
         startNewSessionMenuItem = new javax.swing.JMenuItem();
         loadSessionMenuItem = new javax.swing.JMenuItem();
@@ -604,6 +605,14 @@ public class Main extends javax.swing.JFrame {
             }
         });
         printingMenu.add(pProfitLossBLMenuItem);
+
+        expensesMenuItem.setText("Expenses");
+        expensesMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                expensesMenuItemActionPerformed(evt);
+            }
+        });
+        printingMenu.add(expensesMenuItem);
 
         fainMainMenu.add(printingMenu);
 
@@ -992,6 +1001,17 @@ public class Main extends javax.swing.JFrame {
         }
         addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_pProfitLossBLMenuItemActionPerformed
+
+    private void expensesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_expensesMenuItemActionPerformed
+        PExpenses item = new PExpenses(dbConnection, this, this.level+1);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }//GEN-LAST:event_expensesMenuItemActionPerformed
     
     /**
      * @param item the internal frame to be added to desktop pane
@@ -1082,6 +1102,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem eStockMenuItem;
     private javax.swing.JMenuItem eTransactionMenuItem;
     private javax.swing.JMenu editMenu;
+    private javax.swing.JMenuItem expensesMenuItem;
     private javax.swing.JMenuBar fainMainMenu;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuItem loadSessionMenuItem;

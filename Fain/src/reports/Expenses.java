@@ -92,6 +92,7 @@ public class Expenses {
         try{
             doc = startDocument(paper, orientation);
             
+            createTable(con, doc, fromDate, toDate, branch);
             
             doc.close();
         }catch(Exception e){
