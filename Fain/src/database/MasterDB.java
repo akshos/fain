@@ -195,6 +195,16 @@ public final class MasterDB {
         return null;
     }
     
+    public static ResultSet getAccountsByCat(Statement stmt, String cat){
+        String sql="select * from master where category='" + cat +"' ;";
+        try {
+            return stmt.executeQuery(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+            return null;
+        }
+    }
+    
     public static String[][] getPurchaseAC(Statement stmt){
         String sql="select accountNo,accountHead from master where category='PR';";
         try {
