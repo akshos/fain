@@ -5,11 +5,14 @@
  */
 package fain;
 
+import database.CustomerDB;
 import utility.Codes;
 import database.MasterDB;
 import database.DBConnection;
+import database.TransactionDB;
 import java.awt.Dimension;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
@@ -109,6 +112,29 @@ public class EMaster extends javax.swing.JInternalFrame implements RefreshOption
             item.setSize(790, 470);
         }
         mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+        
+        this.updateTable();
+    }
+    
+    private void deleteEntry(){
+        int row = this.dataTable.getSelectedRow();
+        String accCode = this.dataTable.getModel().getValueAt(row, 0).toString();
+        String accName = this.dataTable.getModel().getValueAt(row, 1).toString();
+        int ret = TransactionDB.checkAccountIdPresent(dbConnection.getStatement(), accCode);
+        if(ret == Codes.EXISTING_ENTRY){
+            JOptionPane.showMessageDialog(this, "This account has transactions. Cannot delete.", "CANNOT DELETE", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if(ret == Codes.FAIL){
+            JOptionPane.showMessageDialog(this, "Cannot check transactions. Cannot delete.", "CANNOT DELETE", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        ret = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete " + accName, "SURE?", JOptionPane.WARNING_MESSAGE);
+        if(ret == JOptionPane.NO_OPTION){
+            return;
+        }
+        CustomerDB.delete(dbConnection.getStatement(), accCode);
+        MasterDB.delete(dbConnection.getStatement(), accCode);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -160,6 +186,7 @@ public class EMaster extends javax.swing.JInternalFrame implements RefreshOption
 
         upperPanel.setLayout(new java.awt.BorderLayout());
 
+        dataTable.setAutoCreateRowSorter(true);
         dataTable.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         dataTable.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         dataTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -414,6 +441,11 @@ public class EMaster extends javax.swing.JInternalFrame implements RefreshOption
 
         deleteButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         deleteButton.setText("F3: Delete");
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
         lowerPanel.add(deleteButton);
 
         findButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -448,11 +480,8 @@ public class EMaster extends javax.swing.JInternalFrame implements RefreshOption
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F2){
             addEntry();
         }
-        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F2){
-        
-        }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F3){
-        
+            deleteEntry();
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F5){
         
@@ -475,6 +504,10 @@ public class EMaster extends javax.swing.JInternalFrame implements RefreshOption
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
         this.resizeColumns();
     }//GEN-LAST:event_formComponentResized
+
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+        this.deleteEntry();
+    }//GEN-LAST:event_deleteButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

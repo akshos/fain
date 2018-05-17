@@ -10,6 +10,7 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.TableModel;
+import utility.Codes;
 
 /**
  *
@@ -73,7 +74,7 @@ public final class SalesDB {
         }
     }
     
-        public static boolean checkExisting(Statement stmt,String id){
+    public static boolean checkExisting(Statement stmt,String id){
         String check="select * from sales where Id="+id+";";
         try {
             ResultSet rs=stmt.executeQuery(check);
@@ -85,6 +86,7 @@ public final class SalesDB {
         }
         return false;
     }
+    
     public static TableModel getTable(Statement stmt){
         String sqlQuery = "select s.salesId as 'ID', b.name as 'Branch', s.date as 'Date', "
                 + "s.billNo as 'Bill No:', c.name as 'Party',s.barrelNoFrom as 'Barrel # From', "
@@ -102,7 +104,21 @@ public final class SalesDB {
             se.printStackTrace();
 	}
 	return table;
-}
+    }
+    
+    public static String getTidFromSid(Statement stmt, String sid){
+        String sql = "select tid from sales where salesId="+sid+";";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            rs.next();
+            String tid = rs.getString(1);
+            return tid;
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
+    
     public static ResultSet selectAll(Statement stmt){
         String sql="select * from sales;";
         ResultSet rs = null;
@@ -154,5 +170,35 @@ public final class SalesDB {
            se.printStackTrace();
            return 0.0;
        }
+    }
+    
+    public static int checkAccountCodePresent(Statement stmt, String accCode){
+        String sql = "select * from sales where party='"+accCode+"' ;";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next()){
+                return Codes.EXISTING_ENTRY;
+            }else{
+                return Codes.NOT_EXISTS;
+            }
+        }catch(SQLException se){
+            se.printStackTrace();
+            return Codes.FAIL;
+        }
+    }
+    
+    public static int checkTidCodePresent(Statement stmt, String tid){
+        String sql = "select * from sales where tid='"+tid+"' ;";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next()){
+                return Codes.EXISTING_ENTRY;
+            }else{
+                return Codes.NOT_EXISTS;
+            }
+        }catch(SQLException se){
+            se.printStackTrace();
+            return Codes.FAIL;
+        }
     }
 }

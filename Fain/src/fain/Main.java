@@ -386,6 +386,7 @@ public class Main extends javax.swing.JFrame {
 
         aPurchaseOthersMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         aPurchaseOthersMenuItem.setText("Purchase Others");
+        aPurchaseOthersMenuItem.setEnabled(false);
         aPurchaseOthersMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 aPurchaseOthersMenuItemActionPerformed(evt);
@@ -404,6 +405,7 @@ public class Main extends javax.swing.JFrame {
 
         aConsumptionMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         aConsumptionMenuItem.setText("Consumption");
+        aConsumptionMenuItem.setEnabled(false);
         aConsumptionMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 aConsumptionMenuItemActionPerformed(evt);
@@ -473,6 +475,7 @@ public class Main extends javax.swing.JFrame {
 
         ePurchaseOthersMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         ePurchaseOthersMenuItem.setText("Purchase Others");
+        ePurchaseOthersMenuItem.setEnabled(false);
         ePurchaseOthersMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ePurchaseOthersMenuItemActionPerformed(evt);
@@ -509,6 +512,7 @@ public class Main extends javax.swing.JFrame {
 
         eConsumptionMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         eConsumptionMenuItem.setText("Consumption");
+        eConsumptionMenuItem.setEnabled(false);
         eConsumptionMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 eConsumptionMenuItemActionPerformed(evt);

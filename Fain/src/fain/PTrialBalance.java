@@ -14,7 +14,10 @@ import database.MasterDB;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
+import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
@@ -43,6 +46,13 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
         this.level = level;
         this.mainFrame = frame;
         initComponents();
+        loadCurrDate();
+    }
+    
+    private void loadCurrDate(){
+        LocalDateTime now = LocalDateTime.now();
+        Date currDate = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
+        this.asOnTbox.setDate(currDate);
     }
     
     private void generateReport(){    

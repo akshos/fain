@@ -14,6 +14,8 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.Level;
@@ -47,6 +49,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         this.mainFrame = frame;
         this.dbConnection = db;
         initComponents();
+        loadCurrDate();
         refreshContents(Codes.REFRESH_ALL);
         this.prevFrame = null;
         this.editId=id;
@@ -61,8 +64,16 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         this.editId=id;
         this.mode=mode;
         initComponents();
+        loadCurrDate();
         if(mode == Codes.EDIT) this.loadContents();
         else refreshContents(Codes.REFRESH_ALL);
+    }
+    
+    private void loadCurrDate(){
+        LocalDateTime now = LocalDateTime.now();
+        Date currDate = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
+        this.dateTbox.setDate(currDate);
+        this.branchCbox.requestFocus();
     }
     
     @Override
@@ -352,6 +363,12 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         outerPanel.add(leftInerPannel);
 
         rightInerPannel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
+
+        dateTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                keyPressedHandler(evt);
+            }
+        });
         rightInerPannel.add(dateTbox);
 
         branchCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
@@ -378,7 +395,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         });
         rightInerPannel.add(creditCbox);
 
-        amountTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,##0.00"))));
+        amountTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat(""))));
         amountTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         amountTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {

@@ -10,6 +10,7 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.TableModel;
+import utility.Codes;
 
 /**
  *
@@ -136,8 +137,25 @@ public final class PurchaseLatexDB {
         return null;
     }
     
+    public static String getPidFromTid(Statement stmt, String tid){
+        String sql = "select purchaseLatexId from purchaseLatex where tid='"+tid+"';";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            rs.next();
+            String pid = rs.getString(1);
+            return pid;
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
+    
     public static String[] selectOneId(Statement stmt, String id){
-        String sql="select * from purchaseLatex where purchaseLatexId="+id+";";
+        String sql="select purchaseLatexId as 'ID', branch, date as 'Date', "
+                + "prBill as 'Pr. Bill', party, printf(\"%.3f\", quantity) as 'Quantity', "
+                + "printf(\"%.3f\", drc) as 'DRC', printf(\"%.3f\", dryRubber) as 'Dry Rubber', "
+                + "printf(\"%.2f\", rate) as 'Rate' , printf(\"%.2f\", value) as 'Value' from "
+                + "purchaseLatex where purchaseLatexId="+id+" ;";
         ResultSet rs=null;
         try{
             rs=stmt.executeQuery(sql);
@@ -164,4 +182,35 @@ public final class PurchaseLatexDB {
         }
         return 0.0;
     }
+    
+    public static int checkAccountCodePresent(Statement stmt, String accCode){
+        String sql = "select * from purchaseLatex where party='"+accCode+"' ;";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next()){
+                return Codes.EXISTING_ENTRY;
+            }else{
+                return Codes.NOT_EXISTS;
+            }
+        }catch(SQLException se){
+            se.printStackTrace();
+            return Codes.FAIL;
+        }
+    }
+    
+    public static int checkTidCodePresent(Statement stmt, String tid){
+        String sql = "select * from purchaseLatex where tid='"+tid+"' ;";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next()){
+                return Codes.EXISTING_ENTRY;
+            }else{
+                return Codes.NOT_EXISTS;
+            }
+        }catch(SQLException se){
+            se.printStackTrace();
+            return Codes.FAIL;
+        }
+    }
+    
 }

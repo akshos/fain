@@ -80,6 +80,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
             this.customerAdded = true;
             this.categoryCbox.transferFocus();
             this.insertData();
+            this.nextEntry();
         }
     }
     
@@ -272,6 +273,9 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
     
     private void nextEntry(){
         this.accountCodeTbox.requestFocus();
+        this.accountHeadTbox.setText("");
+        this.yopBalanceTbox.setText("");
+        this.currentBalanceTbox.setText("");
     }
     
     private boolean checkCode(){

@@ -6,9 +6,12 @@
 package fain;
 
 import database.DBConnection;
+import database.PurchaseLatexDB;
 import database.SalesDB;
+import database.TransactionDB;
 import java.awt.Dimension;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
@@ -113,6 +116,24 @@ public class ESLatex extends javax.swing.JInternalFrame implements RefreshOption
         mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }
     
+    private void deleteEntry(){
+        int row = this.dataTable.getSelectedRow();
+        
+        String saleId = this.dataTable.getModel().getValueAt(row, 0).toString();
+        String billNo = this.dataTable.getModel().getValueAt(row, 3).toString();
+        String tid = SalesDB.getTidFromSid(dbConnection.getStatement(), saleId);
+        
+        int ret;
+        ret = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete Bill No. " + billNo, "SURE?", JOptionPane.WARNING_MESSAGE);
+        if(ret == JOptionPane.NO_OPTION){
+            return;
+        }
+        SalesDB.delete(dbConnection.getStatement(), saleId);
+        TransactionDB.deleteByTid(dbConnection.getStatement(), tid);
+        
+        this.updateTable();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -163,6 +184,7 @@ public class ESLatex extends javax.swing.JInternalFrame implements RefreshOption
 
         upperPanel.setLayout(new java.awt.BorderLayout());
 
+        dataTable.setAutoCreateRowSorter(true);
         dataTable.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         dataTable.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         dataTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -411,6 +433,11 @@ public class ESLatex extends javax.swing.JInternalFrame implements RefreshOption
 
         deleteButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         deleteButton.setText("F3: Delete");
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
         lowerPanel.add(deleteButton);
 
         findButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -445,11 +472,8 @@ public class ESLatex extends javax.swing.JInternalFrame implements RefreshOption
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F2){
             addEntry();
         }
-        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F2){
-        
-        }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F3){
-        
+            deleteEntry();
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F5){
         
@@ -468,6 +492,10 @@ public class ESLatex extends javax.swing.JInternalFrame implements RefreshOption
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
         this.resizeColumns();
     }//GEN-LAST:event_formComponentResized
+
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+        this.deleteEntry();
+    }//GEN-LAST:event_deleteButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

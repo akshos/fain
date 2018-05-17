@@ -65,7 +65,7 @@ public final class MasterDB {
         try {
             stmt.executeUpdate(del);
         } catch (SQLException ex) {
-            Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("****Cound not delete customer*****");
         }
     }
     

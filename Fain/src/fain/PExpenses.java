@@ -16,6 +16,8 @@ import java.awt.Dimension;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
@@ -44,7 +46,15 @@ public class PExpenses extends javax.swing.JInternalFrame{
         this.level = level;
         this.mainFrame = frame;
         initComponents();
+        loadCurrDate();
         loadBranch();
+    }
+    
+    private void loadCurrDate(){
+        LocalDateTime now = LocalDateTime.now();
+        Date currDate = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
+        this.fromDatePicker.setDate(currDate);
+        this.toDatePicker.setDate(currDate);
     }
     
     private void loadBranch(){

@@ -63,6 +63,15 @@ public final class TransactionDB {
         }
     }
     
+    public static void deleteByTid(Statement stmt,String tid){
+        String del="delete from transactions where tid='"+tid+"';";
+        try {
+            stmt.executeUpdate(del);
+        } catch (SQLException ex) {
+            System.out.println("*****Cannot delete******");
+        }
+    }
+    
     public static boolean checkExistingTNo(Statement stmt,String tNo){
         String check="select * from transactions where transactionNo="+tNo+";";
         try {
@@ -104,7 +113,21 @@ public final class TransactionDB {
             se.printStackTrace();
 	}
 	return table;
-}
+    }
+    
+    public static String getTidFromTno(Statement stmt, String tno){
+        String sql = "select tid from transactions where transactionNo="+tno+";";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            rs.next();
+            String tid = rs.getString(1);
+            return tid;
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
+    
     public static ResultSet selectAll(Statement stmt){
         String sql="select * from transactions;";
         ResultSet rs = null;
@@ -125,19 +148,6 @@ public final class TransactionDB {
             return ResultSetToStringArray.getRowAsStringArray(rs);
         }
         catch(SQLException se){
-            se.printStackTrace();
-        }
-        return null;
-    }
-    
-    public static String getTidFromTNo(Statement stmt, String tNo){
-        String sql = "select tid from transactions where transactionNo="+tNo+";";
-        try{
-            ResultSet rs = stmt.executeQuery(sql);
-            rs.next();
-            String tid = rs.getString(1);
-            return tid;
-        }catch(SQLException se){
             se.printStackTrace();
         }
         return null;
@@ -271,6 +281,36 @@ public final class TransactionDB {
             se.printStackTrace();
         }
         return null;
+    }
+    
+    public static int checkAccountCodePresent(Statement stmt, String accCode){
+        String sql = "select * from transactions where credit='"+accCode+"' or debit='"+accCode+"' ;";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next()){
+                return Codes.EXISTING_ENTRY;
+            }else{
+                return Codes.NOT_EXISTS;
+            }
+        }catch(SQLException se){
+            se.printStackTrace();
+            return Codes.FAIL;
+        }
+    }
+    
+    public static int checkTidCodePresent(Statement stmt, String tid){
+        String sql = "select * from transactions where tid='"+tid+"' ;";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next()){
+                return Codes.EXISTING_ENTRY;
+            }else{
+                return Codes.NOT_EXISTS;
+            }
+        }catch(SQLException se){
+            se.printStackTrace();
+            return Codes.FAIL;
+        }
     }
     
 }
