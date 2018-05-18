@@ -353,20 +353,20 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         setTitle("Data Entry (Transaction)");
         setPreferredSize(new java.awt.Dimension(450, 410));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameClosing(evt);
             }
-            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
             }
         });
 
@@ -417,6 +417,11 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
 
         rightInerPannel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
 
+        dateTbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dateTboxActionPerformed(evt);
+            }
+        });
         dateTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -591,6 +596,17 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
     private void formInternalFrameClosing(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosing
         Preferences.storeInternalFrameDimension(this);        // TODO add your handling code here:
     }//GEN-LAST:event_formInternalFrameClosing
+
+    private void dateTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dateTboxActionPerformed
+        Date oDate = dateTbox.getDate();        
+        DateFormat oDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        String szDate = oDateFormat.format(oDate);
+         try {
+             dateTbox.setDate(oDateFormat.parse(szDate));       // TODO add your handling code here:
+         } catch (ParseException ex) {
+             Logger.getLogger(APLatex.class.getName()).log(Level.SEVERE, null, ex);
+         }        // TODO add your handling code here:
+    }//GEN-LAST:event_dateTboxActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
