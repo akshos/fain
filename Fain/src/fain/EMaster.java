@@ -11,11 +11,13 @@ import database.MasterDB;
 import database.DBConnection;
 import database.TransactionDB;
 import java.awt.Dimension;
+import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
+import utility.UtilityFuncs;
 /**
  *
  * @author akshos
@@ -71,12 +73,13 @@ public class EMaster extends javax.swing.JInternalFrame implements RefreshOption
                 col.getColumn(i).setPreferredWidth(colWidth);
             }
         }
-        this.dataTable.setRowHeight(30);
+        this.dataTable.setRowHeight(40);
     }
     
     public void updateTable(){
         TableModel table = MasterDB.getTable(dbConnection.getStatement());
         this.dataTable.setModel(table);
+        UtilityFuncs.setTableFont(dataTable);
         this.setMinWidth();
         resizeColumns();
         setColumnAlignment();

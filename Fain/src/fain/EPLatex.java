@@ -18,6 +18,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import reports.PurchaseBill;
 import utility.Codes;
+import utility.UtilityFuncs;
 
 /**
  *
@@ -68,6 +69,7 @@ public class EPLatex extends javax.swing.JInternalFrame implements RefreshOption
     public void updateTable(){
         TableModel table = PurchaseLatexDB.getTable(dbConnection.getStatement());
         this.dataTable.setModel(table);
+        UtilityFuncs.setTableFont(dataTable);
         setMinWidth();
         resizeColumns();
         setColumnAlignment();

@@ -16,6 +16,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import utility.Codes;
+import utility.UtilityFuncs;
 /**
  *
  * @author akshos
@@ -80,6 +81,7 @@ public class ESLatex extends javax.swing.JInternalFrame implements RefreshOption
     public void updateTable(){
         TableModel table = SalesDB.getTable(dbConnection.getStatement());
         this.dataTable.setModel(table);
+        UtilityFuncs.setTableFont(dataTable);
         setMinWidth();
         resizeColumns();
         setColumnAlignment();

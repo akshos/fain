@@ -13,6 +13,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import utility.Codes;
+import utility.UtilityFuncs;
 
 /**
  *
@@ -67,6 +68,7 @@ public class EBranches extends javax.swing.JInternalFrame implements RefreshOpti
     public void updateTable(){
         TableModel table = BranchDB.getTable(dbConnection.getStatement());
         this.dataTable.setModel(table);
+        UtilityFuncs.setTableFont(dataTable);
         setMinWidth();
         resizeColumns();
         setColumnAlignment();
@@ -155,6 +157,7 @@ public class EBranches extends javax.swing.JInternalFrame implements RefreshOpti
 
         tableScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         tableScrollPane.setAutoscrolls(true);
+        tableScrollPane.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         tableScrollPane.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -163,7 +166,7 @@ public class EBranches extends javax.swing.JInternalFrame implements RefreshOpti
 
         dataTable.setAutoCreateRowSorter(true);
         dataTable.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        dataTable.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        dataTable.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         dataTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null},

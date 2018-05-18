@@ -281,8 +281,26 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         enterButton = new javax.swing.JButton();
 
         setClosable(true);
+        setResizable(true);
         setTitle("Data Entry (Stock)");
         setPreferredSize(new java.awt.Dimension(450, 410));
+        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameClosing(evt);
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+        });
 
         outerPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
         outerPanel.setLayout(new java.awt.GridLayout(1, 2));
@@ -301,27 +319,27 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
 
         labelsPanel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
 
-        itemNameLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        itemNameLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         itemNameLabel.setText("Item Name");
         labelsPanel.add(itemNameLabel);
 
-        currentStockLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        currentStockLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         currentStockLabel.setText("Current Stock");
         labelsPanel.add(currentStockLabel);
 
-        rateLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        rateLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         rateLabel.setText("Rate");
         labelsPanel.add(rateLabel);
 
-        purchasesLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        purchasesLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         purchasesLabel.setText("Purchases A/c");
         labelsPanel.add(purchasesLabel);
 
-        SalesLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        SalesLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         SalesLabel.setText("Sales A/c");
         labelsPanel.add(SalesLabel);
 
-        stockLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        stockLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         stockLabel.setText("Stock A/c");
         labelsPanel.add(stockLabel);
 
@@ -331,7 +349,7 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
 
         rightInerPannel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
 
-        itemNameTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        itemNameTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         itemNameTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 itemNameTboxFocusGained(evt);
@@ -345,7 +363,7 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         rightInerPannel.add(itemNameTbox);
 
         currentStockTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##0.000"))));
-        currentStockTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        currentStockTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         currentStockTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 currentStockTboxFocusGained(evt);
@@ -364,7 +382,7 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         rightInerPannel.add(currentStockTbox);
 
         rateTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##0.00"))));
-        rateTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        rateTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         rateTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 rateTboxFocusGained(evt);
@@ -382,7 +400,7 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         });
         rightInerPannel.add(rateTbox);
 
-        purchasesCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        purchasesCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         purchasesCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 purchasesCboxKeyPressed(evt);
@@ -390,7 +408,7 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         });
         rightInerPannel.add(purchasesCbox);
 
-        salesCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        salesCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         salesCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 salesCboxKeyPressed(evt);
@@ -398,7 +416,7 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         });
         rightInerPannel.add(salesCbox);
 
-        stockCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        stockCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         stockCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 stockCboxKeyPressed(evt);
@@ -409,7 +427,7 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 60, 2, 60));
         buttonPanel.setLayout(new java.awt.BorderLayout());
 
-        enterButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        enterButton.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         enterButton.setText("ENTER");
         enterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -502,6 +520,10 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
     private void rateTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_rateTboxFocusGained
         this.rateTbox.selectAll();
     }//GEN-LAST:event_rateTboxFocusGained
+
+    private void formInternalFrameClosing(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosing
+        Preferences.storeInternalFrameDimension(this);        // TODO add your handling code here:
+    }//GEN-LAST:event_formInternalFrameClosing
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

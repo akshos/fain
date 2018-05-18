@@ -309,31 +309,31 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
 
         labelsPanel.setLayout(new java.awt.GridLayout(8, 0, 0, 10));
 
-        branchLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        branchLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         branchLabel.setText("Branch");
         labelsPanel.add(branchLabel);
 
-        dateLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        dateLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         dateLabel.setText("Date");
         labelsPanel.add(dateLabel);
 
-        referencenumberLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        referencenumberLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         referencenumberLabel.setText("Reference Number");
         labelsPanel.add(referencenumberLabel);
 
-        itemcodeLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        itemcodeLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         itemcodeLabel.setText("Item Code");
         labelsPanel.add(itemcodeLabel);
 
-        itemnameLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        itemnameLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         itemnameLabel.setText("Item Name");
         labelsPanel.add(itemnameLabel);
 
-        narrationLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        narrationLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         narrationLabel.setText("Narration");
         labelsPanel.add(narrationLabel);
 
-        quantityLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        quantityLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         quantityLabel.setText("Quantity");
         labelsPanel.add(quantityLabel);
 
@@ -453,7 +453,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 60, 2, 60));
         buttonPanel.setLayout(new java.awt.BorderLayout());
 
-        enterButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        enterButton.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         enterButton.setText("ENTER");
         enterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
