@@ -22,6 +22,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import javax.swing.UIManager;
+import utility.UtilityFuncs;
 
 /**
  *
@@ -311,6 +312,11 @@ public class Main extends javax.swing.JFrame {
         });
 
         mainDesktopPane.setName("mainDesktopPane"); // NOI18N
+        mainDesktopPane.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                mainDesktopPaneKeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout mainDesktopPaneLayout = new javax.swing.GroupLayout(mainDesktopPane);
         mainDesktopPane.setLayout(mainDesktopPaneLayout);
@@ -1052,6 +1058,17 @@ public class Main extends javax.swing.JFrame {
         }
         addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_sessionInfoMenuItemActionPerformed
+
+    private void mainDesktopPaneKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_mainDesktopPaneKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_RIGHT){
+            System.out.println("Right Arrow");
+            UtilityFuncs.click(this.fileMenu, 10, 10);
+        }
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_LEFT){
+            System.out.println("Left Arrow");
+            UtilityFuncs.click(this.editMenu, 10, 10);
+        }
+    }//GEN-LAST:event_mainDesktopPaneKeyPressed
     
     /**
      * @param item the internal frame to be added to desktop pane
