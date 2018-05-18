@@ -88,13 +88,17 @@ public class CashBankAccount {
         pageNum = 0;
         scat = category;
         sdate = prtDate = "";
+        
         boolean ret = false;
+        
         if(category.compareTo("CH") == 0){
             PREFIX = "cashbook";
         }else if(category.compareTo("BK") == 0){
             PREFIX = "bankbook";
         }
+        
         Document doc;
+        
         try{
             doc = startDocument(paper, orientation);
             
@@ -105,13 +109,14 @@ public class CashBankAccount {
             }
             
             double balance = calculatePreviousBalance(con, fromDate, accountId);
-            createTable(con, doc, fromDate, toDate, accountId, balance);
+            ret = createTable(con, doc, fromDate, toDate, accountId, balance);
             doc.close();
         }catch(Exception e){
             e.printStackTrace();
         }
+        if(ret)
+            ViewPdf.openPdfViewer(PREFIX + ".pdf");
         
-        ViewPdf.openPdfViewer(PREFIX + ".pdf");
         return ret;
     }
     
@@ -165,7 +170,7 @@ public class CashBankAccount {
         table.addCell(cell);
     }
     
-    private static void createTable(DBConnection con, Document doc, String fromDate, String toDate, String accountId, double prevBalance){
+    private static boolean createTable(DBConnection con, Document doc, String fromDate, String toDate, String accountId, double prevBalance){
         float columns[] = {0.7f, 2, 1, 1};
         PdfPTable table = new PdfPTable(columns);
         table.setWidthPercentage(90);
@@ -186,7 +191,7 @@ public class CashBankAccount {
         String[] transactionDates = TransactionDB.getTrasnsationDatesBetweenIncDatesIdRS(con.getStatement(), fromDate, toDate, accountId);
         if(transactionDates == null){
             JOptionPane.showMessageDialog(null, "No Transactions between the selected dates", "No Transaction", JOptionPane.WARNING_MESSAGE);
-            return;
+            return false;
         }
         ResultSet rs;
         String sql;
@@ -195,7 +200,7 @@ public class CashBankAccount {
         HashMap<String, String> accountHeads = MasterDB.getAccountHeadHashMap(con.getStatement());
         if(accountHeads == null){
             JOptionPane.showMessageDialog(null, "Failed to get Accounts", "FAILED", JOptionPane.ERROR_MESSAGE);
-            return;
+            return false;
         }
         
         try{
@@ -284,7 +289,9 @@ public class CashBankAccount {
             
         }catch(Exception e){
             e.printStackTrace();
+            return false;
         }
+        return true;
         
     }
     
