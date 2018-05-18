@@ -149,7 +149,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         if(!checkCode()){
             return false;
         }
-        if(!ValidationChecks.validateName(headName)){
+        if(headName.trim().isEmpty()){
             int ret = JOptionPane.showConfirmDialog(this, "Please enter a valid Account Head", "Invalid Entry", JOptionPane.WARNING_MESSAGE);
             if(ret == JOptionPane.OK_OPTION){
                 return false;
