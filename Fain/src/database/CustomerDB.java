@@ -138,6 +138,8 @@ public final class CustomerDB {
         String sql = "select customerCode, name, address from customer ";
         if(branchId.compareToIgnoreCase("All") != 0){
             sql += " where branch='"+branchId+"' ";
+        }else if(branchId.compareToIgnoreCase("None") == 0){
+            return null;
         }
         sql += "order by name asc;";
         try{

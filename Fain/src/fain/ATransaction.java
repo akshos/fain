@@ -6,6 +6,7 @@
 package fain;
 
 import database.BranchDB;
+import database.CustomerDB;
 import database.DBConnection;
 import database.MasterDB;
 import database.TransactionDB;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ComboBoxModel;
@@ -79,8 +81,8 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
     @Override
     public void refreshContents(int type){
         if(type == Codes.REFRESH_ALL){
-            loadCreditDebit();
             loadBranch();
+            loadCreditDebit();
         }
         else if(type == Codes.REFRESH_MASTER){
             loadCreditDebit();
@@ -92,7 +94,11 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
     
     private void loadBranch(){
         System.out.println("loading categorycbox");
+        String selectedBranch = "";
         branchData = BranchDB.getBranch(this.dbConnection.getStatement());
+        if(this.branchCbox.getSelectedIndex() != -1){
+            selectedBranch = this.branchCbox.getSelectedItem().toString();
+        }
         int len;
         if(branchData  == null){
             len =  0;
@@ -105,6 +111,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         }
         cboxData[len] = "Add New";
         this.branchCbox.setModel(new DefaultComboBoxModel(cboxData));
+        this.branchCbox.setSelectedItem(selectedBranch);
     }
     
     private void loadContents(){
@@ -120,9 +127,9 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
             Logger.getLogger(ATransaction.class.getName()).log(Level.SEVERE, null, ex);
         }
         loadBranch();
-        loadCreditDebit();
         int indexValB=Arrays.asList(branchData[0]).indexOf(data[2]);
         this.branchCbox.setSelectedIndex(indexValB);
+        loadCreditDebit();
         int indexValD=Arrays.asList(accountData[0]).indexOf(data[3]);
         this.debitCbox.setSelectedIndex(indexValD);
         int indexValC=Arrays.asList(accountData[0]).indexOf(data[4]);
@@ -139,8 +146,18 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         if(this.debitCbox.getSelectedIndex() != -1){
             debitSelected = this.debitCbox.getSelectedItem().toString();
         }
+        String branchCode;
+        int index = this.branchCbox.getSelectedIndex();
+        if(index == -1){
+            branchCode = "None";
+        }else{
+            branchCode = this.branchData[0][index];
+        }
         System.out.println("loading credit and debit cbox");
-        accountData = MasterDB.getAccountHead(this.dbConnection.getStatement());
+        String generalAccounts[][] = MasterDB.getGeneralAccountHeads(dbConnection.getStatement());
+        String customerAccounts[][] = CustomerDB.getCustomersInBranch(dbConnection.getStatement(), branchCode);
+        accountData = append(generalAccounts, customerAccounts);
+        //accountData = MasterDB.getAccountHead(this.dbConnection.getStatement());
         int len;
         if(accountData == null){
             len = 0;
@@ -156,6 +173,24 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         this.debitCbox.setModel(new DefaultComboBoxModel(cboxData));
         if(!creditSelected.isEmpty() ) this.creditCbox.setSelectedItem(creditSelected);
         if(!debitSelected.isEmpty()) this.debitCbox.setSelectedItem(debitSelected);
+    }
+    
+    public static String[][] append(String[][] a, String[][] b) {
+        if(b == null){
+            return a;
+        }
+        int len = a[0].length + b[0].length;
+        int n = 0;
+        String[][] c = new String[2][len];
+        for(int i = 0; i < a[0].length; i++, n++){
+            c[0][n] = a[0][i];
+            c[1][n] = a[1][i];
+        }
+        for(int i = 0; i < b[0].length; i++, n++){
+            c[0][n] = b[0][i];
+            c[1][n] = b[1][i];
+        }
+        return c;
     }
     
     private void insertData(){
@@ -372,6 +407,16 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         rightInerPannel.add(dateTbox);
 
         branchCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        branchCbox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                branchCboxItemStateChanged(evt);
+            }
+        });
+        branchCbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                branchCboxFocusLost(evt);
+            }
+        });
         branchCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 branchCboxKeyPressed(evt);
@@ -516,6 +561,14 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
     private void narrationTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_narrationTboxFocusGained
         this.narrationTbox.selectAll();
     }//GEN-LAST:event_narrationTboxFocusGained
+
+    private void branchCboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_branchCboxItemStateChanged
+        this.loadCreditDebit();
+    }//GEN-LAST:event_branchCboxItemStateChanged
+
+    private void branchCboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_branchCboxFocusLost
+        this.loadCreditDebit();
+    }//GEN-LAST:event_branchCboxFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -99,7 +99,7 @@ public final class MasterDB {
     }
     
     public static ResultSet selectAll(Statement stmt){
-        String sql="select * from master;";
+        String sql="select * from master order by accountNo asc;";
         ResultSet rs = null;
         try{
             rs=stmt.executeQuery(sql);
@@ -121,6 +121,18 @@ public final class MasterDB {
             se.printStackTrace();
         }
         return null;
+    }
+    
+    public static String[][] getGeneralAccountHeads(Statement stmt){
+       String sql="select accountNo,accountHead from master where category<>'CR' and category<>'DB' order by accountNo asc;";
+        try {
+            ResultSet rs=stmt.executeQuery(sql);
+            return ResultSetToStringArray.getStringArray2col(rs);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(MasterDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null; 
     }
     
     public static String[][] getAccountHead(Statement stmt){
