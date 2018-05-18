@@ -111,7 +111,7 @@ public class CashBankAccount {
             e.printStackTrace();
         }
         
-        
+        ViewPdf.openPdfViewer(PREFIX + ".pdf");
         return ret;
     }
     
