@@ -141,6 +141,7 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         setClosable(true);
         setResizable(true);
         setTitle("Branches");
+        setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         setPreferredSize(new java.awt.Dimension(450, 410));
         addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -187,19 +188,19 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
 
         labelsPanel.setLayout(new java.awt.GridLayout(5, 0, 0, 10));
 
-        accountHeadLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        accountHeadLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         accountHeadLabel.setText("Name");
         labelsPanel.add(accountHeadLabel);
 
-        yopBalLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        yopBalLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         yopBalLabel.setText("Address");
         labelsPanel.add(yopBalLabel);
 
-        jLabel2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         jLabel2.setText("KGST");
         labelsPanel.add(jLabel2);
 
-        jLabel3.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         jLabel3.setText("RB Registration Number");
         labelsPanel.add(jLabel3);
 
@@ -209,6 +210,7 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
 
         rightInerPannel.setLayout(new java.awt.GridLayout(5, 0, 0, 10));
 
+        nameTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         nameTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
@@ -217,7 +219,7 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         rightInerPannel.add(nameTbox);
 
         addressTarea.setColumns(20);
-        addressTarea.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        addressTarea.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         addressTarea.setRows(5);
         addressTarea.setTabSize(0);
         addressTarea.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -234,7 +236,7 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
 
         rightInerPannel.add(jScrollPane1);
 
-        kgstTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        kgstTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         kgstTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 kgstTboxFocusGained(evt);
@@ -247,7 +249,7 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         });
         rightInerPannel.add(kgstTbox);
 
-        rbregnoTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        rbregnoTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         rbregnoTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 rbregnoTboxFocusGained(evt);
@@ -263,7 +265,7 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 60, 2, 60));
         buttonPanel.setLayout(new java.awt.BorderLayout());
 
-        enterButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        enterButton.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         enterButton.setText("ENTER");
         enterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

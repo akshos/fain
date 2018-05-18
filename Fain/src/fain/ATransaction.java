@@ -349,8 +349,26 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         enterButton = new javax.swing.JButton();
 
         setClosable(true);
+        setResizable(true);
         setTitle("Data Entry (Transaction)");
         setPreferredSize(new java.awt.Dimension(450, 410));
+        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameClosing(evt);
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+        });
 
         outerPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
         outerPanel.setLayout(new java.awt.GridLayout(1, 2));
@@ -369,27 +387,27 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
 
         labelsPanel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
 
-        dateLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        dateLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         dateLabel.setText("Date");
         labelsPanel.add(dateLabel);
 
-        branchLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        branchLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         branchLabel.setText("Branch");
         labelsPanel.add(branchLabel);
 
-        debitLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        debitLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         debitLabel.setText("Debit ( R )");
         labelsPanel.add(debitLabel);
 
-        creditLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        creditLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         creditLabel.setText("Credit ( P )");
         labelsPanel.add(creditLabel);
 
-        amountLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        amountLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         amountLabel.setText("Amount");
         labelsPanel.add(amountLabel);
 
-        narrationLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        narrationLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         narrationLabel.setText("Narration");
         labelsPanel.add(narrationLabel);
 
@@ -406,7 +424,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         });
         rightInerPannel.add(dateTbox);
 
-        branchCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        branchCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         branchCbox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 branchCboxItemStateChanged(evt);
@@ -424,7 +442,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         });
         rightInerPannel.add(branchCbox);
 
-        debitCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        debitCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         debitCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 debitCboxKeyPressed(evt);
@@ -432,7 +450,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         });
         rightInerPannel.add(debitCbox);
 
-        creditCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        creditCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         creditCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 creditCboxKeyPressed(evt);
@@ -441,7 +459,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         rightInerPannel.add(creditCbox);
 
         amountTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat(""))));
-        amountTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        amountTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         amountTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 amountTboxFocusGained(evt);
@@ -454,7 +472,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         });
         rightInerPannel.add(amountTbox);
 
-        narrationTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        narrationTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         narrationTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 narrationTboxFocusGained(evt);
@@ -475,7 +493,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         });
         buttonPanel.setLayout(new java.awt.BorderLayout());
 
-        enterButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        enterButton.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         enterButton.setText("ENTER");
         enterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -569,6 +587,10 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
     private void branchCboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_branchCboxFocusLost
         this.loadCreditDebit();
     }//GEN-LAST:event_branchCboxFocusLost
+
+    private void formInternalFrameClosing(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosing
+        Preferences.storeInternalFrameDimension(this);        // TODO add your handling code here:
+    }//GEN-LAST:event_formInternalFrameClosing
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

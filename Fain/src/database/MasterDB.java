@@ -240,7 +240,7 @@ public final class MasterDB {
         return null;
     }
     public static String[][] getStockAC(Statement stmt){
-        String sql="select accountNo,accountHead from master where category='SK';";
+        String sql="select accountNo,accountHead from master where category='SK' or category='SL';";
         try {
             ResultSet rs=stmt.executeQuery(sql);
             return ResultSetToStringArray.getStringArray2col(rs);

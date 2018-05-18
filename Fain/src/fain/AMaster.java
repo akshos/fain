@@ -149,7 +149,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         if(!checkCode()){
             return false;
         }
-        if(!ValidationChecks.validateName(headName)){
+        if(headName.trim().isEmpty()){
             int ret = JOptionPane.showConfirmDialog(this, "Please enter a valid Account Head", "Invalid Entry", JOptionPane.WARNING_MESSAGE);
             if(ret == JOptionPane.OK_OPTION){
                 return false;
@@ -371,23 +371,23 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
 
         labelsPanel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
 
-        accountCodeLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        accountCodeLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         accountCodeLabel.setText("Account Code");
         labelsPanel.add(accountCodeLabel);
 
-        accountHeadLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        accountHeadLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         accountHeadLabel.setText("Account Head");
         labelsPanel.add(accountHeadLabel);
 
-        yopBalLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        yopBalLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         yopBalLabel.setText("YOP-Balance");
         labelsPanel.add(yopBalLabel);
 
-        currBalLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        currBalLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         currBalLabel.setText("Current Balance");
         labelsPanel.add(currBalLabel);
 
-        categoryLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        categoryLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         categoryLabel.setText("Category");
         labelsPanel.add(categoryLabel);
 
@@ -397,7 +397,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
 
         rightInerPannel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
 
-        accountCodeTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        accountCodeTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         accountCodeTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 accountCodeTboxFocusGained(evt);
@@ -413,7 +413,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(accountCodeTbox);
 
-        accountHeadTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        accountHeadTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         accountHeadTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 accountHeadTboxFocusGained(evt);
@@ -427,7 +427,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         rightInerPannel.add(accountHeadTbox);
 
         yopBalanceTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,##0.00"))));
-        yopBalanceTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        yopBalanceTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         yopBalanceTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 yopBalanceTboxFocusGained(evt);
@@ -441,7 +441,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         rightInerPannel.add(yopBalanceTbox);
 
         currentBalanceTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,##0.00"))));
-        currentBalanceTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        currentBalanceTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         currentBalanceTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 currentBalanceTboxFocusGained(evt);
@@ -455,7 +455,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         rightInerPannel.add(currentBalanceTbox);
 
         categoryCbox.setBackground(java.awt.Color.white);
-        categoryCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        categoryCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         categoryCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 categoryCboxKeyPressed(evt);
@@ -466,7 +466,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 60, 2, 60));
         buttonPanel.setLayout(new java.awt.BorderLayout());
 
-        enterButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        enterButton.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         enterButton.setText("ENTER");
         enterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

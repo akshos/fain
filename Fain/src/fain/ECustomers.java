@@ -16,6 +16,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import utility.Codes;
+import utility.UtilityFuncs;
 
 /**
  *
@@ -70,6 +71,7 @@ public class ECustomers extends javax.swing.JInternalFrame implements RefreshOpt
     public void updateTable(){
         TableModel table = CustomerDB.getTable(dbConnection.getStatement());
         this.dataTable.setModel(table);
+        UtilityFuncs.setTableFont(dataTable);
         this.setMinWidth();
         resizeColumns();
         setColumnAlignment();

@@ -18,8 +18,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import database.InfoDB;
 import database.SessionInfoDB;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
+import javax.swing.UIManager;
+import utility.UtilityFuncs;
 
 /**
  *
@@ -37,13 +40,15 @@ public class Main extends javax.swing.JFrame {
      * Creates new form Main
      */
     public Main() {
+        UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 24));
+        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 24));
         this.user = null;
         this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         initComponents();
         createLogoutMenu();
         this.activeInternalFrame = new javax.swing.JInternalFrame[10];
         this.level = 0;
-        Preferences.loadAllProperties();
+        Preferences.loadAllProperties();  
     }
     
     private void disableComponents(){
@@ -89,11 +94,11 @@ public class Main extends javax.swing.JFrame {
     
     private boolean askForNewSession(){
         JTextField sessionNameTbox = new JTextField();
-        sessionNameTbox.setFont(new java.awt.Font("Dialog", 1, 14));
+        sessionNameTbox.setFont(new java.awt.Font("Dialog", 1, 24));
         JLabel msg = new JLabel("Enter Session Name : ");
-        msg.setFont(new java.awt.Font("Dialog", 1, 14));
+        msg.setFont(new java.awt.Font("Dialog", 1, 24));
         JLabel msg2 = new JLabel("(Alpabets, numbers, - , _ only)");
-        msg2.setFont(new java.awt.Font("Dialog", 1, 11));
+        msg2.setFont(new java.awt.Font("Dialog", 1, 18));
         final JComponent[] inputs = new JComponent[]{
             msg,
             new JLabel("(Alpabets, numbers, - , _ only)"),
@@ -129,9 +134,9 @@ public class Main extends javax.swing.JFrame {
         JComboBox sessionNamesCbox = new JComboBox(sessionNames);
         String currSession = this.dbConnection.getDatabaseName();
         sessionNamesCbox.setSelectedItem(currSession);
-        sessionNamesCbox.setFont(new java.awt.Font("Dialog", 1, 14));
+        sessionNamesCbox.setFont(new java.awt.Font("Dialog", 1, 24));
         JLabel msg = new JLabel("Choose Session Name : ");
-        msg.setFont(new java.awt.Font("Dialog", 1, 14));
+        msg.setFont(new java.awt.Font("Dialog", 1, 24));
         final JComponent[] inputs = new JComponent[]{
             msg,
             sessionNamesCbox
@@ -211,7 +216,7 @@ public class Main extends javax.swing.JFrame {
     
     private void createLogoutMenu(){
         logoutMenu = new javax.swing.JMenu();
-        logoutMenu.setFont(new java.awt.Font("Dialog", 1, 14));
+        logoutMenu.setFont(new java.awt.Font("Dialog", 1, 24));
         logoutMenu.setText("Logout");
         logoutMenu.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -307,6 +312,11 @@ public class Main extends javax.swing.JFrame {
         });
 
         mainDesktopPane.setName("mainDesktopPane"); // NOI18N
+        mainDesktopPane.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                mainDesktopPaneKeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout mainDesktopPaneLayout = new javax.swing.GroupLayout(mainDesktopPane);
         mainDesktopPane.setLayout(mainDesktopPaneLayout);
@@ -316,29 +326,29 @@ public class Main extends javax.swing.JFrame {
         );
         mainDesktopPaneLayout.setVerticalGroup(
             mainDesktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 441, Short.MAX_VALUE)
+            .addGap(0, 426, Short.MAX_VALUE)
         );
 
         getContentPane().add(mainDesktopPane, java.awt.BorderLayout.CENTER);
 
         statusPanel.setMaximumSize(new java.awt.Dimension(32767, 30));
-        statusPanel.setPreferredSize(new java.awt.Dimension(699, 25));
+        statusPanel.setPreferredSize(new java.awt.Dimension(699, 30));
         statusPanel.setLayout(new java.awt.GridLayout(1, 0));
 
-        databaseNameStatus.setFont(new java.awt.Font("Cantarell", 0, 24)); // NOI18N
+        databaseNameStatus.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         databaseNameStatus.setText("Session");
         statusPanel.add(databaseNameStatus);
 
         getContentPane().add(statusPanel, java.awt.BorderLayout.SOUTH);
 
         fainMainMenu.setName("fainMenuBar"); // NOI18N
-        fainMainMenu.setPreferredSize(new java.awt.Dimension(240, 30));
+        fainMainMenu.setPreferredSize(new java.awt.Dimension(240, 40));
 
         fileMenu.setMnemonic('a');
         fileMenu.setText("Append");
-        fileMenu.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        fileMenu.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         fileMenu.setName("fileMenu"); // NOI18N
-        fileMenu.setPreferredSize(new java.awt.Dimension(80, 21));
+        fileMenu.setPreferredSize(new java.awt.Dimension(120, 30));
         fileMenu.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 fileMenuMouseExited(evt);
@@ -348,7 +358,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        aMasterMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        aMasterMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         aMasterMenuItem.setText("Master");
         aMasterMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -357,7 +367,7 @@ public class Main extends javax.swing.JFrame {
         });
         fileMenu.add(aMasterMenuItem);
 
-        aTransactionMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        aTransactionMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         aTransactionMenuItem.setText("Transaction");
         aTransactionMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -366,7 +376,7 @@ public class Main extends javax.swing.JFrame {
         });
         fileMenu.add(aTransactionMenuItem);
 
-        aStockMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        aStockMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         aStockMenuItem.setText("Stock");
         aStockMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -375,7 +385,7 @@ public class Main extends javax.swing.JFrame {
         });
         fileMenu.add(aStockMenuItem);
 
-        aPurchaseLatexMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        aPurchaseLatexMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         aPurchaseLatexMenuItem.setText("Purchase Latex");
         aPurchaseLatexMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -394,7 +404,7 @@ public class Main extends javax.swing.JFrame {
         });
         fileMenu.add(aPurchaseOthersMenuItem);
 
-        aSalesLatexMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        aSalesLatexMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         aSalesLatexMenuItem.setText("Sales Latex");
         aSalesLatexMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -413,7 +423,7 @@ public class Main extends javax.swing.JFrame {
         });
         fileMenu.add(aConsumptionMenuItem);
 
-        aBranchesMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        aBranchesMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         aBranchesMenuItem.setText("Branches");
         aBranchesMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -426,8 +436,8 @@ public class Main extends javax.swing.JFrame {
 
         editMenu.setMnemonic('e');
         editMenu.setText("Edit");
-        editMenu.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        editMenu.setPreferredSize(new java.awt.Dimension(50, 21));
+        editMenu.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        editMenu.setPreferredSize(new java.awt.Dimension(70, 40));
         editMenu.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 editMenuMouseExited(evt);
@@ -437,7 +447,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        eMasterMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        eMasterMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         eMasterMenuItem.setText("Master");
         eMasterMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -446,7 +456,7 @@ public class Main extends javax.swing.JFrame {
         });
         editMenu.add(eMasterMenuItem);
 
-        eTransactionMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        eTransactionMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         eTransactionMenuItem.setText("Transaction");
         eTransactionMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -455,7 +465,7 @@ public class Main extends javax.swing.JFrame {
         });
         editMenu.add(eTransactionMenuItem);
 
-        eStockMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        eStockMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         eStockMenuItem.setText("Stock");
         eStockMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -464,7 +474,7 @@ public class Main extends javax.swing.JFrame {
         });
         editMenu.add(eStockMenuItem);
 
-        ePurchaseLatexMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        ePurchaseLatexMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         ePurchaseLatexMenuItem.setText("Purchase Latex");
         ePurchaseLatexMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -483,7 +493,7 @@ public class Main extends javax.swing.JFrame {
         });
         editMenu.add(ePurchaseOthersMenuItem);
 
-        eSalesLatexMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        eSalesLatexMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         eSalesLatexMenuItem.setText("Sales Latex");
         eSalesLatexMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -492,7 +502,7 @@ public class Main extends javax.swing.JFrame {
         });
         editMenu.add(eSalesLatexMenuItem);
 
-        eBranchesMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        eBranchesMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         eBranchesMenuItem.setText("Branches");
         eBranchesMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -501,7 +511,7 @@ public class Main extends javax.swing.JFrame {
         });
         editMenu.add(eBranchesMenuItem);
 
-        eCustomersMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        eCustomersMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         eCustomersMenuItem.setText("Customers");
         eCustomersMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -524,8 +534,8 @@ public class Main extends javax.swing.JFrame {
 
         printingMenu.setMnemonic('p');
         printingMenu.setText("Printing");
-        printingMenu.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        printingMenu.setPreferredSize(new java.awt.Dimension(80, 21));
+        printingMenu.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        printingMenu.setPreferredSize(new java.awt.Dimension(120, 40));
         printingMenu.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 printingMenuMouseExited(evt);
@@ -536,9 +546,9 @@ public class Main extends javax.swing.JFrame {
         });
 
         accountBooksMenu.setText("Account Books");
-        accountBooksMenu.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        accountBooksMenu.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
 
-        dayBookMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        dayBookMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         dayBookMenuItem.setText("Day Book");
         dayBookMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -547,7 +557,7 @@ public class Main extends javax.swing.JFrame {
         });
         accountBooksMenu.add(dayBookMenuItem);
 
-        cashBookMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        cashBookMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         cashBookMenuItem.setText("Cash Book");
         cashBookMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -556,7 +566,7 @@ public class Main extends javax.swing.JFrame {
         });
         accountBooksMenu.add(cashBookMenuItem);
 
-        bankBookMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        bankBookMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         bankBookMenuItem.setText("Bank Book");
         bankBookMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -567,7 +577,7 @@ public class Main extends javax.swing.JFrame {
 
         printingMenu.add(accountBooksMenu);
 
-        statementsMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        statementsMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         statementsMenuItem.setText("Statements");
         statementsMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -576,7 +586,7 @@ public class Main extends javax.swing.JFrame {
         });
         printingMenu.add(statementsMenuItem);
 
-        debtorsMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        debtorsMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         debtorsMenuItem.setText("Debtors");
         debtorsMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -585,7 +595,7 @@ public class Main extends javax.swing.JFrame {
         });
         printingMenu.add(debtorsMenuItem);
 
-        creditorsMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        creditorsMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         creditorsMenuItem.setText("Creditors");
         creditorsMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -594,7 +604,7 @@ public class Main extends javax.swing.JFrame {
         });
         printingMenu.add(creditorsMenuItem);
 
-        pLedgerMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        pLedgerMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         pLedgerMenuItem.setText("Ledgers");
         pLedgerMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -603,7 +613,7 @@ public class Main extends javax.swing.JFrame {
         });
         printingMenu.add(pLedgerMenuItem);
 
-        pTrialBalanceMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        pTrialBalanceMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         pTrialBalanceMenuItem.setText("Trial Balance");
         pTrialBalanceMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -612,7 +622,7 @@ public class Main extends javax.swing.JFrame {
         });
         printingMenu.add(pTrialBalanceMenuItem);
 
-        pProfitLossBLMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        pProfitLossBLMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         pProfitLossBLMenuItem.setText("P&L and B/S");
         pProfitLossBLMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -621,7 +631,7 @@ public class Main extends javax.swing.JFrame {
         });
         printingMenu.add(pProfitLossBLMenuItem);
 
-        expensesMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        expensesMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         expensesMenuItem.setText("Expenses");
         expensesMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -634,7 +644,7 @@ public class Main extends javax.swing.JFrame {
 
         optionsMenu.setMnemonic('o');
         optionsMenu.setText("Options");
-        optionsMenu.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        optionsMenu.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         optionsMenu.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 optionsMenuMouseExited(evt);
@@ -644,7 +654,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        startNewSessionMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        startNewSessionMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         startNewSessionMenuItem.setText("Start New Session");
         startNewSessionMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -653,7 +663,7 @@ public class Main extends javax.swing.JFrame {
         });
         optionsMenu.add(startNewSessionMenuItem);
 
-        loadSessionMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        loadSessionMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         loadSessionMenuItem.setText("Load Session");
         loadSessionMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -662,7 +672,7 @@ public class Main extends javax.swing.JFrame {
         });
         optionsMenu.add(loadSessionMenuItem);
 
-        sessionInfoMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        sessionInfoMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         sessionInfoMenuItem.setText("Session Details");
         sessionInfoMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -671,7 +681,7 @@ public class Main extends javax.swing.JFrame {
         });
         optionsMenu.add(sessionInfoMenuItem);
 
-        addUserMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        addUserMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         addUserMenuItem.setText("Add User");
         addUserMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1048,6 +1058,17 @@ public class Main extends javax.swing.JFrame {
         }
         addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_sessionInfoMenuItemActionPerformed
+
+    private void mainDesktopPaneKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_mainDesktopPaneKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_RIGHT){
+            System.out.println("Right Arrow");
+            UtilityFuncs.click(this.fileMenu, 10, 10);
+        }
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_LEFT){
+            System.out.println("Left Arrow");
+            UtilityFuncs.click(this.editMenu, 10, 10);
+        }
+    }//GEN-LAST:event_mainDesktopPaneKeyPressed
     
     /**
      * @param item the internal frame to be added to desktop pane

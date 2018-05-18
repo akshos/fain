@@ -102,7 +102,8 @@ public class DayBook {
         }catch(Exception e){
             e.printStackTrace();
         }
-        
+        if(ret)
+            ViewPdf.openPdfViewer(PREFIX + ".pdf");
         return ret;
     }
     

@@ -80,7 +80,7 @@ public class Ledger {
         return null;
     }
     
-    public static void createReport(DBConnection con, String paper, String orientation,  String branch, String accFrom, String accTo){
+    public static boolean createReport(DBConnection con, String paper, String orientation,  String branch, String accFrom, String accTo){
         sbranch = branch;
         scon = con;
         saccFrom = accFrom;
@@ -88,6 +88,8 @@ public class Ledger {
         pageNum = 1;
         pageCreditTotal = 0;
         pageDebitTotal = 0;
+        
+        boolean ret = false;
         
         try{
             String accountData[][];
@@ -99,13 +101,13 @@ public class Ledger {
             }
             if(accountData == null){
                 JOptionPane.showMessageDialog(null, "No Accounts Available", "NO ACCOUNTS", JOptionPane.WARNING_MESSAGE);
-                return;
+                return false;
             }
             
             int startIndex = Arrays.asList(accountData[0]).indexOf(accFrom);
             if(startIndex == -1){
                 JOptionPane.showMessageDialog(null, "Cannot find From Account", "ERROR", JOptionPane.ERROR_MESSAGE);
-                return;
+                return false;
             }
             
             int endIndex = 0;
@@ -118,8 +120,8 @@ public class Ledger {
                 endIndex = Arrays.asList(accountData[0]).indexOf(accTo);
             }
             if(endIndex == -1){
-                JOptionPane.showMessageDialog(null, "Cannot find To Account", "ERROR", JOptionPane.ERROR_MESSAGE);
-                return;
+                JOptionPane.showMessageDialog(null, "Cannot find Account To", "ERROR", JOptionPane.ERROR_MESSAGE);
+                return false;
             }
             if(endIndex < startIndex){
                 endIndex = startIndex;
@@ -129,7 +131,11 @@ public class Ledger {
             saccountName = MasterDB.getAccountHead(con.getStatement(), currAcc);
             Document doc = startDocument(paper, orientation);
             for(int i = startIndex; i <= endIndex; i++){
-                addLedger(con, doc, accountData[0][i], branch, accFrom, accTo);
+                ret = addLedger(con, doc, accountData[0][i], branch, accFrom, accTo);
+                if(!ret){
+                    JOptionPane.showMessageDialog(null, "Failed to create Ledger", "FAILED", JOptionPane.ERROR_MESSAGE);
+                    break;
+                }
                 if(i < endIndex){
                     currAcc = accountData[0][i+1];
                     saccountName = MasterDB.getAccountHead(con.getStatement(), currAcc);
@@ -140,9 +146,10 @@ public class Ledger {
             doc.close();
         }catch(Exception e){
             e.printStackTrace();
-            return;
         }
-        ViewPdf.openPdfViewer(PREFIX + ".pdf");
+        if(ret)
+            ViewPdf.openPdfViewer(PREFIX + ".pdf");
+        return ret;
     }
        
     private static void addHeaderCell(PdfPTable table, String header){
@@ -152,8 +159,8 @@ public class Ledger {
         table.addCell(cell);
     }
     
-    private static void addLedger(DBConnection con, Document doc, String accId, String branch, String accFrom, String accTo){        
-        addTable(con, doc, accId);
+    private static boolean addLedger(DBConnection con, Document doc, String accId, String branch, String accFrom, String accTo){        
+        return addTable(con, doc, accId);
     }
     
     private static void addTableRow(PdfPTable table, int border, Font font, String date, String nar, String debit, String credit){
@@ -181,7 +188,7 @@ public class Ledger {
         table.addCell(cell);
     }
     
-    private static void addTable(DBConnection con, Document doc, String accId){
+    private static boolean addTable(DBConnection con, Document doc, String accId){
         float columns[] = {0.7f, 2, 1, 1};
         PdfPTable table = new PdfPTable(columns);
         table.setWidthPercentage(90);
@@ -261,7 +268,9 @@ public class Ledger {
             
         }catch(Exception se){
             se.printStackTrace();
+            return false;
         }
+        return true;
         
     }
        

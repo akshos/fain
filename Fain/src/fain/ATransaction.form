@@ -3,6 +3,7 @@
 <Form version="1.8" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JInternalFrameFormInfo">
   <Properties>
     <Property name="closable" type="boolean" value="true"/>
+    <Property name="resizable" type="boolean" value="true"/>
     <Property name="title" type="java.lang.String" value="Data Entry (Transaction)"/>
     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
       <Dimension value="[450, 410]"/>
@@ -11,6 +12,9 @@
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
   </SyntheticProperties>
+  <Events>
+    <EventHandler event="internalFrameClosing" listener="javax.swing.event.InternalFrameListener" parameters="javax.swing.event.InternalFrameEvent" handler="formInternalFrameClosing"/>
+  </Events>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
@@ -21,7 +25,7 @@
     <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
-    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,1,108,0,0,3,96"/>
+    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,1,-37,0,0,3,-95"/>
   </AuxValues>
 
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
@@ -88,7 +92,7 @@
                 <Component class="javax.swing.JLabel" name="dateLabel">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Dialog" size="14" style="1"/>
+                      <Font name="Dialog" size="24" style="1"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="Date"/>
                   </Properties>
@@ -96,7 +100,7 @@
                 <Component class="javax.swing.JLabel" name="branchLabel">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Dialog" size="14" style="1"/>
+                      <Font name="Dialog" size="24" style="1"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="Branch"/>
                   </Properties>
@@ -104,7 +108,7 @@
                 <Component class="javax.swing.JLabel" name="debitLabel">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Dialog" size="14" style="1"/>
+                      <Font name="Dialog" size="24" style="1"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="Debit ( R )"/>
                   </Properties>
@@ -112,7 +116,7 @@
                 <Component class="javax.swing.JLabel" name="creditLabel">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Dialog" size="14" style="1"/>
+                      <Font name="Dialog" size="24" style="1"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="Credit ( P )"/>
                   </Properties>
@@ -120,7 +124,7 @@
                 <Component class="javax.swing.JLabel" name="amountLabel">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Dialog" size="14" style="1"/>
+                      <Font name="Dialog" size="24" style="1"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="Amount"/>
                   </Properties>
@@ -128,7 +132,7 @@
                 <Component class="javax.swing.JLabel" name="narrationLabel">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Dialog" size="14" style="1"/>
+                      <Font name="Dialog" size="24" style="1"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="Narration"/>
                   </Properties>
@@ -153,7 +157,7 @@
             <Component class="javax.swing.JComboBox" name="branchCbox">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Dialog" size="14" style="0"/>
+                  <Font name="Dialog" size="24" style="0"/>
                 </Property>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="0"/>
@@ -171,7 +175,7 @@
             <Component class="javax.swing.JComboBox" name="debitCbox">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Dialog" size="14" style="0"/>
+                  <Font name="Dialog" size="24" style="0"/>
                 </Property>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="0"/>
@@ -187,7 +191,7 @@
             <Component class="javax.swing.JComboBox" name="creditCbox">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Dialog" size="14" style="0"/>
+                  <Font name="Dialog" size="24" style="0"/>
                 </Property>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="0"/>
@@ -206,7 +210,7 @@
                   <Format format="" subtype="-1" type="4"/>
                 </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Dialog" size="14" style="0"/>
+                  <Font name="Dialog" size="24" style="0"/>
                 </Property>
               </Properties>
               <Events>
@@ -217,7 +221,7 @@
             <Component class="javax.swing.JTextField" name="narrationTbox">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Dialog" size="14" style="0"/>
+                  <Font name="Dialog" size="24" style="0"/>
                 </Property>
               </Properties>
               <Events>
@@ -242,7 +246,7 @@
                 <Component class="javax.swing.JButton" name="enterButton">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Dialog" size="14" style="1"/>
+                      <Font name="Dialog" size="24" style="1"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="ENTER"/>
                   </Properties>

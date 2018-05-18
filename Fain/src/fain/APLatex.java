@@ -439,8 +439,26 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         enterButton = new javax.swing.JButton();
 
         setClosable(true);
+        setResizable(true);
         setTitle("Purchase Latex");
         setPreferredSize(new java.awt.Dimension(450, 410));
+        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameClosing(evt);
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+        });
 
         outerPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
         outerPanel.setLayout(new java.awt.GridLayout(1, 2));
@@ -459,39 +477,39 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
 
         labelsPanel.setLayout(new java.awt.GridLayout(10, 0, 0, 10));
 
-        branchLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        branchLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         branchLabel.setText("Branch");
         labelsPanel.add(branchLabel);
 
-        dateLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        dateLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         dateLabel.setText("Date");
         labelsPanel.add(dateLabel);
 
-        prbillLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        prbillLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         prbillLabel.setText("Pr. Bill");
         labelsPanel.add(prbillLabel);
 
-        partyLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        partyLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         partyLabel.setText("Party");
         labelsPanel.add(partyLabel);
 
-        quantityLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        quantityLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         quantityLabel.setText("Quantity Kgs.");
         labelsPanel.add(quantityLabel);
 
-        drcLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        drcLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         drcLabel.setText("D R C");
         labelsPanel.add(drcLabel);
 
-        dryrubberLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        dryrubberLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         dryrubberLabel.setText("Dry Rubber Kgs.");
         labelsPanel.add(dryrubberLabel);
 
-        rateLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        rateLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         rateLabel.setText("Rate");
         labelsPanel.add(rateLabel);
 
-        valueLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        valueLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         valueLabel.setText("Value");
         labelsPanel.add(valueLabel);
 
@@ -501,7 +519,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
 
         rightInerPannel.setLayout(new java.awt.GridLayout(10, 0, 0, 10));
 
-        branchCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        branchCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         branchCbox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 branchCboxItemStateChanged(evt);
@@ -528,7 +546,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         rightInerPannel.add(dateTbox);
 
         prBillTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        prBillTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        prBillTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         prBillTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 prBillTboxFocusGained(evt);
@@ -544,7 +562,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(prBillTbox);
 
-        partyCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        partyCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         partyCbox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 partyCboxItemStateChanged(evt);
@@ -563,7 +581,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         rightInerPannel.add(partyCbox);
 
         quantityTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,##0.000"))));
-        quantityTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        quantityTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         quantityTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 quantityTboxFocusGained(evt);
@@ -582,7 +600,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         rightInerPannel.add(quantityTbox);
 
         drcTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,##0.000"))));
-        drcTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        drcTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         drcTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 drcTboxFocusGained(evt);
@@ -602,7 +620,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
 
         dryRubberTbox.setEditable(false);
         dryRubberTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,##0.000"))));
-        dryRubberTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        dryRubberTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         dryRubberTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 dryRubberTboxFocusGained(evt);
@@ -621,7 +639,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         rightInerPannel.add(dryRubberTbox);
 
         rateTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,##0.000"))));
-        rateTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        rateTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         rateTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 rateTboxFocusGained(evt);
@@ -641,7 +659,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
 
         valueTbox.setEditable(false);
         valueTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,##0.000"))));
-        valueTbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        valueTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         valueTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 valueTboxFocusGained(evt);
@@ -662,7 +680,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 60, 2, 60));
         buttonPanel.setLayout(new java.awt.BorderLayout());
 
-        enterButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        enterButton.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         enterButton.setText("ENTER");
         enterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -806,6 +824,9 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
              Logger.getLogger(APLatex.class.getName()).log(Level.SEVERE, null, ex);
          }
     }//GEN-LAST:event_dateTboxActionPerformed
+    private void formInternalFrameClosing(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosing
+        Preferences.storeInternalFrameDimension(this);        // TODO add your handling code here:
+    }//GEN-LAST:event_formInternalFrameClosing
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
