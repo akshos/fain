@@ -15,11 +15,14 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.sql.Statement;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
@@ -53,8 +56,10 @@ public class PExpenses extends javax.swing.JInternalFrame{
     private void loadCurrDate(){
         LocalDateTime now = LocalDateTime.now();
         Date currDate = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
-        this.fromDatePicker.setDate(currDate);
-        this.toDatePicker.setDate(currDate);
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        String date=df.format(currDate);
+        this.fromDatePicker.setText(date);
+        this.toDatePicker.setText(date);
     }
     
     private void loadBranch(){
@@ -76,7 +81,6 @@ public class PExpenses extends javax.swing.JInternalFrame{
     
     private void generateReport(){    
         setBusy();        
-        DateFormat df = new SimpleDateFormat("dd/MM/yy");
         
         if(branchData == null){
             JOptionPane.showMessageDialog(null, "No Available Branches", "No Branch", JOptionPane.WARNING_MESSAGE);
@@ -93,19 +97,40 @@ public class PExpenses extends javax.swing.JInternalFrame{
             branch = this.branchData[0][index];
         }
         
-        Date date = this.fromDatePicker.getDate() ;
-        if(date == null){
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        String fromDate=null;
+        Date selDate=null;
+         try {
+             selDate = df.parse(this.fromDatePicker.getText());
+             System.out.println(selDate);
+             DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd");
+             String sqlDate=df1.format(selDate);
+             System.out.println(sqlDate);
+             fromDate=sqlDate.toString();
+             fromDate=selDate.toString();
+         } catch (ParseException ex) {
+             Logger.getLogger(APLatex.class.getName()).log(Level.SEVERE, null, ex);
+         }
+        if(fromDate == null){
             JOptionPane.showMessageDialog(this, "Please enter Date From", "NO DATE", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        String fromDate = df.format(date);
-        
-        date = this.toDatePicker.getDate();
-        if(date == null){
+        String toDate=null;
+        selDate=null;
+         try {
+             selDate = df.parse(this.toDatePicker.getText());
+             System.out.println(selDate);
+             DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd");
+             String sqlDate=df1.format(selDate);
+             System.out.println(sqlDate);
+             toDate=sqlDate.toString();
+         } catch (ParseException ex) {
+             Logger.getLogger(APLatex.class.getName()).log(Level.SEVERE, null, ex);
+         }
+        if(toDate == null){
             JOptionPane.showMessageDialog(this, "Please enter Date From", "NO DATE", JOptionPane.WARNING_MESSAGE);
             return;
-        }       
-        String toDate = df.format(this.toDatePicker.getDate());
+        }  
         
         String paper = this.paperCbox.getSelectedItem().toString();
         String orientation = this.orientationCbox.getSelectedItem().toString();
@@ -148,8 +173,8 @@ public class PExpenses extends javax.swing.JInternalFrame{
         orientationLabel = new javax.swing.JLabel();
         rightInerPannel = new javax.swing.JPanel();
         branchCbox = new javax.swing.JComboBox<>();
-        fromDatePicker = new org.jdesktop.swingx.JXDatePicker();
-        toDatePicker = new org.jdesktop.swingx.JXDatePicker();
+        toDatePicker = new javax.swing.JFormattedTextField();
+        fromDatePicker = new javax.swing.JFormattedTextField();
         paperCbox = new javax.swing.JComboBox<>();
         orientationCbox = new javax.swing.JComboBox<>();
         buttonPanel = new javax.swing.JPanel();
@@ -161,20 +186,20 @@ public class PExpenses extends javax.swing.JInternalFrame{
         setTitle("Statements");
         setPreferredSize(new java.awt.Dimension(450, 410));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameClosed(evt);
             }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
             }
         });
 
@@ -195,23 +220,23 @@ public class PExpenses extends javax.swing.JInternalFrame{
 
         labelsPanel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
 
-        Branch.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        Branch.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         Branch.setText("Branch");
         labelsPanel.add(Branch);
 
-        dateFromLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        dateFromLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         dateFromLabel.setText("Date from");
         labelsPanel.add(dateFromLabel);
 
-        asOnLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        asOnLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         asOnLabel.setText("Date To");
         labelsPanel.add(asOnLabel);
 
-        paperLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        paperLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         paperLabel.setText("Paper");
         labelsPanel.add(paperLabel);
 
-        orientationLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        orientationLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         orientationLabel.setText("Orientation");
         labelsPanel.add(orientationLabel);
 
@@ -221,7 +246,7 @@ public class PExpenses extends javax.swing.JInternalFrame{
 
         rightInerPannel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
 
-        branchCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        branchCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         branchCbox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 branchCboxItemStateChanged(evt);
@@ -229,15 +254,28 @@ public class PExpenses extends javax.swing.JInternalFrame{
         });
         rightInerPannel.add(branchCbox);
 
+        try {
+            toDatePicker.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        toDatePicker.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        rightInerPannel.add(toDatePicker);
+
+        try {
+            fromDatePicker.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        fromDatePicker.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         fromDatePicker.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fromDatePickerActionPerformed(evt);
             }
         });
         rightInerPannel.add(fromDatePicker);
-        rightInerPannel.add(toDatePicker);
 
-        paperCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        paperCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         paperCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A4", "Legal" }));
         paperCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -246,7 +284,7 @@ public class PExpenses extends javax.swing.JInternalFrame{
         });
         rightInerPannel.add(paperCbox);
 
-        orientationCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        orientationCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         orientationCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Landscape", "Portrait" }));
         orientationCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -258,7 +296,7 @@ public class PExpenses extends javax.swing.JInternalFrame{
         buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 60, 2, 60));
         buttonPanel.setLayout(new java.awt.BorderLayout());
 
-        enterButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        enterButton.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         enterButton.setText("ENTER");
         enterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -314,13 +352,13 @@ public class PExpenses extends javax.swing.JInternalFrame{
         }
     }//GEN-LAST:event_enterButtonKeyPressed
 
-    private void fromDatePickerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fromDatePickerActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_fromDatePickerActionPerformed
-
     private void branchCboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_branchCboxItemStateChanged
                 // TODO add your handling code here:
     }//GEN-LAST:event_branchCboxItemStateChanged
+
+    private void fromDatePickerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fromDatePickerActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fromDatePickerActionPerformed
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Branch;
@@ -329,7 +367,7 @@ public class PExpenses extends javax.swing.JInternalFrame{
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JLabel dateFromLabel;
     private javax.swing.JButton enterButton;
-    private org.jdesktop.swingx.JXDatePicker fromDatePicker;
+    private javax.swing.JFormattedTextField fromDatePicker;
     private javax.swing.JPanel labelsPanel;
     private javax.swing.JPanel leftInerPannel;
     private javax.swing.JLabel logoLabel;
@@ -340,6 +378,6 @@ public class PExpenses extends javax.swing.JInternalFrame{
     private javax.swing.JComboBox<String> paperCbox;
     private javax.swing.JLabel paperLabel;
     private javax.swing.JPanel rightInerPannel;
-    private org.jdesktop.swingx.JXDatePicker toDatePicker;
+    private javax.swing.JFormattedTextField toDatePicker;
     // End of variables declaration//GEN-END:variables
 }

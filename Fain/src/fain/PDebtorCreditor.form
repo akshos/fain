@@ -93,7 +93,7 @@
                 <Component class="javax.swing.JLabel" name="Branch">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Dialog" size="14" style="1"/>
+                      <Font name="Dialog" size="24" style="1"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="Branch"/>
                   </Properties>
@@ -101,7 +101,7 @@
                 <Component class="javax.swing.JLabel" name="accountFromLabel">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Dialog" size="14" style="1"/>
+                      <Font name="Dialog" size="24" style="1"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="Account From"/>
                   </Properties>
@@ -109,7 +109,7 @@
                 <Component class="javax.swing.JLabel" name="accountToLabel">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Dialog" size="14" style="1"/>
+                      <Font name="Dialog" size="24" style="1"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="Account To"/>
                   </Properties>
@@ -117,7 +117,7 @@
                 <Component class="javax.swing.JLabel" name="paperLabel">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Dialog" size="14" style="1"/>
+                      <Font name="Dialog" size="24" style="1"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="Paper"/>
                   </Properties>
@@ -125,7 +125,7 @@
                 <Component class="javax.swing.JLabel" name="orientationLabel">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Dialog" size="14" style="1"/>
+                      <Font name="Dialog" size="24" style="1"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="Orientation"/>
                   </Properties>
@@ -145,7 +145,7 @@
             <Component class="javax.swing.JComboBox" name="branchCbox">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Dialog" size="14" style="0"/>
+                  <Font name="Dialog" size="24" style="0"/>
                 </Property>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="4">
@@ -166,7 +166,7 @@
             <Component class="javax.swing.JComboBox" name="accountFromCbox">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Dialog" size="14" style="0"/>
+                  <Font name="Dialog" size="24" style="0"/>
                 </Property>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="4">
@@ -184,7 +184,7 @@
             <Component class="javax.swing.JComboBox" name="accountToCbox">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Dialog" size="14" style="0"/>
+                  <Font name="Dialog" size="24" style="0"/>
                 </Property>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="4">
@@ -202,7 +202,7 @@
             <Component class="javax.swing.JComboBox" name="paperCbox">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Dialog" size="14" style="0"/>
+                  <Font name="Dialog" size="24" style="0"/>
                 </Property>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="2">
@@ -221,7 +221,7 @@
             <Component class="javax.swing.JComboBox" name="orientationCbox">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Dialog" size="14" style="0"/>
+                  <Font name="Dialog" size="24" style="0"/>
                 </Property>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="2">
@@ -251,7 +251,7 @@
                 <Component class="javax.swing.JButton" name="enterButton">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Dialog" size="14" style="1"/>
+                      <Font name="Dialog" size="24" style="1"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="ENTER"/>
                   </Properties>

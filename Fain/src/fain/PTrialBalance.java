@@ -14,10 +14,15 @@ import database.MasterDB;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
@@ -52,18 +57,37 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
     private void loadCurrDate(){
         LocalDateTime now = LocalDateTime.now();
         Date currDate = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
-        this.asOnTbox.setDate(currDate);
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        String date=df.format(currDate);
+        this.fromDatePicker.setText(date);
     }
     
     private void generateReport(){    
         setBusy();
         
-        String date = this.asOnTbox.getDate().toString();
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        String fromDate=null;
+        Date selDate=null;
+         try {
+             selDate = df.parse(this.fromDatePicker.getText());
+             System.out.println(selDate);
+             DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd");
+             String sqlDate=df1.format(selDate);
+             System.out.println(sqlDate);
+             fromDate=sqlDate.toString();
+             fromDate=selDate.toString();
+         } catch (ParseException ex) {
+             Logger.getLogger(APLatex.class.getName()).log(Level.SEVERE, null, ex);
+         }
+        if(fromDate == null){
+            JOptionPane.showMessageDialog(this, "Please enter Date From", "NO DATE", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         
         String paper = this.paperCbox.getSelectedItem().toString();
         String orientation = this.orientationCbox.getSelectedItem().toString();
 
-        boolean ret = TrialBalance.createReport(dbConnection, paper, orientation, date);
+        boolean ret = TrialBalance.createReport(dbConnection, paper, orientation, fromDate);
         resetBusy();
     }
     
@@ -97,7 +121,7 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
         paperLabel = new javax.swing.JLabel();
         orientationLabel = new javax.swing.JLabel();
         rightInerPannel = new javax.swing.JPanel();
-        asOnTbox = new org.jdesktop.swingx.JXDatePicker();
+        fromDatePicker = new javax.swing.JFormattedTextField();
         paperCbox = new javax.swing.JComboBox<>();
         orientationCbox = new javax.swing.JComboBox<>();
         buttonPanel = new javax.swing.JPanel();
@@ -143,15 +167,15 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
 
         labelsPanel.setLayout(new java.awt.GridLayout(4, 0, 0, 10));
 
-        asOnLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        asOnLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         asOnLabel.setText("As on");
         labelsPanel.add(asOnLabel);
 
-        paperLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        paperLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         paperLabel.setText("Paper");
         labelsPanel.add(paperLabel);
 
-        orientationLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        orientationLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         orientationLabel.setText("Orientation");
         labelsPanel.add(orientationLabel);
 
@@ -160,9 +184,17 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
         outerPanel.add(leftInerPannel);
 
         rightInerPannel.setLayout(new java.awt.GridLayout(4, 0, 0, 10));
-        rightInerPannel.add(asOnTbox);
 
-        paperCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        try {
+            fromDatePicker.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        fromDatePicker.setFocusable(false);
+        fromDatePicker.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        rightInerPannel.add(fromDatePicker);
+
+        paperCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         paperCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A4", "Legal" }));
         paperCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -171,7 +203,7 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
         });
         rightInerPannel.add(paperCbox);
 
-        orientationCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        orientationCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         orientationCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Landscape", "Portrait" }));
         orientationCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -183,7 +215,7 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
         buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 60, 2, 60));
         buttonPanel.setLayout(new java.awt.BorderLayout());
 
-        enterButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        enterButton.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         enterButton.setText("ENTER");
         enterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -241,9 +273,9 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel asOnLabel;
-    private org.jdesktop.swingx.JXDatePicker asOnTbox;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JButton enterButton;
+    private javax.swing.JFormattedTextField fromDatePicker;
     private javax.swing.JPanel labelsPanel;
     private javax.swing.JPanel leftInerPannel;
     private javax.swing.JLabel logoLabel;
