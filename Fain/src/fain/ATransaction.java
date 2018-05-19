@@ -74,8 +74,9 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
     private void loadCurrDate(){
         LocalDateTime now = LocalDateTime.now();
         Date currDate = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
-        this.dateTbox.setDate(currDate);
-        this.branchCbox.requestFocus();
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        String date=df.format(currDate);
+        this.dateTbox.setText(date);
     }
     
     @Override
@@ -120,11 +121,11 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
             System.out.println("Load Contents : selectedOneId has returned null");
             return;
         }
-        DateFormat df = new SimpleDateFormat("dd/MM/yy");
+         DateFormat df = new SimpleDateFormat("dd/MM/yy");
         try {
-            this.dateTbox.setDate(df.parse(data[1]));
+            this.dateTbox.setText(df.parse(data[2]).toString());
         } catch (ParseException ex) {
-            Logger.getLogger(ATransaction.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(APLatex.class.getName()).log(Level.SEVERE, null, ex);
         }
         loadBranch();
         int indexValB=Arrays.asList(branchData[0]).indexOf(data[2]);
@@ -195,9 +196,16 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
     
     private void insertData(){
         Statement stmt=dbConnection.getStatement();
-        DateFormat df = new SimpleDateFormat("dd/MM/yy");
         
-        String date         =df.format(dateTbox.getDate());
+        DateFormat df = new SimpleDateFormat("YYYY/MM/DD");
+        String date=null;
+        Date selDate=null;
+         try {
+             selDate = df.parse(dateTbox.getText());
+             date=selDate.toString();
+         } catch (ParseException ex) {
+             Logger.getLogger(APLatex.class.getName()).log(Level.SEVERE, null, ex);
+         }
         if(date == null){
             JOptionPane.showMessageDialog(this, "Please enter Date From", "NO DATE", JOptionPane.WARNING_MESSAGE);
             return;
@@ -339,7 +347,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         amountLabel = new javax.swing.JLabel();
         narrationLabel = new javax.swing.JLabel();
         rightInerPannel = new javax.swing.JPanel();
-        dateTbox = new org.jdesktop.swingx.JXDatePicker();
+        dateTbox = new javax.swing.JFormattedTextField();
         branchCbox = new javax.swing.JComboBox<>();
         debitCbox = new javax.swing.JComboBox<>();
         creditCbox = new javax.swing.JComboBox<>();
@@ -417,16 +425,12 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
 
         rightInerPannel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
 
-        dateTbox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                dateTboxActionPerformed(evt);
-            }
-        });
-        dateTbox.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
-            }
-        });
+        try {
+            dateTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        dateTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         rightInerPannel.add(dateTbox);
 
         branchCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
@@ -597,17 +601,6 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         Preferences.storeInternalFrameDimension(this);        // TODO add your handling code here:
     }//GEN-LAST:event_formInternalFrameClosing
 
-    private void dateTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dateTboxActionPerformed
-        Date oDate = dateTbox.getDate();        
-        DateFormat oDateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        String szDate = oDateFormat.format(oDate);
-         try {
-             dateTbox.setDate(oDateFormat.parse(szDate));       // TODO add your handling code here:
-         } catch (ParseException ex) {
-             Logger.getLogger(APLatex.class.getName()).log(Level.SEVERE, null, ex);
-         }        // TODO add your handling code here:
-    }//GEN-LAST:event_dateTboxActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel amountLabel;
@@ -618,7 +611,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
     private javax.swing.JComboBox<String> creditCbox;
     private javax.swing.JLabel creditLabel;
     private javax.swing.JLabel dateLabel;
-    private org.jdesktop.swingx.JXDatePicker dateTbox;
+    private javax.swing.JFormattedTextField dateTbox;
     private javax.swing.JComboBox<String> debitCbox;
     private javax.swing.JLabel debitLabel;
     private javax.swing.JButton enterButton;

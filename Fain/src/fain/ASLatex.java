@@ -78,7 +78,9 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
     private void loadCurrDate(){
         LocalDateTime now = LocalDateTime.now();
         Date currDate = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
-        this.dateTbox.setDate(currDate);
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        String date=df.format(currDate);
+        this.dateTbox.setText(date);
     }
     
     private void resetParty(){
@@ -99,9 +101,9 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         this.branchCbox.setSelectedIndex(indexValB);
         DateFormat df = new SimpleDateFormat("dd/MM/yy");
         try {
-            this.dateTbox.setDate(df.parse(data[2]));
+            this.dateTbox.setText(df.parse(data[2]).toString());
         } catch (ParseException ex) {
-            Logger.getLogger(ASLatex.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(APLatex.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.prBillTbox.setText(data[3]);
         this.prevBillNo = data[3];
@@ -236,9 +238,15 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         }
         int index = this.branchCbox.getSelectedIndex();
         branch = this.branchData[0][index];
-        DateFormat df = new SimpleDateFormat("dd/MM/yy");
-        
-        String date         =df.format(dateTbox.getDate());
+        DateFormat df = new SimpleDateFormat("YYYY/MM/DD");
+        String date=null;
+        Date selDate=null;
+         try {
+             selDate = df.parse(dateTbox.getText());
+             date=selDate.toString();
+         } catch (ParseException ex) {
+             Logger.getLogger(APLatex.class.getName()).log(Level.SEVERE, null, ex);
+         }
         if(date == null){
             JOptionPane.showMessageDialog(this, "Please enter Date From", "NO DATE", JOptionPane.WARNING_MESSAGE);
             return;
@@ -441,7 +449,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         valueLabel = new javax.swing.JLabel();
         rightInerPannel = new javax.swing.JPanel();
         branchCbox = new javax.swing.JComboBox<>();
-        dateTbox = new org.jdesktop.swingx.JXDatePicker();
+        dateTbox = new javax.swing.JFormattedTextField();
         prBillTbox = new javax.swing.JTextField();
         partyCbox = new javax.swing.JComboBox<>();
         barrelFromTbox = new javax.swing.JTextField();
@@ -459,20 +467,20 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         setTitle("Sales Latex");
         setPreferredSize(new java.awt.Dimension(450, 410));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameClosing(evt);
             }
-            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
             }
         });
 
@@ -556,16 +564,12 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(branchCbox);
 
-        dateTbox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                dateTboxActionPerformed(evt);
-            }
-        });
-        dateTbox.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
-            }
-        });
+        try {
+            dateTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        dateTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         rightInerPannel.add(dateTbox);
 
         prBillTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
@@ -865,16 +869,6 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         this.valueTbox.selectAll();
     }//GEN-LAST:event_valueTboxFocusGained
 
-    private void dateTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dateTboxActionPerformed
-        Date oDate = dateTbox.getDate();        
-        DateFormat oDateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        String szDate = oDateFormat.format(oDate);
-         try {
-             dateTbox.setDate(oDateFormat.parse(szDate));       // TODO add your handling code here:
-         } catch (ParseException ex) {
-             Logger.getLogger(APLatex.class.getName()).log(Level.SEVERE, null, ex);
-         }        // TODO add your handling code here:
-    }//GEN-LAST:event_dateTboxActionPerformed
     private void formInternalFrameClosing(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosing
         Preferences.storeInternalFrameDimension(this);        // TODO add your handling code here:
     }//GEN-LAST:event_formInternalFrameClosing
@@ -890,7 +884,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
     private javax.swing.JLabel branchLabel;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JLabel dateLabel;
-    private org.jdesktop.swingx.JXDatePicker dateTbox;
+    private javax.swing.JFormattedTextField dateTbox;
     private javax.swing.JLabel drcLabel;
     private javax.swing.JFormattedTextField drcTbox;
     private javax.swing.JFormattedTextField dryRubberTbox;
