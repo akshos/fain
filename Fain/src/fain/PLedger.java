@@ -222,23 +222,23 @@ public class PLedger extends javax.swing.JInternalFrame{
 
         labelsPanel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
 
-        accountCodeLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        accountCodeLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         accountCodeLabel.setText("Branch");
         labelsPanel.add(accountCodeLabel);
 
-        accountHeadLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        accountHeadLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         accountHeadLabel.setText("Account From");
         labelsPanel.add(accountHeadLabel);
 
-        yopBalLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        yopBalLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         yopBalLabel.setText("Account To");
         labelsPanel.add(yopBalLabel);
 
-        paperLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        paperLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         paperLabel.setText("Paper");
         labelsPanel.add(paperLabel);
 
-        orientationLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        orientationLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         orientationLabel.setText("Orientation");
         labelsPanel.add(orientationLabel);
 
@@ -249,7 +249,7 @@ public class PLedger extends javax.swing.JInternalFrame{
         rightInerPannel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
 
         branchCbox.setBackground(java.awt.Color.white);
-        branchCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        branchCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         branchCbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 branchCboxFocusLost(evt);
@@ -263,7 +263,7 @@ public class PLedger extends javax.swing.JInternalFrame{
         rightInerPannel.add(branchCbox);
 
         accountFromCbox.setBackground(java.awt.Color.white);
-        accountFromCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        accountFromCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         accountFromCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 accountFromCboxKeyPressed(evt);
@@ -272,7 +272,7 @@ public class PLedger extends javax.swing.JInternalFrame{
         rightInerPannel.add(accountFromCbox);
 
         accountToCbox.setBackground(java.awt.Color.white);
-        accountToCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        accountToCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         accountToCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 accountToCboxKeyPressed(evt);
@@ -281,7 +281,7 @@ public class PLedger extends javax.swing.JInternalFrame{
         rightInerPannel.add(accountToCbox);
 
         paperCbox.setBackground(java.awt.Color.white);
-        paperCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        paperCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         paperCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A4", "Legal" }));
         paperCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -291,7 +291,7 @@ public class PLedger extends javax.swing.JInternalFrame{
         rightInerPannel.add(paperCbox);
 
         orientationCbox.setBackground(java.awt.Color.white);
-        orientationCbox.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        orientationCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         orientationCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Landscape", "Portrait" }));
         orientationCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -303,7 +303,7 @@ public class PLedger extends javax.swing.JInternalFrame{
         buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 60, 2, 60));
         buttonPanel.setLayout(new java.awt.BorderLayout());
 
-        enterButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        enterButton.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         enterButton.setText("ENTER");
         enterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
