@@ -104,7 +104,7 @@ public final class TransactionDB {
                 + "t.credit || ' ' || mcredit.accountHead as 'Credit', "
                 + "printf(\"%.2f\", t.amount) as 'Amount', t.narration as 'Narration' from transactions as t, "
                 + "branch as b, master as mdebit, master mcredit "
-                + "where t.branch=b.branchId and t.credit=mcredit.accountNo and t.debit=mdebit.accountNo;";
+                + "where t.branch=b.branchId and t.credit=mcredit.accountNo and t.debit=mdebit.accountNo order by t.date asc;";
 	TableModel table = null;
         ResultSet rs = null;
 	try{
