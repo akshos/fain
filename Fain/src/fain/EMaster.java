@@ -12,17 +12,20 @@ import database.DBConnection;
 import database.TransactionDB;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.util.Arrays;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import utility.UtilityFuncs;
+import utility.ValidationChecks;
 /**
  *
  * @author akshos
  */
 public class EMaster extends javax.swing.JInternalFrame implements RefreshOption{
+    private String categories[] = {"CR", "DB", "SK", "CH", "SL", "PR", "EX", "LN", "AS", "LI", "DP", "SE", "BK", "IN", "SH"};
     private DBConnection dbConnection;
     private Main mainFrame;
     private int level;
@@ -79,8 +82,12 @@ public class EMaster extends javax.swing.JInternalFrame implements RefreshOption
     public void updateTable(){
         TableModel table = MasterDB.getTable(dbConnection.getStatement());
         this.dataTable.setModel(table);
+        setTableAppearance();
+    }
+    
+    private void setTableAppearance(){
         UtilityFuncs.setTableFont(dataTable);
-        this.setMinWidth();
+        setMinWidth();
         resizeColumns();
         setColumnAlignment();
     }
@@ -141,6 +148,32 @@ public class EMaster extends javax.swing.JInternalFrame implements RefreshOption
         
         this.updateTable();
     }
+    
+    private void find(){
+        String searchTerm = JOptionPane.showInputDialog(this, "Enter Search : ", "FILTER", JOptionPane.QUESTION_MESSAGE);
+        if(searchTerm != null){
+            searchTerm = searchTerm.toUpperCase().trim();
+            System.out.println("Search " + searchTerm);
+            if(Arrays.asList(categories).contains(searchTerm)){
+                filterTableCategory(searchTerm);
+            }else{
+                filterTableAccount(searchTerm);
+            }
+        }
+    }
+    
+    private void filterTableCategory(String cat){
+        TableModel table = MasterDB.getTableFilteredCategory(dbConnection.getStatement(), cat);
+        this.dataTable.setModel(table);
+        setTableAppearance();
+    }
+    
+    private void filterTableAccount(String account){
+        TableModel table = MasterDB.getTableFilteredAccount(dbConnection.getStatement(), account);
+        this.dataTable.setModel(table);
+        setTableAppearance();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -191,7 +224,6 @@ public class EMaster extends javax.swing.JInternalFrame implements RefreshOption
 
         upperPanel.setLayout(new java.awt.BorderLayout());
 
-        dataTable.setAutoCreateRowSorter(true);
         dataTable.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         dataTable.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         dataTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -455,6 +487,11 @@ public class EMaster extends javax.swing.JInternalFrame implements RefreshOption
 
         findButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         findButton.setText("F5: Find");
+        findButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                findButtonActionPerformed(evt);
+            }
+        });
         lowerPanel.add(findButton);
 
         topButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -489,7 +526,7 @@ public class EMaster extends javax.swing.JInternalFrame implements RefreshOption
             deleteEntry();
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F5){
-        
+            find();
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_R){
             this.updateTable();
@@ -516,6 +553,10 @@ public class EMaster extends javax.swing.JInternalFrame implements RefreshOption
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         this.deleteEntry();
     }//GEN-LAST:event_deleteButtonActionPerformed
+
+    private void findButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findButtonActionPerformed
+        this.find();        // TODO add your handling code here:
+    }//GEN-LAST:event_findButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

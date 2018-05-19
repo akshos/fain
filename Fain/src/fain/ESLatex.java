@@ -17,6 +17,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import utility.Codes;
 import utility.UtilityFuncs;
+import utility.ValidationChecks;
 /**
  *
  * @author akshos
@@ -81,6 +82,10 @@ public class ESLatex extends javax.swing.JInternalFrame implements RefreshOption
     public void updateTable(){
         TableModel table = SalesDB.getTable(dbConnection.getStatement());
         this.dataTable.setModel(table);
+        setTableAppearance();
+    }
+    
+    private void setTableAppearance(){
         UtilityFuncs.setTableFont(dataTable);
         setMinWidth();
         resizeColumns();
@@ -136,6 +141,41 @@ public class ESLatex extends javax.swing.JInternalFrame implements RefreshOption
         this.updateTable();
     }
     
+    private void find(){
+        String searchTerm = JOptionPane.showInputDialog(this, "Enter Search : ", "FILTER", JOptionPane.QUESTION_MESSAGE);
+        if(searchTerm != null){
+            System.out.println("Search " + searchTerm);
+            if(searchTerm.toLowerCase().charAt(0) == 'b'){
+                String bill = searchTerm.substring(1);
+                System.out.println("Bill NO : " + bill);
+                filterTableBill(bill.trim());
+            }
+            else if(ValidationChecks.isDateValid(searchTerm.trim())){
+                filterTableDate(searchTerm.trim());
+            }else{
+                filterTableAccount(searchTerm.trim());
+            }
+        }
+    }
+    
+    private void filterTableBill(String bill){
+        TableModel table = SalesDB.getTableFilteredBill(dbConnection.getStatement(), bill);
+        this.dataTable.setModel(table);
+        setTableAppearance();
+    }
+    
+    private void filterTableDate(String date){
+        TableModel table = SalesDB.getTableFilteredDate(dbConnection.getStatement(), date);
+        this.dataTable.setModel(table);
+        setTableAppearance();
+    }
+    
+    private void filterTableAccount(String account){
+        TableModel table = SalesDB.getTableFilteredAccount(dbConnection.getStatement(), account);
+        this.dataTable.setModel(table);
+        setTableAppearance();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -186,7 +226,6 @@ public class ESLatex extends javax.swing.JInternalFrame implements RefreshOption
 
         upperPanel.setLayout(new java.awt.BorderLayout());
 
-        dataTable.setAutoCreateRowSorter(true);
         dataTable.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         dataTable.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         dataTable.setModel(new javax.swing.table.DefaultTableModel(

@@ -99,11 +99,50 @@ public final class TransactionDB {
     }
     
     public static TableModel getTable(Statement stmt){
-        String sqlQuery = "select t.transactionNo as 'Transaction No', t.date as 'Date', "
-                + "b.name as 'Branch', mdebit.accountHead as 'Debit', mcredit.accountHead as 'Credit', "
+        String sqlQuery = "select t.transactionNo as 'No.', t.date as 'Date', "
+                + "b.name as 'Branch', t.debit || ' ' || mdebit.accountHead as 'Debit', "
+                + "t.credit || ' ' || mcredit.accountHead as 'Credit', "
                 + "printf(\"%.2f\", t.amount) as 'Amount', t.narration as 'Narration' from transactions as t, "
                 + "branch as b, master as mdebit, master mcredit "
-                + "where t.branch=b.branchId and t.credit=mcredit.accountNo and t.debit=mdebit.accountNo;";
+                + "where t.branch=b.branchId and t.credit=mcredit.accountNo and t.debit=mdebit.accountNo order by t.date asc;";
+	TableModel table = null;
+        ResultSet rs = null;
+	try{
+            rs = stmt.executeQuery(sqlQuery);
+            table = ResultSetToTableModel.getTableModel(rs);
+	}catch( SQLException se ){
+            se.printStackTrace();
+	}
+	return table;
+    }
+    
+    public static TableModel getTableFilteredDate(Statement stmt, String date){
+        String sqlQuery = "select t.transactionNo as 'No.', t.date as 'Date', "
+                + "b.name as 'Branch', t.debit || ' ' || mdebit.accountHead as 'Debit', "
+                + "t.credit || ' ' || mcredit.accountHead as 'Credit', "
+                + "printf(\"%.2f\", t.amount) as 'Amount', t.narration as 'Narration' from transactions as t, "
+                + "branch as b, master as mdebit, master mcredit "
+                + "where t.branch=b.branchId and t.credit=mcredit.accountNo and t.debit=mdebit.accountNo "
+                + "and t.date<'" + date + "' order by t.date asc;";
+	TableModel table = null;
+        ResultSet rs = null;
+	try{
+            rs = stmt.executeQuery(sqlQuery);
+            table = ResultSetToTableModel.getTableModel(rs);
+	}catch( SQLException se ){
+            se.printStackTrace();
+	}
+	return table;
+    }
+    
+    public static TableModel getTableFilteredAccount(Statement stmt, String account){
+        String sqlQuery = "select t.transactionNo as 'No.', t.date as 'Date', "
+                + "b.name as 'Branch', t.debit || ' ' || mdebit.accountHead as 'Debit', "
+                + "t.credit || ' ' || mcredit.accountHead as 'Credit', "
+                + "printf(\"%.2f\", t.amount) as 'Amount', t.narration as 'Narration' from transactions as t, "
+                + "branch as b, master as mdebit, master mcredit "
+                + "where t.branch=b.branchId and t.credit=mcredit.accountNo and t.debit=mdebit.accountNo "
+                + "and (t.debit='" + account + "' or t.credit='" + account + "') order by t.date asc;";
 	TableModel table = null;
         ResultSet rs = null;
 	try{

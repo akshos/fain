@@ -42,6 +42,7 @@ public class Main extends javax.swing.JFrame {
     public Main() {
         UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 24));
         UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 24));
+        UIManager.put("TextField.font", new Font("Arial", Font.PLAIN, 24));
         this.user = null;
         this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         initComponents();

@@ -10,13 +10,16 @@ import database.PurchaseLatexDB;
 import database.SalesDB;
 import database.TransactionDB;
 import java.awt.Dimension;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import utility.Codes;
 import utility.UtilityFuncs;
+import utility.ValidationChecks;
 
 /**
  *
@@ -81,6 +84,10 @@ public class ETransaction extends javax.swing.JInternalFrame implements RefreshO
     public void updateTable(){
         TableModel table = TransactionDB.getTable(dbConnection.getStatement());
         this.dataTable.setModel(table);
+        setTableAppearance();
+    }
+    
+    private void setTableAppearance(){
         UtilityFuncs.setTableFont(dataTable);
         setMinWidth();
         resizeColumns();
@@ -153,6 +160,31 @@ public class ETransaction extends javax.swing.JInternalFrame implements RefreshO
         this.updateTable();
     }
     
+    private void find(){
+        String searchTerm = JOptionPane.showInputDialog(this, "Enter Search : ", "FILTER", JOptionPane.QUESTION_MESSAGE);
+        if(searchTerm != null){
+            System.out.println("Search " + searchTerm);
+            if(ValidationChecks.isDateValid(searchTerm.trim())){
+                filterTableDate(searchTerm.trim());
+            }else{
+                filterTableAccount(searchTerm.trim());
+            }
+        
+        }
+    }
+    
+    private void filterTableDate(String date){
+        TableModel table = TransactionDB.getTableFilteredDate(dbConnection.getStatement(), date);
+        this.dataTable.setModel(table);
+        setTableAppearance();
+    }
+    
+    private void filterTableAccount(String account){
+        TableModel table = TransactionDB.getTableFilteredAccount(dbConnection.getStatement(), account);
+        this.dataTable.setModel(table);
+        setTableAppearance();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -203,7 +235,6 @@ public class ETransaction extends javax.swing.JInternalFrame implements RefreshO
 
         upperPanel.setLayout(new java.awt.BorderLayout());
 
-        dataTable.setAutoCreateRowSorter(true);
         dataTable.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         dataTable.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         dataTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -500,7 +531,7 @@ public class ETransaction extends javax.swing.JInternalFrame implements RefreshO
             deleteEntry();
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F5){
-        
+            find();
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_R){
             this.updateTable();

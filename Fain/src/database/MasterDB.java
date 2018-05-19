@@ -98,6 +98,38 @@ public final class MasterDB {
 	return table;
     }
     
+    public static TableModel getTableFilteredAccount(Statement stmt, String account){
+        String sqlQuery = "select accountNo as 'Account Number', accountHead as 'Account Head', "
+                + "printf(\"%.2f\", openingBal) as 'Opening Balance', "
+                + "printf(\"%.2f\", closingBal) as 'Current Balance', "
+                + "category as 'Category' from master where accountNo='" + account + "' order by accountNo asc;";
+	TableModel table = null;
+        ResultSet rs = null;
+	try{
+            rs = stmt.executeQuery(sqlQuery);
+            table = ResultSetToTableModel.getTableModel(rs);
+	}catch( SQLException se ){
+            se.printStackTrace();
+	}
+	return table;
+    }
+    
+    public static TableModel getTableFilteredCategory(Statement stmt, String cat){
+        String sqlQuery = "select accountNo as 'Account Number', accountHead as 'Account Head', "
+                + "printf(\"%.2f\", openingBal) as 'Opening Balance', "
+                + "printf(\"%.2f\", closingBal) as 'Current Balance', "
+                + "category as 'Category' from master where category='" + cat + "' order by accountNo asc;";
+	TableModel table = null;
+        ResultSet rs = null;
+	try{
+            rs = stmt.executeQuery(sqlQuery);
+            table = ResultSetToTableModel.getTableModel(rs);
+	}catch( SQLException se ){
+            se.printStackTrace();
+	}
+	return table;
+    }
+    
     public static ResultSet selectAll(Statement stmt){
         String sql="select * from master order by accountNo asc;";
         ResultSet rs = null;
@@ -196,7 +228,7 @@ public final class MasterDB {
     }
     
     public static String[][] getAccountHeadByCat(Statement stmt, String cat){
-        String sql="select accountNo,accountHead from master where category='" + cat +"' ;";
+        String sql="select accountNo,accountHead from master where category='" + cat +"' order by accountNo asc;";
         try {
             ResultSet rs=stmt.executeQuery(sql);
             return ResultSetToStringArray.getStringArray2col(rs);
@@ -208,7 +240,7 @@ public final class MasterDB {
     }
     
     public static ResultSet getAccountsByCat(Statement stmt, String cat){
-        String sql="select * from master where category='" + cat +"' ;";
+        String sql="select * from master where category='" + cat +"' order by accountNo asc;";
         try {
             return stmt.executeQuery(sql);
         }catch(SQLException se){
@@ -218,7 +250,7 @@ public final class MasterDB {
     }
     
     public static String[][] getPurchaseAC(Statement stmt){
-        String sql="select accountNo,accountHead from master where category='PR';";
+        String sql="select accountNo,accountHead from master where category='PR' order by accountNo asc;";
         try {
             ResultSet rs=stmt.executeQuery(sql);
             return ResultSetToStringArray.getStringArray2col(rs);
@@ -229,7 +261,7 @@ public final class MasterDB {
         return null;
     }
     public static String[][] getSalesAC(Statement stmt){
-        String sql="select accountNo,accountHead from master where category='SL';";
+        String sql="select accountNo,accountHead from master where category='SL' order by accountNo asc;";
         try {
             ResultSet rs=stmt.executeQuery(sql);
             return ResultSetToStringArray.getStringArray2col(rs);
@@ -240,7 +272,7 @@ public final class MasterDB {
         return null;
     }
     public static String[][] getStockAC(Statement stmt){
-        String sql="select accountNo,accountHead from master where category='SK' or category='SL';";
+        String sql="select accountNo,accountHead from master where category='SK' or category='SL' order by accountNo asc;";
         try {
             ResultSet rs=stmt.executeQuery(sql);
             return ResultSetToStringArray.getStringArray2col(rs);
@@ -253,7 +285,7 @@ public final class MasterDB {
     
     // doubtful need to confirm
     public static String[][] getParty(Statement stmt){
-        String sql="select accountNo,accountHead from master where category='CR';";
+        String sql="select accountNo,accountHead from master where category='CR' order by accountNo asc;";
         try {
             ResultSet rs=stmt.executeQuery(sql);
             return ResultSetToStringArray.getStringArray2col(rs);
@@ -291,7 +323,7 @@ public final class MasterDB {
     }
     
     public static String[][] getIdHeadOpBal(Statement stmt){
-       String sql = "select accountNo, accountHead,  openingBal from master";
+       String sql = "select accountNo, accountHead,  openingBal from master order by accountNo asc";
        try{
            ResultSet rs = stmt.executeQuery(sql);
            return ResultSetToStringArray.getStringArray3col(rs);
@@ -302,7 +334,7 @@ public final class MasterDB {
     }
     
     public static String[][] getAccountIdByCat(Statement stmt, String cat){
-        String sql = "select accountNo, accountHead from master where category='"+cat+"';";
+        String sql = "select accountNo, accountHead from master where category='"+cat+"' order by accountNo asc;";
         try{
             ResultSet rs = stmt.executeQuery(sql);
             return ResultSetToStringArray.getStringArray2col(rs);
