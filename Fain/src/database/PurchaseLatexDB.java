@@ -273,4 +273,35 @@ public final class PurchaseLatexDB {
         }
     }
     
+    public static ResultSet getAllPurchasesParty(Statement stmt, String party){
+        String sql = "select purchaseLatexId, date, prBill, party, accountHead, quantity, drc, dryrubber, rate, value "
+                + "from purchaseLatex, master where purchaseLatex.party=master.accountNo ";
+        if(party.compareTo("All") != 0){
+            sql += "and party ='" + party + "' ";
+        }
+        sql += " order by date asc;";
+        try{
+            return stmt.executeQuery(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static ResultSet getAllPurchasesPartyDateRange(Statement stmt, String party, String from, String to){
+        String sql = "select purchaseLatexId, date, prBill, party, accountHead, quantity, drc, dryrubber, rate, value "
+                + "from purchaseLatex, master where purchaseLatex.party=master.accountNo "
+                + "and date>='"+from+"' and date<='" + to + "' ";
+        if(party.compareTo("All") != 0){
+            sql += "and party ='" + party + "' ";
+        }
+        sql += " order by date asc;";
+        try{
+            return stmt.executeQuery(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
+    
 }
