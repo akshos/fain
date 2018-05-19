@@ -42,18 +42,6 @@ public class TrialBalance {
     private static int pageNum;
     private static String sdate;
     
-    public static void addTitle(DBConnection con, Document doc, String date){
-        try{
-            Paragraph title = new Paragraph();
-            title.add(CommonFuncs.alignCenter("TRIAL BALANCE", CommonFuncs.titleFont));
-            String subTitle = "As on : " + date;
-            title.add(CommonFuncs.alignCenter(subTitle, CommonFuncs.subTitleFont));
-            doc.add(title);
-            CommonFuncs.addEmptyLine(doc, 1);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
     
     private static Document startDocument(String paper, String orientation){
         try{
@@ -188,20 +176,21 @@ public class TrialBalance {
     }
     
     private static class ShowHeader extends PdfPageEventHelper{        
-        public void onStartPage(PdfWriter writer, Document docuement){
-            CommonFuncs.addHeader(scon, docuement);
-            addTitle(scon, docuement, sdate);
-        }
         
         public void onEndPage(PdfWriter writer, Document document) {
             PdfContentByte cb = writer.getDirectContent();
             
+            CommonFuncs.addHeader(cb, document);
+            addTitle(cb, document);
+            
             Phrase footer = new Phrase();
             footer.add(new Phrase("Page : " + pageNum + "    ", CommonFuncs.footerFont));
+            /*
             footer.add(new Phrase("Debit : ", CommonFuncs.footerFont));
             footer.add(new Phrase(String.format("%.2f", pageDebitTotal) + "    ", CommonFuncs.footerFontBold));
             footer.add(new Phrase("Credit : ", CommonFuncs.footerFont));
             footer.add(new Phrase(String.format("%.2f", pageCreditTotal), CommonFuncs.footerFontBold));
+            */
             
             pageNum = pageNum + 1;
             pageCreditTotal = 0;
@@ -212,12 +201,24 @@ public class TrialBalance {
                     document.bottom() - 5, 0);
         }
         
-        @Override
-        public void onCloseDocument(PdfWriter writer, Document document) {
-            PdfTemplate t = writer.getDirectContent().createTemplate(30, 16);
-            ColumnText.showTextAligned(t, Element.ALIGN_LEFT,
-                new Phrase(String.valueOf(pageNum), CommonFuncs.footerFont),
-                (document.right() - document.left()) / 2 + document.leftMargin(), document.bottom() - 5, 0);
+       private void addTitle(PdfContentByte cb, Document document){
+        try{
+            int base = 10;
+                
+                Phrase title = new Phrase("TRIAL BALANCE", CommonFuncs.titleFont);
+                Phrase date = new Phrase("As on : " + sdate);
+                
+                ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
+                    title,
+                    (document.right() - document.left()) / 2 + document.leftMargin(),
+                    document.top() + base + 35, 0);
+            ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
+                    date,
+                    (document.right() - document.left()) / 2 + document.leftMargin(),
+                    document.top() + base + 20, 0);
+        }catch(Exception e){
+            e.printStackTrace();
         }
+    }
     }
 }

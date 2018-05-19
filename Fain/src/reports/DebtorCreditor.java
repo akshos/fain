@@ -37,6 +37,7 @@ import javax.swing.JOptionPane;
 public class DebtorCreditor {
     private static String PREFIX = "";
     private static String sbranch = "";
+    private static String sbranchName = "";
     private static String saccFrom = "";
     private static String saccTo = "";
     private static String stype = "";
@@ -46,29 +47,6 @@ public class DebtorCreditor {
     private static double pageCreditTotal = 0;
     private static double pageDebitTotal = 0;
     
-    
-    private static void addTitle(DBConnection con, Document doc, String type){
-        try{
-            Paragraph title = new Paragraph();
-            
-            String str = (type.compareTo("DB") == 0)?"DEBTORS":"CREDITORS";
-            
-            title.add(CommonFuncs.alignCenter(str, CommonFuncs.titleFont));
-            doc.add(title);
-            
-            Paragraph para = new Paragraph();
-            para.add(CommonFuncs.alignCenter("ACCOUNT From: " + saccFrom + " To: " + saccTo , CommonFuncs.accountHeadFont));
-
-            if(sbranch != null && !sbranch.isEmpty()){
-                String branchName = BranchDB.getBranchName(con.getStatement(), sbranch);
-                para.add(CommonFuncs.alignCenter("BRANCH : " + branchName, CommonFuncs.branchFont));
-            }
-            doc.add(para);
-            CommonFuncs.addEmptyLine(doc, 1);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
     
     private static Document startDocument(String paper, String orientation){
         try{
@@ -94,6 +72,7 @@ public class DebtorCreditor {
         pageCreditTotal = 0;
         pageDebitTotal = 0;
         stype = type;
+        sbranchName = BranchDB.getBranchName(con.getStatement(), branch);
         
         try{
             String accountData[][];
@@ -248,21 +227,22 @@ public class DebtorCreditor {
         return true;
     }
        
-    private static class ShowHeader extends PdfPageEventHelper{        
-        public void onStartPage(PdfWriter writer, Document docuement){
-            CommonFuncs.addHeader(scon, docuement);
-            addTitle(scon, docuement, stype);
-        }
+    private static class ShowHeader extends PdfPageEventHelper{
 
         public void onEndPage(PdfWriter writer, Document document) {
             PdfContentByte cb = writer.getDirectContent();
             
+            CommonFuncs.addHeader(cb, document);
+            addTitle(cb, document);
+            
             Phrase footer = new Phrase();
             footer.add(new Phrase("Page : " + pageNum + "    ", CommonFuncs.footerFont));
+            /*
             footer.add(new Phrase("Debit : ", CommonFuncs.footerFont));
             footer.add(new Phrase(String.format("%.2f", pageDebitTotal) + "    ", CommonFuncs.footerFontBold));
             footer.add(new Phrase("Credit : ", CommonFuncs.footerFont));
             footer.add(new Phrase(String.format("%.2f", pageCreditTotal), CommonFuncs.footerFontBold));
+            */
             
             pageNum = pageNum + 1;
             pageCreditTotal = 0;
@@ -273,12 +253,30 @@ public class DebtorCreditor {
                     document.bottom() - 5, 0);
         }
         
-        @Override
-        public void onCloseDocument(PdfWriter writer, Document document) {
-            PdfTemplate t = writer.getDirectContent().createTemplate(30, 16);
-            ColumnText.showTextAligned(t, Element.ALIGN_LEFT,
-                new Phrase(String.valueOf(pageNum), CommonFuncs.footerFont),
-                (document.right() - document.left()) / 2 + document.leftMargin(), document.bottom() - 5, 0);
+        private void addTitle(PdfContentByte cb, Document document){
+        try{    
+            int base = 10;
+            String str = (stype.compareTo("DB") == 0)?"DEBTORS":"CREDITORS";
+            
+            Phrase title = new Phrase(str, CommonFuncs.titleFont);
+            Phrase branch = new Phrase(sbranchName + " (" + sbranch + ")", CommonFuncs.subTitleFont);
+            Phrase accounts = new Phrase("Account From : " + saccFrom + " To : " + saccTo, CommonFuncs.subTitleFont);
+            ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
+                    title,
+                    (document.right() - document.left()) / 2 + document.leftMargin(),
+                    document.top() + base + 35, 0);
+            ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
+                    branch,
+                    (document.right() - document.left()) / 2 + document.leftMargin(),
+                    document.top() + base + 20, 0);
+            ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
+                    accounts,
+                    (document.right() - document.left()) / 2 + document.leftMargin(),
+                    document.top() + base + 10, 0);
+            
+        }catch(Exception e){
+            e.printStackTrace();
         }
+    }
     }
 }

@@ -26,7 +26,6 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import javax.swing.JOptionPane;
-import static reports.DayBook.addTitle;
 
 /**
  *
@@ -44,26 +43,10 @@ public class CashBankAccount {
     private static String prtDate;
     private static String sdate;
     private static String scat;
+    private static String saccId;
+    private static String saccName;
     
-    public static void addTitle(DBConnection con, Document doc, String fromDate, String toDate){
-        try{
-            Paragraph title = new Paragraph();
-            String pre = "";
-            if(scat.compareTo("CH") == 0){
-                pre = "CASH";
-            }else if(scat.compareTo("BK") == 0){
-                pre = "BANK";
-            }
-            title.add(CommonFuncs.alignCenter(pre + " BOOK", CommonFuncs.titleFont));
-            String subTitle = "From : " + fromDate + "  To : " + toDate;
-            title.add(CommonFuncs.alignCenter(subTitle, CommonFuncs.subTitleFont));
-            doc.add(title);
-            CommonFuncs.addEmptyLine(doc, 1);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-    
+       
     private static Document startDocument(String paper, String orientation){
         try{
             Document doc = new Document();
@@ -85,9 +68,10 @@ public class CashBankAccount {
         stoDate = toDate;
         pageDebitTotal = 0.0;
         pageCreditTotal = 0.0;
-        pageNum = 0;
+        pageNum = 1;
         scat = category;
         sdate = prtDate = "";
+        saccId = saccName = "";
         
         boolean ret = false;
         
@@ -100,16 +84,21 @@ public class CashBankAccount {
         Document doc;
         
         try{
-            doc = startDocument(paper, orientation);
-            
             if(accountId == null){
                 JOptionPane.showMessageDialog(null, "No CASH Account available", "No ACCOUNT", JOptionPane.WARNING_MESSAGE);
-                doc.close();
                 return false;
             }
             
+            saccId = accountId;
+            saccName = MasterDB.getAccountHead(con.getStatement(), accountId);
+            
+            doc = startDocument(paper, orientation);
+                        
+            //calculate the opening balance till fromDate
             double balance = calculatePreviousBalance(con, fromDate, accountId);
+            //generate report from fromDate to toDate with the previous opening balance
             ret = createTable(con, doc, fromDate, toDate, accountId, balance);
+            
             doc.close();
         }catch(Exception e){
             e.printStackTrace();
@@ -296,21 +285,22 @@ public class CashBankAccount {
     }
     
     private static class ShowHeader extends PdfPageEventHelper{        
-        public void onStartPage(PdfWriter writer, Document docuement){
-            CommonFuncs.addHeader(scon, docuement);
-            addTitle(scon, docuement, sfromDate, stoDate);
-        }
+
         
         public void onEndPage(PdfWriter writer, Document document) {
             PdfContentByte cb = writer.getDirectContent();
             
+            CommonFuncs.addHeader(cb, document);
+            addTitle(cb, document);
+            
             Phrase footer = new Phrase();
             footer.add(new Phrase("Page : " + pageNum + "    ", CommonFuncs.footerFont));
+            /*
             footer.add(new Phrase("Debit : ", CommonFuncs.footerFont));
             footer.add(new Phrase(String.format("%.2f", pageDebitTotal) + "    ", CommonFuncs.footerFontBold));
             footer.add(new Phrase("Credit : ", CommonFuncs.footerFont));
             footer.add(new Phrase(String.format("%.2f", pageCreditTotal), CommonFuncs.footerFontBold));
-            
+            */
             pageNum = pageNum + 1;
             pageCreditTotal = 0;
             pageDebitTotal = 0;
@@ -321,12 +311,36 @@ public class CashBankAccount {
                     document.bottom() - 5, 0);
         }
         
-        @Override
-        public void onCloseDocument(PdfWriter writer, Document document) {
-            PdfTemplate t = writer.getDirectContent().createTemplate(30, 16);
-            ColumnText.showTextAligned(t, Element.ALIGN_LEFT,
-                new Phrase(String.valueOf(pageNum), CommonFuncs.footerFont),
-                (document.right() - document.left()) / 2 + document.leftMargin(), document.bottom() - 5, 0);
+       public void addTitle(PdfContentByte cb, Document document){
+            try{
+                int base = 10;
+                
+                String pre = "";
+                if(scat.compareTo("CH") == 0){
+                    pre = "CASH";
+                }else if(scat.compareTo("BK") == 0){
+                    pre = "BANK";
+                }
+                pre += " BOOK";
+
+                Phrase title = new Phrase(pre, CommonFuncs.titleFont);
+                Phrase account = new Phrase(saccName + " ("+ saccId + ")", CommonFuncs.subTitleFont);
+                Phrase date = new Phrase("From : " + sfromDate + "  To : " + stoDate, CommonFuncs.subTitleFont);
+                ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
+                    title,
+                    (document.right() - document.left()) / 2 + document.leftMargin(),
+                    document.top() + base + 35, 0);
+                ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
+                    account,
+                    (document.right() - document.left()) / 2 + document.leftMargin(),
+                    document.top() + base + 20, 0);
+                ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
+                    date,
+                    (document.right() - document.left()) / 2 + document.leftMargin(),
+                    document.top() + base + 10, 0);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
         }
     }
 }

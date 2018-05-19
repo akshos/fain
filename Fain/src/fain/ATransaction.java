@@ -11,6 +11,8 @@ import database.DBConnection;
 import database.MasterDB;
 import database.TransactionDB;
 import java.awt.Dimension;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -292,7 +294,26 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }
     
+    private void checkBranchCode(){
+        String branchCode = this.branchCbox.getSelectedItem().toString();
+        System.out.println("Item : " + branchCode);
+        int index = Arrays.asList(branchData[0]).indexOf(branchCode);
+        if(index != -1){
+            this.branchCbox.setSelectedIndex(index);
+            this.debitCbox.requestFocus();
+        }else{
+            JOptionPane.showMessageDialog(this, "Wrong Branch Code", "Incorrect", JOptionPane.WARNING_MESSAGE);
+            this.branchCbox.getEditor().selectAll();
+        }
+    }
+    
     private void checkBranchChangedItem(){
+        int index = this.branchCbox.getSelectedIndex();
+        System.out.println("Index : " + index);
+        if(index == -1){
+            checkBranchCode();
+            return;
+        }
         String item = this.branchCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
             addNewBranch();
@@ -448,6 +469,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         });
         rightInerPannel.add(dateTbox);
 
+        branchCbox.setEditable(true);
         branchCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         branchCbox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -457,6 +479,11 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         branchCbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 branchCboxFocusLost(evt);
+            }
+        });
+        branchCbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                branchCboxActionPerformed(evt);
             }
         });
         branchCbox.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -546,6 +573,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
     }//GEN-LAST:event_enterButtonActionPerformed
 
     private void branchCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_branchCboxKeyPressed
+        System.out.println("Branch key press");
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             this.checkBranchChangedItem();
         }
@@ -619,6 +647,10 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
     private void dateTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_dateTboxFocusGained
         this.dateTbox.setCaretPosition(0);        // TODO add your handling code here:
     }//GEN-LAST:event_dateTboxFocusGained
+
+    private void branchCboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_branchCboxActionPerformed
+        this.checkBranchChangedItem();// TODO add your handling code here:
+    }//GEN-LAST:event_branchCboxActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -96,7 +96,7 @@ public final class CustomerDB {
     public static TableModel getTable(Statement stmt){
         String sqlQuery = "select c.customerCode as 'ID', c.name as 'Name', c.address as 'Address', "
                 + "b.name AS 'Branch', c.kgst as 'GST', c.rbno as 'RBNO' from customer as c, branch as b "
-                + "where c.branch=b.branchId;";
+                + "where c.branch=b.branchId order by customerCode asc;";
 	TableModel table = null;
         ResultSet rs = null;
 	try{
@@ -109,7 +109,7 @@ public final class CustomerDB {
     }
     
     public static ResultSet selectAll(Statement stmt){
-        String sql="select * from customer;";
+        String sql="select * from customer order by customerCode asc;";
         ResultSet rs = null;
         try{
             rs=stmt.executeQuery(sql);
@@ -135,13 +135,13 @@ public final class CustomerDB {
     }
     
     public static String[][] getCustomersInBranch(Statement stmt, String branchId){
-        String sql = "select customerCode, name, address from customer ";
+        String sql = "select customerCode, name, address from customer";
         if(branchId.compareToIgnoreCase("All") != 0){
             sql += " where branch='"+branchId+"' ";
         }else if(branchId.compareToIgnoreCase("None") == 0){
             return null;
         }
-        sql += "order by name asc;";
+        sql += " order by customerCode asc;";
         try{
             ResultSet rs = stmt.executeQuery(sql);
             return ResultSetToStringArray.getStringArray3col(rs);

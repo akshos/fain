@@ -10,6 +10,9 @@ import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.ColumnText;
+import com.itextpdf.text.pdf.PdfContentByte;
 import database.CustomerDB;
 import database.DBConnection;
 import database.MasterDB;
@@ -20,6 +23,11 @@ import database.StockDB;
 import database.TransactionDB;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JOptionPane;
@@ -28,7 +36,7 @@ import javax.swing.JOptionPane;
  * @author akshos
  */
 public class CommonFuncs {
-    private static final Font nameFont = new Font(Font.FontFamily.COURIER, 18);
+    private static final Font nameFont = new Font(Font.FontFamily.COURIER, 22);
     private static final Font addressFont = new Font(Font.FontFamily.COURIER, 11);
     
     public static final Font titleFont = new Font(Font.FontFamily.COURIER, 14, Font.BOLD);
@@ -44,6 +52,7 @@ public class CommonFuncs {
     
     public static final Font footerFont = new Font(Font.FontFamily.COURIER, 12);
     public static final Font footerFontBold = new Font(Font.FontFamily.COURIER, 12, Font.BOLD);
+    
     public static Paragraph alignCenter(String str, Font f){
         Paragraph para = new Paragraph(str, f);
         para.setAlignment(Element.ALIGN_CENTER);
@@ -70,6 +79,49 @@ public class CommonFuncs {
         }
     }
     
+    public static void addHeader(PdfContentByte cb, Document document){
+            int base = 60;
+            
+            LocalDateTime now = LocalDateTime.now();
+            Date currDate = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+            String date = df.format(currDate);
+            
+            String name = SessionInfoDB.sessionDetails[1];
+            String address = SessionInfoDB.sessionDetails[2];
+            String gst = SessionInfoDB.sessionDetails[3];
+            String rbreg = SessionInfoDB.sessionDetails[4];
+            String phone1 = SessionInfoDB.sessionDetails[5];
+            String phone2 = SessionInfoDB.sessionDetails[6];
+            
+            Phrase cdate = new Phrase(date, addressFont);
+            Phrase cname = new Phrase(name, nameFont);
+            Phrase caddr = new Phrase(address, addressFont);
+            Phrase cphone = new Phrase("Phone: " + phone1 + ", " + phone2, addressFont);
+            Phrase cgst = new Phrase("GST: " + gst + "  RB REG: " + rbreg, addressFont);
+            ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
+                    cdate,
+                    document.right()-50,
+                    document.top() + base + 44, 0);
+            ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
+                    cname,
+                    (document.right() - document.left()) / 2 + document.leftMargin(),
+                    document.top() + base + 44, 0);
+            ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
+                    caddr,
+                    (document.right() - document.left()) / 2 + document.leftMargin(),
+                    document.top() + base + 30, 0);
+            ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
+                    cphone,
+                    (document.right() - document.left()) / 2 + document.leftMargin(),
+                    document.top() + base + 20, 0);
+            ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
+                    cgst,
+                    (document.right() - document.left()) / 2 + document.leftMargin(),
+                    document.top() + base + 10, 0);
+            
+    }
+    
     public static void setDocumentSizeOrientation(Document doc, String paper, String orientation){
         try{
             if(paper.compareTo("A4") == 0){
@@ -88,7 +140,7 @@ public class CommonFuncs {
                     doc.setPageSize(PageSize.LEGAL.rotate());
                 }
             }
-            doc.setMargins(1, 1, 1, 15);
+            doc.setMargins(1, 1, 130, 20);
         }catch(Exception e){
             e.printStackTrace();
         }

@@ -28,7 +28,6 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import javax.swing.JOptionPane;
-import static reports.TrialBalance.addTitle;
 
 /**
  *
@@ -37,27 +36,17 @@ import static reports.TrialBalance.addTitle;
 public class DayBook {
     private static String PREFIX = "daybook";
     
-    private static DBConnection scon;
     private static String sfromDate;
     private static String stoDate;
+    private static String saccountId;
+    private static String saccountName;
     private static String prtDate;
     private static String sdate;
     private static double pageDebitTotal;
     private static double pageCreditTotal;
     private static int pageNum;
     
-    public static void addTitle(DBConnection con, Document doc, String fromDate, String toDate){
-        try{
-            Paragraph title = new Paragraph();
-            title.add(CommonFuncs.alignCenter("DAY BOOK", CommonFuncs.titleFont));
-            String subTitle = "From : " + fromDate + "  To : " + toDate;
-            title.add(CommonFuncs.alignCenter(subTitle, CommonFuncs.subTitleFont));
-            doc.add(title);
-            CommonFuncs.addEmptyLine(doc, 1);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
+    
     
     private static Document startDocument(String paper, String orientation){
         try{
@@ -75,13 +64,15 @@ public class DayBook {
     }
     
     public static boolean createReport(DBConnection con, String paper, String orientation, String fromDate, String toDate, String cashAccountId){
-        scon = con;
         sfromDate = fromDate;
         stoDate = toDate;
         pageDebitTotal = 0.0;
         pageCreditTotal = 0.0;
-        pageNum = 0;
+        pageNum = 1;
         sdate = prtDate = "";
+        saccountId = cashAccountId;
+        saccountName = MasterDB.getAccountHead(con.getStatement(), cashAccountId);
+        
         boolean ret = false;
         
         Document doc;
@@ -102,8 +93,6 @@ public class DayBook {
         }catch(Exception e){
             e.printStackTrace();
         }
-        if(ret)
-            ViewPdf.openPdfViewer(PREFIX + ".pdf");
         return ret;
     }
     
@@ -267,13 +256,12 @@ public class DayBook {
     }
     
     private static class ShowHeader extends PdfPageEventHelper{        
-        public void onStartPage(PdfWriter writer, Document docuement){
-            CommonFuncs.addHeader(scon, docuement);
-            addTitle(scon, docuement, sfromDate, stoDate);
-        }
         
         public void onEndPage(PdfWriter writer, Document document) {
             PdfContentByte cb = writer.getDirectContent();
+            
+            CommonFuncs.addHeader(cb, document);
+            addTitle(cb, document);
             
             Phrase footer = new Phrase();
             footer.add(new Phrase("Page : " + pageNum + "    ", CommonFuncs.footerFont));
@@ -300,5 +288,29 @@ public class DayBook {
                 new Phrase(String.valueOf(pageNum), CommonFuncs.footerFont),
                 (document.right() - document.left()) / 2 + document.leftMargin(), document.bottom() - 5, 0);
         }
+        
+        public void addTitle(PdfContentByte cb, Document document){
+        try{
+            int base = 10;
+            
+            Phrase title = new Phrase("DAYBOOK", CommonFuncs.titleFont);
+                Phrase account = new Phrase(saccountName + " ("+ saccountId + ")", CommonFuncs.subTitleFont);
+                Phrase date = new Phrase("From : " + sfromDate + "  To : " + stoDate, CommonFuncs.subTitleFont);
+                ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
+                    title,
+                    (document.right() - document.left()) / 2 + document.leftMargin(),
+                    document.top() + base + 35, 0);
+                ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
+                    account,
+                    (document.right() - document.left()) / 2 + document.leftMargin(),
+                    document.top() + base + 20, 0);
+                ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
+                    date,
+                    (document.right() - document.left()) / 2 + document.leftMargin(),
+                    document.top() + base + 10, 0);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
     }
 }

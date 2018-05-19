@@ -42,20 +42,7 @@ public class Statements {
     private static double pageDebitTotal;
     private static double pageCreditTotal;
     private static int pageNum;
-    private static String scat;
     
-    public static void addTitle(DBConnection con, Document doc, String fromDate, String toDate, String accountName){
-        try{
-            Paragraph title = new Paragraph();
-            title.add(CommonFuncs.alignCenter(accountName, CommonFuncs.titleFont));
-            String subTitle = "From : " + fromDate + "  To : " + toDate;
-            title.add(CommonFuncs.alignCenter(subTitle, CommonFuncs.subTitleFont));
-            doc.add(title);
-            CommonFuncs.addEmptyLine(doc, 1);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
     
     private static Document startDocument(String paper, String orientation){
         try{
@@ -90,12 +77,13 @@ public class Statements {
             doc = startDocument(paper, orientation);
             
             double balance = calculatePreviousBalance(con, fromDate, accountId);
-            createTable(con, doc, fromDate, toDate, accountId, balance);
+            ret = createTable(con, doc, fromDate, toDate, accountId, balance);
             doc.close();
         }catch(Exception e){
             e.printStackTrace();
         }
-        ViewPdf.openPdfViewer(PREFIX + ".pdf");
+        if(ret)
+            ViewPdf.openPdfViewer(PREFIX + ".pdf");
         
         return ret;
     }
@@ -150,7 +138,7 @@ public class Statements {
         table.addCell(cell);
     }
     
-    private static void createTable(DBConnection con, Document doc, String fromDate, String toDate, String accountId, double prevBalance){
+    private static boolean createTable(DBConnection con, Document doc, String fromDate, String toDate, String accountId, double prevBalance){
         float columns[] = {0.7f, 2, 1, 1};
         PdfPTable table = new PdfPTable(columns);
         table.setWidthPercentage(90);
@@ -170,7 +158,7 @@ public class Statements {
         String[] transactionDates = TransactionDB.getTrasnsationDatesBetweenIncDatesIdRS(con.getStatement(), fromDate, toDate, accountId);
         if(transactionDates == null){
             JOptionPane.showMessageDialog(null, "No Transactions between the selected dates", "No Transaction", JOptionPane.WARNING_MESSAGE);
-            return;
+            return false;
         }
         ResultSet rs;
         String nar;
@@ -178,16 +166,22 @@ public class Statements {
         HashMap<String, String> accountHeads = MasterDB.getAccountHeadHashMap(con.getStatement());
         if(accountHeads == null){
             JOptionPane.showMessageDialog(null, "Failed to get Accounts", "FAILED", JOptionPane.ERROR_MESSAGE);
-            return;
+            return false;
         }
         
         try{
             for (String date : transactionDates){
                 
-                if(openingBalance != 0.0){
+                if(openingBalance > 0.0){
                     addTableRow(table, (PdfPCell.BOTTOM),
                                 CommonFuncs.tableContentFont, date, "Opening Balance",
-                                new DecimalFormat("##,##,##0.00").format(Math.abs(openingBalance)), "");
+                                new DecimalFormat("##,##,##0.00").format(openingBalance), "");
+                    
+                    openingBalance = 0.0;
+                }else if(openingBalance < 0.0){
+                    addTableRow(table, (PdfPCell.BOTTOM),
+                                CommonFuncs.tableContentFont, date, "Opening Balance",
+                                "", new DecimalFormat("##,##,##0.00").format(Math.abs(openingBalance)));
                     
                     openingBalance = 0.0;
                 }               
@@ -248,25 +242,27 @@ public class Statements {
             
         }catch(Exception e){
             e.printStackTrace();
+            return false;
         }
-        
+        return true;
     }
     
     private static class ShowHeader extends PdfPageEventHelper{        
-        public void onStartPage(PdfWriter writer, Document docuement){
-            CommonFuncs.addHeader(scon, docuement);
-            addTitle(scon, docuement, sfromDate, stoDate, saccountName);
-        }
         
         public void onEndPage(PdfWriter writer, Document document) {
             PdfContentByte cb = writer.getDirectContent();
             
+            CommonFuncs.addHeader(cb, document);
+            addTitle(cb, document);
+            
             Phrase footer = new Phrase();
             footer.add(new Phrase("Page : " + pageNum + "    ", CommonFuncs.footerFont));
+            /*
             footer.add(new Phrase("Debit : ", CommonFuncs.footerFont));
             footer.add(new Phrase(String.format("%.2f", pageDebitTotal) + "    ", CommonFuncs.footerFontBold));
             footer.add(new Phrase("Credit : ", CommonFuncs.footerFont));
             footer.add(new Phrase(String.format("%.2f", pageCreditTotal), CommonFuncs.footerFontBold));
+            */
             
             pageNum = pageNum + 1;
             pageCreditTotal = 0;
@@ -277,12 +273,28 @@ public class Statements {
                     document.bottom() - 5, 0);
         }
         
-        @Override
-        public void onCloseDocument(PdfWriter writer, Document document) {
-            PdfTemplate t = writer.getDirectContent().createTemplate(30, 16);
-            ColumnText.showTextAligned(t, Element.ALIGN_LEFT,
-                new Phrase(String.valueOf(pageNum), CommonFuncs.footerFont),
-                (document.right() - document.left()) / 2 + document.leftMargin(), document.bottom() - 5, 0);
+        private void addTitle(PdfContentByte cb, Document document){
+        try{
+           int base = 10;
+            
+            Phrase title = new Phrase("STATEMENT", CommonFuncs.titleFont);
+                Phrase account = new Phrase(saccountName + " ("+ saccountId + ")", CommonFuncs.subTitleFont);
+                Phrase date = new Phrase("From : " + sfromDate + "  To : " + stoDate, CommonFuncs.subTitleFont);
+                ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
+                    title,
+                    (document.right() - document.left()) / 2 + document.leftMargin(),
+                    document.top() + base + 35, 0);
+                ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
+                    account,
+                    (document.right() - document.left()) / 2 + document.leftMargin(),
+                    document.top() + base + 20, 0);
+                ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
+                    date,
+                    (document.right() - document.left()) / 2 + document.leftMargin(),
+                    document.top() + base + 10, 0);
+        }catch(Exception e){
+            e.printStackTrace();
         }
+    }
     }
 }

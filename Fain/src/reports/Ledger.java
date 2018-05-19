@@ -34,6 +34,7 @@ import javax.swing.JOptionPane;
 public class Ledger {
     private static String PREFIX = "ledger";
     private static String sbranch = "";
+    private static String sbranchName = "";
     private static String saccFrom = "";
     private static String saccTo = "";
     private static String saccountName = "";
@@ -44,26 +45,6 @@ public class Ledger {
     private static double pageCreditTotal = 0;
     private static double pageDebitTotal = 0;
     
-    
-    private static void addTitle(DBConnection con, Document doc, String accId, String accountHead){
-        try{
-            Paragraph title = new Paragraph();
-            title.add(CommonFuncs.alignCenter("LEDGER", CommonFuncs.titleFont));
-            doc.add(title);
-            
-            Paragraph para = new Paragraph();
-            para.add(CommonFuncs.alignCenter("ACCOUNT : " + accountHead + " (" + accId + ")", CommonFuncs.accountHeadFont));
-            String branch = CustomerDB.getBranch(con.getStatement(), accId);
-            if(branch != null && !branch.isEmpty()){
-                String branchName = BranchDB.getBranchName(con.getStatement(), branch);
-                para.add(CommonFuncs.alignCenter("BRANCH : " + branchName, CommonFuncs.branchFont));
-            }
-            doc.add(para);
-            CommonFuncs.addEmptyLine(doc, 1);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
     
     private static Document startDocument(String paper, String orientation){
         try{
@@ -88,6 +69,7 @@ public class Ledger {
         pageNum = 1;
         pageCreditTotal = 0;
         pageDebitTotal = 0;
+        sbranchName = BranchDB.getBranchName(con.getStatement(), branch);
         
         boolean ret = false;
         
@@ -275,20 +257,21 @@ public class Ledger {
     }
        
     private static class ShowHeader extends PdfPageEventHelper{        
-        public void onStartPage(PdfWriter writer, Document docuement){
-            CommonFuncs.addHeader(scon, docuement);
-            addTitle(scon, docuement, currAcc, saccountName);
-        }
-
+        
         public void onEndPage(PdfWriter writer, Document document) {
             PdfContentByte cb = writer.getDirectContent();
             
+            CommonFuncs.addHeader(cb, document);
+            addTitle(cb, document);
+            
             Phrase footer = new Phrase();
             footer.add(new Phrase("Page : " + pageNum + "    ", CommonFuncs.footerFont));
+            /*
             footer.add(new Phrase("Debit : ", CommonFuncs.footerFont));
             footer.add(new Phrase(String.format("%.2f", pageDebitTotal) + "    ", CommonFuncs.footerFontBold));
             footer.add(new Phrase("Credit : ", CommonFuncs.footerFont));
             footer.add(new Phrase(String.format("%.2f", pageCreditTotal), CommonFuncs.footerFontBold));
+            */
             
             pageNum = pageNum + 1;
             pageCreditTotal = 0;
@@ -299,12 +282,28 @@ public class Ledger {
                     document.bottom() - 5, 0);
         }
         
-        @Override
-        public void onCloseDocument(PdfWriter writer, Document document) {
-            PdfTemplate t = writer.getDirectContent().createTemplate(30, 16);
-            ColumnText.showTextAligned(t, Element.ALIGN_LEFT,
-                new Phrase(String.valueOf(pageNum), CommonFuncs.footerFont),
-                (document.right() - document.left()) / 2 + document.leftMargin(), document.bottom() - 5, 0);
+       public void addTitle(PdfContentByte cb, Document document){
+        try{
+            int base = 10;
+            
+            Phrase title = new Phrase("LEDGER", CommonFuncs.titleFont);
+            Phrase branch = new Phrase(sbranchName + " (" + sbranch + ")", CommonFuncs.subTitleFont);
+            Phrase accounts = new Phrase("Account From : " + saccFrom + " To : " + saccTo, CommonFuncs.subTitleFont);
+            ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
+                    title,
+                    (document.right() - document.left()) / 2 + document.leftMargin(),
+                    document.top() + base + 35, 0);
+            ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
+                    branch,
+                    (document.right() - document.left()) / 2 + document.leftMargin(),
+                    document.top() + base + 20, 0);
+            ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
+                    accounts,
+                    (document.right() - document.left()) / 2 + document.leftMargin(),
+                    document.top() + base + 10, 0);
+        }catch(Exception e){
+            e.printStackTrace();
         }
+    }
     }
 }
