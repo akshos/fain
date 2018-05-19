@@ -95,8 +95,13 @@ public class TrialBalance {
         table.addCell(cell);
     }
     
-    private static void addTableRow(PdfPTable table, int border, Font font, String accName, String debit, String credit){
+    private static void addTableRow(PdfPTable table, int border, Font font, String accNo, String accName, String debit, String credit){
         PdfPCell cell;
+        
+        cell = new PdfPCell(new Phrase(accNo, CommonFuncs.tableContentFont));
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setBorder(border);
+        table.addCell(cell);
         
         cell = new PdfPCell(new Phrase(accName, CommonFuncs.tableContentFont));
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -115,9 +120,10 @@ public class TrialBalance {
     }
     
     private static boolean addTable(DBConnection con, Document doc){
-        float columns[] = {2, 1, 1};
+        float columns[] = {0.6f, 2, 1, 1};
         PdfPTable table = new PdfPTable(columns);
         table.setWidthPercentage(90);
+        addHeaderCell(table, "Code");
         addHeaderCell(table, "Account");
         addHeaderCell(table, "Debit");
         addHeaderCell(table, "Credit");
@@ -125,6 +131,7 @@ public class TrialBalance {
         
         double creditTotal, debitTotal;
         double currentBalance;
+        String accNo;
         String accHead;
         creditTotal = debitTotal = 0.0;
         String cat;
@@ -133,6 +140,7 @@ public class TrialBalance {
             ResultSet rs = MasterDB.selectAll(con.getStatement());
             while(rs.next()){
                 accHead = rs.getString("accountHead");
+                accNo = rs.getString("accountNo");
                 cat = rs.getString("category");
                 if(cat.compareTo("SK") == 0){
                     accHead = "Op. " + accHead;
@@ -143,14 +151,14 @@ public class TrialBalance {
                 
                 if(currentBalance > 0){
                     addTableRow(table, (PdfPCell.NO_BORDER),
-                        CommonFuncs.tableBoldFont, accHead, 
+                        CommonFuncs.tableBoldFont, accNo, accHead, 
                         new DecimalFormat("##,##,##0.00").format(Math.abs(currentBalance)), "");
                     
                     debitTotal += currentBalance;
                     pageDebitTotal += currentBalance;
                 }else if(currentBalance < 0){
                     addTableRow(table, (PdfPCell.NO_BORDER),
-                        CommonFuncs.tableBoldFont, accHead, 
+                        CommonFuncs.tableBoldFont, accNo, accHead, 
                         "", new DecimalFormat("##,##,##0.00").format(Math.abs(currentBalance)));
                     
                     creditTotal += Math.abs(currentBalance);
@@ -160,7 +168,7 @@ public class TrialBalance {
             }
                 
             addTableRow(table, (PdfPCell.RECTANGLE|PdfPCell.TOP),
-                        CommonFuncs.tableBoldFont, "TOTALS", 
+                        CommonFuncs.tableBoldFont, "", "TOTALS", 
                         new DecimalFormat("##,##,##0.00").format(debitTotal), 
                         new DecimalFormat("##,##,##0.00").format(creditTotal));
 
