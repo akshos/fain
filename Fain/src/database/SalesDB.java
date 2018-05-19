@@ -94,7 +94,64 @@ public final class SalesDB {
                 + "printf(\"%.3f\", s.quantity) as 'Quantity', printf(\"%.3f\", s.drc) as 'DRC', "
                 + "printf(\"%.3f\", s.dryRubber) as 'Dry Rubber', printf(\"%.2f\", s.rate) as 'Rate', "
                 + "printf(\"%.2f\", s.value) as 'Value' from sales as s, branch as b, customer as c where "
-                + "s.branch=b.branchId and s.party=c.customerCode;";
+                + "s.branch=b.branchId and s.party=c.customerCode order by s.date asc;";
+	TableModel table = null;
+        ResultSet rs = null;
+	try{
+            rs = stmt.executeQuery(sqlQuery);
+            table = ResultSetToTableModel.getTableModel(rs);
+	}catch( SQLException se ){
+            se.printStackTrace();
+	}
+	return table;
+    }
+    
+    public static TableModel getTableFilteredBill(Statement stmt, String bill){
+        String sqlQuery = "select s.salesId as 'ID', b.name as 'Branch', s.date as 'Date', "
+                + "s.billNo as 'Bill No:', c.name as 'Party',s.barrelNoFrom as 'Barrel # From', "
+                + "s.barrelNoTo as 'Barrel # To', s.diff as 'Nos:', "
+                + "printf(\"%.3f\", s.quantity) as 'Quantity', printf(\"%.3f\", s.drc) as 'DRC', "
+                + "printf(\"%.3f\", s.dryRubber) as 'Dry Rubber', printf(\"%.2f\", s.rate) as 'Rate', "
+                + "printf(\"%.2f\", s.value) as 'Value' from sales as s, branch as b, customer as c where "
+                + "s.branch=b.branchId and s.party=c.customerCode and s.billNo=" + bill + "' order by s.date asc;";
+	TableModel table = null;
+        ResultSet rs = null;
+	try{
+            rs = stmt.executeQuery(sqlQuery);
+            table = ResultSetToTableModel.getTableModel(rs);
+	}catch( SQLException se ){
+            se.printStackTrace();
+	}
+	return table;
+    }
+    
+    public static TableModel getTableFilteredDate(Statement stmt, String date){
+        String sqlQuery = "select s.salesId as 'ID', b.name as 'Branch', s.date as 'Date', "
+                + "s.billNo as 'Bill No:', c.name as 'Party',s.barrelNoFrom as 'Barrel # From', "
+                + "s.barrelNoTo as 'Barrel # To', s.diff as 'Nos:', "
+                + "printf(\"%.3f\", s.quantity) as 'Quantity', printf(\"%.3f\", s.drc) as 'DRC', "
+                + "printf(\"%.3f\", s.dryRubber) as 'Dry Rubber', printf(\"%.2f\", s.rate) as 'Rate', "
+                + "printf(\"%.2f\", s.value) as 'Value' from sales as s, branch as b, customer as c where "
+                + "s.branch=b.branchId and s.party=c.customerCode and s.date='" + date + "' order by d.date asc;";
+	TableModel table = null;
+        ResultSet rs = null;
+	try{
+            rs = stmt.executeQuery(sqlQuery);
+            table = ResultSetToTableModel.getTableModel(rs);
+	}catch( SQLException se ){
+            se.printStackTrace();
+	}
+	return table;
+    }
+    
+    public static TableModel getTableFilteredAccount(Statement stmt, String account){
+        String sqlQuery = "select s.salesId as 'ID', b.name as 'Branch', s.date as 'Date', "
+                + "s.billNo as 'Bill No:', c.name as 'Party',s.barrelNoFrom as 'Barrel # From', "
+                + "s.barrelNoTo as 'Barrel # To', s.diff as 'Nos:', "
+                + "printf(\"%.3f\", s.quantity) as 'Quantity', printf(\"%.3f\", s.drc) as 'DRC', "
+                + "printf(\"%.3f\", s.dryRubber) as 'Dry Rubber', printf(\"%.2f\", s.rate) as 'Rate', "
+                + "printf(\"%.2f\", s.value) as 'Value' from sales as s, branch as b, customer as c where "
+                + "s.branch=b.branchId and s.party=c.customerCode and s.party='" + account + "' order by s.date asc;";
 	TableModel table = null;
         ResultSet rs = null;
 	try{

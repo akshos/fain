@@ -116,6 +116,44 @@ public final class TransactionDB {
 	return table;
     }
     
+    public static TableModel getTableFilteredDate(Statement stmt, String date){
+        String sqlQuery = "select t.transactionNo as 'No.', t.date as 'Date', "
+                + "b.name as 'Branch', t.debit || ' ' || mdebit.accountHead as 'Debit', "
+                + "t.credit || ' ' || mcredit.accountHead as 'Credit', "
+                + "printf(\"%.2f\", t.amount) as 'Amount', t.narration as 'Narration' from transactions as t, "
+                + "branch as b, master as mdebit, master mcredit "
+                + "where t.branch=b.branchId and t.credit=mcredit.accountNo and t.debit=mdebit.accountNo "
+                + "and t.date<'" + date + "' order by t.date asc;";
+	TableModel table = null;
+        ResultSet rs = null;
+	try{
+            rs = stmt.executeQuery(sqlQuery);
+            table = ResultSetToTableModel.getTableModel(rs);
+	}catch( SQLException se ){
+            se.printStackTrace();
+	}
+	return table;
+    }
+    
+    public static TableModel getTableFilteredAccount(Statement stmt, String account){
+        String sqlQuery = "select t.transactionNo as 'No.', t.date as 'Date', "
+                + "b.name as 'Branch', t.debit || ' ' || mdebit.accountHead as 'Debit', "
+                + "t.credit || ' ' || mcredit.accountHead as 'Credit', "
+                + "printf(\"%.2f\", t.amount) as 'Amount', t.narration as 'Narration' from transactions as t, "
+                + "branch as b, master as mdebit, master mcredit "
+                + "where t.branch=b.branchId and t.credit=mcredit.accountNo and t.debit=mdebit.accountNo "
+                + "and (t.debit='" + account + "' or t.credit='" + account + "') order by t.date asc;";
+	TableModel table = null;
+        ResultSet rs = null;
+	try{
+            rs = stmt.executeQuery(sqlQuery);
+            table = ResultSetToTableModel.getTableModel(rs);
+	}catch( SQLException se ){
+            se.printStackTrace();
+	}
+	return table;
+    }
+    
     public static String getTidFromTno(Statement stmt, String tno){
         String sql = "select tid from transactions where transactionNo="+tno+";";
         try{

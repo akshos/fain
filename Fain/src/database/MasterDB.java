@@ -98,6 +98,38 @@ public final class MasterDB {
 	return table;
     }
     
+    public static TableModel getTableFilteredAccount(Statement stmt, String account){
+        String sqlQuery = "select accountNo as 'Account Number', accountHead as 'Account Head', "
+                + "printf(\"%.2f\", openingBal) as 'Opening Balance', "
+                + "printf(\"%.2f\", closingBal) as 'Current Balance', "
+                + "category as 'Category' from master where accountNo='" + account + "' order by accountNo asc;";
+	TableModel table = null;
+        ResultSet rs = null;
+	try{
+            rs = stmt.executeQuery(sqlQuery);
+            table = ResultSetToTableModel.getTableModel(rs);
+	}catch( SQLException se ){
+            se.printStackTrace();
+	}
+	return table;
+    }
+    
+    public static TableModel getTableFilteredCategory(Statement stmt, String cat){
+        String sqlQuery = "select accountNo as 'Account Number', accountHead as 'Account Head', "
+                + "printf(\"%.2f\", openingBal) as 'Opening Balance', "
+                + "printf(\"%.2f\", closingBal) as 'Current Balance', "
+                + "category as 'Category' from master where category='" + cat + "' order by accountNo asc;";
+	TableModel table = null;
+        ResultSet rs = null;
+	try{
+            rs = stmt.executeQuery(sqlQuery);
+            table = ResultSetToTableModel.getTableModel(rs);
+	}catch( SQLException se ){
+            se.printStackTrace();
+	}
+	return table;
+    }
+    
     public static ResultSet selectAll(Statement stmt){
         String sql="select * from master order by accountNo asc;";
         ResultSet rs = null;

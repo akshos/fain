@@ -111,7 +111,67 @@ public final class PurchaseLatexDB {
             se.printStackTrace();
 	}
 	return table;
-}
+    }
+    
+    public static TableModel getTableFilteredDate(Statement stmt, String date){
+        String sqlQuery = "select l.purchaseLatexId as 'ID', b.name as 'Branch', l.date as 'Date', "
+                + "l.prBill as 'Pr. Bill', l.party || ' ' || c.name as 'Party', printf(\"%.3f\", l.quantity) as 'Quantity', "
+                + "printf(\"%.3f\", l.drc) as 'DRC', printf(\"%.3f\", l.dryRubber) as 'Dry Rubber', "
+                + "printf(\"%.2f\", l.rate) as 'Rate' , printf(\"%.2f\", l.value) as 'Value' from "
+                + "purchaseLatex as l, branch as b, customer as c where l.party=c.customerCode and "
+                + "l.branch=b.branchId and l.date='" + date + "' ;";
+	
+        TableModel table = null;
+        ResultSet rs = null;
+	try{
+            rs = stmt.executeQuery(sqlQuery);
+            table = ResultSetToTableModel.getTableModel(rs);
+	}catch( SQLException se ){
+            se.printStackTrace();
+	}
+	return table;
+    }
+    
+    public static TableModel getTableFilteredAccount(Statement stmt, String party){
+        String sqlQuery = "select l.purchaseLatexId as 'ID', b.name as 'Branch', l.date as 'Date', "
+                + "l.prBill as 'Pr. Bill', l.party || ' ' || c.name as 'Party', printf(\"%.3f\", l.quantity) as 'Quantity', "
+                + "printf(\"%.3f\", l.drc) as 'DRC', printf(\"%.3f\", l.dryRubber) as 'Dry Rubber', "
+                + "printf(\"%.2f\", l.rate) as 'Rate' , printf(\"%.2f\", l.value) as 'Value' from "
+                + "purchaseLatex as l, branch as b, customer as c where l.party=c.customerCode and "
+                + "l.branch=b.branchId and l.party='" + party + "' ;";
+	
+        TableModel table = null;
+        ResultSet rs = null;
+	try{
+            rs = stmt.executeQuery(sqlQuery);
+            table = ResultSetToTableModel.getTableModel(rs);
+	}catch( SQLException se ){
+            se.printStackTrace();
+	}
+	return table;
+    }
+    
+    public static TableModel getTableFilteredBill(Statement stmt, String bill){
+        String sqlQuery = "select l.purchaseLatexId as 'ID', b.name as 'Branch', l.date as 'Date', "
+                + "l.prBill as 'Pr. Bill', l.party || ' ' || c.name as 'Party', printf(\"%.3f\", l.quantity) as 'Quantity', "
+                + "printf(\"%.3f\", l.drc) as 'DRC', printf(\"%.3f\", l.dryRubber) as 'Dry Rubber', "
+                + "printf(\"%.2f\", l.rate) as 'Rate' , printf(\"%.2f\", l.value) as 'Value' from "
+                + "purchaseLatex as l, branch as b, customer as c where l.prBill='" + bill + "' and l.party=c.customerCode and "
+                + "l.branch=b.branchId ;";
+	
+        TableModel table = null;
+        ResultSet rs = null;
+	try{
+            rs = stmt.executeQuery(sqlQuery);
+            table = ResultSetToTableModel.getTableModel(rs);
+	}catch( SQLException se ){
+            se.printStackTrace();
+	}
+	return table;
+    }
+    
+    
+    
     public static ResultSet selectAll(Statement stmt){
         String sql="select * from purchaseLatex;";
         ResultSet rs = null;
