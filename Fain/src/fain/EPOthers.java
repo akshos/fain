@@ -451,6 +451,9 @@ public class EPOthers extends javax.swing.JInternalFrame implements RefreshOptio
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F3){
         
         }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_R){
+            this.updateTable();
+        }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F5){
         
         }
