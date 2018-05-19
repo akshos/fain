@@ -20,6 +20,7 @@ import database.MasterDB;
 import database.PurchaseLatexDB;
 import java.io.FileOutputStream;
 import javax.swing.JOptionPane;
+import utility.UtilityFuncs;
 
 /**
  *
@@ -95,7 +96,7 @@ public class PurchaseBill {
             
             
             addTableRow(table, (PdfPCell.LEFT|PdfPCell.RIGHT), CommonFuncs.tableContentFont,
-                    "DATE : ", date);
+                    "DATE : ", UtilityFuncs.dateSqlToUser(date));
             
             addTableRow(table, (PdfPCell.LEFT|PdfPCell.RIGHT), CommonFuncs.tableContentFont,
                     "BILL NO : ", billNo);

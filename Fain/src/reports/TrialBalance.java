@@ -28,6 +28,7 @@ import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.HashMap;
 import javax.swing.JOptionPane;
+import utility.UtilityFuncs;
 import utility.Wait;
 /**
  *
@@ -65,7 +66,7 @@ public class TrialBalance {
         pageDebitTotal = 0.0;
         pageCreditTotal = 0.0;
         pageNum = 1;
-        sdate = date;
+        sdate = UtilityFuncs.dateSqlToUser(date);
         boolean ret = false;
         
         ret = CommonFuncs.updateAllAccounts(con, date);

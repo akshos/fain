@@ -25,6 +25,7 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import javax.swing.JOptionPane;
+import utility.UtilityFuncs;
 
 /**
  *
@@ -58,8 +59,8 @@ public class PurchaseLatex {
     
     public static boolean createReport(DBConnection con, String paper, String orientation, String fromDate, String toDate, String accountId){
         scon = con;
-        sfromDate = fromDate;
-        stoDate = toDate;
+        sfromDate = UtilityFuncs.dateSqlToUser(fromDate);
+        stoDate = UtilityFuncs.dateSqlToUser(toDate);
         pageNum = 1;
         saccountId = accountId;
 
@@ -95,6 +96,8 @@ public class PurchaseLatex {
      
     private static void addTableRow(PdfPTable table, int border, Font font, String date, String bill, String party, String qnty, String drc, String dryWt, String rate, String value){
         PdfPCell cell;
+        
+        date = UtilityFuncs.dateSqlToUser(date);
         
         cell = new PdfPCell(new Phrase(date, CommonFuncs.tableContentFont));
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);

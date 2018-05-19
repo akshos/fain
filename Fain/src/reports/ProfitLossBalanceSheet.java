@@ -27,6 +27,7 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JOptionPane;
+import utility.UtilityFuncs;
 
 /**
  *
@@ -78,7 +79,7 @@ public class ProfitLossBalanceSheet {
         pageDebitTotal = 0.0;
         pageCreditTotal = 0.0;
         pageNum = 0;
-        sdate = date;
+        sdate = UtilityFuncs.dateSqlToUser(date);
         boolean ret = false;
         
         Document doc;

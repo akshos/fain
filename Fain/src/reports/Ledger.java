@@ -27,6 +27,7 @@ import java.sql.ResultSet;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import javax.swing.JOptionPane;
+import utility.UtilityFuncs;
 /**
  *
  * @author akshos
@@ -147,6 +148,8 @@ public class Ledger {
     
     private static void addTableRow(PdfPTable table, int border, Font font, String date, String nar, String debit, String credit){
         PdfPCell cell;
+        
+        date = UtilityFuncs.dateSqlToUser(date);
         
         cell = new PdfPCell(new Phrase(date, CommonFuncs.tableContentFont));
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);

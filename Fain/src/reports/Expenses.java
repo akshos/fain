@@ -28,6 +28,7 @@ import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import javax.swing.JOptionPane;
+import utility.UtilityFuncs;
 
 /**
  *
@@ -63,8 +64,8 @@ public class Expenses {
     
     public static boolean createReport(DBConnection con, String paper, String orientation, String branch, String fromDate, String toDate){
         scon = con;
-        sfromDate = fromDate;
-        stoDate = toDate;
+        sfromDate = UtilityFuncs.dateSqlToUser(fromDate);
+        stoDate = UtilityFuncs.dateSqlToUser(toDate);
         pageDebitTotal = 0.0;
         pageCreditTotal = 0.0;
         pageNum = 0;
@@ -99,6 +100,8 @@ public class Expenses {
      
     private static void addTableRow(PdfPTable table, int border, Font font, String date, String nar, String debit, String credit){
         PdfPCell cell;
+        
+        date = UtilityFuncs.dateSqlToUser(date);
         
         cell = new PdfPCell(new Phrase(date, CommonFuncs.tableContentFont));
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);

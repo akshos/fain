@@ -29,6 +29,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import javax.swing.JOptionPane;
+import utility.UtilityFuncs;
 
 /**
  *
@@ -137,16 +138,16 @@ public class DebtorCreditor {
     }
     
     
-    private static void addTableRow(PdfPTable table, int border, Font font, String date, String nar, String debit, String credit){
+    private static void addTableRow(PdfPTable table, int border, Font font, String accId, String accName, String debit, String credit){
         PdfPCell cell;
         
-        cell = new PdfPCell(new Phrase(date, CommonFuncs.tableContentFont));
+        cell = new PdfPCell(new Phrase(accId, CommonFuncs.tableContentFont));
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         cell.setBorder(border);
         table.addCell(cell);
 
         
-        cell = new PdfPCell(new Phrase(nar, CommonFuncs.tableContentFont));
+        cell = new PdfPCell(new Phrase(accName, CommonFuncs.tableContentFont));
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         cell.setBorder(border);
         table.addCell(cell);

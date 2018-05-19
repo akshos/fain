@@ -60,6 +60,8 @@ public class UtilityFuncs {
     }
     
     public static String dateSqlToUser(String date){
+        if(date.trim().isEmpty())
+            return "";
         try{
             String parts[] = date.split("-");
             return parts[2] + "/" + parts[1] + "/" + parts[0];

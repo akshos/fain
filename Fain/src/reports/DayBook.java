@@ -28,6 +28,7 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import javax.swing.JOptionPane;
+import utility.UtilityFuncs;
 
 /**
  *
@@ -64,8 +65,8 @@ public class DayBook {
     }
     
     public static boolean createReport(DBConnection con, String paper, String orientation, String fromDate, String toDate, String cashAccountId){
-        sfromDate = fromDate;
-        stoDate = toDate;
+        sfromDate = UtilityFuncs.dateSqlToUser(fromDate);
+        stoDate = UtilityFuncs.dateSqlToUser(toDate);
         pageDebitTotal = 0.0;
         pageCreditTotal = 0.0;
         pageNum = 1;
@@ -124,6 +125,8 @@ public class DayBook {
      
     private static void addTableRow(PdfPTable table, int border, Font font, String date, String nar, String debit, String credit){
         PdfPCell cell;
+        
+        date = UtilityFuncs.dateSqlToUser(date);
         
         cell = new PdfPCell(new Phrase(date, CommonFuncs.tableContentFont));
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
