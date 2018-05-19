@@ -164,7 +164,6 @@ public class EStock extends javax.swing.JInternalFrame implements RefreshOption{
 
         upperPanel.setLayout(new java.awt.BorderLayout());
 
-        dataTable.setAutoCreateRowSorter(true);
         dataTable.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         dataTable.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         dataTable.setModel(new javax.swing.table.DefaultTableModel(

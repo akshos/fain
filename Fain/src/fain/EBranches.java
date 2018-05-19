@@ -164,7 +164,6 @@ public class EBranches extends javax.swing.JInternalFrame implements RefreshOpti
             }
         });
 
-        dataTable.setAutoCreateRowSorter(true);
         dataTable.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         dataTable.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         dataTable.setModel(new javax.swing.table.DefaultTableModel(
