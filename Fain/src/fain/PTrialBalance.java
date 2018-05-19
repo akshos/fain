@@ -29,6 +29,7 @@ import utility.Codes;
 import utility.ValidationChecks;
 import reports.TrialBalance;
 import utility.UtilityFuncs;
+import utility.Wait;
 /**
  *
  * @author akshos
@@ -72,12 +73,23 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
             JOptionPane.showMessageDialog(this, "Please enter valid Date", "INVALID DATE", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        asOnDate = UtilityFuncs.dateUserToSql(asOnDate);
+        final String date = UtilityFuncs.dateUserToSql(asOnDate);
         
-        String paper = this.paperCbox.getSelectedItem().toString();
-        String orientation = this.orientationCbox.getSelectedItem().toString();
-
-        boolean ret = TrialBalance.createReport(dbConnection, paper, orientation, asOnDate);
+        final String paper = this.paperCbox.getSelectedItem().toString();
+        final String orientation = this.orientationCbox.getSelectedItem().toString();
+        
+        Thread t;
+        t = new Thread(new Runnable(){
+            public void run(){
+                Wait wait = new Wait();
+                wait.setSize(new Dimension(700, 400));
+                wait.setVisible(true);
+                mainFrame.addToMainDesktopPane(wait, level+1, Codes.NO_DATABASE);
+                TrialBalance.createReport(dbConnection, wait, paper, orientation, date);
+            }
+        });
+        t.start();
+        //boolean ret = TrialBalance.createReport(dbConnection, paper, orientation, asOnDate);
         resetBusy();
     }
     
@@ -85,6 +97,7 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
         this.enterButton.setEnabled(false);
         this.enterButton.setText("Please Wait");
         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+        this.enterButton.repaint();
     }
     
     private void resetBusy(){

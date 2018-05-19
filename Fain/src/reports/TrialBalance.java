@@ -28,6 +28,7 @@ import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.HashMap;
 import javax.swing.JOptionPane;
+import utility.Wait;
 /**
  *
  * @author akshos
@@ -58,7 +59,7 @@ public class TrialBalance {
         return null;
     }
     
-    public static boolean createReport(DBConnection con, String paper, String orientation, String date){
+    public static boolean createReport(DBConnection con, Wait wait, String paper, String orientation, String date){
         scon = con;
         currAcc = "";
         pageDebitTotal = 0.0;
@@ -70,6 +71,7 @@ public class TrialBalance {
         ret = CommonFuncs.updateAllAccounts(con, date);
          if(!ret){
             JOptionPane.showMessageDialog(null, "Failed to Update Accounts", "FAILED", JOptionPane.WARNING_MESSAGE);
+            wait.closeWait();
             return false;
         }
         
@@ -82,9 +84,11 @@ public class TrialBalance {
             doc.close();
         }catch(Exception e){
             e.printStackTrace();
+            wait.closeWait();
             return false;
         }
         ViewPdf.openPdfViewer(PREFIX + ".pdf");
+        wait.closeWait();
         return ret;
     }
     
