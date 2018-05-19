@@ -201,20 +201,20 @@ public class PStatements extends javax.swing.JInternalFrame{
         setTitle("Statements");
         setPreferredSize(new java.awt.Dimension(450, 410));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameClosed(evt);
             }
-            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
         });
 
@@ -283,13 +283,7 @@ public class PStatements extends javax.swing.JInternalFrame{
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        fromDatePicker.setFocusable(false);
         fromDatePicker.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        fromDatePicker.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fromDatePickerActionPerformed(evt);
-            }
-        });
         rightInerPannel.add(fromDatePicker);
 
         try {
@@ -297,7 +291,6 @@ public class PStatements extends javax.swing.JInternalFrame{
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        toDatePicker.setFocusable(false);
         toDatePicker.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         rightInerPannel.add(toDatePicker);
 
@@ -381,10 +374,6 @@ public class PStatements extends javax.swing.JInternalFrame{
     private void branchCboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_branchCboxItemStateChanged
         this.loadAccounts();        // TODO add your handling code here:
     }//GEN-LAST:event_branchCboxItemStateChanged
-
-    private void fromDatePickerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fromDatePickerActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_fromDatePickerActionPerformed
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Branch;

@@ -180,7 +180,6 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        asOnTbox.setFocusable(false);
         asOnTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         rightInerPannel.add(asOnTbox);
 
