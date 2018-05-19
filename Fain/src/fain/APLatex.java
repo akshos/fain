@@ -547,6 +547,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        dateTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         dateTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 dateTboxActionPerformed(evt);

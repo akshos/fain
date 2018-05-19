@@ -569,6 +569,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        dateTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         rightInerPannel.add(dateTbox);
 
         prBillTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N

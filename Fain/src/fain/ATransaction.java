@@ -430,6 +430,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        dateTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         rightInerPannel.add(dateTbox);
 
         branchCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
