@@ -20,7 +20,7 @@ public class ValidationChecks {
     private static final String namePattern = "^[a-zA-Z0-9_',.:; -]{3,30}$";
     private static final String idPattern = "^[0-9_-]{3,30}$";
     
-    final static String DATE_FORMAT = "dd/MM/yy";
+    final static String DATE_FORMAT = "dd/MM/yyyy";
     
     public static boolean validateCode(String item){
         Pattern pattern = Pattern.compile(codePattern);

@@ -26,6 +26,7 @@ import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
+import utility.UtilityFuncs;
 /**
  *
  * @author akshos
@@ -121,16 +122,16 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
             System.out.println("Load Contents : selectedOneId has returned null");
             return;
         }
-         DateFormat df = new SimpleDateFormat("dd/MM/yy");
-        try {
-            this.dateTbox.setText(df.parse(data[2]).toString());
-        } catch (ParseException ex) {
-            Logger.getLogger(APLatex.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
+        this.dateTbox.setText(UtilityFuncs.dateSqlToUser(data[1]));
+        
         loadBranch();
+        
         int indexValB=Arrays.asList(branchData[0]).indexOf(data[2]);
         this.branchCbox.setSelectedIndex(indexValB);
+        
         loadCreditDebit();
+        
         int indexValD=Arrays.asList(accountData[0]).indexOf(data[3]);
         this.debitCbox.setSelectedIndex(indexValD);
         int indexValC=Arrays.asList(accountData[0]).indexOf(data[4]);
@@ -200,16 +201,16 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String date=null;
         Date selDate=null;
-         try {
-             selDate = df.parse(dateTbox.getText());
-             System.out.println(selDate);
-             DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd");
-             String sqlDate=df1.format(selDate);
-             System.out.println(sqlDate);
-             date=sqlDate.toString();
-         } catch (ParseException ex) {
-             Logger.getLogger(APLatex.class.getName()).log(Level.SEVERE, null, ex);
-         }
+        try {
+            selDate = df.parse(dateTbox.getText());
+            System.out.println(selDate);
+            DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd");
+            String sqlDate=df1.format(selDate);
+            System.out.println(sqlDate);
+            date=sqlDate.toString();
+        }catch (ParseException ex) {
+            Logger.getLogger(APLatex.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if(date == null){
             JOptionPane.showMessageDialog(this, "Please enter Date From", "NO DATE", JOptionPane.WARNING_MESSAGE);
             return;
@@ -365,20 +366,20 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         setTitle("Data Entry (Transaction)");
         setPreferredSize(new java.awt.Dimension(450, 410));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameClosing(evt);
             }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
         });
 
@@ -435,6 +436,16 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
             ex.printStackTrace();
         }
         dateTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        dateTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                dateTboxFocusGained(evt);
+            }
+        });
+        dateTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                keyPressedHandler(evt);
+            }
+        });
         rightInerPannel.add(dateTbox);
 
         branchCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
@@ -604,6 +615,10 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
     private void formInternalFrameClosing(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosing
         Preferences.storeInternalFrameDimension(this);        // TODO add your handling code here:
     }//GEN-LAST:event_formInternalFrameClosing
+
+    private void dateTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_dateTboxFocusGained
+        this.dateTbox.setCaretPosition(0);        // TODO add your handling code here:
+    }//GEN-LAST:event_dateTboxFocusGained
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

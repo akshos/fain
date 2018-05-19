@@ -5,10 +5,17 @@
  */
 package utility;
 
+import fain.APLatex;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 
@@ -40,5 +47,25 @@ public class UtilityFuncs {
         target.dispatchEvent(press);
         target.dispatchEvent(release);
         target.dispatchEvent(click);
+    }
+    
+    public static String dateUserToSql(String date){
+        try{
+            String parts[] = date.split("/");
+            return parts[2] + "-" + parts[1] + "-" + parts[0];
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    public static String dateSqlToUser(String date){
+        try{
+            String parts[] = date.split("-");
+            return parts[2] + "/" + parts[1] + "/" + parts[0];
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 }

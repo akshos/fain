@@ -16,6 +16,7 @@ import database.TransactionDB;
 import java.awt.Dimension;
 import java.sql.Statement;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -28,6 +29,8 @@ import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
+import utility.UtilityFuncs;
+import utility.ValidationChecks;
 /**
  *
  * @author akshos
@@ -99,12 +102,9 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         this.loadBranch();
         int indexValB=Arrays.asList(branchData[0]).indexOf(data[1]);
         this.branchCbox.setSelectedIndex(indexValB);
-        DateFormat df = new SimpleDateFormat("dd/MM/yy");
-        try {
-            this.dateTbox.setText(df.parse(data[2]).toString());
-        } catch (ParseException ex) {
-            Logger.getLogger(APLatex.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
+        this.dateTbox.setText(UtilityFuncs.dateSqlToUser(data[2]));
+        
         this.prBillTbox.setText(data[3]);
         this.prevBillNo = data[3];
         this.loadParty();
@@ -238,25 +238,18 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         }
         int index = this.branchCbox.getSelectedIndex();
         branch = this.branchData[0][index];
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        String date=null;
-        Date selDate=null;
-         try {
-             selDate = df.parse(dateTbox.getText());
-             System.out.println(selDate);
-             DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd");
-             String sqlDate=df1.format(selDate);
-             System.out.println(sqlDate);
-             date=sqlDate.toString();
-         } catch (ParseException ex) {
-             Logger.getLogger(APLatex.class.getName()).log(Level.SEVERE, null, ex);
-         }
-        if(date == null){
-            JOptionPane.showMessageDialog(this, "Please enter Date From", "NO DATE", JOptionPane.WARNING_MESSAGE);
+        
+        String date = this.dateTbox.getText();
+        if(!ValidationChecks.isDateValid(date)){
+            JOptionPane.showMessageDialog(this, "Please enter a valid Date", "INVALID DATE", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        
+        date = UtilityFuncs.dateUserToSql(date);
+        
         String bill = prBillTbox.getText();
-        String party      ="";
+        
+        String party = "";
         item = partyCbox.getSelectedItem().toString();
         if(item.compareTo("None") == 0){
             int ret = JOptionPane.showConfirmDialog(this, "Please select a valid branch", "No branch selected", JOptionPane.WARNING_MESSAGE);
@@ -264,17 +257,21 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         }
         index = partyCbox.getSelectedIndex();
         party = partyData[0][index];
+        
         if( !validateFields() ){
             return;
         }
-        int bnto     =Integer.parseInt(barrelToTbox.getText().replace(",",""));
-        int bnfrom      =Integer.parseInt(barrelFromTbox.getText().replace(",",""));
-        double quantity =Double.parseDouble(quantityTbox.getText().replace(",",""));
-        double drc      =Double.parseDouble(drcTbox.getText().replace(",",""));
-        double dryrubber=Double.parseDouble(dryRubberTbox.getText().replace(",",""));
-        double rate     =Double.parseDouble(rateTbox.getText().replace(",",""));
-        double value    =Double.parseDouble(valueTbox.getText().replace(",",""));
+        
+        int bnto        = Integer.parseInt(barrelToTbox.getText().replace(",",""));
+        int bnfrom      = Integer.parseInt(barrelFromTbox.getText().replace(",",""));
+        double quantity = Double.parseDouble(quantityTbox.getText().replace(",",""));
+        double drc      = Double.parseDouble(drcTbox.getText().replace(",",""));
+        double dryrubber= Double.parseDouble(dryRubberTbox.getText().replace(",",""));
+        double rate     = Double.parseDouble(rateTbox.getText().replace(",",""));
+        double value    = Double.parseDouble(valueTbox.getText().replace(",",""));
+        
         String tid = TransactionDB.generateTid();
+        
         String purchaseAccount = StockDB.getLatexPurchaseAccount(dbConnection.getStatement());
         if(purchaseAccount.compareTo("none") == 0){
             int ret = JOptionPane.showConfirmDialog(this, "Item 'Latex' was not found in stock", "No stock Latex", JOptionPane.WARNING_MESSAGE);
@@ -368,7 +365,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         }
         qnt = Double.parseDouble(item);
         Double dryRubber = (qnt * drc)/100;
-        this.dryRubberTbox.setText(String.valueOf(dryRubber));
+        this.dryRubberTbox.setText(new DecimalFormat("##,##,##,####.000").format(dryRubber));
     }
     
     private void calculateValue(){
@@ -383,7 +380,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         }
         double rate = Double.parseDouble(item);
         double value = rate * dryRubber;
-        this.valueTbox.setText(String.valueOf(value));
+        this.valueTbox.setText(new DecimalFormat("##,##,##,###0.00").format(value));
     }
     
     private void addNewBranch(){
@@ -471,20 +468,20 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         setTitle("Sales Latex");
         setPreferredSize(new java.awt.Dimension(450, 410));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameClosing(evt);
             }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
         });
 
@@ -574,6 +571,16 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
             ex.printStackTrace();
         }
         dateTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        dateTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                dateTboxFocusGained(evt);
+            }
+        });
+        dateTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                keyPressedHandler(evt);
+            }
+        });
         rightInerPannel.add(dateTbox);
 
         prBillTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
@@ -631,7 +638,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(barrelToTbox);
 
-        quantityTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,##0.000"))));
+        quantityTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,###.000"))));
         quantityTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         quantityTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -650,7 +657,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(quantityTbox);
 
-        drcTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,##0.000"))));
+        drcTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,###.000"))));
         drcTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         drcTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -673,7 +680,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         rightInerPannel.add(drcTbox);
 
         dryRubberTbox.setEditable(false);
-        dryRubberTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,##0.000"))));
+        dryRubberTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,###.000"))));
         dryRubberTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         dryRubberTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -692,7 +699,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(dryRubberTbox);
 
-        rateTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,##0.000"))));
+        rateTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,##0.00"))));
         rateTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         rateTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -715,7 +722,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         rightInerPannel.add(rateTbox);
 
         valueTbox.setEditable(false);
-        valueTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,##0.000"))));
+        valueTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,##0.00"))));
         valueTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         valueTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -863,6 +870,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
 
     private void dryRubberTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_dryRubberTboxFocusGained
         this.dryRubberTbox.selectAll();
+        this.dryRubberTbox.transferFocus();
     }//GEN-LAST:event_dryRubberTboxFocusGained
 
     private void rateTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_rateTboxFocusGained
@@ -871,11 +879,16 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
 
     private void valueTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_valueTboxFocusGained
         this.valueTbox.selectAll();
+        this.valueTbox.transferFocus();
     }//GEN-LAST:event_valueTboxFocusGained
 
     private void formInternalFrameClosing(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosing
         Preferences.storeInternalFrameDimension(this);        // TODO add your handling code here:
     }//GEN-LAST:event_formInternalFrameClosing
+
+    private void dateTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_dateTboxFocusGained
+        this.dateTbox.setCaretPosition(0);        // TODO add your handling code here:
+    }//GEN-LAST:event_dateTboxFocusGained
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

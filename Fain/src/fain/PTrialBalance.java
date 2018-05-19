@@ -28,6 +28,7 @@ import javax.swing.JOptionPane;
 import utility.Codes;
 import utility.ValidationChecks;
 import reports.TrialBalance;
+import utility.UtilityFuncs;
 /**
  *
  * @author akshos
@@ -59,35 +60,24 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
         Date currDate = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String date=df.format(currDate);
-        this.fromDatePicker.setText(date);
+        this.asOnTbox.setText(date);
     }
     
     private void generateReport(){    
         setBusy();
         
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        String fromDate=null;
-        Date selDate=null;
-         try {
-             selDate = df.parse(this.fromDatePicker.getText());
-             System.out.println(selDate);
-             DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd");
-             String sqlDate=df1.format(selDate);
-             System.out.println(sqlDate);
-             fromDate=sqlDate.toString();
-             fromDate=selDate.toString();
-         } catch (ParseException ex) {
-             Logger.getLogger(APLatex.class.getName()).log(Level.SEVERE, null, ex);
-         }
-        if(fromDate == null){
-            JOptionPane.showMessageDialog(this, "Please enter Date From", "NO DATE", JOptionPane.WARNING_MESSAGE);
+        String asOnDate=this.asOnTbox.getText();
+        if(!ValidationChecks.isDateValid(asOnDate)){
+            JOptionPane.showMessageDialog(this, "Please enter valid Date", "INVALID DATE", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        asOnDate = UtilityFuncs.dateUserToSql(asOnDate);
         
         String paper = this.paperCbox.getSelectedItem().toString();
         String orientation = this.orientationCbox.getSelectedItem().toString();
 
-        boolean ret = TrialBalance.createReport(dbConnection, paper, orientation, fromDate);
+        boolean ret = TrialBalance.createReport(dbConnection, paper, orientation, asOnDate);
         resetBusy();
     }
     
@@ -121,7 +111,7 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
         paperLabel = new javax.swing.JLabel();
         orientationLabel = new javax.swing.JLabel();
         rightInerPannel = new javax.swing.JPanel();
-        fromDatePicker = new javax.swing.JFormattedTextField();
+        asOnTbox = new javax.swing.JFormattedTextField();
         paperCbox = new javax.swing.JComboBox<>();
         orientationCbox = new javax.swing.JComboBox<>();
         buttonPanel = new javax.swing.JPanel();
@@ -133,20 +123,20 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
         setTitle("Trial Balance");
         setPreferredSize(new java.awt.Dimension(450, 410));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameClosed(evt);
             }
-            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
         });
 
@@ -186,13 +176,13 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
         rightInerPannel.setLayout(new java.awt.GridLayout(4, 0, 0, 10));
 
         try {
-            fromDatePicker.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
+            asOnTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        fromDatePicker.setFocusable(false);
-        fromDatePicker.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        rightInerPannel.add(fromDatePicker);
+        asOnTbox.setFocusable(false);
+        asOnTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        rightInerPannel.add(asOnTbox);
 
         paperCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         paperCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A4", "Legal" }));
@@ -273,9 +263,9 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel asOnLabel;
+    private javax.swing.JFormattedTextField asOnTbox;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JButton enterButton;
-    private javax.swing.JFormattedTextField fromDatePicker;
     private javax.swing.JPanel labelsPanel;
     private javax.swing.JPanel leftInerPannel;
     private javax.swing.JLabel logoLabel;

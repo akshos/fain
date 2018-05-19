@@ -27,6 +27,8 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
 import reports.Expenses;
+import utility.UtilityFuncs;
+import utility.ValidationChecks;
 /**
  *
  * @author akshos
@@ -97,40 +99,20 @@ public class PExpenses extends javax.swing.JInternalFrame{
             branch = this.branchData[0][index];
         }
         
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        String fromDate=null;
-        Date selDate=null;
-         try {
-             selDate = df.parse(this.fromDatePicker.getText());
-             System.out.println(selDate);
-             DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd");
-             String sqlDate=df1.format(selDate);
-             System.out.println(sqlDate);
-             fromDate=sqlDate.toString();
-             fromDate=selDate.toString();
-         } catch (ParseException ex) {
-             Logger.getLogger(APLatex.class.getName()).log(Level.SEVERE, null, ex);
-         }
-        if(fromDate == null){
-            JOptionPane.showMessageDialog(this, "Please enter Date From", "NO DATE", JOptionPane.WARNING_MESSAGE);
+        String fromDate=this.fromDatePicker.getText();
+        if(!ValidationChecks.isDateValid(fromDate)){
+            JOptionPane.showMessageDialog(this, "Please enter valid Date From", "INVALID DATE", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        String toDate=null;
-        selDate=null;
-         try {
-             selDate = df.parse(this.toDatePicker.getText());
-             System.out.println(selDate);
-             DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd");
-             String sqlDate=df1.format(selDate);
-             System.out.println(sqlDate);
-             toDate=sqlDate.toString();
-         } catch (ParseException ex) {
-             Logger.getLogger(APLatex.class.getName()).log(Level.SEVERE, null, ex);
-         }
-        if(toDate == null){
-            JOptionPane.showMessageDialog(this, "Please enter Date From", "NO DATE", JOptionPane.WARNING_MESSAGE);
+        fromDate = UtilityFuncs.dateUserToSql(fromDate);
+        System.out.println("From Date " + fromDate);
+        
+        String toDate=this.toDatePicker.getText();
+        if(!ValidationChecks.isDateValid(toDate)){
+            JOptionPane.showMessageDialog(this, "Please enter valid Date To", "INVALID DATE", JOptionPane.WARNING_MESSAGE);
             return;
-        }  
+        }       
+        toDate = UtilityFuncs.dateUserToSql(toDate);  
         
         String paper = this.paperCbox.getSelectedItem().toString();
         String orientation = this.orientationCbox.getSelectedItem().toString();
