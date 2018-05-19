@@ -491,6 +491,9 @@ public class EMaster extends javax.swing.JInternalFrame implements RefreshOption
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F5){
         
         }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_R){
+            this.updateTable();
+        }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F6){
             this.dataTable.setRowSelectionInterval(0, 0);
         }

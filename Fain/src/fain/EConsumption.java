@@ -449,6 +449,9 @@ public class EConsumption extends javax.swing.JInternalFrame implements RefreshO
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F2){
         
         }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_R){
+            this.updateTable();
+        }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F3){
         
         }

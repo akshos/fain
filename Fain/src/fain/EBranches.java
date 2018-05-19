@@ -458,6 +458,9 @@ public class EBranches extends javax.swing.JInternalFrame implements RefreshOpti
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F2){
         
         }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_R){
+            this.updateTable();
+        }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F3){
         
         }

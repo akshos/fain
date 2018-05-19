@@ -482,6 +482,9 @@ public class ECustomers extends javax.swing.JInternalFrame implements RefreshOpt
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F3){
             deleteEntry();
         }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_R){
+            this.updateTable();
+        }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F5){
         
         }
