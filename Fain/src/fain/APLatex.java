@@ -70,7 +70,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         this.editId=id;
         initComponents();
         loadCurrDate();
-        if(mode == Codes.EDIT) this.loadContents();
+        if(mode == Codes.EDIT) {this.loadContents(); System.out.println("editmode");}
         else refreshContents(Codes.REFRESH_ALL);
     }
     
@@ -93,6 +93,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         this.branchCbox.setSelectedIndex(indexValB);
         DateFormat df = new SimpleDateFormat("dd/MM/yy");
         try {
+            System.out.println(data[2]);
             this.dateTbox.setText(df.parse(data[2]).toString());
         } catch (ParseException ex) {
             Logger.getLogger(APLatex.class.getName()).log(Level.SEVERE, null, ex);
@@ -237,16 +238,20 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         }
         int index = this.branchCbox.getSelectedIndex();
         branch = this.branchData[0][index];
-        DateFormat df = new SimpleDateFormat("YYYY/MM/DD");
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String date=null;
         Date selDate=null;
          try {
              selDate = df.parse(dateTbox.getText());
-             date=selDate.toString();
+             System.out.println(selDate);
+             DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd");
+             String sqlDate=df1.format(selDate);
+             System.out.println(sqlDate);
+             date=sqlDate.toString();
          } catch (ParseException ex) {
              Logger.getLogger(APLatex.class.getName()).log(Level.SEVERE, null, ex);
          }
-         
+        
         if(date == null){
             JOptionPane.showMessageDialog(this, "Please enter Date From", "NO DATE", JOptionPane.WARNING_MESSAGE);
             return;

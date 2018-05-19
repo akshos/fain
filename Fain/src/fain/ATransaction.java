@@ -197,12 +197,16 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
     private void insertData(){
         Statement stmt=dbConnection.getStatement();
         
-        DateFormat df = new SimpleDateFormat("YYYY/MM/DD");
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String date=null;
         Date selDate=null;
          try {
              selDate = df.parse(dateTbox.getText());
-             date=selDate.toString();
+             System.out.println(selDate);
+             DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd");
+             String sqlDate=df1.format(selDate);
+             System.out.println(sqlDate);
+             date=sqlDate.toString();
          } catch (ParseException ex) {
              Logger.getLogger(APLatex.class.getName()).log(Level.SEVERE, null, ex);
          }
