@@ -99,8 +99,9 @@ public final class TransactionDB {
     }
     
     public static TableModel getTable(Statement stmt){
-        String sqlQuery = "select t.transactionNo as 'Transaction No', t.date as 'Date', "
-                + "b.name as 'Branch', mdebit.accountHead as 'Debit', mcredit.accountHead as 'Credit', "
+        String sqlQuery = "select t.transactionNo as 'No.', t.date as 'Date', "
+                + "b.name as 'Branch', t.debit || ' ' || mdebit.accountHead as 'Debit', "
+                + "t.credit || ' ' || mcredit.accountHead as 'Credit', "
                 + "printf(\"%.2f\", t.amount) as 'Amount', t.narration as 'Narration' from transactions as t, "
                 + "branch as b, master as mdebit, master mcredit "
                 + "where t.branch=b.branchId and t.credit=mcredit.accountNo and t.debit=mdebit.accountNo;";

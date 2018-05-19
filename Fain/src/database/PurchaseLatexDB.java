@@ -96,7 +96,7 @@ public final class PurchaseLatexDB {
     
     public static TableModel getTable(Statement stmt){
         String sqlQuery = "select l.purchaseLatexId as 'ID', b.name as 'Branch', l.date as 'Date', "
-                + "l.prBill as 'Pr. Bill', c.name as 'Party', printf(\"%.3f\", l.quantity) as 'Quantity', "
+                + "l.prBill as 'Pr. Bill', l.party || ' ' || c.name as 'Party', printf(\"%.3f\", l.quantity) as 'Quantity', "
                 + "printf(\"%.3f\", l.drc) as 'DRC', printf(\"%.3f\", l.dryRubber) as 'Dry Rubber', "
                 + "printf(\"%.2f\", l.rate) as 'Rate' , printf(\"%.2f\", l.value) as 'Value' from "
                 + "purchaseLatex as l, branch as b, customer as c where l.party=c.customerCode and "
