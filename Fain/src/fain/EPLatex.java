@@ -173,7 +173,7 @@ public class EPLatex extends javax.swing.JInternalFrame implements RefreshOption
     }
     
     private void filterTableDate(String date){
-        TableModel table = PurchaseLatexDB.getTableFilteredDate(dbConnection.getStatement(), date);
+        TableModel table = PurchaseLatexDB.getTableFilteredDate(dbConnection.getStatement(), UtilityFuncs.dateUserToSql(date));
         this.dataTable.setModel(table);
         setTableAppearance();
     }
