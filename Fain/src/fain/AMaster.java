@@ -165,7 +165,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
                 this.doDefaultCloseAction();
             }
         }
-        String cat = this.categoryTbox.getText();
+        String cat = this.categoryTbox.getText().toUpperCase();
         if( cat.compareTo("CR")==0 || cat.compareTo("DB")==0 ){
             if(!CustomerDB.checkExisting(dbConnection.getStatement(), this.accountCodeTbox.getText())){
                 int ret = JOptionPane.showConfirmDialog(this, "Please add a customer first", "No customer", JOptionPane.WARNING_MESSAGE);
