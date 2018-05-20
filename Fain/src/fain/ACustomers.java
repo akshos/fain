@@ -169,8 +169,6 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        topPanel = new javax.swing.JPanel();
-        headingPanel = new javax.swing.JLabel();
         outerPanel = new javax.swing.JPanel();
         leftInerPannel = new javax.swing.JPanel();
         logoPanel = new javax.swing.JPanel();
@@ -222,16 +220,6 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
             public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
         });
-
-        topPanel.setLayout(new java.awt.BorderLayout());
-
-        headingPanel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        headingPanel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        headingPanel.setText("CUSTOMERS");
-        headingPanel.setPreferredSize(new java.awt.Dimension(49, 40));
-        topPanel.add(headingPanel, java.awt.BorderLayout.CENTER);
-
-        getContentPane().add(topPanel, java.awt.BorderLayout.PAGE_START);
 
         outerPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
         outerPanel.setLayout(new java.awt.GridLayout(1, 2));
@@ -377,7 +365,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
 
         titleLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        titleLabel.setText("EXPENSES");
+        titleLabel.setText("CUSTOMER");
         titlePanel.add(titleLabel, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(titlePanel, java.awt.BorderLayout.PAGE_START);
@@ -469,7 +457,6 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
     private javax.swing.JLabel categoryLabel;
     private javax.swing.JTextField codeTbox;
     private javax.swing.JButton enterButton;
-    private javax.swing.JLabel headingPanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -483,7 +470,6 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
     private javax.swing.JPanel rightInerPannel;
     private javax.swing.JLabel titleLabel;
     private javax.swing.JPanel titlePanel;
-    private javax.swing.JPanel topPanel;
     private javax.swing.JLabel yopBalLabel;
     // End of variables declaration//GEN-END:variables
 
