@@ -136,7 +136,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
     }
     
     private void checkCategory(){
-        String catCode = this.categoryTbox.getText();
+        String catCode = this.categoryTbox.getText().toUpperCase();
         if( catCode.compareTo("CR")==0 || catCode.compareTo("DB")==0 ){
             addCustomer();
         }else{
@@ -192,7 +192,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
             yopBalance = Double.parseDouble(yopBalanceTbox.getText().replace(",", ""));
         }
         
-        String category = this.categoryTbox.getText();
+        String category = this.categoryTbox.getText().toUpperCase();
         if(!validateCategory()){
             JOptionPane.showMessageDialog(this, "Please choose a valid category", "No category", JOptionPane.WARNING_MESSAGE);
             return;
