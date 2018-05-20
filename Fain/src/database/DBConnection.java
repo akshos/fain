@@ -42,8 +42,7 @@ public class DBConnection {
         return this.stmt;
     }
     
-    public String getDatabaseName(){
-        
+    public String getDatabaseName(){  
         return databaseName;
     }
     public void setDatabaseName(String name){

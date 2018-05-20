@@ -114,15 +114,15 @@ public class Ledger {
             saccountName = MasterDB.getAccountHead(con.getStatement(), currAcc);
             Document doc = startDocument(paper, orientation);
             for(int i = startIndex; i <= endIndex; i++){
+                currAcc = accountData[0][i];
+                saccountName = MasterDB.getAccountHead(con.getStatement(), currAcc);
                 ret = addLedger(con, doc, accountData[0][i], branch, accFrom, accTo);
                 if(!ret){
                     JOptionPane.showMessageDialog(null, "Failed to create Ledger", "FAILED", JOptionPane.ERROR_MESSAGE);
                     break;
                 }
                 if(i < endIndex){
-                    currAcc = accountData[0][i+1];
-                    saccountName = MasterDB.getAccountHead(con.getStatement(), currAcc);
-                    doc.newPage();
+                    doc.newPage();   
                 }
             }
             
@@ -291,7 +291,7 @@ public class Ledger {
             
             Phrase title = new Phrase("LEDGER", CommonFuncs.titleFont);
             Phrase branch = new Phrase(sbranchName + " (" + sbranch + ")", CommonFuncs.subTitleFont);
-            Phrase accounts = new Phrase("Account From : " + saccFrom + " To : " + saccTo, CommonFuncs.subTitleFont);
+            Phrase accounts = new Phrase("Account : " + saccountName + " (" + currAcc + ")", CommonFuncs.subTitleFont);
             ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
                     title,
                     (document.right() - document.left()) / 2 + document.leftMargin(),

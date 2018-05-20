@@ -295,6 +295,8 @@ public class Main extends javax.swing.JFrame {
         pLedgerMenuItem = new javax.swing.JMenuItem();
         pTrialBalanceMenuItem = new javax.swing.JMenuItem();
         pProfitLossBLMenuItem = new javax.swing.JMenuItem();
+        pListOfAccountsMenuItem = new javax.swing.JMenuItem();
+        pPartyWiseStatement = new javax.swing.JMenuItem();
         pPurchaseLatexMenuItem = new javax.swing.JMenuItem();
         expensesMenuItem = new javax.swing.JMenuItem();
         optionsMenu = new javax.swing.JMenu();
@@ -632,6 +634,24 @@ public class Main extends javax.swing.JFrame {
             }
         });
         printingMenu.add(pProfitLossBLMenuItem);
+
+        pListOfAccountsMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        pListOfAccountsMenuItem.setText("List Of Accounts");
+        pListOfAccountsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pListOfAccountsMenuItemActionPerformed(evt);
+            }
+        });
+        printingMenu.add(pListOfAccountsMenuItem);
+
+        pPartyWiseStatement.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        pPartyWiseStatement.setText("Party Wise Statement");
+        pPartyWiseStatement.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pPartyWiseStatementActionPerformed(evt);
+            }
+        });
+        printingMenu.add(pPartyWiseStatement);
 
         pPurchaseLatexMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         pPurchaseLatexMenuItem.setText("Purchase Latex");
@@ -1091,6 +1111,28 @@ public class Main extends javax.swing.JFrame {
         }
         addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_pPurchaseLatexMenuItemActionPerformed
+
+    private void pPartyWiseStatementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pPartyWiseStatementActionPerformed
+        PPartyWiseStatement item = new PPartyWiseStatement(dbConnection, this, this.level+1);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }//GEN-LAST:event_pPartyWiseStatementActionPerformed
+
+    private void pListOfAccountsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pListOfAccountsMenuItemActionPerformed
+        PListOfAccounts item = new PListOfAccounts(dbConnection, this, this.level+1);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }//GEN-LAST:event_pListOfAccountsMenuItemActionPerformed
     
     /**
      * @param item the internal frame to be added to desktop pane
@@ -1188,6 +1230,8 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JDesktopPane mainDesktopPane;
     private javax.swing.JMenu optionsMenu;
     private javax.swing.JMenuItem pLedgerMenuItem;
+    private javax.swing.JMenuItem pListOfAccountsMenuItem;
+    private javax.swing.JMenuItem pPartyWiseStatement;
     private javax.swing.JMenuItem pProfitLossBLMenuItem;
     private javax.swing.JMenuItem pPurchaseLatexMenuItem;
     private javax.swing.JMenuItem pTrialBalanceMenuItem;

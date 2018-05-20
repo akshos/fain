@@ -15,21 +15,31 @@ public class Account{
     private double openingBal;
     private double closingBal;
     String accountHead;
-
+    
+    public double qnty;
+    public double drc;
+    public double dryWt;
+    public double rate;
+    public double value;
+    public double balance;
+    
     public Account(){
         openingBal = credit = debit = closingBal = 0.0;
         accountHead = "";
+        qnty = drc = dryWt = rate = value = balance = 0.0;
     }
     
     public Account(String head){
         accountHead = head;
         openingBal = credit = debit = closingBal = 0.0;
+        qnty = drc = dryWt = rate = value = balance = 0.0;
     }
 
     public Account(String head, double opBal){
         accountHead = head;
         openingBal = opBal;
         credit = debit = closingBal = 0.0;
+        qnty = drc = dryWt = rate = value = balance = 0.0;
     }
     
     public Account(String head, String opBal){
@@ -81,5 +91,15 @@ public class Account{
     
     public String getAccountHead(){
         return accountHead;
+    }
+    
+    public double calculateDryWt(){
+        dryWt = (qnty*drc/100);
+        return dryWt;
+    }
+    
+    public double calculateValue(){
+        value = (dryWt * rate);
+        return value;
     }
 }

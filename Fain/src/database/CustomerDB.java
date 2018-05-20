@@ -151,6 +151,26 @@ public final class CustomerDB {
         return null;
     }
     
+    public static String[][] getCustomersFilteredCodeBranch(Statement stmt, String branch, String code){
+        String sql = "select customerCode, name from customer";
+        if(code.compareToIgnoreCase("All") != 0){
+            sql += " where customerCode='"+code+"' ";
+        }else if(code.compareToIgnoreCase("All") == 0 && branch.compareToIgnoreCase("All") != 0){
+            sql += " where branch='"+branch+"' ";
+        }
+        else if(code.compareToIgnoreCase("None") == 0){
+            return null;
+        }
+        sql += " order by customerCode asc;";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            return ResultSetToStringArray.getStringArray2col(rs);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
+    
     public static String getBranch(Statement stmt, String id){
         String sql = "select branch from customer where customerCode='"+id+"';";
         try{

@@ -29,6 +29,7 @@ import utility.Codes;
 import reports.PurchaseLatex;
 import utility.UtilityFuncs;
 import utility.ValidationChecks;
+import utility.Wait;
 /**
  *
  * @author akshos
@@ -108,21 +109,31 @@ public class PPurchaseLatex extends javax.swing.JInternalFrame{
             JOptionPane.showMessageDialog(this, "Please enter valid Date From", "INVALID DATE", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        fromDate = UtilityFuncs.dateUserToSql(fromDate);
-        System.out.println("From Date " + fromDate);
+        final String dateFrom = UtilityFuncs.dateUserToSql(fromDate);
+        System.out.println("From Date " + dateFrom);
         
         String toDate=this.toDatePicker.getText();
         if(!ValidationChecks.isDateValid(toDate)){
             JOptionPane.showMessageDialog(this, "Please enter valid Date To", "INVALID DATE", JOptionPane.WARNING_MESSAGE);
             return;
         }       
-        toDate = UtilityFuncs.dateUserToSql(toDate);  
+        final String dateTo = UtilityFuncs.dateUserToSql(toDate);  
         
         String paper = this.paperCbox.getSelectedItem().toString();
         String orientation = this.orientationCbox.getSelectedItem().toString();
         
-        boolean ret = PurchaseLatex.createReport(dbConnection, paper, orientation, fromDate, toDate, account);
-        
+        Thread t;
+        t = new Thread(new Runnable(){
+            public void run(){
+                Wait wait = new Wait();
+                wait.setSize(new Dimension(700, 400));
+                wait.setVisible(true);
+                mainFrame.addToMainDesktopPane(wait, level+1, Codes.NO_DATABASE);
+                boolean ret = PurchaseLatex.createReport(dbConnection, paper, orientation, dateFrom, dateTo, account);
+                wait.closeWait();
+            }
+        });
+        t.start();
         resetBusy();
     }
     
@@ -165,11 +176,13 @@ public class PPurchaseLatex extends javax.swing.JInternalFrame{
         orientationCbox = new javax.swing.JComboBox<>();
         buttonPanel = new javax.swing.JPanel();
         enterButton = new javax.swing.JButton();
+        titlePanel = new javax.swing.JPanel();
+        titleLabel = new javax.swing.JLabel();
 
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
-        setTitle("Statements");
+        setTitle("Purchase Latex");
         setPreferredSize(new java.awt.Dimension(450, 410));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
@@ -293,6 +306,15 @@ public class PPurchaseLatex extends javax.swing.JInternalFrame{
 
         getContentPane().add(outerPanel, java.awt.BorderLayout.CENTER);
 
+        titlePanel.setLayout(new java.awt.BorderLayout());
+
+        titleLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        titleLabel.setText("PURCHASE LATEX REPORT");
+        titlePanel.add(titleLabel, java.awt.BorderLayout.CENTER);
+
+        getContentPane().add(titlePanel, java.awt.BorderLayout.PAGE_START);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -347,6 +369,8 @@ public class PPurchaseLatex extends javax.swing.JInternalFrame{
     private javax.swing.JComboBox<String> paperCbox;
     private javax.swing.JLabel paperLabel;
     private javax.swing.JPanel rightInerPannel;
+    private javax.swing.JLabel titleLabel;
+    private javax.swing.JPanel titlePanel;
     private javax.swing.JFormattedTextField toDatePicker;
     // End of variables declaration//GEN-END:variables
 }

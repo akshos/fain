@@ -15,47 +15,43 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.sql.Statement;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
-import reports.Statements;
-import utility.UtilityFuncs;
 import utility.ValidationChecks;
+import reports.ListOfAccounts;
+import utility.UtilityFuncs;
 import utility.Wait;
 /**
  *
  * @author akshos
  */
-public class PStatements extends javax.swing.JInternalFrame{
+public class PListOfAccounts extends javax.swing.JInternalFrame{
     
     DBConnection dbConnection;
     int level;
     Main mainFrame;
-    String accountData[][];
     String branchData[][];
+    String accountData[][];
     /**
      * Creates new form MasterEntry
      */
-    public PStatements() {
+    public PListOfAccounts() {
         initComponents();
     }
     
-    public PStatements(DBConnection db, Main frame, int level){
+    public PListOfAccounts(DBConnection db, Main frame, int level){
         this.dbConnection = db;
         this.level = level;
         this.mainFrame = frame;
         initComponents();
-        loadCurrDate();
-        loadBranch();
         loadAccounts();
+        loadCurrDate();
     }
     
     private void loadCurrDate(){
@@ -63,92 +59,65 @@ public class PStatements extends javax.swing.JInternalFrame{
         Date currDate = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String date=df.format(currDate);
-        this.fromDatePicker.setText(date);
-        this.toDatePicker.setText(date);
-    }
-    
-    private void loadBranch(){
-        System.out.println("loading branchcbox");
-        branchData = BranchDB.getBranch(this.dbConnection.getStatement());
-        int len;
-        if(branchData  == null){
-            len =  0;
-        }else{
-            len = branchData[0].length;
-        }
-        String[] cboxData = new String[len];
-        for(int i = 0; i < len; i++){
-            cboxData[i] = branchData[0][i] + " : " + branchData[1][i];
-        }
-        this.branchCbox.setModel(new DefaultComboBoxModel(cboxData));
+        this.asOnTbox.setText(date);
     }
     
     private void loadAccounts(){
-        String item = this.branchCbox.getSelectedItem().toString();
-        if(item.compareTo("Add New") == 0){
-            resetAccounts();
-            return;
-        }
-        this.accountCbox.setEnabled(true);
-        int index = this.branchCbox.getSelectedIndex();
-        String branchCode = this.branchData[0][index];
-        accountData = CustomerDB.getCustomersInBranch(this.dbConnection.getStatement(), branchCode);
+        accountData = MasterDB.getAccountHead(dbConnection.getStatement());
         int len;
-        String[] cboxData = null;
+        String[] cboxDataFrom = null;
+        String[] cboxDataTo = null;
         if(accountData  == null){
             len =  0;
-            cboxData = new String[1];
-            cboxData[0] = "None";
-            this.accountCbox.setToolTipText("No customers available for branch");
+            cboxDataFrom = new String[1];
+            cboxDataFrom[0] = "None";
+            cboxDataTo = new String[1];
+            cboxDataTo[0] = "None";
+            this.accountFromCbox.setToolTipText("No Customers Available");
+            this.accountToCbox.setToolTipText("No Customers Available");
         }else{
             len = accountData[0].length;
-            cboxData = new String[len];
+            cboxDataFrom = new String[len];
+            cboxDataTo = new String[len+2];
             for(int i = 0; i < len; i++){
-                cboxData[i] = accountData[0][i] + " : "  + accountData[1][i] ;
+                cboxDataFrom[i] = accountData[0][i] + " : " + accountData[1][i] ;
+                cboxDataTo[i] = accountData[0][i] + " : " + accountData[1][i] ;
             }
-            String address = this.accountData[2][0];
-            this.accountCbox.setToolTipText(address);
         }
-        this.accountCbox.setModel(new DefaultComboBoxModel(cboxData));
-        
-    }
-    
-    private void resetAccounts(){
-        String resetData[] = new String[1];
-        resetData[0] = "Select Branch";
-        this.accountCbox.setModel(new DefaultComboBoxModel(resetData));
-        this.accountCbox.setEnabled(false);
+        this.accountFromCbox.setModel(new DefaultComboBoxModel(cboxDataFrom));
+        cboxDataTo[len] = "All";
+        cboxDataTo[len+1] = "None";
+        this.accountToCbox.setModel(new DefaultComboBoxModel(cboxDataTo));
+        this.accountToCbox.setSelectedIndex(len);
     }
     
     private void generateReport(){    
         setBusy();
-        
-        String item = this.accountCbox.getSelectedItem().toString();
-        if(item.compareTo("None") == 0){
-            JOptionPane.showMessageDialog(this, "Please select an Account", "No Account", JOptionPane.WARNING_MESSAGE);
+        if(accountFromCbox.getSelectedItem().toString().compareTo("None") == 0){
+            JOptionPane.showMessageDialog(this, "Please select atleast one Account", "No Account selected", JOptionPane.WARNING_MESSAGE);
+            resetBusy();
             return;
         }
-        int index = this.accountCbox.getSelectedIndex();
-        String account = this.accountData[0][index];
         
-        String fromDate=this.fromDatePicker.getText();
-        if(!ValidationChecks.isDateValid(fromDate)){
-            JOptionPane.showMessageDialog(this, "Please enter valid Date From", "INVALID DATE", JOptionPane.WARNING_MESSAGE);
-            return;
+        String asOn = this.asOnTbox.getText();
+        final String date = UtilityFuncs.dateUserToSql(asOn);
+        
+        int index;
+        String item;
+        index = this.accountFromCbox.getSelectedIndex();
+        String accFrom = this.accountData[0][index];
+        item = this.accountToCbox.getSelectedItem().toString();
+        String accTo = "";
+        if(item.compareTo("None") == 0 || item.compareTo("All") == 0){
+            accTo = item;
+        }else{
+            index = this.accountToCbox.getSelectedIndex();
+            accTo = this.accountData[0][index];
         }
-        final String dateFrom = UtilityFuncs.dateUserToSql(fromDate);
-        System.out.println("From Date " + dateFrom);
-        
-        String toDate=this.toDatePicker.getText();
-        if(!ValidationChecks.isDateValid(toDate)){
-            JOptionPane.showMessageDialog(this, "Please enter valid Date To", "INVALID DATE", JOptionPane.WARNING_MESSAGE);
-            return;
-        }       
-        final String dateTo = UtilityFuncs.dateUserToSql(toDate);  
-        final String faccount = account;
-        String paper = this.paperCbox.getSelectedItem().toString();
-        String orientation = this.orientationCbox.getSelectedItem().toString();
-        
+        final String toAccount = accTo;
+        final String fromAccount = accFrom;
+        final String paper = this.paperCbox.getSelectedItem().toString();
+        final String orientation = this.orientationCbox.getSelectedItem().toString();
         Thread t;
         t = new Thread(new Runnable(){
             public void run(){
@@ -156,8 +125,8 @@ public class PStatements extends javax.swing.JInternalFrame{
                 wait.setSize(new Dimension(700, 400));
                 wait.setVisible(true);
                 mainFrame.addToMainDesktopPane(wait, level+1, Codes.NO_DATABASE);
-                boolean ret = Statements.createReport(dbConnection, paper, orientation, dateFrom, dateTo, faccount);
-                wait.closeWait();
+        
+                ListOfAccounts.createReport(dbConnection, wait, paper, orientation, date, fromAccount, toAccount);
             }
         });
         t.start();
@@ -190,17 +159,15 @@ public class PStatements extends javax.swing.JInternalFrame{
         logoPanel = new javax.swing.JPanel();
         logoLabel = new javax.swing.JLabel();
         labelsPanel = new javax.swing.JPanel();
-        Branch = new javax.swing.JLabel();
-        cashAccountLabel = new javax.swing.JLabel();
-        dateFromLabel = new javax.swing.JLabel();
         asOnLabel = new javax.swing.JLabel();
+        accountHeadLabel = new javax.swing.JLabel();
+        yopBalLabel = new javax.swing.JLabel();
         paperLabel = new javax.swing.JLabel();
         orientationLabel = new javax.swing.JLabel();
         rightInerPannel = new javax.swing.JPanel();
-        branchCbox = new javax.swing.JComboBox<>();
-        accountCbox = new javax.swing.JComboBox<>();
-        fromDatePicker = new javax.swing.JFormattedTextField();
-        toDatePicker = new javax.swing.JFormattedTextField();
+        asOnTbox = new javax.swing.JFormattedTextField();
+        accountFromCbox = new javax.swing.JComboBox<>();
+        accountToCbox = new javax.swing.JComboBox<>();
         paperCbox = new javax.swing.JComboBox<>();
         orientationCbox = new javax.swing.JComboBox<>();
         buttonPanel = new javax.swing.JPanel();
@@ -209,9 +176,8 @@ public class PStatements extends javax.swing.JInternalFrame{
         titleLabel = new javax.swing.JLabel();
 
         setClosable(true);
-        setMaximizable(true);
         setResizable(true);
-        setTitle("Statements");
+        setTitle("List Of Accounts");
         setPreferredSize(new java.awt.Dimension(450, 410));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
@@ -246,23 +212,19 @@ public class PStatements extends javax.swing.JInternalFrame{
 
         leftInerPannel.add(logoPanel);
 
-        labelsPanel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
-
-        Branch.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        Branch.setText("Branch");
-        labelsPanel.add(Branch);
-
-        cashAccountLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        cashAccountLabel.setText("Account");
-        labelsPanel.add(cashAccountLabel);
-
-        dateFromLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        dateFromLabel.setText("Date from");
-        labelsPanel.add(dateFromLabel);
+        labelsPanel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
 
         asOnLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        asOnLabel.setText("Date To");
+        asOnLabel.setText("As On");
         labelsPanel.add(asOnLabel);
+
+        accountHeadLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        accountHeadLabel.setText("Account From");
+        labelsPanel.add(accountHeadLabel);
+
+        yopBalLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        yopBalLabel.setText("Account To");
+        labelsPanel.add(yopBalLabel);
 
         paperLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         paperLabel.setText("Paper");
@@ -276,37 +238,35 @@ public class PStatements extends javax.swing.JInternalFrame{
 
         outerPanel.add(leftInerPannel);
 
-        rightInerPannel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
+        rightInerPannel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
 
-        branchCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        branchCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        branchCbox.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                branchCboxItemStateChanged(evt);
+        try {
+            asOnTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        asOnTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        rightInerPannel.add(asOnTbox);
+
+        accountFromCbox.setBackground(java.awt.Color.white);
+        accountFromCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        accountFromCbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                accountFromCboxKeyPressed(evt);
             }
         });
-        rightInerPannel.add(branchCbox);
+        rightInerPannel.add(accountFromCbox);
 
-        accountCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        accountCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        rightInerPannel.add(accountCbox);
+        accountToCbox.setBackground(java.awt.Color.white);
+        accountToCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        accountToCbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                accountToCboxKeyPressed(evt);
+            }
+        });
+        rightInerPannel.add(accountToCbox);
 
-        try {
-            fromDatePicker.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
-        fromDatePicker.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        rightInerPannel.add(fromDatePicker);
-
-        try {
-            toDatePicker.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
-        toDatePicker.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        rightInerPannel.add(toDatePicker);
-
+        paperCbox.setBackground(java.awt.Color.white);
         paperCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         paperCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A4", "Legal" }));
         paperCbox.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -316,6 +276,7 @@ public class PStatements extends javax.swing.JInternalFrame{
         });
         rightInerPannel.add(paperCbox);
 
+        orientationCbox.setBackground(java.awt.Color.white);
         orientationCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         orientationCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Landscape", "Portrait" }));
         orientationCbox.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -352,7 +313,7 @@ public class PStatements extends javax.swing.JInternalFrame{
 
         titleLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        titleLabel.setText("STATEMENTS");
+        titleLabel.setText("LIST OF ACCOUNTS");
         titlePanel.add(titleLabel, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(titlePanel, java.awt.BorderLayout.PAGE_START);
@@ -367,6 +328,23 @@ public class PStatements extends javax.swing.JInternalFrame{
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
         generateReport();
     }//GEN-LAST:event_enterButtonActionPerformed
+
+    private void accountFromCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_accountFromCboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            accountFromCbox.transferFocus();
+        }
+    }//GEN-LAST:event_accountFromCboxKeyPressed
+
+    private void accountToCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_accountToCboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            accountToCbox.transferFocus();
+        }
+    }//GEN-LAST:event_accountToCboxKeyPressed
 
     private void paperCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_paperCboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
@@ -392,21 +370,15 @@ public class PStatements extends javax.swing.JInternalFrame{
             this.generateReport();
         }
     }//GEN-LAST:event_enterButtonKeyPressed
-
-    private void branchCboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_branchCboxItemStateChanged
-        this.loadAccounts();        // TODO add your handling code here:
-    }//GEN-LAST:event_branchCboxItemStateChanged
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel Branch;
-    private javax.swing.JComboBox<String> accountCbox;
+    private javax.swing.JComboBox<String> accountFromCbox;
+    private javax.swing.JLabel accountHeadLabel;
+    private javax.swing.JComboBox<String> accountToCbox;
     private javax.swing.JLabel asOnLabel;
-    private javax.swing.JComboBox<String> branchCbox;
+    private javax.swing.JFormattedTextField asOnTbox;
     private javax.swing.JPanel buttonPanel;
-    private javax.swing.JLabel cashAccountLabel;
-    private javax.swing.JLabel dateFromLabel;
     private javax.swing.JButton enterButton;
-    private javax.swing.JFormattedTextField fromDatePicker;
     private javax.swing.JPanel labelsPanel;
     private javax.swing.JPanel leftInerPannel;
     private javax.swing.JLabel logoLabel;
@@ -419,6 +391,6 @@ public class PStatements extends javax.swing.JInternalFrame{
     private javax.swing.JPanel rightInerPannel;
     private javax.swing.JLabel titleLabel;
     private javax.swing.JPanel titlePanel;
-    private javax.swing.JFormattedTextField toDatePicker;
+    private javax.swing.JLabel yopBalLabel;
     // End of variables declaration//GEN-END:variables
 }

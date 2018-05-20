@@ -30,6 +30,7 @@ import utility.ValidationChecks;
 import reports.CashBankAccount;
 import reports.DayBook;
 import utility.UtilityFuncs;
+import utility.Wait;
 /**
  *
  * @author akshos
@@ -71,10 +72,13 @@ public class PAccountBooks extends javax.swing.JInternalFrame{
     private void setType(){
         if(this.type.compareTo("DAY") == 0){
             this.setTitle("CASH BOOK");
+            this.titleLabel.setText("CASH BOOK");
         }else if(this.type.compareTo("CH") == 0){
             this.setTitle("DAY BOOK");
+            this.titleLabel.setText("DAY BOOK");
         }else if(this.type.compareTo("BK") == 0){
             this.setTitle("BANK BOOK");
+            this.titleLabel.setText("BANK BOOK");
         }
     }
     
@@ -94,7 +98,7 @@ public class PAccountBooks extends javax.swing.JInternalFrame{
         }
         String[] cboxData = new String[len+1];
         for(int i = 0; i < len; i++){
-            cboxData[i] = accountData[1][i] + " (" + accountData[0][i] + ")";
+            cboxData[i] = accountData[0][i] + " : " + accountData[1][i];
         }
         cboxData[len] = "None";
         this.cashAccountCbox.setModel(new DefaultComboBoxModel(cboxData));
@@ -109,7 +113,7 @@ public class PAccountBooks extends javax.swing.JInternalFrame{
             return;
         }
         int index = this.cashAccountCbox.getSelectedIndex();
-        String account = this.accountData[0][index];
+        final String account = this.accountData[0][index];
         
         String fromDate=this.fromDatePicker.getText();
         if(!ValidationChecks.isDateValid(fromDate)){
@@ -126,14 +130,26 @@ public class PAccountBooks extends javax.swing.JInternalFrame{
         }       
         toDate = UtilityFuncs.dateUserToSql(toDate);
         
-        String paper = this.paperCbox.getSelectedItem().toString();
-        String orientation = this.orientationCbox.getSelectedItem().toString();
-        if(this.type.compareTo("DAY") == 0){
-            boolean ret = DayBook.createReport(dbConnection, paper, orientation, fromDate, toDate, account);
-        }else{
-            boolean ret = CashBankAccount.createReport(dbConnection, paper, orientation, fromDate, toDate, account, type);
-        }
-
+        final String dateFrom = fromDate;
+        final String dateTo = dateFrom;
+        final String paper = this.paperCbox.getSelectedItem().toString();
+        final String orientation = this.orientationCbox.getSelectedItem().toString();
+        Thread t;
+        t = new Thread(new Runnable(){
+            public void run(){
+                Wait wait = new Wait();
+                wait.setSize(new Dimension(700, 400));
+                wait.setVisible(true);
+                mainFrame.addToMainDesktopPane(wait, level+1, Codes.NO_DATABASE);
+                if(type.compareTo("DAY") == 0){
+                    boolean ret = DayBook.createReport(dbConnection, paper, orientation, dateFrom, dateTo, account);
+                }else{
+                    boolean ret = CashBankAccount.createReport(dbConnection, paper, orientation, dateFrom, dateTo, account, type);
+                }
+                wait.closeWait();
+            }
+        });
+        t.start();
         resetBusy();
     }
     
@@ -176,6 +192,8 @@ public class PAccountBooks extends javax.swing.JInternalFrame{
         orientationCbox = new javax.swing.JComboBox<>();
         buttonPanel = new javax.swing.JPanel();
         enterButton = new javax.swing.JButton();
+        titlePanel = new javax.swing.JPanel();
+        titleLabel = new javax.swing.JLabel();
 
         setClosable(true);
         setMaximizable(true);
@@ -183,20 +201,20 @@ public class PAccountBooks extends javax.swing.JInternalFrame{
         setTitle("Account Book");
         setPreferredSize(new java.awt.Dimension(450, 410));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameClosed(evt);
             }
-            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
         });
 
@@ -309,6 +327,15 @@ public class PAccountBooks extends javax.swing.JInternalFrame{
 
         getContentPane().add(outerPanel, java.awt.BorderLayout.CENTER);
 
+        titlePanel.setLayout(new java.awt.BorderLayout());
+
+        titleLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        titleLabel.setText("ACCOUNT BOOK");
+        titlePanel.add(titleLabel, java.awt.BorderLayout.CENTER);
+
+        getContentPane().add(titlePanel, java.awt.BorderLayout.PAGE_START);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -367,6 +394,8 @@ public class PAccountBooks extends javax.swing.JInternalFrame{
     private javax.swing.JComboBox<String> paperCbox;
     private javax.swing.JLabel paperLabel;
     private javax.swing.JPanel rightInerPannel;
+    private javax.swing.JLabel titleLabel;
+    private javax.swing.JPanel titlePanel;
     private javax.swing.JFormattedTextField toDatePicker;
     // End of variables declaration//GEN-END:variables
 }

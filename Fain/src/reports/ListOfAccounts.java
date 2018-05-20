@@ -34,8 +34,8 @@ import utility.Wait;
  *
  * @author akshos
  */
-public class TrialBalance {
-    private static String PREFIX = "trialbal";
+public class ListOfAccounts {
+    private static String PREFIX = "listofaccounts";
     
     private static String currAcc;
     private static DBConnection scon;
@@ -50,7 +50,7 @@ public class TrialBalance {
             Document doc = new Document();
             CommonFuncs.setDocumentSizeOrientation(doc, paper, orientation);
             PdfWriter writer = PdfWriter.getInstance(doc, new FileOutputStream(CommonFuncs.generateFileName(PREFIX)));
-            writer.setPageEvent(new TrialBalance.ShowHeader());
+            writer.setPageEvent(new ListOfAccounts.ShowHeader());
             doc.open();
             CommonFuncs.addMetaData(doc);
             return doc;
@@ -60,7 +60,7 @@ public class TrialBalance {
         return null;
     }
     
-    public static boolean createReport(DBConnection con, Wait wait, String paper, String orientation, String date){
+    public static boolean createReport(DBConnection con, Wait wait, String paper, String orientation, String date, String accFrom, String accTo){
         scon = con;
         currAcc = "";
         pageDebitTotal = 0.0;
@@ -80,7 +80,7 @@ public class TrialBalance {
         try{
             doc = startDocument(paper, orientation);
             
-            ret = addTable(con, doc);
+            ret = addTable(con, doc, accFrom, accTo);
             
             doc.close();
         }catch(Exception e){
@@ -124,7 +124,7 @@ public class TrialBalance {
         table.addCell(cell);
     }
     
-    private static boolean addTable(DBConnection con, Document doc){
+    private static boolean addTable(DBConnection con, Document doc, String accFrom, String accTo){
         float columns[] = {0.6f, 2, 1, 1};
         PdfPTable table = new PdfPTable(columns);
         table.setWidthPercentage(90);
@@ -140,12 +140,19 @@ public class TrialBalance {
         String accHead;
         creditTotal = debitTotal = 0.0;
         String cat;
-        
+        boolean started = false;
         try{
             ResultSet rs = MasterDB.selectAll(con.getStatement());
             while(rs.next()){
-                accHead = rs.getString("accountHead");
                 accNo = rs.getString("accountNo");
+                if(!started && accNo.compareTo(accFrom) == 0){
+                    started = true;
+                }
+                if(!started)
+                    continue;
+                accHead = rs.getString("accountHead");
+                
+                
                 cat = rs.getString("category");
                 if(cat.compareTo("SK") == 0){
                     accHead = "Op. " + accHead;
@@ -168,6 +175,10 @@ public class TrialBalance {
                     
                     creditTotal += Math.abs(currentBalance);
                     pageCreditTotal += Math.abs(currentBalance);
+                }
+                
+                if(started && accNo.compareTo(accTo) == 0){
+                    break;
                 }
                 
             }

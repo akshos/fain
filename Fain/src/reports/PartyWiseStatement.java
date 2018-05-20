@@ -15,6 +15,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfWriter;
+import database.CustomerDB;
 import database.DBConnection;
 import database.MasterDB;
 import database.PurchaseLatexDB;
@@ -23,22 +24,28 @@ import java.io.FileOutputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import javax.swing.JOptionPane;
+import utility.Codes;
 import utility.UtilityFuncs;
 
 /**
  *
  * @author akshos
  */
-public class PurchaseLatex {
-    private static final String PREFIX = "purchaselatex";
+public class PartyWiseStatement {
+    private static final String PREFIX = "partywisestatement";
     
     private static DBConnection scon;
     private static String sfromDate;
     private static String stoDate;
     private static String saccountId;
     private static String saccountName;
+    private static String sbranch;
     private static int pageNum;
     
     
@@ -47,7 +54,7 @@ public class PurchaseLatex {
             Document doc = new Document();
             CommonFuncs.setDocumentSizeOrientation(doc, paper, orientation);
             PdfWriter writer = PdfWriter.getInstance(doc, new FileOutputStream(CommonFuncs.generateFileName(PREFIX)));
-            writer.setPageEvent(new PurchaseLatex.ShowHeader());
+            writer.setPageEvent(new PartyWiseStatement.ShowHeader());
             doc.open();
             CommonFuncs.addMetaData(doc);
             return doc;
@@ -57,34 +64,84 @@ public class PurchaseLatex {
         return null;
     }
     
-    public static boolean createReport(DBConnection con, String paper, String orientation, String fromDate, String toDate, String accountId){
+    public static int createReport(DBConnection con, String paper, String orientation, String fromDate, String toDate, String branch, String accountId){
         scon = con;
         sfromDate = UtilityFuncs.dateSqlToUser(fromDate);
         stoDate = UtilityFuncs.dateSqlToUser(toDate);
         pageNum = 1;
-        saccountId = accountId;
-
-        boolean ret = false;
+        sbranch = branch;
+        
+        int ret = 0;
 
         Document doc;
         try{
-            if(accountId.compareTo("All") == 0){
-                saccountName = "All";
-            }else{
-                saccountName = MasterDB.getAccountHead(con.getStatement(), accountId);
+            
+            String[][] accountData = CustomerDB.getCustomersFilteredCodeBranch(con.getStatement(), branch, accountId);
+            if(accountData == null){
+                JOptionPane.showMessageDialog(null, "No Customer Accounts Available", "No Customers", JOptionPane.ERROR_MESSAGE);
+                return Codes.FAIL;
             }
             
+            LinkedHashMap<String, Account> accounts = CommonFuncs.addToHashMapLinked(accountData, false);
+            calculateBalance(con, accounts, fromDate, toDate);
+            
+            List<String> keyList = new ArrayList<String>(accounts.keySet());
+            int len = keyList.size();
+                        
             doc = startDocument(paper, orientation);
-
-            ret = createTable(con, doc, fromDate, toDate, accountId);
+            
+            String key;
+            Account acc;
+            for(int i = 0; i < len; i++){
+               key = keyList.get(i);
+               saccountId = key;
+               saccountName = MasterDB.getAccountHead(con.getStatement(), saccountId);
+               acc = accounts.get(key);               
+               ret = createTable(con, doc, fromDate, toDate, key, acc);
+               if(ret == Codes.FAIL){
+                   return ret;
+               }
+               if(i < len-1){
+                   doc.newPage();
+               }
+            }
+            
+            
             doc.close();
         }catch(Exception e){
             e.printStackTrace();
         }
-        if(ret)
+        if(ret != Codes.FAIL)
             ViewPdf.openPdfViewer(PREFIX + ".pdf");
         
         return ret;
+    }
+    
+    private static boolean calculateBalance(DBConnection con, LinkedHashMap<String, Account> accounts, String fromDate, String toDate){
+        String debitAcc, creditAcc;
+        double amount;
+        Account acc;
+        try{
+            ResultSet rs = TransactionDB.getTransactionsBeforeDateRS(con.getStatement(), fromDate);
+            while(rs.next()){
+                debitAcc = rs.getString("debit");
+                creditAcc = rs.getString("credit");
+                amount = rs.getDouble("amount");
+                
+                acc = accounts.get(creditAcc);
+                if(acc != null){
+                    acc.balance += amount;
+                }
+                acc = null;
+                acc = accounts.get(debitAcc);
+                if(acc != null){
+                    acc.balance -= amount;
+                }
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return true;
     }
     
      private static void addHeaderCell(PdfPTable table, String header){
@@ -94,7 +151,7 @@ public class PurchaseLatex {
         table.addCell(cell);
     }
      
-    private static void addTableRow(PdfPTable table, int border, Font font, String date, String bill, String party, String qnty, String drc, String dryWt, String rate, String value){
+    private static void addTableRow(PdfPTable table, int border, Font font, String date, String bill, String qnty, String drc, String dryWt, String rate, String value, String advance, String balance){
         PdfPCell cell;
         
         date = UtilityFuncs.dateSqlToUser(date);
@@ -106,11 +163,6 @@ public class PurchaseLatex {
         
         cell = new PdfPCell(new Phrase(bill, CommonFuncs.tableContentFont));
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        cell.setBorder(border);
-        table.addCell(cell);
-        
-        cell = new PdfPCell(new Phrase(party, font));
-        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         cell.setBorder(border);
         table.addCell(cell);
         
@@ -138,20 +190,31 @@ public class PurchaseLatex {
         cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         cell.setBorder(border);
         table.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase(advance, font));
+        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        cell.setBorder(border);
+        table.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase(balance, font));
+        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        cell.setBorder(border);
+        table.addCell(cell);
     }
     
-    private static boolean createTable(DBConnection con, Document doc, String fromDate, String toDate, String accountId){
-        float columns[] = {1, 0.7f, 2, 1, 1, 1, 1, 1};
+    private static int createTable(DBConnection con, Document doc, String fromDate, String toDate, String accId, Account acc){
+        float columns[] = {1, 0.7f, 2, 1, 1, 1, 1, 1, 1};
         PdfPTable table = new PdfPTable(columns);
         table.setWidthPercentage(90);
         addHeaderCell(table, "Date");
         addHeaderCell(table, "Bill");
-        addHeaderCell(table, "Party");
         addHeaderCell(table, "Qnty");
         addHeaderCell(table, "DRC");
         addHeaderCell(table, "Dry Wt.");
         addHeaderCell(table, "Rate");
         addHeaderCell(table, "Value");
+        addHeaderCell(table, "Advance");
+        addHeaderCell(table, "Balance");
         table.setHeaderRows(1);
         
         int count = 0;
@@ -159,60 +222,99 @@ public class PurchaseLatex {
         double totalDry = 0.0;
         double totalRate = 0.0;
         double totalValue = 0.0;
+        boolean purchased = false;
+        boolean advanced = false;
         
-        String date, partyCode, partyName, bill;
+        double balance = acc.balance;
+        double advance = 0.0;
+        
+        double amount;
+        String partyCode, partyName, bill;
         double qnty, drc, dryWt, rate, value;
         
+        String[] dates = TransactionDB.getTrasnsationDatesBetweenIncDatesIdRS(con.getStatement(), fromDate, toDate, accId);
+        if(dates == null){
+            return Codes.NOT_EXISTS;
+        }
         try{
-            ResultSet rs = PurchaseLatexDB.getAllPurchasesPartyDateRange(con.getStatement(), accountId, fromDate, toDate);
-            if(rs == null){
-                JOptionPane.showMessageDialog(null, "No Purchases Available", "No Purchases", JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-            while(rs.next()){
-                date = rs.getString("date");
-                bill = rs.getString("prBill");
-                partyCode = rs.getString("party");
-                partyName = rs.getString("accountHead");
-                qnty = rs.getDouble("quantity");
-                drc = rs.getDouble("drc");
-                dryWt = (qnty*drc/100);
-                rate = rs.getDouble("rate");
-                value = dryWt*rate;
-                
-                addTableRow(table, (PdfPCell.LEFT|PdfPCell.RIGHT),
-                                CommonFuncs.tableContentFont, date, bill, partyCode + " : "+partyName,
+            for(String date : dates){
+                purchased = false;
+                ResultSet rs = PurchaseLatexDB.getPurchasesOnDateForParty(con.getStatement(), date, accId);
+                while(rs.next()){
+                    bill = rs.getString("prBill");
+                    qnty = rs.getDouble("quantity");
+                    drc = rs.getDouble("drc");
+                    dryWt = (qnty*drc/100);
+                    rate = rs.getDouble("rate");
+                    value = (dryWt * rate);
+                    
+                    addTableRow(table, (PdfPCell.LEFT|PdfPCell.RIGHT),
+                                CommonFuncs.tableContentFont, date, bill, 
                                 new DecimalFormat("##,##,##0.000").format(qnty), 
                                 new DecimalFormat("##,##,##0.000").format(drc), 
                                 new DecimalFormat("##,##,##0.000").format(dryWt),
                                 new DecimalFormat("##,##,##0.00").format(rate), 
-                                new DecimalFormat("##,##,##0.00").format(value));
+                                new DecimalFormat("##,##,##0.00").format(value), 
+                                "", "");
+                    
+                    purchased = true;
+                    count++;
+                    totalQuantity += qnty;
+                    totalDry += dryWt;
+                    totalRate += rate;
+                    totalValue += value;
+                }
+                advanced = false;
+                rs = TransactionDB.getTransactionsOnDateForDebitId(con.getStatement(), date, accId);
+                while(rs.next()){
+                    amount = rs.getDouble("amount");
+                    balance -= amount;
+                    advance += amount;
+                    advanced = true;
+                    addTableRow(table, (PdfPCell.LEFT|PdfPCell.RIGHT),
+                                CommonFuncs.tableContentFont, (!purchased)?date:"",
+                                "", "", "", "", "", "",
+                                new DecimalFormat("##,##,##0.00").format(amount), "");
+                    
+                }
                 
+                if(advanced || purchased){
+                    addTableRow(table, (PdfPCell.LEFT|PdfPCell.RIGHT),
+                                CommonFuncs.tableContentFont, "",
+                                "", "", "", "", "", "", "",
+                                new DecimalFormat("##,##,##0.00").format(balance) );
+                }
                 
-                totalQuantity += qnty;
-                totalDry += dryWt;
-                totalRate += rate;
-                totalValue += value;
-                count++;
             }
-            //average
-            double avgDrc = (totalDry/totalQuantity)*100;
-            double avgRate = totalRate / count;
-            addTableRow(table, (PdfPCell.BOTTOM|PdfPCell.TOP|PdfPCell.LEFT|PdfPCell.RIGHT),
-                                CommonFuncs.tableContentFont, "", "", "",
+            
+            double avgDrc = (totalQuantity!=0.0)?(totalDry/totalQuantity)*100:0.0;
+            double avgRate = (count!=0)?(totalRate / count):0.0;
+            addTableRow(table, (PdfPCell.TOP|PdfPCell.BOTTOM|PdfPCell.LEFT|PdfPCell.RIGHT),
+                                CommonFuncs.tableBoldFont, "", "TOTALS", 
                                 new DecimalFormat("##,##,##0.000").format(totalQuantity), 
                                 new DecimalFormat("##,##,##0.000").format(avgDrc), 
                                 new DecimalFormat("##,##,##0.000").format(totalDry),
                                 new DecimalFormat("##,##,##0.00").format(avgRate), 
-                                new DecimalFormat("##,##,##0.00").format(totalValue));
+                                new DecimalFormat("##,##,##0.00").format(totalValue), 
+                                "", "");
             
-            doc.add(table);
+            
+            addTableRow(table, (PdfPCell.TOP|PdfPCell.BOTTOM|PdfPCell.LEFT|PdfPCell.RIGHT),
+                                CommonFuncs.tableBoldFont,"",
+                                "", "", "", "", "", "",
+                                new DecimalFormat("##,##,##0.00").format(advance), "");
             
         }catch(Exception e){
             e.printStackTrace();
-            return false;
+            return Codes.FAIL;
         }
-        return true;
+        try{
+            doc.add(table);
+        }catch(Exception e){
+            e.printStackTrace();
+            return Codes.FAIL;
+        }
+        return Codes.SUCCESS;
     }
     
     private static class ShowHeader extends PdfPageEventHelper{        
@@ -237,7 +339,7 @@ public class PurchaseLatex {
             try{
                int base = 10;
 
-                Phrase title = new Phrase("PURCHASE REPORT (LATEX)", CommonFuncs.titleFont);
+                Phrase title = new Phrase("PARTY WISE STATEMENT", CommonFuncs.titleFont);
                 Phrase account = new Phrase(saccountName + " ("+ saccountId + ")", CommonFuncs.subTitleFont);
                 Phrase date = new Phrase("From : " + sfromDate + "  To : " + stoDate, CommonFuncs.subTitleFont);
                 ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,

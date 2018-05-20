@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import utility.Codes;
 import utility.ValidationChecks;
 import reports.Ledger;
+import utility.Wait;
 /**
  *
  * @author akshos
@@ -58,7 +59,7 @@ public class PLedger extends javax.swing.JInternalFrame{
         }
         String[] cboxData = new String[len+2];
         for(int i = 0; i < len; i++){
-            cboxData[i] = branchData[1][i] + " (" + branchData[0][i] + ")";
+            cboxData[i] = branchData[0][i] + " : " + branchData[1][i];
         }
         cboxData[len] = "All";
         cboxData[len+1] = "None";
@@ -95,8 +96,8 @@ public class PLedger extends javax.swing.JInternalFrame{
             cboxDataFrom = new String[len];
             cboxDataTo = new String[len+2];
             for(int i = 0; i < len; i++){
-                cboxDataFrom[i] = accountData[1][i] + "  (" + accountData[0][i] +")"  ;
-                cboxDataTo[i] = accountData[1][i] + "  (" + accountData[0][i] +")"  ;
+                cboxDataFrom[i] = accountData[0][i] + " : " + accountData[0][i] ;
+                cboxDataTo[i] = accountData[0][i] + " : " + accountData[0][i] ;
             }
         }
         this.accountFromCbox.setModel(new DefaultComboBoxModel(cboxDataFrom));
@@ -137,9 +138,25 @@ public class PLedger extends javax.swing.JInternalFrame{
             index = this.accountToCbox.getSelectedIndex();
             accTo = this.accountData[0][index];
         }
+        
+        final String branch = branchCode;
+        final String fromAcc = accFrom;
+        final String toAcc = accTo;
         String paper = this.paperCbox.getSelectedItem().toString();
         String orientation = this.orientationCbox.getSelectedItem().toString();
-        Ledger.createReport(dbConnection, paper, orientation, branchCode, accFrom, accTo);
+        
+        Thread t;
+        t = new Thread(new Runnable(){
+            public void run(){
+                Wait wait = new Wait();
+                wait.setSize(new Dimension(700, 400));
+                wait.setVisible(true);
+                mainFrame.addToMainDesktopPane(wait, level+1, Codes.NO_DATABASE);
+                Ledger.createReport(dbConnection, paper, orientation, branch, fromAcc, toAcc);
+                wait.closeWait();
+            }
+        });
+        t.start();
         resetBusy();
     }
     
@@ -182,6 +199,8 @@ public class PLedger extends javax.swing.JInternalFrame{
         orientationCbox = new javax.swing.JComboBox<>();
         buttonPanel = new javax.swing.JPanel();
         enterButton = new javax.swing.JButton();
+        titlePanel = new javax.swing.JPanel();
+        titleLabel = new javax.swing.JLabel();
 
         setClosable(true);
         setResizable(true);
@@ -323,6 +342,15 @@ public class PLedger extends javax.swing.JInternalFrame{
 
         getContentPane().add(outerPanel, java.awt.BorderLayout.CENTER);
 
+        titlePanel.setLayout(new java.awt.BorderLayout());
+
+        titleLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        titleLabel.setText("LEDGER");
+        titlePanel.add(titleLabel, java.awt.BorderLayout.CENTER);
+
+        getContentPane().add(titlePanel, java.awt.BorderLayout.PAGE_START);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -407,6 +435,8 @@ public class PLedger extends javax.swing.JInternalFrame{
     private javax.swing.JComboBox<String> paperCbox;
     private javax.swing.JLabel paperLabel;
     private javax.swing.JPanel rightInerPannel;
+    private javax.swing.JLabel titleLabel;
+    private javax.swing.JPanel titlePanel;
     private javax.swing.JLabel yopBalLabel;
     // End of variables declaration//GEN-END:variables
 }

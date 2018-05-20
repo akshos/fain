@@ -29,6 +29,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.swing.JOptionPane;
 /**
@@ -174,6 +175,18 @@ public class CommonFuncs {
     
     public static HashMap<String, Account> addToHashMap(String[][] data, boolean opBal){
         HashMap<String, Account> accountData = new HashMap();
+        if(data == null){
+            System.out.println("ERROR : addToHashMap : data received is null");
+        }
+        int len = data[0].length;
+        for( int i = 0; i < len; i++ ){
+            accountData.put(data[0][i], (opBal)?(new Account(data[1][i], data[2][i])):(new Account(data[1][i])) );
+        }
+        return accountData;
+    }
+    
+    public static LinkedHashMap<String, Account> addToHashMapLinked(String[][] data, boolean opBal){
+        LinkedHashMap<String, Account> accountData = new LinkedHashMap();
         if(data == null){
             System.out.println("ERROR : addToHashMap : data received is null");
         }

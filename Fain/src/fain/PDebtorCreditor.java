@@ -22,6 +22,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
 import reports.DebtorCreditor;
+import utility.Wait;
 /**
  *
  * @author akshos
@@ -55,8 +56,10 @@ public class PDebtorCreditor extends javax.swing.JInternalFrame{
     private void setTitle(){
         if(type.compareTo("DB") == 0){
             this.setTitle("Debtors");
+            this.titleLabel.setText("DEBTORS");
         }else if(type.compareTo("CR") == 0){
             this.setTitle("CREDITORS");
+            this.titleLabel.setText("CREDITORS");
         }
     }
     
@@ -71,7 +74,7 @@ public class PDebtorCreditor extends javax.swing.JInternalFrame{
         }
         String[] cboxData = new String[len+1];
         for(int i = 0; i < len; i++){
-            cboxData[i] = branchData[1][i] + " (" + branchData[0][i] + ")";
+            cboxData[i] = branchData[0][i] + " : " + branchData[1][i];
         }
         cboxData[len] = "All";
         this.branchCbox.setModel(new DefaultComboBoxModel(cboxData));
@@ -100,12 +103,13 @@ public class PDebtorCreditor extends javax.swing.JInternalFrame{
             len = accountData[0].length;
             cboxData = new String[len];
             for(int i = 0; i < len; i++){
-                cboxData[i] = accountData[1][i] + "  (" + accountData[0][i] +")"  ;
+                cboxData[i] = accountData[0][i] + " : " + accountData[1][i];
             }
             this.accountFromCbox.setToolTipText("Select an Account");
         }
         this.accountFromCbox.setModel(new DefaultComboBoxModel(cboxData));
         this.accountToCbox.setModel(new DefaultComboBoxModel(cboxData));
+        this.accountToCbox.setSelectedIndex(cboxData.length-1);
     }
     
     private void resetParty(){
@@ -146,8 +150,18 @@ public class PDebtorCreditor extends javax.swing.JInternalFrame{
         String paper = this.paperCbox.getSelectedItem().toString();
         String orientation = this.orientationCbox.getSelectedItem().toString();
         
-        boolean ret = DebtorCreditor.createReport(dbConnection, paper, orientation, branchCode, accountFrom, accountTo, type);
-        
+        Thread t;
+        t = new Thread(new Runnable(){
+            public void run(){
+                Wait wait = new Wait();
+                wait.setSize(new Dimension(700, 400));
+                wait.setVisible(true);
+                mainFrame.addToMainDesktopPane(wait, level+1, Codes.NO_DATABASE);
+                boolean ret = DebtorCreditor.createReport(dbConnection, paper, orientation, branchCode, accountFrom, accountTo, type);
+                wait.closeWait();
+            }
+        });
+        t.start();
         resetBusy();
     }
     
@@ -190,6 +204,8 @@ public class PDebtorCreditor extends javax.swing.JInternalFrame{
         orientationCbox = new javax.swing.JComboBox<>();
         buttonPanel = new javax.swing.JPanel();
         enterButton = new javax.swing.JButton();
+        titlePanel = new javax.swing.JPanel();
+        titleLabel = new javax.swing.JLabel();
 
         setClosable(true);
         setMaximizable(true);
@@ -197,20 +213,20 @@ public class PDebtorCreditor extends javax.swing.JInternalFrame{
         setTitle("Statements");
         setPreferredSize(new java.awt.Dimension(450, 410));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameClosed(evt);
             }
-            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
         });
 
@@ -315,6 +331,15 @@ public class PDebtorCreditor extends javax.swing.JInternalFrame{
 
         getContentPane().add(outerPanel, java.awt.BorderLayout.CENTER);
 
+        titlePanel.setLayout(new java.awt.BorderLayout());
+
+        titleLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        titleLabel.setText("DEBTORS CREDITORS");
+        titlePanel.add(titleLabel, java.awt.BorderLayout.CENTER);
+
+        getContentPane().add(titlePanel, java.awt.BorderLayout.PAGE_START);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -374,5 +399,7 @@ public class PDebtorCreditor extends javax.swing.JInternalFrame{
     private javax.swing.JComboBox<String> paperCbox;
     private javax.swing.JLabel paperLabel;
     private javax.swing.JPanel rightInerPannel;
+    private javax.swing.JLabel titleLabel;
+    private javax.swing.JPanel titlePanel;
     // End of variables declaration//GEN-END:variables
 }

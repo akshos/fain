@@ -27,6 +27,7 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import javax.swing.JOptionPane;
 import utility.UtilityFuncs;
+import utility.Wait;
 
 /**
  *
@@ -106,7 +107,6 @@ public class CashBankAccount {
         }
         if(ret)
             ViewPdf.openPdfViewer(PREFIX + ".pdf");
-        
         return ret;
     }
     

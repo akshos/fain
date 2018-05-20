@@ -174,7 +174,7 @@ public class ETransaction extends javax.swing.JInternalFrame implements RefreshO
     }
     
     private void filterTableDate(String date){
-        TableModel table = TransactionDB.getTableFilteredDate(dbConnection.getStatement(), date);
+        TableModel table = TransactionDB.getTableFilteredDate(dbConnection.getStatement(), UtilityFuncs.dateUserToSql(date));
         this.dataTable.setModel(table);
         setTableAppearance();
     }

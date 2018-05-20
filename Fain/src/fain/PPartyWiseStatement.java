@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
-import reports.Statements;
+import reports.PartyWiseStatement;
 import utility.UtilityFuncs;
 import utility.ValidationChecks;
 import utility.Wait;
@@ -34,7 +34,7 @@ import utility.Wait;
  *
  * @author akshos
  */
-public class PStatements extends javax.swing.JInternalFrame{
+public class PPartyWiseStatement extends javax.swing.JInternalFrame{
     
     DBConnection dbConnection;
     int level;
@@ -44,11 +44,11 @@ public class PStatements extends javax.swing.JInternalFrame{
     /**
      * Creates new form MasterEntry
      */
-    public PStatements() {
+    public PPartyWiseStatement() {
         initComponents();
     }
     
-    public PStatements(DBConnection db, Main frame, int level){
+    public PPartyWiseStatement(DBConnection db, Main frame, int level){
         this.dbConnection = db;
         this.level = level;
         this.mainFrame = frame;
@@ -76,23 +76,23 @@ public class PStatements extends javax.swing.JInternalFrame{
         }else{
             len = branchData[0].length;
         }
-        String[] cboxData = new String[len];
+        String[] cboxData = new String[len+1];
         for(int i = 0; i < len; i++){
             cboxData[i] = branchData[0][i] + " : " + branchData[1][i];
         }
+        cboxData[len] = "All";
         this.branchCbox.setModel(new DefaultComboBoxModel(cboxData));
     }
     
     private void loadAccounts(){
-        String item = this.branchCbox.getSelectedItem().toString();
-        if(item.compareTo("Add New") == 0){
-            resetAccounts();
-            return;
+        String branch;
+        if(branchData == null || this.branchCbox.getSelectedItem().toString().compareTo("All") == 0){
+            branch = "All";
+        }else{
+            int index = this.branchCbox.getSelectedIndex();
+            branch = branchData[0][index];
         }
-        this.accountCbox.setEnabled(true);
-        int index = this.branchCbox.getSelectedIndex();
-        String branchCode = this.branchData[0][index];
-        accountData = CustomerDB.getCustomersInBranch(this.dbConnection.getStatement(), branchCode);
+        accountData = CustomerDB.getCustomersInBranch(this.dbConnection.getStatement(), branch);
         int len;
         String[] cboxData = null;
         if(accountData  == null){
@@ -102,50 +102,60 @@ public class PStatements extends javax.swing.JInternalFrame{
             this.accountCbox.setToolTipText("No customers available for branch");
         }else{
             len = accountData[0].length;
-            cboxData = new String[len];
-            for(int i = 0; i < len; i++){
-                cboxData[i] = accountData[0][i] + " : "  + accountData[1][i] ;
+            cboxData = new String[len+1];
+            cboxData[0] = "All";
+            for(int i = 1; i <= len; i++){
+                cboxData[i] = accountData[0][i-1] + " : " + accountData[1][i-1];
             }
-            String address = this.accountData[2][0];
-            this.accountCbox.setToolTipText(address);
         }
-        this.accountCbox.setModel(new DefaultComboBoxModel(cboxData));
-        
-    }
-    
-    private void resetAccounts(){
-        String resetData[] = new String[1];
-        resetData[0] = "Select Branch";
-        this.accountCbox.setModel(new DefaultComboBoxModel(resetData));
-        this.accountCbox.setEnabled(false);
+        this.accountCbox.setModel(new DefaultComboBoxModel(cboxData));    
     }
     
     private void generateReport(){    
         setBusy();
+        
+        String branch;
+        if(branchData == null || this.branchCbox.getSelectedItem().toString().compareTo("All") == 0){
+            branch = "All";
+        }else{
+            int index = this.branchCbox.getSelectedIndex();
+            branch = branchData[0][index];
+        }
         
         String item = this.accountCbox.getSelectedItem().toString();
         if(item.compareTo("None") == 0){
             JOptionPane.showMessageDialog(this, "Please select an Account", "No Account", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        
+        String account;
         int index = this.accountCbox.getSelectedIndex();
-        String account = this.accountData[0][index];
+        if(index == 0){
+            account = "All";
+        }
+        else{
+            account = this.accountData[0][index-1];
+        }
         
         String fromDate=this.fromDatePicker.getText();
         if(!ValidationChecks.isDateValid(fromDate)){
             JOptionPane.showMessageDialog(this, "Please enter valid Date From", "INVALID DATE", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        final String dateFrom = UtilityFuncs.dateUserToSql(fromDate);
-        System.out.println("From Date " + dateFrom);
+        fromDate = UtilityFuncs.dateUserToSql(fromDate);
+        System.out.println("From Date " + fromDate);
         
         String toDate=this.toDatePicker.getText();
         if(!ValidationChecks.isDateValid(toDate)){
             JOptionPane.showMessageDialog(this, "Please enter valid Date To", "INVALID DATE", JOptionPane.WARNING_MESSAGE);
             return;
         }       
-        final String dateTo = UtilityFuncs.dateUserToSql(toDate);  
+        toDate = UtilityFuncs.dateUserToSql(toDate);  
+        
+        final String fbranch = branch;
         final String faccount = account;
+        final String dateFrom = fromDate;
+        final String dateTo = toDate;
         String paper = this.paperCbox.getSelectedItem().toString();
         String orientation = this.orientationCbox.getSelectedItem().toString();
         
@@ -156,7 +166,7 @@ public class PStatements extends javax.swing.JInternalFrame{
                 wait.setSize(new Dimension(700, 400));
                 wait.setVisible(true);
                 mainFrame.addToMainDesktopPane(wait, level+1, Codes.NO_DATABASE);
-                boolean ret = Statements.createReport(dbConnection, paper, orientation, dateFrom, dateTo, faccount);
+                int ret = PartyWiseStatement.createReport(dbConnection, paper, orientation, dateFrom, dateTo, fbranch, faccount);
                 wait.closeWait();
             }
         });
@@ -190,7 +200,7 @@ public class PStatements extends javax.swing.JInternalFrame{
         logoPanel = new javax.swing.JPanel();
         logoLabel = new javax.swing.JLabel();
         labelsPanel = new javax.swing.JPanel();
-        Branch = new javax.swing.JLabel();
+        branchLabel = new javax.swing.JLabel();
         cashAccountLabel = new javax.swing.JLabel();
         dateFromLabel = new javax.swing.JLabel();
         asOnLabel = new javax.swing.JLabel();
@@ -211,7 +221,7 @@ public class PStatements extends javax.swing.JInternalFrame{
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
-        setTitle("Statements");
+        setTitle("Party Wise Statements");
         setPreferredSize(new java.awt.Dimension(450, 410));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
@@ -248,9 +258,9 @@ public class PStatements extends javax.swing.JInternalFrame{
 
         labelsPanel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
 
-        Branch.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        Branch.setText("Branch");
-        labelsPanel.add(Branch);
+        branchLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        branchLabel.setText("Branch");
+        labelsPanel.add(branchLabel);
 
         cashAccountLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         cashAccountLabel.setText("Account");
@@ -352,7 +362,7 @@ public class PStatements extends javax.swing.JInternalFrame{
 
         titleLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        titleLabel.setText("STATEMENTS");
+        titleLabel.setText("PARTY WISE STATEMENT");
         titlePanel.add(titleLabel, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(titlePanel, java.awt.BorderLayout.PAGE_START);
@@ -398,10 +408,10 @@ public class PStatements extends javax.swing.JInternalFrame{
     }//GEN-LAST:event_branchCboxItemStateChanged
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel Branch;
     private javax.swing.JComboBox<String> accountCbox;
     private javax.swing.JLabel asOnLabel;
     private javax.swing.JComboBox<String> branchCbox;
+    private javax.swing.JLabel branchLabel;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JLabel cashAccountLabel;
     private javax.swing.JLabel dateFromLabel;

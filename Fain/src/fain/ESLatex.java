@@ -165,7 +165,7 @@ public class ESLatex extends javax.swing.JInternalFrame implements RefreshOption
     }
     
     private void filterTableDate(String date){
-        TableModel table = SalesDB.getTableFilteredDate(dbConnection.getStatement(), date);
+        TableModel table = SalesDB.getTableFilteredDate(dbConnection.getStatement(), UtilityFuncs.dateUserToSql(date));
         this.dataTable.setModel(table);
         setTableAppearance();
     }
@@ -517,7 +517,7 @@ public class ESLatex extends javax.swing.JInternalFrame implements RefreshOption
             deleteEntry();
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F5){
-        
+            find();
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_R){
             this.updateTable();

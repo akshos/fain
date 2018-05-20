@@ -87,7 +87,6 @@ public class Expenses {
         }
         if(ret)
             ViewPdf.openPdfViewer(PREFIX + ".pdf");
-        
         return ret;
     }
     

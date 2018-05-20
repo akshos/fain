@@ -96,12 +96,12 @@ public class ProfitLossBalanceSheet {
             doc = startDocument(paper, orientation);
             double grossIncome = tradingAccount(con, doc);
             
-            stitle = "PROFIT AND LOSS ACCOUNT";
             doc.newPage();
+            stitle = "PROFIT AND LOSS ACCOUNT";
             double profitLoss = profitAndLoss(con, doc, grossIncome);
             
-            stitle = "BALANCE SHEET";
             doc.newPage();
+            stitle = "BALANCE SHEET";
             balanceSheet(con, doc, profitLoss);
             
             doc.close();

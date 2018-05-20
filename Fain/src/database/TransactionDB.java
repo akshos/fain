@@ -254,8 +254,11 @@ public final class TransactionDB {
     }
     
     public static String[] getTrasnsationDatesBetweenIncDatesIdRS(Statement stmt, String from, String to, String id){
-        String sql = "select distinct date from transactions where date>='"+from+"' and date<='"+to+"' and "
-                + "(credit='"+id+"' or debit='"+id+"') order by date asc;";
+        String sql = "select distinct date from transactions where date>='"+from+"' and date<='"+to+"' ";
+        if(id.compareTo("All") != 0){
+            sql += " and (credit='"+id+"' or debit='"+id+"') ";
+        }
+        sql += " order by date asc ;";
         try{
             ResultSet rs = stmt.executeQuery(sql);
             return ResultSetToStringArray.getStringArray1col(rs);
@@ -292,6 +295,17 @@ public final class TransactionDB {
     public static ResultSet getTransactionsOnDateForId(Statement stmt, String date, String id){
         String sql = "select date, debit, credit, amount, narration from "
                 + "transactions where date='"+date+"' and (credit='"+id+"' or debit='"+id+"');";
+        try{
+            return stmt.executeQuery(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static ResultSet getTransactionsOnDateForDebitId(Statement stmt, String date, String id){
+        String sql = "select date, debit, credit, amount, narration from "
+                + "transactions where date='"+date+"' and  debit='"+id+"' ;";
         try{
             return stmt.executeQuery(sql);
         }catch(SQLException se){

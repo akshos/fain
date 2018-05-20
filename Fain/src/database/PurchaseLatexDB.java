@@ -304,4 +304,25 @@ public final class PurchaseLatexDB {
         return null;
     }
     
+    public static String[] getPurchaseDatesRange(Statement stmt, String from, String to, String party){
+        String sql = "select date from purchaseLatex where party='"+party+"' and date>='"+from+"' and date<='"+to+"' order by date asc;";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            return ResultSetToStringArray.getStringArray1col(rs);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static ResultSet getPurchasesOnDateForParty(Statement stmt, String date, String party){
+        String sql = "select * from purchaseLatex where party='"+party+"' and date='"+date+"' ;";
+        try{
+            return stmt.executeQuery(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
+    
 }

@@ -29,6 +29,7 @@ import utility.Codes;
 import utility.ValidationChecks;
 import reports.ProfitLossBalanceSheet;
 import utility.UtilityFuncs;
+import utility.Wait;
 /**
  *
  * @author akshos
@@ -71,13 +72,24 @@ public class PProfitLossBalanceSheet extends javax.swing.JInternalFrame{
             JOptionPane.showMessageDialog(this, "Please enter valid Date", "INVALID DATE", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        asOnDate = UtilityFuncs.dateUserToSql(asOnDate);
+        final String date = UtilityFuncs.dateUserToSql(asOnDate);
         
-        String paper = this.paperCbox.getSelectedItem().toString();
-        String orientation = this.orientationCbox.getSelectedItem().toString();
-
-        boolean ret = ProfitLossBalanceSheet.createReport(dbConnection, paper, orientation, asOnDate);
+        final String paper = this.paperCbox.getSelectedItem().toString();
+        final String orientation = this.orientationCbox.getSelectedItem().toString();
         
+        
+        Thread t;
+        t = new Thread(new Runnable(){
+            public void run(){
+                Wait wait = new Wait();
+                wait.setSize(new Dimension(700, 400));
+                wait.setVisible(true);
+                mainFrame.addToMainDesktopPane(wait, level+1, Codes.NO_DATABASE);
+                boolean ret = ProfitLossBalanceSheet.createReport(dbConnection, paper, orientation, date);
+                wait.closeWait();
+            }
+        });
+        t.start();
         resetBusy();
     }
     
@@ -119,6 +131,8 @@ public class PProfitLossBalanceSheet extends javax.swing.JInternalFrame{
         orientationCbox = new javax.swing.JComboBox<>();
         buttonPanel = new javax.swing.JPanel();
         enterButton = new javax.swing.JButton();
+        titlePanel = new javax.swing.JPanel();
+        titleLabel = new javax.swing.JLabel();
 
         setClosable(true);
         setMaximizable(true);
@@ -228,6 +242,15 @@ public class PProfitLossBalanceSheet extends javax.swing.JInternalFrame{
 
         getContentPane().add(outerPanel, java.awt.BorderLayout.CENTER);
 
+        titlePanel.setLayout(new java.awt.BorderLayout());
+
+        titleLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        titleLabel.setText("P/L & BALANCE SHEET");
+        titlePanel.add(titleLabel, java.awt.BorderLayout.CENTER);
+
+        getContentPane().add(titlePanel, java.awt.BorderLayout.PAGE_START);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -279,5 +302,7 @@ public class PProfitLossBalanceSheet extends javax.swing.JInternalFrame{
     private javax.swing.JComboBox<String> paperCbox;
     private javax.swing.JLabel paperLabel;
     private javax.swing.JPanel rightInerPannel;
+    private javax.swing.JLabel titleLabel;
+    private javax.swing.JPanel titlePanel;
     // End of variables declaration//GEN-END:variables
 }
