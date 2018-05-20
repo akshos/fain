@@ -93,6 +93,19 @@ public final class CustomerDB {
         return false;
     }
     
+    public static String getCustomerName(Statement stmt, String id){
+        String check="select name from customer where customerCode='"+id+"';";
+        try {
+            ResultSet rs=stmt.executeQuery(check);
+            if (rs.next()){
+                return rs.getString(1);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+    
     public static TableModel getTable(Statement stmt){
         String sqlQuery = "select c.customerCode as 'ID', c.name as 'Name', c.address as 'Address', "
                 + "b.name AS 'Branch', c.kgst as 'GST', c.rbno as 'RBNO' from customer as c, branch as b "

@@ -20,7 +20,9 @@ import database.InfoDB;
 import database.SessionInfoDB;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import javax.swing.JComboBox;
+import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import utility.UtilityFuncs;
 
@@ -50,6 +52,7 @@ public class Main extends javax.swing.JFrame {
         this.activeInternalFrame = new javax.swing.JInternalFrame[10];
         this.level = 0;
         Preferences.loadAllProperties();  
+        fainMainMenu.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0), "none");
     }
     
     private void disableComponents(){

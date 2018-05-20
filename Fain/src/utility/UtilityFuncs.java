@@ -5,6 +5,7 @@
  */
 package utility;
 
+import database.DBConnection;
 import fain.APLatex;
 import java.awt.Component;
 import java.awt.Font;
@@ -14,10 +15,17 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.awt.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
+import java.awt.Component;
+import java.awt.ScrollPane;
+import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -70,4 +78,28 @@ public class UtilityFuncs {
             return null;
         }
     }
+    
+    public static int selectOption(JInternalFrame form, String title, String[][] optionData){
+        if(optionData == null){
+            return -1;
+        }
+        int len = optionData[0].length;
+        String[] cboxData = new String[len];
+        for(int i = 0; i < len; i++){
+            cboxData[i] = optionData[0][i] + " : " + optionData[1][i];
+        }
+        JComboBox optionList = new JComboBox(cboxData);
+        optionList.setFont(new java.awt.Font("Dialog", 1, 24));
+        final JComponent[] inputs = new JComponent[]{
+            optionList,
+        };
+        optionList.requestFocus();
+        int res = JOptionPane.showConfirmDialog(form, inputs, "SELECT " + title, JOptionPane.PLAIN_MESSAGE);
+        if(res == JOptionPane.OK_OPTION){
+            int index = optionList.getSelectedIndex();
+            return index;
+        }
+        return -1;
+    }
+
 }

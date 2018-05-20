@@ -41,7 +41,7 @@ public final class SalesDB {
         }
             return true;
     }
-    public static boolean update(Statement stmt,String code, String branch, String date, String billNo,String party,int barrelNoFrom,int barrelNoTo,double quantity,double drc,double dryRubber,double rate,double value, String tid ){
+    public static boolean update(Statement stmt,String code, String branch, String date, String billNo,String party,int barrelNoFrom,int barrelNoTo,double quantity,double drc,double dryRubber,double rate,double value){
         int diff=barrelNoTo-barrelNoFrom+1;
         String sql = "update sales set branch='"          +branch         + "',"
                                             +"date='"           +date           + "',"
@@ -54,8 +54,7 @@ public final class SalesDB {
                                             +"drc="                  +drc            + ","
                                             +"dryRubber="        +dryRubber      + ","
                                             +"rate="            +rate           + ","
-                                            +"value="            +value          + ","
-                                            +"tid='"            +tid            + "'"
+                                            +"value="            +value          + " "
                                + "where salesId=" + code + ";";
         try{
             stmt.executeUpdate(sql);

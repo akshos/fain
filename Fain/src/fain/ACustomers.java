@@ -17,6 +17,7 @@ import java.util.Arrays;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
+import utility.UtilityFuncs;
 /**
  *
  * @author akshos
@@ -64,34 +65,45 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         }
         this.codeTbox.setEditable(false);
         this.nameTbox.setEditable(false);
+        this.addressTarea.requestFocus();
     }
     
-    private void loadBranch(){
-        System.out.println("loading categorycbox");
+    private void loadBranchData(){
+        System.out.println("loading branch data");
         branchData = BranchDB.getBranch(this.dbConnection.getStatement());
-        int len;
-        if(branchData  == null){
-            len =  0;
-        }else{
-            len = branchData[0].length;
-        }
-        String[] cboxData = new String[len+1];
-        for(int i = 0; i < len; i++){
-            cboxData[i] = branchData[0][i] + " : " + branchData[1][i];
-        }
-        cboxData[len] = "Add New";
-        this.branchCbox.setModel(new DefaultComboBoxModel(cboxData));
     }
+    
+    private void chooseBranch(){
+        int index = UtilityFuncs.selectOption(this, "BRANCH", branchData);
+        if(index != -1){
+            this.branchTbox.setText(branchData[0][index]);
+            this.branchNameLabel.setText(branchData[1][index]);
+        }
+    }
+    
+    private boolean validateBranch(){
+        String branchCode = this.branchTbox.getText();
+        String branchName = BranchDB.getBranchName(dbConnection.getStatement(), branchCode);
+        if(branchName != null){
+            this.branchNameLabel.setText(branchName);
+            return true;
+        }else{
+            this.branchNameLabel.setText("NOT FOUND");
+            return false;
+        }
+    }
+    
     private void loadContents(){
         String[] data = CustomerDB.selectOneId(dbConnection.getStatement(), editId);
         if(data == null){
             System.out.println("Load Contents : selectedOneId has returned null");
             return;
         }
-        loadBranch();
-        int indexValP=Arrays.asList(branchData[0]).indexOf(data[3]);
-        this.branchCbox.setSelectedIndex(indexValP);
-        //branchCbox.setEnabled(false);
+        
+        loadBranchData();
+        this.branchTbox.setText(data[3]);
+        this.validateBranch();
+        
         this.codeTbox.setText(data[0]);
         this.nameTbox.setText(data[1]);
         this.addressTarea.setText(data[2]);
@@ -105,14 +117,12 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         String name     =nameTbox.getText();
         String address  =addressTarea.getText();
 
-        String branch     ="";
-        int selectedIndex = branchCbox.getSelectedIndex();
-        String selectedItem = branchCbox.getSelectedItem().toString();
-        if(selectedItem.compareTo("Add New") == 0){
-            JOptionPane.showConfirmDialog(this, "Please select a valid Branch", "No branch selected", JOptionPane.WARNING_MESSAGE, JOptionPane.OK_OPTION);
+       String branch = branchTbox.getText();
+        if(!validateBranch()){
+            JOptionPane.showMessageDialog(this, "Please enter a valid BRANCH", "No branch selected", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        branch = branchData[0][selectedIndex];
+        
         String kgst = kgstTbox.getText();
         String rbregno = rbregnoTbox.getText();
         
@@ -146,25 +156,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
     @Override
     public void refreshContents(int type) {
         if(type == Codes.REFRESH_BRANCHES){
-            loadBranch();
-        }
-    }
-    
-    private void addNewBranch(){
-        ABranches item = new ABranches(dbConnection, Codes.NEW_ENTRY, null, mainFrame, this.level+1, this);
-        Dimension dim = Preferences.getInternalFrameDimension(item);
-        if(dim != null){
-            item.setSize(dim);
-        }else{
-            item.setSize(790, 470);
-        }
-        mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
-    }
-    
-    private void checkChangedItem(){
-        String item = this.branchCbox.getSelectedItem().toString();
-        if(item.compareTo("Add New") == 0){
-            addNewBranch();
+            loadBranchData();
         }
     }
     
@@ -193,13 +185,16 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         rightInerPannel = new javax.swing.JPanel();
         codeTbox = new javax.swing.JTextField();
         nameTbox = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        addressTarea = new javax.swing.JTextArea();
-        branchCbox = new javax.swing.JComboBox<>();
+        addressTarea = new javax.swing.JTextField();
+        branchPanel = new javax.swing.JPanel();
+        branchTbox = new javax.swing.JTextField();
+        branchNameLabel = new javax.swing.JLabel();
         kgstTbox = new javax.swing.JTextField();
         rbregnoTbox = new javax.swing.JTextField();
         buttonPanel = new javax.swing.JPanel();
         enterButton = new javax.swing.JButton();
+        titlePanel = new javax.swing.JPanel();
+        titleLabel = new javax.swing.JLabel();
 
         setClosable(true);
         setResizable(true);
@@ -303,37 +298,31 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         });
         rightInerPannel.add(nameTbox);
 
-        jScrollPane1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                jScrollPane1KeyPressed(evt);
-            }
-        });
-
-        addressTarea.setColumns(20);
-        addressTarea.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        addressTarea.setRows(5);
-        addressTarea.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                addressTareaFocusGained(evt);
-            }
-        });
         addressTarea.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                addressTareaKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
-        jScrollPane1.setViewportView(addressTarea);
+        rightInerPannel.add(addressTarea);
 
-        rightInerPannel.add(jScrollPane1);
+        branchPanel.setLayout(new java.awt.BorderLayout());
 
-        branchCbox.setBackground(java.awt.Color.white);
-        branchCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        branchCbox.addKeyListener(new java.awt.event.KeyAdapter() {
+        branchTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        branchTbox.setPreferredSize(new java.awt.Dimension(150, 23));
+        branchTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                branchCboxKeyPressed(evt);
+                branchTboxKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                branchTboxKeyReleased(evt);
             }
         });
-        rightInerPannel.add(branchCbox);
+        branchPanel.add(branchTbox, java.awt.BorderLayout.LINE_START);
+
+        branchNameLabel.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        branchPanel.add(branchNameLabel, java.awt.BorderLayout.CENTER);
+
+        rightInerPannel.add(branchPanel);
 
         kgstTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         kgstTbox.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -356,7 +345,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         });
         rbregnoTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                rbregnoTboxKeyPressed(evt);
+                enterButtonKeyPressed(evt);
             }
         });
         rightInerPannel.add(rbregnoTbox);
@@ -384,6 +373,15 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
 
         getContentPane().add(outerPanel, java.awt.BorderLayout.CENTER);
 
+        titlePanel.setLayout(new java.awt.BorderLayout());
+
+        titleLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        titleLabel.setText("EXPENSES");
+        titlePanel.add(titleLabel, java.awt.BorderLayout.CENTER);
+
+        getContentPane().add(titlePanel, java.awt.BorderLayout.PAGE_START);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -392,38 +390,17 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         insertData();
         }//GEN-LAST:event_enterButtonActionPerformed
 
-    private void branchCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_branchCboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.checkChangedItem();
-        }
-                if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }
-    }//GEN-LAST:event_branchCboxKeyPressed
-
-    private void addressTareaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_addressTareaKeyPressed
-         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_TAB) {
-            System.out.println(evt.getModifiers());
-            javax.swing.JTextArea input = (javax.swing.JTextArea)evt.getSource();
-            if(evt.getModifiers() > 0) input.transferFocusBackward();
-            else input.transferFocus(); 
-            evt.consume();
-        }
-    }//GEN-LAST:event_addressTareaKeyPressed
-
-    private void jScrollPane1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jScrollPane1KeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.jScrollPane1.transferFocus();
-        }
-    }//GEN-LAST:event_jScrollPane1KeyPressed
-
     private void enterButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterButtonKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
         }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             this.insertData();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
         }
     }//GEN-LAST:event_enterButtonKeyPressed
 
@@ -434,16 +411,17 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
     private void keyPressedHandler(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyPressedHandler
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
-        }
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
             javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
             cmp.transferFocus();
         }
     }//GEN-LAST:event_keyPressedHandler
-
-    private void addressTareaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_addressTareaFocusGained
-        this.addressTarea.selectAll();
-    }//GEN-LAST:event_addressTareaFocusGained
 
     private void kgstTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_kgstTboxFocusGained
         this.kgstTbox.selectAll();
@@ -453,25 +431,40 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         this.rbregnoTbox.selectAll();
     }//GEN-LAST:event_rbregnoTboxFocusGained
 
-    private void rbregnoTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rbregnoTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.insertData();
-        }
-    }//GEN-LAST:event_rbregnoTboxKeyPressed
-
     private void formInternalFrameClosing(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosing
         Preferences.storeInternalFrameDimension(this);
     }//GEN-LAST:event_formInternalFrameClosing
+
+    private void branchTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_branchTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F10){
+            this.chooseBranch();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }
+    }//GEN-LAST:event_branchTboxKeyPressed
+
+    private void branchTboxKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_branchTboxKeyReleased
+        this.validateBranch();
+    }//GEN-LAST:event_branchTboxKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel accountCodeLabel;
     private javax.swing.JLabel accountHeadLabel;
-    private javax.swing.JTextArea addressTarea;
-    private javax.swing.JComboBox<String> branchCbox;
+    private javax.swing.JTextField addressTarea;
+    private javax.swing.JLabel branchNameLabel;
+    private javax.swing.JPanel branchPanel;
+    private javax.swing.JTextField branchTbox;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JLabel categoryLabel;
     private javax.swing.JTextField codeTbox;
@@ -480,7 +473,6 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField kgstTbox;
     private javax.swing.JPanel labelsPanel;
     private javax.swing.JPanel leftInerPannel;
@@ -489,6 +481,8 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
     private javax.swing.JPanel outerPanel;
     private javax.swing.JTextField rbregnoTbox;
     private javax.swing.JPanel rightInerPannel;
+    private javax.swing.JLabel titleLabel;
+    private javax.swing.JPanel titlePanel;
     private javax.swing.JPanel topPanel;
     private javax.swing.JLabel yopBalLabel;
     // End of variables declaration//GEN-END:variables

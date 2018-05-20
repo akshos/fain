@@ -313,9 +313,10 @@ public final class MasterDB {
         String sql = "select accountHead from master where accountNo='"+accId+"';";
         try{
             ResultSet rs = stmt.executeQuery(sql);
-            rs.next();
-            String head = rs.getString(1);
-            return head;
+            if(rs.next()){
+                String head = rs.getString(1);
+                return head;
+            }
         }catch(SQLException se){
             se.printStackTrace();
         }

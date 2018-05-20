@@ -123,9 +123,10 @@ public final class BranchDB {
         String sql = "select name from branch where branchId='"+id+"';";
         try{
             ResultSet rs = stmt.executeQuery(sql);
-            rs.next();
-            String name = rs.getString(1);
-            return name;
+            if( rs.next() ){
+                String name = rs.getString(1);
+                return name;
+            }
         }catch(SQLException se){
             se.printStackTrace();
         }

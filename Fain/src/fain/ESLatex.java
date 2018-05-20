@@ -195,6 +195,8 @@ public class ESLatex extends javax.swing.JInternalFrame implements RefreshOption
         findButton = new javax.swing.JButton();
         topButton = new javax.swing.JButton();
         bottomButton = new javax.swing.JButton();
+        titlePanel = new javax.swing.JPanel();
+        titleLabel = new javax.swing.JLabel();
 
         setClosable(true);
         setMaximizable(true);
@@ -495,6 +497,15 @@ public class ESLatex extends javax.swing.JInternalFrame implements RefreshOption
 
         getContentPane().add(lowerPanel, java.awt.BorderLayout.SOUTH);
 
+        titlePanel.setLayout(new java.awt.BorderLayout());
+
+        titleLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        titleLabel.setText("BROWSE SALES LATEX");
+        titlePanel.add(titleLabel, java.awt.BorderLayout.CENTER);
+
+        getContentPane().add(titlePanel, java.awt.BorderLayout.PAGE_START);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -551,6 +562,8 @@ public class ESLatex extends javax.swing.JInternalFrame implements RefreshOption
     private javax.swing.JButton findButton;
     private javax.swing.JPanel lowerPanel;
     private javax.swing.JScrollPane tableScrollPane;
+    private javax.swing.JLabel titleLabel;
+    private javax.swing.JPanel titlePanel;
     private javax.swing.JButton topButton;
     private javax.swing.JPanel upperPanel;
     // End of variables declaration//GEN-END:variables

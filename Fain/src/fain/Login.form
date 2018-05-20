@@ -80,7 +80,7 @@
             <Component class="javax.swing.JLabel" name="usernameLabel">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Cantarell" size="18" style="1"/>
+                  <Font name="Dialog" size="24" style="0"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Username"/>
                 <Property name="verticalTextPosition" type="int" value="3"/>
@@ -89,7 +89,7 @@
             <Component class="javax.swing.JTextField" name="usernameTbox">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Cantarell" size="24" style="0"/>
+                  <Font name="Dialog" size="24" style="0"/>
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" value="Enter you username"/>
               </Properties>
@@ -102,7 +102,7 @@
             <Component class="javax.swing.JLabel" name="passwordLabel">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Cantarell" size="18" style="1"/>
+                  <Font name="Dialog" size="24" style="0"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Password"/>
                 <Property name="verticalAlignment" type="int" value="3"/>
@@ -111,7 +111,7 @@
             <Component class="javax.swing.JPasswordField" name="passwordPbox">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Cantarell" size="24" style="0"/>
+                  <Font name="Dialog" size="24" style="0"/>
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" value="Enter your password"/>
               </Properties>
@@ -138,7 +138,7 @@
                 <Component class="javax.swing.JButton" name="loginButton">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Cantarell" size="18" style="0"/>
+                      <Font name="Dialog" size="24" style="0"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="Login"/>
                   </Properties>
@@ -150,7 +150,7 @@
                 <Component class="javax.swing.JButton" name="exitButton">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Cantarell" size="18" style="0"/>
+                      <Font name="Dialog" size="24" style="0"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="Exit"/>
                   </Properties>

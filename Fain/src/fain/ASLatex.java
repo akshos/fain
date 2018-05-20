@@ -10,6 +10,7 @@ import database.CustomerDB;
 import database.DBConnection;
 import database.MasterDB;
 import database.PurchaseDB;
+import database.PurchaseLatexDB;
 import database.SalesDB;
 import database.StockDB;
 import database.TransactionDB;
@@ -86,30 +87,28 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         this.dateTbox.setText(date);
     }
     
-    private void resetParty(){
-        String resetData[] = new String[1];
-        resetData[0] = "Select Branch";
-        this.partyCbox.setModel(new DefaultComboBoxModel(resetData));
-        this.partyCbox.setEnabled(false);
-    }
-    
     private void loadContents(){
         String[] data = SalesDB.selectOneId(dbConnection.getStatement(), editId);
         if(data == null){
             System.out.println("Load Contents : selectedOneId has returned null");
             return;
         }
-        this.loadBranch();
-        int indexValB=Arrays.asList(branchData[0]).indexOf(data[1]);
-        this.branchCbox.setSelectedIndex(indexValB);
+        
+        this.loadBranchData();
+        
+        this.branchTbox.setText(data[1]);
+        this.validateBranch();
         
         this.dateTbox.setText(UtilityFuncs.dateSqlToUser(data[2]));
         
         this.prBillTbox.setText(data[3]);
         this.prevBillNo = data[3];
-        this.loadParty();
-        int indexValP=Arrays.asList(partyData[0]).indexOf(data[4]);
-        this.partyCbox.setSelectedIndex(indexValP);
+        
+        this.loadPartyData();
+        
+        this.partyTbox.setText(data[4]);
+        this.validateParty();
+        
         this.barrelFromTbox.setText(data[5]);
         this.barrelToTbox.setText(data[6]);
         
@@ -121,83 +120,67 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
     }
         
         
-    private void loadParty(){
-        String item = this.branchCbox.getSelectedItem().toString();
-        if(item.compareTo("Add New") == 0){
-            resetParty();
-            return;
-        }
-        this.partyCbox.setEnabled(true);
-        int index = this.branchCbox.getSelectedIndex();
-        String branchCode = this.branchData[0][index];
-        partyData = CustomerDB.getCustomersInBranch(this.dbConnection.getStatement(), branchCode);
-        int len;
-        String[] cboxData = null;
-        if(partyData  == null){
-            len =  0;
-            cboxData = new String[1];
-            cboxData[0] = "Add New";
-            this.partyCbox.setToolTipText("No customers available for branch");
+    private void loadPartyData(){
+        String branchCode = this.branchTbox.getText();
+        partyData = CustomerDB.getCustomersInBranch(this.dbConnection.getStatement(), branchCode);   
+    }
+    
+    private boolean validateParty(){
+        String accCode = this.partyTbox.getText();
+        String accName = CustomerDB.getCustomerName(dbConnection.getStatement(), accCode);
+        if(accName != null){
+            this.partyNameLabel.setText(accName);
+            return true;
         }else{
-            len = partyData[0].length;
-            cboxData = new String[len+1];
-            for(int i = 0; i < len; i++){
-                cboxData[i] = partyData[1][i] + "  (" + partyData[0][i] +")"  ;
-            }
-            cboxData[len] = "Add New";
-            String address = this.partyData[2][0];
-            this.partyCbox.setToolTipText(address);
+            this.partyNameLabel.setText("NOT FOUND");
+            return false;
         }
-        this.partyCbox.setModel(new DefaultComboBoxModel(cboxData));
     }
     
-    private void showPartyAddress(){
-       String item = this.partyCbox.getSelectedItem().toString();
-       if(item.compareTo("Add New") == 0){
-           this.partyCbox.setToolTipText("No customers available for branch");
-           return;
-       }
-       int index = this.partyCbox.getSelectedIndex();
-       String address = this.partyData[2][index];
-       this.partyCbox.setToolTipText(address);
-       System.out.println("Address : " + address);
-       try
-        {
-            java.awt.event.KeyEvent ke = new java.awt.event.KeyEvent(partyCbox, java.awt.event.KeyEvent.KEY_PRESSED, System.currentTimeMillis(), java.awt.event.InputEvent.CTRL_MASK, java.awt.event.KeyEvent.VK_F1, java.awt.event.KeyEvent.CHAR_UNDEFINED);
-            this.partyCbox.dispatchEvent(ke);
+    private void chooseParty(){
+        int index = UtilityFuncs.selectOption(this, " PARTY", partyData);
+        if(index != -1){
+            this.partyTbox.setText(partyData[0][index]);
+            this.partyNameLabel.setText(partyData[1][index]);
         }
-        catch (Throwable e1)
-        {e1.printStackTrace();}
     }
-    
-    private void loadBranch(){
-        System.out.println("loading branchcbox");
+        
+    private void loadBranchData(){
+        System.out.println("loading branch data");
         branchData = BranchDB.getBranch(this.dbConnection.getStatement());
-        int len;
-        if(branchData  == null){
-            len =  0;
+    }
+    
+    private void chooseBranch(){
+        int index = UtilityFuncs.selectOption(this, "BRANCH", branchData);
+        if(index != -1){
+            this.branchTbox.setText(branchData[0][index]);
+            this.branchNameLabel.setText(branchData[1][index]);
+        }
+    }
+    
+    private boolean validateBranch(){
+        String branchCode = this.branchTbox.getText();
+        String branchName = BranchDB.getBranchName(dbConnection.getStatement(), branchCode);
+        if(branchName != null){
+            this.branchNameLabel.setText(branchName);
+            return true;
         }else{
-            len = branchData[0].length;
+            this.branchNameLabel.setText("NOT FOUND");
+            return false;
         }
-        String[] cboxData = new String[len+1];
-        for(int i = 0; i < len; i++){
-            cboxData[i] = branchData[1][i] + " (" + branchData[0][i] + ")";
-        }
-        cboxData[len] = "Add New";
-        this.branchCbox.setModel(new DefaultComboBoxModel(cboxData));
     }
     
      @Override
     public void refreshContents(int code) {
         if(code == Codes.REFRESH_ALL){
-            loadBranch();
-            loadParty();
+            loadBranchData();
+            loadPartyData();
         }
         else if(code == Codes.REFRESH_BRANCHES){
-            loadBranch();
+            loadBranchData();
         }
         else if(code == Codes.REFRESH_MASTER){
-            loadParty();
+            loadPartyData();
         }
     }
     
@@ -230,18 +213,16 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
     
     private void insertData(){
         Statement stmt=dbConnection.getStatement();
-        String branch = "";
-        String item = branchCbox.getSelectedItem().toString();
-        if(item.compareTo("Add New") == 0){
-            int ret = JOptionPane.showConfirmDialog(this, "Please select a valid branch", "No branch selected", JOptionPane.WARNING_MESSAGE);
+        
+        String branch = branchTbox.getText();
+        if(!validateBranch()){
+            JOptionPane.showMessageDialog(this, "Please enter a valid BRANCH", "No branch selected", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        int index = this.branchCbox.getSelectedIndex();
-        branch = this.branchData[0][index];
         
         String date = this.dateTbox.getText();
         if(!ValidationChecks.isDateValid(date)){
-            JOptionPane.showMessageDialog(this, "Please enter a valid Date", "INVALID DATE", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please enter a valid DATE", "INVALID DATE", JOptionPane.WARNING_MESSAGE);
             return;
         }
         
@@ -249,14 +230,11 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         
         String bill = prBillTbox.getText();
         
-        String party = "";
-        item = partyCbox.getSelectedItem().toString();
-        if(item.compareTo("None") == 0){
-            int ret = JOptionPane.showConfirmDialog(this, "Please select a valid branch", "No branch selected", JOptionPane.WARNING_MESSAGE);
+        String party = partyTbox.getText();
+        if(!validateParty()){
+            JOptionPane.showMessageDialog(this, "Please enter a valid PARTY", "PARTY NOT FOUND", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        index = partyCbox.getSelectedIndex();
-        party = partyData[0][index];
         
         if( !validateFields() ){
             return;
@@ -281,7 +259,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         boolean ret;
         
         if(mode==Codes.EDIT){
-            ret = SalesDB.update(stmt, editId, branch, date, bill, party, bnfrom, bnto, quantity, drc, dryrubber, rate, value, tid);
+            ret = SalesDB.update(stmt, editId, branch, date, bill, party, bnfrom, bnto, quantity, drc, dryrubber, rate, value);
             if(ret){
                 JOptionPane.showMessageDialog(this, "The entry has been updated", "Success", JOptionPane.INFORMATION_MESSAGE);
             }else{
@@ -289,9 +267,10 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
                 return;
             }
             
+            tid = SalesDB.getTidFromSid(stmt, editId);
             String narration = "SALE OF LATEX (BILL #" + bill +")";
             
-            ret = TransactionDB.update(stmt, editId, date, branch, party, purchaseAccount, value, narration, tid);
+            ret = TransactionDB.updateByTid(stmt,date, branch, party, purchaseAccount, value, narration, tid);
             if(!ret){
                 JOptionPane.showMessageDialog(this, "Failed to update Transaction", "Failed", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -324,7 +303,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
     }
     
     private void nextEntry(){
-        this.branchCbox.requestFocus();
+        this.branchTbox.requestFocus();
         this.prBillTbox.setText("");
         this.barrelFromTbox.setText("");
         this.barrelToTbox.setText("");
@@ -383,46 +362,6 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         this.valueTbox.setText(new DecimalFormat("##,##,##,###0.00").format(value));
     }
     
-    private void addNewBranch(){
-        ABranches item = new ABranches(dbConnection, Codes.NEW_ENTRY, null, mainFrame, this.level+1, this);
-        Dimension dim = Preferences.getInternalFrameDimension(item);
-        if(dim != null){
-            item.setSize(dim);
-        }else{
-            item.setSize(790, 470);
-        }
-        mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
-    }
-    
-    private void checkBranchChangedItem(){
-        String item = this.branchCbox.getSelectedItem().toString();
-        if(item.compareTo("Add New") == 0){
-            addNewBranch();
-        }else{
-            this.branchCbox.transferFocus();
-        }
-    }
-    
-    private void addNewMasterAccount(){
-        AMaster item = new AMaster(dbConnection, Codes.NEW_ENTRY, null, mainFrame, this.level+1, this);
-        Dimension dim = Preferences.getInternalFrameDimension(item);
-        if(dim != null){
-            System.out.println("setting size");
-            item.setSize(dim);
-        }else{
-            item.setSize(790, 300);
-        }
-        mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
-    }
-    
-    private void checkPartyChangedItem(){
-        String item = this.partyCbox.getSelectedItem().toString();
-        if(item.compareTo("Add New") == 0){
-            addNewMasterAccount();
-        }else{
-            this.partyCbox.transferFocus();
-        }
-    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -449,10 +388,14 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         rateLabel = new javax.swing.JLabel();
         valueLabel = new javax.swing.JLabel();
         rightInerPannel = new javax.swing.JPanel();
-        branchCbox = new javax.swing.JComboBox<>();
+        branchPanel = new javax.swing.JPanel();
+        branchTbox = new javax.swing.JTextField();
+        branchNameLabel = new javax.swing.JLabel();
         dateTbox = new javax.swing.JFormattedTextField();
         prBillTbox = new javax.swing.JTextField();
-        partyCbox = new javax.swing.JComboBox<>();
+        partyPanel = new javax.swing.JPanel();
+        partyTbox = new javax.swing.JTextField();
+        partyNameLabel = new javax.swing.JLabel();
         barrelFromTbox = new javax.swing.JTextField();
         barrelToTbox = new javax.swing.JTextField();
         quantityTbox = new javax.swing.JFormattedTextField();
@@ -462,6 +405,8 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         valueTbox = new javax.swing.JFormattedTextField();
         buttonPanel = new javax.swing.JPanel();
         enterButton = new javax.swing.JButton();
+        titlePanel = new javax.swing.JPanel();
+        titleLabel = new javax.swing.JLabel();
 
         setClosable(true);
         setResizable(true);
@@ -552,18 +497,29 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
 
         rightInerPannel.setLayout(new java.awt.GridLayout(12, 0, 0, 10));
 
-        branchCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        branchCbox.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                branchCboxItemStateChanged(evt);
+        branchPanel.setLayout(new java.awt.BorderLayout());
+
+        branchTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        branchTbox.setPreferredSize(new java.awt.Dimension(150, 23));
+        branchTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                branchTboxFocusLost(evt);
             }
         });
-        branchCbox.addKeyListener(new java.awt.event.KeyAdapter() {
+        branchTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                branchCboxKeyPressed(evt);
+                branchTboxKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                branchTboxKeyReleased(evt);
             }
         });
-        rightInerPannel.add(branchCbox);
+        branchPanel.add(branchTbox, java.awt.BorderLayout.LINE_START);
+
+        branchNameLabel.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        branchPanel.add(branchNameLabel, java.awt.BorderLayout.CENTER);
+
+        rightInerPannel.add(branchPanel);
 
         try {
             dateTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
@@ -599,18 +555,24 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(prBillTbox);
 
-        partyCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        partyCbox.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                partyCboxItemStateChanged(evt);
-            }
-        });
-        partyCbox.addKeyListener(new java.awt.event.KeyAdapter() {
+        partyPanel.setLayout(new java.awt.BorderLayout());
+
+        partyTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        partyTbox.setPreferredSize(new java.awt.Dimension(150, 23));
+        partyTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                partyCboxKeyPressed(evt);
+                partyTboxKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                partyTboxKeyReleased(evt);
             }
         });
-        rightInerPannel.add(partyCbox);
+        partyPanel.add(partyTbox, java.awt.BorderLayout.LINE_START);
+
+        partyNameLabel.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        partyPanel.add(partyNameLabel, java.awt.BorderLayout.CENTER);
+
+        rightInerPannel.add(partyPanel);
 
         barrelFromTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         barrelFromTbox.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -736,7 +698,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         valueTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
+                enterButtonKeyPressed(evt);
             }
         });
         rightInerPannel.add(valueTbox);
@@ -764,14 +726,28 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
 
         getContentPane().add(outerPanel, java.awt.BorderLayout.CENTER);
 
+        titlePanel.setLayout(new java.awt.BorderLayout());
+
+        titleLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        titleLabel.setText("SALES LATEX");
+        titlePanel.add(titleLabel, java.awt.BorderLayout.CENTER);
+
+        getContentPane().add(titlePanel, java.awt.BorderLayout.PAGE_START);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void keyPressedHandler(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyPressedHandler
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
-        }
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
             javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
             cmp.transferFocus();
         }
@@ -805,19 +781,6 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         this.chechPrBill();
     }//GEN-LAST:event_prBillTboxFocusLost
 
-    private void branchCboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_branchCboxItemStateChanged
-        this.loadParty();
-    }//GEN-LAST:event_branchCboxItemStateChanged
-
-    private void branchCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_branchCboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-             this.doDefaultCloseAction();
-        }
-        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.checkBranchChangedItem();
-        }
-    }//GEN-LAST:event_branchCboxKeyPressed
-
     private void drcTboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_drcTboxFocusLost
         this.calculateDryRubber();
     }//GEN-LAST:event_drcTboxFocusLost
@@ -826,25 +789,17 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         this.calculateValue();
     }//GEN-LAST:event_rateTboxFocusLost
 
-    private void partyCboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_partyCboxItemStateChanged
-        this.showPartyAddress();
-    }//GEN-LAST:event_partyCboxItemStateChanged
-
-    private void partyCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_partyCboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-             this.doDefaultCloseAction();
-        }
-        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.checkPartyChangedItem();
-        }
-    }//GEN-LAST:event_partyCboxKeyPressed
-
     private void enterButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterButtonKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
              this.doDefaultCloseAction();
-        }
-        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             this.insertData();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
         }
     }//GEN-LAST:event_enterButtonKeyPressed
 
@@ -890,6 +845,52 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         this.dateTbox.setCaretPosition(0);        // TODO add your handling code here:
     }//GEN-LAST:event_dateTboxFocusGained
 
+    private void branchTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_branchTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F10){
+            this.chooseBranch();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }
+    }//GEN-LAST:event_branchTboxKeyPressed
+
+    private void branchTboxKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_branchTboxKeyReleased
+        this.validateBranch();
+    }//GEN-LAST:event_branchTboxKeyReleased
+
+    private void partyTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_partyTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F10){
+            chooseParty();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }
+    }//GEN-LAST:event_partyTboxKeyPressed
+
+    private void partyTboxKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_partyTboxKeyReleased
+        this.validateParty();        // TODO add your handling code here:
+    }//GEN-LAST:event_partyTboxKeyReleased
+
+    private void branchTboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_branchTboxFocusLost
+        this.loadPartyData();        // TODO add your handling code here:
+    }//GEN-LAST:event_branchTboxFocusLost
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField barrelFromTbox;
@@ -897,8 +898,10 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
     private javax.swing.JLabel barrelfromLabel;
     private javax.swing.JLabel barreltoLabel;
     private javax.swing.JLabel billnumberLabel;
-    private javax.swing.JComboBox<String> branchCbox;
     private javax.swing.JLabel branchLabel;
+    private javax.swing.JLabel branchNameLabel;
+    private javax.swing.JPanel branchPanel;
+    private javax.swing.JTextField branchTbox;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JLabel dateLabel;
     private javax.swing.JFormattedTextField dateTbox;
@@ -912,14 +915,18 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
     private javax.swing.JPanel leftInerPannel;
     private javax.swing.JPanel logoPanel;
     private javax.swing.JPanel outerPanel;
-    private javax.swing.JComboBox<String> partyCbox;
     private javax.swing.JLabel partyLabel;
+    private javax.swing.JLabel partyNameLabel;
+    private javax.swing.JPanel partyPanel;
+    private javax.swing.JTextField partyTbox;
     private javax.swing.JTextField prBillTbox;
     private javax.swing.JLabel quantityLabel;
     private javax.swing.JFormattedTextField quantityTbox;
     private javax.swing.JLabel rateLabel;
     private javax.swing.JFormattedTextField rateTbox;
     private javax.swing.JPanel rightInerPannel;
+    private javax.swing.JLabel titleLabel;
+    private javax.swing.JPanel titlePanel;
     private javax.swing.JLabel valueLabel;
     private javax.swing.JFormattedTextField valueTbox;
     // End of variables declaration//GEN-END:variables

@@ -38,7 +38,7 @@ public final class Tables {
             + "credit           varchar(20),"
             + "amount           real,"
             + "narration        varchar(50),"
-            + "tid              varchar(30));";
+            + "tid              varchar(50));";
     
     public static final String stockTable = "create table stock("
             + "itemCode     integer primary key autoincrement,"
@@ -60,7 +60,7 @@ public final class Tables {
             + "dryRubber            real,"
             + "rate                 real,"
             + "value                real,"
-            + "tid                  varchar(30) );";
+            + "tid                  varchar(50) );";
     
     public static final String purchaseTable = "create table purchase("
             + "purchaseId       integer primary key autoincrement,"
@@ -72,7 +72,7 @@ public final class Tables {
             + "itemName         varchar(20),"
             + "quantity         real,"
             + "value            real,"
-            + "tid              varchar(30) );";
+            + "tid              varchar(50) );";
     
     public static final String salesTable = "create table sales("
             + "salesId      integer primary key autoincrement,"
@@ -88,7 +88,7 @@ public final class Tables {
             + "dryRubber    real,"
             + "rate         real,"
             + "value        real,"
-            + "tid          varchar(30) );";
+            + "tid          varchar(50) );";
     
     public static final String consumptionTable = "create table consumption("
             + "consumptionId        INTEGER primary key autoincrement,"

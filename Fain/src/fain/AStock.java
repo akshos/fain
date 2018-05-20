@@ -279,6 +279,8 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         stockCbox = new javax.swing.JComboBox<>();
         buttonPanel = new javax.swing.JPanel();
         enterButton = new javax.swing.JButton();
+        titlePanel = new javax.swing.JPanel();
+        titleLabel = new javax.swing.JLabel();
 
         setClosable(true);
         setResizable(true);
@@ -447,6 +449,15 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
 
         getContentPane().add(outerPanel, java.awt.BorderLayout.CENTER);
 
+        titlePanel.setLayout(new java.awt.BorderLayout());
+
+        titleLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        titleLabel.setText("STOCK");
+        titlePanel.add(titleLabel, java.awt.BorderLayout.CENTER);
+
+        getContentPane().add(titlePanel, java.awt.BorderLayout.PAGE_START);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
@@ -547,6 +558,8 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
     private javax.swing.JComboBox<String> salesCbox;
     private javax.swing.JComboBox<String> stockCbox;
     private javax.swing.JLabel stockLabel;
+    private javax.swing.JLabel titleLabel;
+    private javax.swing.JPanel titlePanel;
     // End of variables declaration//GEN-END:variables
 
     

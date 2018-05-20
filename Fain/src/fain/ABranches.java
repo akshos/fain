@@ -131,12 +131,13 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         jLabel3 = new javax.swing.JLabel();
         rightInerPannel = new javax.swing.JPanel();
         nameTbox = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        addressTarea = new javax.swing.JTextArea();
+        addressTarea = new javax.swing.JTextField();
         kgstTbox = new javax.swing.JTextField();
         rbregnoTbox = new javax.swing.JTextField();
         buttonPanel = new javax.swing.JPanel();
         enterButton = new javax.swing.JButton();
+        titlePanel = new javax.swing.JPanel();
+        titleLabel = new javax.swing.JLabel();
 
         setClosable(true);
         setResizable(true);
@@ -218,23 +219,12 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         });
         rightInerPannel.add(nameTbox);
 
-        addressTarea.setColumns(20);
-        addressTarea.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        addressTarea.setRows(5);
-        addressTarea.setTabSize(0);
-        addressTarea.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                addressTareaFocusGained(evt);
-            }
-        });
         addressTarea.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                addressTareaKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
-        jScrollPane1.setViewportView(addressTarea);
-
-        rightInerPannel.add(jScrollPane1);
+        rightInerPannel.add(addressTarea);
 
         kgstTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         kgstTbox.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -257,7 +247,7 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         });
         rbregnoTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                rbregnoTboxKeyPressed(evt);
+                enterButtonKeyPressed(evt);
             }
         });
         rightInerPannel.add(rbregnoTbox);
@@ -285,6 +275,15 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
 
         getContentPane().add(outerPanel, java.awt.BorderLayout.CENTER);
 
+        titlePanel.setLayout(new java.awt.BorderLayout());
+
+        titleLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        titleLabel.setText("BRANCHES");
+        titlePanel.add(titleLabel, java.awt.BorderLayout.CENTER);
+
+        getContentPane().add(titlePanel, java.awt.BorderLayout.PAGE_START);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -298,28 +297,21 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         insertData();
     }//GEN-LAST:event_enterButtonActionPerformed
 
-    private void addressTareaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_addressTareaKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_TAB) {
-            System.out.println(evt.getModifiers());
-            javax.swing.JTextArea input = (javax.swing.JTextArea)evt.getSource();
-            if(evt.getModifiers() > 0) input.transferFocusBackward();
-            else input.transferFocus(); 
-            evt.consume();
-        }
-        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }
-    }//GEN-LAST:event_addressTareaKeyPressed
-
     private void formInternalFrameClosing(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosing
         Preferences.storeInternalFrameDimension(this);
     }//GEN-LAST:event_formInternalFrameClosing
 
     private void enterButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterButtonKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
+             this.doDefaultCloseAction();
         }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            insertData();
+            this.insertData();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
         }
     }//GEN-LAST:event_enterButtonKeyPressed
 
@@ -330,16 +322,17 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
     private void keyPressedHandler(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyPressedHandler
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
-        }
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
             javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
             cmp.transferFocus();
         }
     }//GEN-LAST:event_keyPressedHandler
-
-    private void addressTareaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_addressTareaFocusGained
-        this.addressTarea.selectAll();
-    }//GEN-LAST:event_addressTareaFocusGained
 
     private void kgstTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_kgstTboxFocusGained
         this.kgstTbox.selectAll();
@@ -349,25 +342,15 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
         this.rbregnoTbox.selectAll();
     }//GEN-LAST:event_rbregnoTboxFocusGained
 
-    private void rbregnoTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rbregnoTboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.insertData();
-        }
-    }//GEN-LAST:event_rbregnoTboxKeyPressed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel accountHeadLabel;
-    private javax.swing.JTextArea addressTarea;
+    private javax.swing.JTextField addressTarea;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JButton enterButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField kgstTbox;
     private javax.swing.JPanel labelsPanel;
     private javax.swing.JPanel leftInerPannel;
@@ -376,6 +359,8 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
     private javax.swing.JPanel outerPanel;
     private javax.swing.JTextField rbregnoTbox;
     private javax.swing.JPanel rightInerPannel;
+    private javax.swing.JLabel titleLabel;
+    private javax.swing.JPanel titlePanel;
     private javax.swing.JLabel yopBalLabel;
     // End of variables declaration//GEN-END:variables
 

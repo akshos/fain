@@ -7,6 +7,8 @@ package database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.TableModel;
@@ -43,8 +45,26 @@ public final class TransactionDB {
                                            +"credit='"      +credit     + "',"
                                            +"amount="       +amount     + ","
                                            +"narration='"   +narration  + "',"
-                                           +"tid='"         +tid        +"'"
+                                           +"tid='"         +tid        +"' "
                                + "where transactionNo=" + code + ";";
+        try{
+            stmt.executeUpdate(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    
+    public static boolean updateByTid(Statement stmt, String date, String branch, String debit, String credit, double amount, String narration, String tid){
+        String sql = "update transactions set date='"       +date       + "',"
+                                           +"branch='"      +branch     + "',"
+                                           +"debit='"       +debit      + "',"
+                                           +"credit='"      +credit     + "',"
+                                           +"amount="       +amount     + ","
+                                           +"narration='"   +narration  + "' "
+                               + "where tid='" + tid + "';";
+        System.out.println("Sql : " + sql);
         try{
             stmt.executeUpdate(sql);
         }catch(SQLException se){
@@ -195,6 +215,9 @@ public final class TransactionDB {
     public static String generateTid(){
         java.util.UUID uuid = java.util.UUID.randomUUID();
         String id = uuid.toString().substring(0, 20);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        Date date = new Date();
+        id += sdf.format(date);
         return id;
     }
     

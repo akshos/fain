@@ -58,16 +58,16 @@ public class CreateUser extends javax.swing.JInternalFrame {
         if(!validateFields()){
             return;
         }
-        String username = this.usernameTbox.getText();
+        String username = this.usernameTbox.getText().toLowerCase();
         int ret = UsersDB.existingUser(username);
         if(ret == Codes.EXISTING_USER){
             JOptionPane.showMessageDialog(this, "Username already exists", "Warning", JOptionPane.WARNING_MESSAGE);
             return;
-        }else{
+        }else if(ret == Codes.FAIL){
             JOptionPane.showMessageDialog(this, "Failed to check username ("+ret+")", "Warning", JOptionPane.WARNING_MESSAGE);
         }
-        String password = this.passwordPbox.getText();
-        String rePassword = this.rePasswodPbox.getText();
+        String password = this.passwordPbox.getText().toLowerCase();
+        String rePassword = this.rePasswodPbox.getText().toLowerCase();
         if(password.compareTo(rePassword) != 0){
             JOptionPane.showMessageDialog(this, "Passwords do not match", "Warning", JOptionPane.WARNING_MESSAGE);
         }
@@ -171,19 +171,19 @@ public class CreateUser extends javax.swing.JInternalFrame {
         labelPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
         labelPanel.setLayout(new java.awt.GridLayout(5, 0, 10, 0));
 
-        usernameLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        usernameLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         usernameLabel.setText("Username :");
         labelPanel.add(usernameLabel);
 
-        passwordLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        passwordLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         passwordLabel.setText("Password :");
         labelPanel.add(passwordLabel);
 
-        rPasswordLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        rPasswordLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         rPasswordLabel.setText("Retype Password :");
         labelPanel.add(rPasswordLabel);
 
-        typeLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        typeLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         typeLabel.setText("Type :");
         labelPanel.add(typeLabel);
 
@@ -194,7 +194,7 @@ public class CreateUser extends javax.swing.JInternalFrame {
         rightPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 10, 10));
         rightPanel.setLayout(new java.awt.GridLayout(5, 0, 0, 15));
 
-        usernameTbox.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        usernameTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         usernameTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 usernameTboxActionPerformed(evt);
@@ -202,6 +202,7 @@ public class CreateUser extends javax.swing.JInternalFrame {
         });
         rightPanel.add(usernameTbox);
 
+        passwordPbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         passwordPbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 passwordPboxFocusGained(evt);
@@ -214,6 +215,7 @@ public class CreateUser extends javax.swing.JInternalFrame {
         });
         rightPanel.add(passwordPbox);
 
+        rePasswodPbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         rePasswodPbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 rePasswodPboxFocusGained(evt);
@@ -226,7 +228,7 @@ public class CreateUser extends javax.swing.JInternalFrame {
         });
         rightPanel.add(rePasswodPbox);
 
-        typeCbox.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        typeCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         typeCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrator", "Standard User" }));
         typeCbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -235,7 +237,7 @@ public class CreateUser extends javax.swing.JInternalFrame {
         });
         rightPanel.add(typeCbox);
 
-        createButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        createButton.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         createButton.setText("CREATE");
         createButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

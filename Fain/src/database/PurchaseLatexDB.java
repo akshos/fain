@@ -37,7 +37,7 @@ public final class PurchaseLatexDB {
         }
         return true;
     }
-    public static boolean update(Statement stmt, String code,String branch, String date, String prBill,String party,double quantity, double drc, double dryRubber, double rate, double value, String tid){
+    public static boolean update(Statement stmt, String code,String branch, String date, String prBill,String party,double quantity, double drc, double dryRubber, double rate, double value){
         String sql = "update purchaseLatex set branch='"          +branch         + "',"
                                             +"date='"           +date           + "',"
                                             +"prBill='"          +prBill         + "',"
@@ -46,8 +46,7 @@ public final class PurchaseLatexDB {
                                             +"drc="                  +drc            + ","
                                             +"dryRubber="        +dryRubber      + ","
                                             +"rate="            +rate           + ","
-                                            +"value="            +value          + ","
-                                            +"tid='"            +tid            + "'"
+                                            +"value="            +value          + " "
                                + "where purchaseLatexId=" + code + ";";
         try{
             stmt.executeUpdate(sql);

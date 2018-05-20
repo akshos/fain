@@ -39,4 +39,17 @@ public class CategoryDB {
         }
         return null;
     }
+        
+        public static String getCategoryName(Statement stmt, String id){
+            String sql = "select name from category where code='"+id+"' ;";
+            try{
+                ResultSet rs = stmt.executeQuery(sql);
+                if(rs.next()){
+                    return rs.getString(1);
+                }
+            }catch(SQLException se){
+                se.printStackTrace();
+            }
+            return null;
+        }
 }

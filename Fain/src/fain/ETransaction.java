@@ -72,12 +72,13 @@ public class ETransaction extends javax.swing.JInternalFrame implements RefreshO
         int colCount = this.dataTable.getColumnCount();
         if(colCount == 0) return;
         int colWidth  = (screenWidth / (colCount-1)) - (100/(colCount)+5);
+        TableColumnModel col = this.dataTable.getColumnModel();
         if(colWidth > 100){
-            TableColumnModel col = this.dataTable.getColumnModel();
             for(int i = 1; i < colCount; i++){
                 col.getColumn(i).setPreferredWidth(colWidth);
             }
         }
+        col.getColumn(6).setPreferredWidth(700);
         this.dataTable.setRowHeight(30);
     }
     
@@ -204,6 +205,8 @@ public class ETransaction extends javax.swing.JInternalFrame implements RefreshO
         findButton = new javax.swing.JButton();
         topButton = new javax.swing.JButton();
         bottomButton = new javax.swing.JButton();
+        titlePanel = new javax.swing.JPanel();
+        titleLabel = new javax.swing.JLabel();
 
         setClosable(true);
         setMaximizable(true);
@@ -509,6 +512,15 @@ public class ETransaction extends javax.swing.JInternalFrame implements RefreshO
 
         getContentPane().add(lowerPanel, java.awt.BorderLayout.SOUTH);
 
+        titlePanel.setLayout(new java.awt.BorderLayout());
+
+        titleLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        titleLabel.setText("BROWSE TRANSACTIONS");
+        titlePanel.add(titleLabel, java.awt.BorderLayout.CENTER);
+
+        getContentPane().add(titlePanel, java.awt.BorderLayout.PAGE_START);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -569,6 +581,8 @@ public class ETransaction extends javax.swing.JInternalFrame implements RefreshO
     private javax.swing.JButton findButton;
     private javax.swing.JPanel lowerPanel;
     private javax.swing.JScrollPane tableScrollPane;
+    private javax.swing.JLabel titleLabel;
+    private javax.swing.JPanel titlePanel;
     private javax.swing.JButton topButton;
     private javax.swing.JPanel upperPanel;
     // End of variables declaration//GEN-END:variables

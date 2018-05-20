@@ -64,8 +64,8 @@ public class Login extends javax.swing.JInternalFrame {
     }
     
     private void attemptLogin(){
-        String username = this.usernameTbox.getText();
-        String password = this.passwordPbox.getText();
+        String username = this.usernameTbox.getText().toLowerCase();
+        String password = this.passwordPbox.getText().toLowerCase();
         if(!User.validPassword(password) || !User.validUsername(username)){
             JOptionPane.showMessageDialog(this, "Please enter a valid uername and password", "Cannot Login", JOptionPane.WARNING_MESSAGE);
             return; 
@@ -119,12 +119,12 @@ public class Login extends javax.swing.JInternalFrame {
         entryPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 10, 10));
         entryPanel.setLayout(new java.awt.GridLayout(5, 0, 0, 10));
 
-        usernameLabel.setFont(new java.awt.Font("Cantarell", 1, 18)); // NOI18N
+        usernameLabel.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         usernameLabel.setText("Username");
         usernameLabel.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         entryPanel.add(usernameLabel);
 
-        usernameTbox.setFont(new java.awt.Font("Cantarell", 0, 24)); // NOI18N
+        usernameTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         usernameTbox.setToolTipText("Enter you username");
         usernameTbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -141,12 +141,12 @@ public class Login extends javax.swing.JInternalFrame {
         });
         entryPanel.add(usernameTbox);
 
-        passwordLabel.setFont(new java.awt.Font("Cantarell", 1, 18)); // NOI18N
+        passwordLabel.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         passwordLabel.setText("Password");
         passwordLabel.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         entryPanel.add(passwordLabel);
 
-        passwordPbox.setFont(new java.awt.Font("Cantarell", 0, 24)); // NOI18N
+        passwordPbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         passwordPbox.setToolTipText("Enter your password");
         passwordPbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -163,7 +163,7 @@ public class Login extends javax.swing.JInternalFrame {
         buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 10));
         buttonPanel.setLayout(new java.awt.GridLayout(1, 2, 20, 0));
 
-        loginButton.setFont(new java.awt.Font("Cantarell", 0, 18)); // NOI18N
+        loginButton.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         loginButton.setText("Login");
         loginButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -177,7 +177,7 @@ public class Login extends javax.swing.JInternalFrame {
         });
         buttonPanel.add(loginButton);
 
-        exitButton.setFont(new java.awt.Font("Cantarell", 0, 18)); // NOI18N
+        exitButton.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         exitButton.setText("Exit");
         exitButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
