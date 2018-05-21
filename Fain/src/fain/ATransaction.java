@@ -9,6 +9,8 @@ import database.BranchDB;
 import database.CustomerDB;
 import database.DBConnection;
 import database.MasterDB;
+import database.PurchaseLatexDB;
+import database.SalesDB;
 import database.TransactionDB;
 import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
@@ -263,7 +265,21 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         boolean ret;
         
         if(mode==Codes.EDIT){
-            ret = TransactionDB.update(stmt, editId, date, branchCode, debit, credit, amount, narration, tid);
+            tid = TransactionDB.getTidFromTno(dbConnection.getStatement(), editId);
+        
+            int res = PurchaseLatexDB.checkTidCodePresent(dbConnection.getStatement(), tid);
+            if(res == Codes.EXISTING_ENTRY){
+                JOptionPane.showMessageDialog(this, "Please Edit from Purchase Latex", "CANNOT EDIT", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            res = SalesDB.checkTidCodePresent(dbConnection.getStatement(), tid);
+            if(res == Codes.EXISTING_ENTRY){
+                JOptionPane.showMessageDialog(this, "Please Edit from Sales Latex", "CANNOT EDIT", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            ret = TransactionDB.update(stmt, editId, date, branchCode, debit, credit, amount, narration);
             if(ret){
                 JOptionPane.showMessageDialog(this, "The entry has been updated", "Success", JOptionPane.INFORMATION_MESSAGE);
             }else{

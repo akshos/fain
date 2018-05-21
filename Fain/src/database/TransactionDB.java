@@ -38,14 +38,13 @@ public final class TransactionDB {
             
     }
     
-    public static boolean update(Statement stmt, String code,String date, String branch, String debit, String credit, double amount, String narration, String tid){
+    public static boolean update(Statement stmt, String code,String date, String branch, String debit, String credit, double amount, String narration){
         String sql = "update transactions set date='"       +date       + "',"
                                            +"branch='"      +branch     + "',"
                                            +"debit='"       +debit      + "',"
                                            +"credit='"      +credit     + "',"
                                            +"amount="       +amount     + ","
-                                           +"narration='"   +narration  + "',"
-                                           +"tid='"         +tid        +"' "
+                                           +"narration='"   +narration  + "' "
                                + "where transactionNo=" + code + ";";
         try{
             stmt.executeUpdate(sql);
@@ -317,7 +316,7 @@ public final class TransactionDB {
     
     public static ResultSet getTransactionsOnDateForId(Statement stmt, String date, String id){
         String sql = "select date, debit, credit, amount, narration from "
-                + "transactions where date='"+date+"' and (credit='"+id+"' or debit='"+id+"');";
+                + "transactions where date='"+date+"' and (credit='"+id+"' or debit='"+id+"') order by date asc;";
         try{
             return stmt.executeQuery(sql);
         }catch(SQLException se){
@@ -328,7 +327,7 @@ public final class TransactionDB {
     
     public static ResultSet getTransactionsOnDateForDebitId(Statement stmt, String date, String id){
         String sql = "select date, debit, credit, amount, narration from "
-                + "transactions where date='"+date+"' and  debit='"+id+"' ;";
+                + "transactions where date='"+date+"' and  debit='"+id+"' order by date asc;";
         try{
             return stmt.executeQuery(sql);
         }catch(SQLException se){
@@ -339,7 +338,7 @@ public final class TransactionDB {
     
     public static ResultSet getTransactionsInBranch(Statement stmt, String branch){
         String sql = "select date, debit, credit, amount from transactions "
-                + "where branch='"+branch+"';";
+                + "where branch='"+branch+"' order by date asc;";
         try{
             return stmt.executeQuery(sql);
         }catch(SQLException se){
@@ -350,7 +349,11 @@ public final class TransactionDB {
     
     public static ResultSet getTransactionsInBranchBetDatesIncl(Statement stmt, String branch, String fromDate, String toDate){
         String sql = "select date, debit, credit, amount from transactions "
-                + "where branch='"+branch+"' and date<='"+toDate+"' and date>='"+fromDate+"' ;";
+                + "where date<='"+toDate+"' and date>='"+fromDate+"' ";
+        if(branch.compareToIgnoreCase("all") != 0){
+            sql += " and branch='"+branch+"' ";
+        }
+        sql += "order by date asc;";
         try{
             return stmt.executeQuery(sql);
         }catch(SQLException se){
