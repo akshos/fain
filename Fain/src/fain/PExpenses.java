@@ -53,7 +53,7 @@ public class PExpenses extends javax.swing.JInternalFrame{
         this.mainFrame = frame;
         initComponents();
         loadCurrDate();
-        loadBranch();
+        loadBranchData();
     }
     
     private void loadCurrDate(){
@@ -65,21 +65,31 @@ public class PExpenses extends javax.swing.JInternalFrame{
         this.toDatePicker.setText(date);
     }
     
-    private void loadBranch(){
-        System.out.println("loading branchcbox");
+    private void loadBranchData(){
+        System.out.println("loading branch data");
         branchData = BranchDB.getBranch(this.dbConnection.getStatement());
-        int len;
-        if(branchData  == null){
-            len =  0;
+    }
+    
+    private void chooseBranch(){
+        int index = UtilityFuncs.selectOption(this, "BRANCH", branchData);
+        if(index != -1){
+            this.branchTbox.setText(branchData[0][index]);
+            this.branchNameLabel.setText(branchData[1][index]);
+        }
+    }
+    
+    private boolean validateBranch(){
+        String branchCode = this.branchTbox.getText();
+        if(branchCode.isEmpty())
+            return true;
+        String branchName = BranchDB.getBranchName(dbConnection.getStatement(), branchCode);
+        if(branchName != null){
+            this.branchNameLabel.setText(branchName);
+            return true;
         }else{
-            len = branchData[0].length;
+            this.branchNameLabel.setText("NOT FOUND");
+            return false;
         }
-        String[] cboxData = new String[len+1];
-        for(int i = 0; i < len; i++){
-            cboxData[i] = branchData[0][i] + " : " + branchData[1][i];
-        }
-        cboxData[len] = "All";
-        this.branchCbox.setModel(new DefaultComboBoxModel(cboxData));
     }
     
     private void generateReport(){    
@@ -90,14 +100,12 @@ public class PExpenses extends javax.swing.JInternalFrame{
             return;
         }
         
-        String branch = "";
-        
-        String item = this.branchCbox.getSelectedItem().toString();
-        if(item.compareToIgnoreCase("All") == 0){
-            branch = item;
-        }else{
-            int index = this.branchCbox.getSelectedIndex();
-            branch = this.branchData[0][index];
+        String branch = this.branchTbox.getText().trim();
+        if(branch.isEmpty()){
+            branch = "All";
+        }else if(!validateBranch()){
+            JOptionPane.showMessageDialog(this, "Please enter a valid Branch", "No Branch", JOptionPane.WARNING_MESSAGE);
+            return;
         }
         
         String fromDate=this.fromDatePicker.getText();
@@ -168,7 +176,9 @@ public class PExpenses extends javax.swing.JInternalFrame{
         paperLabel = new javax.swing.JLabel();
         orientationLabel = new javax.swing.JLabel();
         rightInerPannel = new javax.swing.JPanel();
-        branchCbox = new javax.swing.JComboBox<>();
+        branchPanel = new javax.swing.JPanel();
+        branchTbox = new javax.swing.JTextField();
+        branchNameLabel = new javax.swing.JLabel();
         fromDatePicker = new javax.swing.JFormattedTextField();
         toDatePicker = new javax.swing.JFormattedTextField();
         paperCbox = new javax.swing.JComboBox<>();
@@ -244,13 +254,32 @@ public class PExpenses extends javax.swing.JInternalFrame{
 
         rightInerPannel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
 
-        branchCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        branchCbox.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                branchCboxItemStateChanged(evt);
+        branchPanel.setLayout(new java.awt.BorderLayout());
+
+        branchTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        branchTbox.setPreferredSize(new java.awt.Dimension(150, 23));
+        branchTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                branchTboxFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                branchTboxFocusLost(evt);
             }
         });
-        rightInerPannel.add(branchCbox);
+        branchTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                branchTboxKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                branchTboxKeyReleased(evt);
+            }
+        });
+        branchPanel.add(branchTbox, java.awt.BorderLayout.LINE_START);
+
+        branchNameLabel.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        branchPanel.add(branchNameLabel, java.awt.BorderLayout.CENTER);
+
+        rightInerPannel.add(branchPanel);
 
         try {
             fromDatePicker.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
@@ -258,9 +287,19 @@ public class PExpenses extends javax.swing.JInternalFrame{
             ex.printStackTrace();
         }
         fromDatePicker.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        fromDatePicker.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                fromDatePickerFocusGained(evt);
+            }
+        });
         fromDatePicker.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fromDatePickerActionPerformed(evt);
+            }
+        });
+        fromDatePicker.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(fromDatePicker);
@@ -271,6 +310,16 @@ public class PExpenses extends javax.swing.JInternalFrame{
             ex.printStackTrace();
         }
         toDatePicker.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        toDatePicker.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                toDatePickerFocusGained(evt);
+            }
+        });
+        toDatePicker.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                keyPressedHandler(evt);
+            }
+        });
         rightInerPannel.add(toDatePicker);
 
         paperCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
@@ -339,6 +388,12 @@ public class PExpenses extends javax.swing.JInternalFrame{
             this.doDefaultCloseAction();
         }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             paperCbox.transferFocus();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
         }
     }//GEN-LAST:event_paperCboxKeyPressed
 
@@ -346,7 +401,13 @@ public class PExpenses extends javax.swing.JInternalFrame{
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
         }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            orientationCbox.transferFocus();
+            this.generateReport();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
         }
     }//GEN-LAST:event_orientationCboxKeyPressed
 
@@ -356,21 +417,77 @@ public class PExpenses extends javax.swing.JInternalFrame{
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             this.generateReport();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
         }
     }//GEN-LAST:event_enterButtonKeyPressed
-
-    private void branchCboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_branchCboxItemStateChanged
-                // TODO add your handling code here:
-    }//GEN-LAST:event_branchCboxItemStateChanged
 
     private void fromDatePickerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fromDatePickerActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_fromDatePickerActionPerformed
+
+    private void branchTboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_branchTboxFocusLost
+        this.validateBranch();
+    }//GEN-LAST:event_branchTboxFocusLost
+
+    private void branchTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_branchTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F10){
+            this.chooseBranch();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }
+    }//GEN-LAST:event_branchTboxKeyPressed
+
+    private void branchTboxKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_branchTboxKeyReleased
+        this.validateBranch();
+    }//GEN-LAST:event_branchTboxKeyReleased
+
+    private void fromDatePickerFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_fromDatePickerFocusGained
+        this.fromDatePicker.setCaretPosition(0);        // TODO add your handling code here:
+    }//GEN-LAST:event_fromDatePickerFocusGained
+
+    private void toDatePickerFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_toDatePickerFocusGained
+        this.toDatePicker.setCaretPosition(0);        // TODO add your handling code here:
+    }//GEN-LAST:event_toDatePickerFocusGained
+
+    private void keyPressedHandler(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyPressedHandler
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }
+    }//GEN-LAST:event_keyPressedHandler
+
+    private void branchTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_branchTboxFocusGained
+        this.branchTbox.selectAll();        // TODO add your handling code here:
+    }//GEN-LAST:event_branchTboxFocusGained
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Branch;
     private javax.swing.JLabel asOnLabel;
-    private javax.swing.JComboBox<String> branchCbox;
+    private javax.swing.JLabel branchNameLabel;
+    private javax.swing.JPanel branchPanel;
+    private javax.swing.JTextField branchTbox;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JLabel dateFromLabel;
     private javax.swing.JButton enterButton;

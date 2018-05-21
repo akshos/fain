@@ -502,6 +502,9 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         branchTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         branchTbox.setPreferredSize(new java.awt.Dimension(150, 23));
         branchTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                branchTboxFocusGained(evt);
+            }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 branchTboxFocusLost(evt);
             }
@@ -559,6 +562,11 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
 
         partyTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         partyTbox.setPreferredSize(new java.awt.Dimension(150, 23));
+        partyTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                partyTboxFocusGained(evt);
+            }
+        });
         partyTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 partyTboxKeyPressed(evt);
@@ -890,6 +898,14 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
     private void branchTboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_branchTboxFocusLost
         this.loadPartyData();        // TODO add your handling code here:
     }//GEN-LAST:event_branchTboxFocusLost
+
+    private void branchTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_branchTboxFocusGained
+        this.branchTbox.selectAll();        // TODO add your handling code here:
+    }//GEN-LAST:event_branchTboxFocusGained
+
+    private void partyTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_partyTboxFocusGained
+        this.partyTbox.selectAll();        // TODO add your handling code here:
+    }//GEN-LAST:event_partyTboxFocusGained
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

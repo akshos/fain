@@ -54,7 +54,7 @@ public class PPurchaseLatex extends javax.swing.JInternalFrame{
         this.mainFrame = frame;
         initComponents();
         loadCurrDate();
-        loadAccounts();
+        loadAccountData();
     }
     
     private void loadCurrDate(){
@@ -66,42 +66,48 @@ public class PPurchaseLatex extends javax.swing.JInternalFrame{
         this.toDatePicker.setText(date);
     }
     
-    private void loadAccounts(){
-        accountData = CustomerDB.getCustomersInBranch(this.dbConnection.getStatement(), "All");
-        int len;
-        String[] cboxData = null;
-        if(accountData  == null){
-            len =  0;
-            cboxData = new String[1];
-            cboxData[0] = "None";
-            this.accountCbox.setToolTipText("No customers available for branch");
-        }else{
-            len = accountData[0].length;
-            cboxData = new String[len+1];
-            cboxData[0] = "All";
-            for(int i = 1; i <= len; i++){
-                cboxData[i] = accountData[0][i-1] + " : " + accountData[1][i-1];
-            }
+    private void loadAccountData(){
+        String branchCode = "All";
+        accountData = CustomerDB.getCustomersInBranch(this.dbConnection.getStatement(), branchCode);
+    }
+    
+    private boolean validateAccount(){
+        String accCode = this.accountTbox.getText();
+        if(accCode.isEmpty())
+            return true;
+        String accName = CustomerDB.getCustomerName(dbConnection.getStatement(), accCode);
+        if(accName != null){
+            this.accountNameLabel.setText(accName);
+            return true;
         }
-        this.accountCbox.setModel(new DefaultComboBoxModel(cboxData));    
+        else{
+            this.accountNameLabel.setText("NOT FOUND");
+            return false;
+        }
+    }
+    
+    private void chooseAccount(){
+       int index = UtilityFuncs.selectOption(this, " ACCOUNT", accountData);
+       if(index != -1){
+           this.accountNameLabel.setText(accountData[1][index]);
+           this.accountTbox.setText(accountData[0][index]);
+       }
     }
     
     private void generateReport(){    
         setBusy();
         
-        String item = this.accountCbox.getSelectedItem().toString();
-        if(item.compareTo("None") == 0){
-            JOptionPane.showMessageDialog(this, "Please select an Account", "No Account", JOptionPane.WARNING_MESSAGE);
+        if(accountData == null){
+            JOptionPane.showMessageDialog(this, "No Accounts Available", "No Accounts", JOptionPane.WARNING_MESSAGE);
             return;
         }
         
-        String account;
-        int index = this.accountCbox.getSelectedIndex();
-        if(index == 0){
-            account = "All";
-        }
-        else{
-            account = this.accountData[0][index-1];
+        String account = this.accountTbox.getText().trim();
+        if(account.isEmpty()){
+            account = accountData[0][0];
+        }else if(!validateAccount()){
+            JOptionPane.showMessageDialog(this, "Please enter a valid Account From", "No Account", JOptionPane.WARNING_MESSAGE);
+            return;
         }
         
         String fromDate=this.fromDatePicker.getText();
@@ -116,9 +122,9 @@ public class PPurchaseLatex extends javax.swing.JInternalFrame{
         if(!ValidationChecks.isDateValid(toDate)){
             JOptionPane.showMessageDialog(this, "Please enter valid Date To", "INVALID DATE", JOptionPane.WARNING_MESSAGE);
             return;
-        }       
+        }
         final String dateTo = UtilityFuncs.dateUserToSql(toDate);  
-        
+        final String faccount = account;
         String paper = this.paperCbox.getSelectedItem().toString();
         String orientation = this.orientationCbox.getSelectedItem().toString();
         
@@ -129,7 +135,7 @@ public class PPurchaseLatex extends javax.swing.JInternalFrame{
                 wait.setSize(new Dimension(700, 400));
                 wait.setVisible(true);
                 mainFrame.addToMainDesktopPane(wait, level+1, Codes.NO_DATABASE);
-                boolean ret = PurchaseLatex.createReport(dbConnection, paper, orientation, dateFrom, dateTo, account);
+                boolean ret = PurchaseLatex.createReport(dbConnection, paper, orientation, dateFrom, dateTo, faccount);
                 wait.closeWait();
             }
         });
@@ -169,7 +175,9 @@ public class PPurchaseLatex extends javax.swing.JInternalFrame{
         paperLabel = new javax.swing.JLabel();
         orientationLabel = new javax.swing.JLabel();
         rightInerPannel = new javax.swing.JPanel();
-        accountCbox = new javax.swing.JComboBox<>();
+        accountPanel = new javax.swing.JPanel();
+        accountTbox = new javax.swing.JTextField();
+        accountNameLabel = new javax.swing.JLabel();
         fromDatePicker = new javax.swing.JFormattedTextField();
         toDatePicker = new javax.swing.JFormattedTextField();
         paperCbox = new javax.swing.JComboBox<>();
@@ -245,9 +253,29 @@ public class PPurchaseLatex extends javax.swing.JInternalFrame{
 
         rightInerPannel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
 
-        accountCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        accountCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        rightInerPannel.add(accountCbox);
+        accountPanel.setLayout(new java.awt.BorderLayout());
+
+        accountTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        accountTbox.setPreferredSize(new java.awt.Dimension(150, 23));
+        accountTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                accountTboxFocusGained(evt);
+            }
+        });
+        accountTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                accountTboxKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                accountTboxKeyReleased(evt);
+            }
+        });
+        accountPanel.add(accountTbox, java.awt.BorderLayout.LINE_START);
+
+        accountNameLabel.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        accountPanel.add(accountNameLabel, java.awt.BorderLayout.CENTER);
+
+        rightInerPannel.add(accountPanel);
 
         try {
             fromDatePicker.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
@@ -255,6 +283,16 @@ public class PPurchaseLatex extends javax.swing.JInternalFrame{
             ex.printStackTrace();
         }
         fromDatePicker.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        fromDatePicker.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                fromDatePickerFocusGained(evt);
+            }
+        });
+        fromDatePicker.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                keyPressedHandler(evt);
+            }
+        });
         rightInerPannel.add(fromDatePicker);
 
         try {
@@ -263,13 +301,23 @@ public class PPurchaseLatex extends javax.swing.JInternalFrame{
             ex.printStackTrace();
         }
         toDatePicker.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        toDatePicker.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                toDatePickerFocusGained(evt);
+            }
+        });
+        toDatePicker.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                keyPressedHandler(evt);
+            }
+        });
         rightInerPannel.add(toDatePicker);
 
         paperCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         paperCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A4", "Legal" }));
         paperCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                paperCboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(paperCbox);
@@ -278,7 +326,7 @@ public class PPurchaseLatex extends javax.swing.JInternalFrame{
         orientationCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Landscape", "Portrait" }));
         orientationCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                orientationCboxKeyPressed(evt);
+                enterButtonKeyPressed(evt);
             }
         });
         rightInerPannel.add(orientationCbox);
@@ -326,33 +374,73 @@ public class PPurchaseLatex extends javax.swing.JInternalFrame{
         generateReport();
     }//GEN-LAST:event_enterButtonActionPerformed
 
-    private void paperCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_paperCboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            paperCbox.transferFocus();
-        }
-    }//GEN-LAST:event_paperCboxKeyPressed
-
-    private void orientationCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_orientationCboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            orientationCbox.transferFocus();
-        }
-    }//GEN-LAST:event_orientationCboxKeyPressed
-
     private void enterButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterButtonKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             this.generateReport();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
         }
     }//GEN-LAST:event_enterButtonKeyPressed
+
+    private void accountTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_accountTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F10){
+            chooseAccount();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }
+    }//GEN-LAST:event_accountTboxKeyPressed
+
+    private void accountTboxKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_accountTboxKeyReleased
+        this.validateAccount();        // TODO add your handling code here:
+    }//GEN-LAST:event_accountTboxKeyReleased
+
+    private void keyPressedHandler(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyPressedHandler
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }  // TODO add your handling code here:
+    }//GEN-LAST:event_keyPressedHandler
+
+    private void fromDatePickerFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_fromDatePickerFocusGained
+        this.fromDatePicker.setCaretPosition(0);        // TODO add your handling code here:
+    }//GEN-LAST:event_fromDatePickerFocusGained
+
+    private void toDatePickerFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_toDatePickerFocusGained
+        this.toDatePicker.setCaretPosition(0);        // TODO add your handling code here:
+    }//GEN-LAST:event_toDatePickerFocusGained
+
+    private void accountTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_accountTboxFocusGained
+        this.accountTbox.selectAll();        // TODO add your handling code here:
+    }//GEN-LAST:event_accountTboxFocusGained
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> accountCbox;
+    private javax.swing.JLabel accountNameLabel;
+    private javax.swing.JPanel accountPanel;
+    private javax.swing.JTextField accountTbox;
     private javax.swing.JLabel asOnLabel;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JLabel cashAccountLabel;

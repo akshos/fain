@@ -197,8 +197,17 @@ public class PProfitLossBalanceSheet extends javax.swing.JInternalFrame{
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        asOnTbox.setFocusable(false);
         asOnTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        asOnTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                asOnTboxFocusGained(evt);
+            }
+        });
+        asOnTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                keyPressedHandler(evt);
+            }
+        });
         rightInerPannel.add(asOnTbox);
 
         paperCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
@@ -267,6 +276,12 @@ public class PProfitLossBalanceSheet extends javax.swing.JInternalFrame{
             this.doDefaultCloseAction();
         }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             paperCbox.transferFocus();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
         }
     }//GEN-LAST:event_paperCboxKeyPressed
 
@@ -274,7 +289,13 @@ public class PProfitLossBalanceSheet extends javax.swing.JInternalFrame{
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
         }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            orientationCbox.transferFocus();
+            this.generateReport();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
         }
     }//GEN-LAST:event_orientationCboxKeyPressed
 
@@ -284,8 +305,32 @@ public class PProfitLossBalanceSheet extends javax.swing.JInternalFrame{
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             this.generateReport();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
         }
     }//GEN-LAST:event_enterButtonKeyPressed
+
+    private void asOnTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_asOnTboxFocusGained
+        this.asOnTbox.setCaretPosition(0);        // TODO add your handling code here:
+    }//GEN-LAST:event_asOnTboxFocusGained
+
+    private void keyPressedHandler(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyPressedHandler
+         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            paperCbox.transferFocus();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }
+    }//GEN-LAST:event_keyPressedHandler
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel asOnLabel;

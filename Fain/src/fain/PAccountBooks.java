@@ -56,7 +56,7 @@ public class PAccountBooks extends javax.swing.JInternalFrame{
         this.type = type;
         initComponents();
         loadCurrDate();
-        loadAccounts();
+        loadAccountData();
         setType();
     }
     
@@ -71,18 +71,18 @@ public class PAccountBooks extends javax.swing.JInternalFrame{
     
     private void setType(){
         if(this.type.compareTo("DAY") == 0){
-            this.setTitle("CASH BOOK");
-            this.titleLabel.setText("CASH BOOK");
-        }else if(this.type.compareTo("CH") == 0){
             this.setTitle("DAY BOOK");
             this.titleLabel.setText("DAY BOOK");
+        }else if(this.type.compareTo("CH") == 0){
+            this.setTitle("CASH BOOK");
+            this.titleLabel.setText("CASH BOOK");
         }else if(this.type.compareTo("BK") == 0){
             this.setTitle("BANK BOOK");
             this.titleLabel.setText("BANK BOOK");
         }
     }
     
-    private void loadAccounts(){
+    private void loadAccountData(){
         String cat;
         if(this.type.compareTo("DAY") == 0){
             cat = "CH";
@@ -90,30 +90,36 @@ public class PAccountBooks extends javax.swing.JInternalFrame{
             cat = type;
         }
         accountData = MasterDB.getAccountHeadByCat(this.dbConnection.getStatement(), cat);
-        int len;
-        if(accountData == null){
-            len = 0;
+    }
+    
+    private boolean validateAccount(){
+        String accCode = this.accountTbox.getText();
+        String accName = MasterDB.getAccountHead(dbConnection.getStatement(), accCode);
+        if(accName != null){
+            this.accountNameTbox.setText(accName);
+            return true;
         }else{
-            len = accountData[0].length;
+            this.accountNameTbox.setText("NOT FOUND");
+            return false;
         }
-        String[] cboxData = new String[len+1];
-        for(int i = 0; i < len; i++){
-            cboxData[i] = accountData[0][i] + " : " + accountData[1][i];
+    }
+    
+    private void chooseAccount(){
+        int index = UtilityFuncs.selectOption(this, " ACCOUNT", accountData);
+        if(index != -1){
+            this.accountTbox.setText(accountData[0][index]);
+            this.accountNameTbox.setText(accountData[1][index]);
         }
-        cboxData[len] = "None";
-        this.cashAccountCbox.setModel(new DefaultComboBoxModel(cboxData));
     }
     
     private void generateReport(){    
         setBusy();
         
-        String item = this.cashAccountCbox.getSelectedItem().toString();
-        if(item.compareTo("None") == 0){
-            JOptionPane.showMessageDialog(this, "Please select an Account", "No Account", JOptionPane.WARNING_MESSAGE);
+        final String account = this.accountTbox.getText();
+        if(!validateAccount()){
+            JOptionPane.showMessageDialog(this, "Please enter a valid Account", "No Account", JOptionPane.WARNING_MESSAGE);
             return;
-        }
-        int index = this.cashAccountCbox.getSelectedIndex();
-        final String account = this.accountData[0][index];
+        }        
         
         String fromDate=this.fromDatePicker.getText();
         if(!ValidationChecks.isDateValid(fromDate)){
@@ -185,7 +191,9 @@ public class PAccountBooks extends javax.swing.JInternalFrame{
         paperLabel = new javax.swing.JLabel();
         orientationLabel = new javax.swing.JLabel();
         rightInerPannel = new javax.swing.JPanel();
-        cashAccountCbox = new javax.swing.JComboBox<>();
+        accountPanel = new javax.swing.JPanel();
+        accountTbox = new javax.swing.JTextField();
+        accountNameTbox = new javax.swing.JLabel();
         fromDatePicker = new javax.swing.JFormattedTextField();
         toDatePicker = new javax.swing.JFormattedTextField();
         paperCbox = new javax.swing.JComboBox<>();
@@ -261,9 +269,29 @@ public class PAccountBooks extends javax.swing.JInternalFrame{
 
         rightInerPannel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
 
-        cashAccountCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        cashAccountCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        rightInerPannel.add(cashAccountCbox);
+        accountPanel.setLayout(new java.awt.BorderLayout());
+
+        accountTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        accountTbox.setPreferredSize(new java.awt.Dimension(150, 23));
+        accountTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                accountTboxFocusGained(evt);
+            }
+        });
+        accountTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                accountTboxKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                accountTboxKeyReleased(evt);
+            }
+        });
+        accountPanel.add(accountTbox, java.awt.BorderLayout.LINE_START);
+
+        accountNameTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        accountPanel.add(accountNameTbox, java.awt.BorderLayout.CENTER);
+
+        rightInerPannel.add(accountPanel);
 
         try {
             fromDatePicker.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
@@ -271,9 +299,19 @@ public class PAccountBooks extends javax.swing.JInternalFrame{
             ex.printStackTrace();
         }
         fromDatePicker.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        fromDatePicker.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                fromDatePickerFocusGained(evt);
+            }
+        });
         fromDatePicker.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fromDatePickerActionPerformed(evt);
+            }
+        });
+        fromDatePicker.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(fromDatePicker);
@@ -284,13 +322,23 @@ public class PAccountBooks extends javax.swing.JInternalFrame{
             ex.printStackTrace();
         }
         toDatePicker.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        toDatePicker.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                toDatePickerFocusGained(evt);
+            }
+        });
+        toDatePicker.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                keyPressedHandler(evt);
+            }
+        });
         rightInerPannel.add(toDatePicker);
 
         paperCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         paperCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A4", "Legal" }));
         paperCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                paperCboxKeyPressed(evt);
+                keyPressedHandler(evt);
             }
         });
         rightInerPannel.add(paperCbox);
@@ -299,7 +347,7 @@ public class PAccountBooks extends javax.swing.JInternalFrame{
         orientationCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Landscape", "Portrait" }));
         orientationCbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                orientationCboxKeyPressed(evt);
+                enterButtonKeyPressed(evt);
             }
         });
         rightInerPannel.add(orientationCbox);
@@ -347,39 +395,79 @@ public class PAccountBooks extends javax.swing.JInternalFrame{
         generateReport();
     }//GEN-LAST:event_enterButtonActionPerformed
 
-    private void paperCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_paperCboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            paperCbox.transferFocus();
-        }
-    }//GEN-LAST:event_paperCboxKeyPressed
-
-    private void orientationCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_orientationCboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            orientationCbox.transferFocus();
-        }
-    }//GEN-LAST:event_orientationCboxKeyPressed
-
     private void enterButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterButtonKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             this.generateReport();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
         }
     }//GEN-LAST:event_enterButtonKeyPressed
 
     private void fromDatePickerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fromDatePickerActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_fromDatePickerActionPerformed
+
+    private void accountTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_accountTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F10){
+            chooseAccount();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }
+    }//GEN-LAST:event_accountTboxKeyPressed
+
+    private void accountTboxKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_accountTboxKeyReleased
+        this.validateAccount();        // TODO add your handling code here:
+    }//GEN-LAST:event_accountTboxKeyReleased
+
+    private void keyPressedHandler(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyPressedHandler
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }
+    }//GEN-LAST:event_keyPressedHandler
+
+    private void fromDatePickerFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_fromDatePickerFocusGained
+        this.fromDatePicker.setCaretPosition(0);
+    }//GEN-LAST:event_fromDatePickerFocusGained
+
+    private void toDatePickerFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_toDatePickerFocusGained
+        this.toDatePicker.setCaretPosition(0);        // TODO add your handling code here:
+    }//GEN-LAST:event_toDatePickerFocusGained
+
+    private void accountTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_accountTboxFocusGained
+        this.accountTbox.selectAll();        // TODO add your handling code here:
+    }//GEN-LAST:event_accountTboxFocusGained
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel accountNameTbox;
+    private javax.swing.JPanel accountPanel;
+    private javax.swing.JTextField accountTbox;
     private javax.swing.JLabel asOnLabel;
     private javax.swing.JPanel buttonPanel;
-    private javax.swing.JComboBox<String> cashAccountCbox;
     private javax.swing.JLabel cashAccountLabel;
     private javax.swing.JLabel dateFromLabel;
     private javax.swing.JButton enterButton;

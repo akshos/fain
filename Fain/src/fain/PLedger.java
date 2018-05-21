@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import utility.Codes;
 import utility.ValidationChecks;
 import reports.Ledger;
+import utility.UtilityFuncs;
 import utility.Wait;
 /**
  *
@@ -44,104 +45,126 @@ public class PLedger extends javax.swing.JInternalFrame{
         this.level = level;
         this.mainFrame = frame;
         initComponents();
-        loadBranch();
-        loadAccounts();
+        loadBranchData();
+        loadAccountData();
     }
     
-    private void loadBranch(){
-        System.out.println("loading branchcbox");
+    private void loadBranchData(){
+        System.out.println("loading branch data");
         branchData = BranchDB.getBranch(this.dbConnection.getStatement());
-        int len;
-        if(branchData  == null){
-            len =  0;
-        }else{
-            len = branchData[0].length;
-        }
-        String[] cboxData = new String[len+2];
-        for(int i = 0; i < len; i++){
-            cboxData[i] = branchData[0][i] + " : " + branchData[1][i];
-        }
-        cboxData[len] = "All";
-        cboxData[len+1] = "None";
-        this.branchCbox.setModel(new DefaultComboBoxModel(cboxData));
-        this.branchCbox.setSelectedIndex(len);
     }
     
-    private void loadAccounts(){
-        String item = this.branchCbox.getSelectedItem().toString();
-        
-        if(item.compareTo("None") != 0){
-            String branchCode = "All";
-            if(item.compareTo("All") != 0){
-                int index = this.branchCbox.getSelectedIndex();
-                branchCode = this.branchData[0][index];
-            }
-            accountData = CustomerDB.getCustomersInBranch(this.dbConnection.getStatement(), branchCode);
-        }else{
-            accountData = MasterDB.getAccountHead(dbConnection.getStatement());
+    private void chooseBranch(){
+        int index = UtilityFuncs.selectOption(this, "BRANCH", branchData);
+        if(index != -1){
+            this.branchTbox.setText(branchData[0][index]);
+            this.branchNameLabel.setText(branchData[1][index]);
         }
-        int len;
-        String[] cboxDataFrom = null;
-        String[] cboxDataTo = null;
-        if(accountData  == null){
-            len =  0;
-            cboxDataFrom = new String[1];
-            cboxDataFrom[0] = "None";
-            cboxDataTo = new String[1];
-            cboxDataTo[0] = "None";
-            this.accountFromCbox.setToolTipText("No Customers Available");
-            this.accountToCbox.setToolTipText("No Customers Available");
+    }
+    
+    private boolean validateBranch(){
+        String branchCode = this.branchTbox.getText();
+        if(branchCode.isEmpty())
+            return true;
+        String branchName = BranchDB.getBranchName(dbConnection.getStatement(), branchCode);
+        if(branchName != null){
+            this.branchNameLabel.setText(branchName);
+            return true;
         }else{
-            len = accountData[0].length;
-            cboxDataFrom = new String[len];
-            cboxDataTo = new String[len+2];
-            for(int i = 0; i < len; i++){
-                cboxDataFrom[i] = accountData[0][i] + " : " + accountData[0][i] ;
-                cboxDataTo[i] = accountData[0][i] + " : " + accountData[0][i] ;
-            }
+            this.branchNameLabel.setText("NOT FOUND");
+            return false;
         }
-        this.accountFromCbox.setModel(new DefaultComboBoxModel(cboxDataFrom));
-        cboxDataTo[len] = "All";
-        cboxDataTo[len+1] = "None";
-        this.accountToCbox.setModel(new DefaultComboBoxModel(cboxDataTo));
-        this.accountToCbox.setSelectedIndex(len);
+    }
+    
+    private void loadAccountData(){
+        String branchCode = this.branchTbox.getText().trim();
+        if(branchCode.isEmpty()){
+            branchCode = "All";
+        }
+        accountData = CustomerDB.getCustomersInBranch(this.dbConnection.getStatement(), branchCode);
+    }
+    
+    private boolean validateFromAccount(){
+        String accCode = this.fromAccountTbox.getText();
+        if(accCode.isEmpty())
+            return true;
+        String accName = CustomerDB.getCustomerName(dbConnection.getStatement(), accCode);
+        if(accName != null){
+            this.fromAccountLabel.setText(accName);
+            return true;
+        }
+        else{
+            this.fromAccountLabel.setText("NOT FOUND");
+            return false;
+        }
+    }
+    
+    private boolean validateToAccount(){
+        String accCode = this.toAccountTbox.getText();
+        if(accCode.isEmpty())
+            return true;
+        String accName = CustomerDB.getCustomerName(dbConnection.getStatement(), accCode);
+        if(accName != null){
+            this.toAccountLabel.setText(accName);
+            return true;
+        }
+        else{
+            this.toAccountLabel.setText("NOT FOUND");
+            return false;
+        }
+    }
+    
+    private void chooseFromAccount(){
+       int index = UtilityFuncs.selectOption(this, " ACCOUNT", accountData);
+       if(index != -1){
+           this.fromAccountLabel.setText(accountData[1][index]);
+           this.fromAccountTbox.setText(accountData[0][index]);
+       }
+    }
+    
+    private void chooseToAccount(){
+       int index = UtilityFuncs.selectOption(this, " ACCOUNT", accountData);
+       if(index != -1){
+           this.toAccountLabel.setText(accountData[1][index]);
+           this.toAccountTbox.setText(accountData[0][index]);
+       }
     }
     
     private void generateReport(){    
         setBusy();
-        if(branchData == null){
-            JOptionPane.showMessageDialog(this, "No Available Branches", "No Branches", JOptionPane.WARNING_MESSAGE);
-            resetBusy();
+        
+        if(accountData == null){
+            JOptionPane.showMessageDialog(this, "No Accounts Available", "No Accounts", JOptionPane.WARNING_MESSAGE);
             return;
-        }
-        if(accountFromCbox.getSelectedItem().toString().compareTo("None") == 0){
-            JOptionPane.showMessageDialog(this, "Please select atleast one Account", "No Account selected", JOptionPane.WARNING_MESSAGE);
-            resetBusy();
-            return;
-        }
-        int index;
-        String item = this.branchCbox.getSelectedItem().toString();
-        String branchCode = "";
-        if(item.compareTo("All") == 0 || item.compareTo("None") == 0){
-            branchCode = item;
-        }else{
-            index = this.branchCbox.getSelectedIndex();
-            branchCode = this.branchData[0][index];
-        }
-        index = this.accountFromCbox.getSelectedIndex();
-        String accFrom = this.accountData[0][index];
-        item = this.accountToCbox.getSelectedItem().toString();
-        String accTo = "";
-        if(item.compareTo("None") == 0 || item.compareTo("All") == 0){
-            accTo = item;
-        }else{
-            index = this.accountToCbox.getSelectedIndex();
-            accTo = this.accountData[0][index];
         }
         
-        final String branch = branchCode;
-        final String fromAcc = accFrom;
-        final String toAcc = accTo;
+        String branch = this.branchTbox.getText().trim();
+        if(branch.isEmpty()){
+            branch = "All";
+        }else if(!validateBranch()){
+            JOptionPane.showMessageDialog(this, "Please enter a valid Branch", "No Branch", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        String accountFrom = this.fromAccountTbox.getText().trim();
+        if(accountFrom.isEmpty()){
+            accountFrom = accountData[0][0];
+        }else if(!validateFromAccount()){
+            JOptionPane.showMessageDialog(this, "Please enter a valid Account From", "No Account", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        String accountTo = this.toAccountTbox.getText().trim();
+        if(accountTo.isEmpty()){
+            accountTo = accountData[0][accountData[0].length-1];
+        }else if(!validateToAccount()){
+            JOptionPane.showMessageDialog(this, "Please enter a valid Account To", "No Account", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        final String branchCode = branch;
+        final String fromAcc = accountFrom;
+        final String toAcc = accountTo;
         String paper = this.paperCbox.getSelectedItem().toString();
         String orientation = this.orientationCbox.getSelectedItem().toString();
         
@@ -152,7 +175,7 @@ public class PLedger extends javax.swing.JInternalFrame{
                 wait.setSize(new Dimension(700, 400));
                 wait.setVisible(true);
                 mainFrame.addToMainDesktopPane(wait, level+1, Codes.NO_DATABASE);
-                Ledger.createReport(dbConnection, paper, orientation, branch, fromAcc, toAcc);
+                Ledger.createReport(dbConnection, paper, orientation, branchCode, fromAcc, toAcc);
                 wait.closeWait();
             }
         });
@@ -192,9 +215,15 @@ public class PLedger extends javax.swing.JInternalFrame{
         paperLabel = new javax.swing.JLabel();
         orientationLabel = new javax.swing.JLabel();
         rightInerPannel = new javax.swing.JPanel();
-        branchCbox = new javax.swing.JComboBox<>();
-        accountFromCbox = new javax.swing.JComboBox<>();
-        accountToCbox = new javax.swing.JComboBox<>();
+        branchPanel = new javax.swing.JPanel();
+        branchTbox = new javax.swing.JTextField();
+        branchNameLabel = new javax.swing.JLabel();
+        fromAccount = new javax.swing.JPanel();
+        fromAccountTbox = new javax.swing.JTextField();
+        fromAccountLabel = new javax.swing.JLabel();
+        toAccount = new javax.swing.JPanel();
+        toAccountTbox = new javax.swing.JTextField();
+        toAccountLabel = new javax.swing.JLabel();
         paperCbox = new javax.swing.JComboBox<>();
         orientationCbox = new javax.swing.JComboBox<>();
         buttonPanel = new javax.swing.JPanel();
@@ -267,37 +296,80 @@ public class PLedger extends javax.swing.JInternalFrame{
 
         rightInerPannel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
 
-        branchCbox.setBackground(java.awt.Color.white);
-        branchCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        branchCbox.addFocusListener(new java.awt.event.FocusAdapter() {
+        branchPanel.setLayout(new java.awt.BorderLayout());
+
+        branchTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        branchTbox.setPreferredSize(new java.awt.Dimension(150, 23));
+        branchTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                branchTboxFocusGained(evt);
+            }
             public void focusLost(java.awt.event.FocusEvent evt) {
-                branchCboxFocusLost(evt);
+                branchTboxFocusLost(evt);
             }
         });
-        branchCbox.addKeyListener(new java.awt.event.KeyAdapter() {
+        branchTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                branchCboxKeyPressed(evt);
+                branchTboxKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                branchTboxKeyReleased(evt);
             }
         });
-        rightInerPannel.add(branchCbox);
+        branchPanel.add(branchTbox, java.awt.BorderLayout.LINE_START);
 
-        accountFromCbox.setBackground(java.awt.Color.white);
-        accountFromCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        accountFromCbox.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                accountFromCboxKeyPressed(evt);
-            }
-        });
-        rightInerPannel.add(accountFromCbox);
+        branchNameLabel.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        branchPanel.add(branchNameLabel, java.awt.BorderLayout.CENTER);
 
-        accountToCbox.setBackground(java.awt.Color.white);
-        accountToCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        accountToCbox.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                accountToCboxKeyPressed(evt);
+        rightInerPannel.add(branchPanel);
+
+        fromAccount.setLayout(new java.awt.BorderLayout());
+
+        fromAccountTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        fromAccountTbox.setPreferredSize(new java.awt.Dimension(150, 23));
+        fromAccountTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                fromAccountTboxFocusGained(evt);
             }
         });
-        rightInerPannel.add(accountToCbox);
+        fromAccountTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                fromAccountTboxKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                fromAccountTboxKeyReleased(evt);
+            }
+        });
+        fromAccount.add(fromAccountTbox, java.awt.BorderLayout.LINE_START);
+
+        fromAccountLabel.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        fromAccount.add(fromAccountLabel, java.awt.BorderLayout.CENTER);
+
+        rightInerPannel.add(fromAccount);
+
+        toAccount.setLayout(new java.awt.BorderLayout());
+
+        toAccountTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        toAccountTbox.setPreferredSize(new java.awt.Dimension(150, 23));
+        toAccountTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                toAccountTboxFocusGained(evt);
+            }
+        });
+        toAccountTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                toAccountTboxKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                toAccountTboxKeyReleased(evt);
+            }
+        });
+        toAccount.add(toAccountTbox, java.awt.BorderLayout.LINE_START);
+
+        toAccountLabel.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        toAccount.add(toAccountLabel, java.awt.BorderLayout.CENTER);
+
+        rightInerPannel.add(toAccount);
 
         paperCbox.setBackground(java.awt.Color.white);
         paperCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
@@ -362,41 +434,17 @@ public class PLedger extends javax.swing.JInternalFrame{
         generateReport();
     }//GEN-LAST:event_enterButtonActionPerformed
 
-    private void branchCboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_branchCboxFocusLost
-        this.loadAccounts();
-    }//GEN-LAST:event_branchCboxFocusLost
-
-    private void branchCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_branchCboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }
-        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            branchCbox.transferFocus();
-        }
-    }//GEN-LAST:event_branchCboxKeyPressed
-
-    private void accountFromCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_accountFromCboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }
-        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            accountFromCbox.transferFocus();
-        }
-    }//GEN-LAST:event_accountFromCboxKeyPressed
-
-    private void accountToCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_accountToCboxKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
-            this.doDefaultCloseAction();
-        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            accountToCbox.transferFocus();
-        }
-    }//GEN-LAST:event_accountToCboxKeyPressed
-
     private void paperCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_paperCboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
         }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             paperCbox.transferFocus();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
         }
     }//GEN-LAST:event_paperCboxKeyPressed
 
@@ -404,7 +452,13 @@ public class PLedger extends javax.swing.JInternalFrame{
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
         }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            orientationCbox.transferFocus();
+            this.generateReport();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
         }
     }//GEN-LAST:event_orientationCboxKeyPressed
 
@@ -414,17 +468,106 @@ public class PLedger extends javax.swing.JInternalFrame{
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             this.generateReport();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
         }
     }//GEN-LAST:event_enterButtonKeyPressed
+
+    private void branchTboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_branchTboxFocusLost
+        this.validateBranch();
+        this.loadAccountData();
+    }//GEN-LAST:event_branchTboxFocusLost
+
+    private void branchTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_branchTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F10){
+            this.chooseBranch();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }
+    }//GEN-LAST:event_branchTboxKeyPressed
+
+    private void branchTboxKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_branchTboxKeyReleased
+        this.validateBranch();
+    }//GEN-LAST:event_branchTboxKeyReleased
+
+    private void fromAccountTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fromAccountTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F10){
+            chooseFromAccount();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }
+    }//GEN-LAST:event_fromAccountTboxKeyPressed
+
+    private void fromAccountTboxKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fromAccountTboxKeyReleased
+        this.validateFromAccount();        // TODO add your handling code here:
+    }//GEN-LAST:event_fromAccountTboxKeyReleased
+
+    private void toAccountTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_toAccountTboxKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F10){
+            chooseToAccount();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
+            this.doDefaultCloseAction();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocusBackward();
+        }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
+            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
+            cmp.transferFocus();
+        }
+    }//GEN-LAST:event_toAccountTboxKeyPressed
+
+    private void toAccountTboxKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_toAccountTboxKeyReleased
+        this.validateToAccount();        // TODO add your handling code here:
+    }//GEN-LAST:event_toAccountTboxKeyReleased
+
+    private void toAccountTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_toAccountTboxFocusGained
+        this.toAccountTbox.selectAll();        // TODO add your handling code here:
+    }//GEN-LAST:event_toAccountTboxFocusGained
+
+    private void fromAccountTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_fromAccountTboxFocusGained
+        this.fromAccountTbox.selectAll();        // TODO add your handling code here:
+    }//GEN-LAST:event_fromAccountTboxFocusGained
+
+    private void branchTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_branchTboxFocusGained
+        this.branchTbox.selectAll();        // TODO add your handling code here:
+    }//GEN-LAST:event_branchTboxFocusGained
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel accountCodeLabel;
-    private javax.swing.JComboBox<String> accountFromCbox;
     private javax.swing.JLabel accountHeadLabel;
-    private javax.swing.JComboBox<String> accountToCbox;
-    private javax.swing.JComboBox<String> branchCbox;
+    private javax.swing.JLabel branchNameLabel;
+    private javax.swing.JPanel branchPanel;
+    private javax.swing.JTextField branchTbox;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JButton enterButton;
+    private javax.swing.JPanel fromAccount;
+    private javax.swing.JLabel fromAccountLabel;
+    private javax.swing.JTextField fromAccountTbox;
     private javax.swing.JPanel labelsPanel;
     private javax.swing.JPanel leftInerPannel;
     private javax.swing.JLabel logoLabel;
@@ -437,6 +580,9 @@ public class PLedger extends javax.swing.JInternalFrame{
     private javax.swing.JPanel rightInerPannel;
     private javax.swing.JLabel titleLabel;
     private javax.swing.JPanel titlePanel;
+    private javax.swing.JPanel toAccount;
+    private javax.swing.JLabel toAccountLabel;
+    private javax.swing.JTextField toAccountTbox;
     private javax.swing.JLabel yopBalLabel;
     // End of variables declaration//GEN-END:variables
 }
