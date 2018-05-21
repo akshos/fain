@@ -137,7 +137,7 @@ public class PAccountBooks extends javax.swing.JInternalFrame{
         toDate = UtilityFuncs.dateUserToSql(toDate);
         
         final String dateFrom = fromDate;
-        final String dateTo = dateFrom;
+        final String dateTo = toDate;
         final String paper = this.paperCbox.getSelectedItem().toString();
         final String orientation = this.orientationCbox.getSelectedItem().toString();
         Thread t;
