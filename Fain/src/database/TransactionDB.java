@@ -142,7 +142,7 @@ public final class TransactionDB {
                 + "printf(\"%.2f\", t.amount) as 'Amount', t.narration as 'Narration' from transactions as t, "
                 + "branch as b, master as mdebit, master mcredit "
                 + "where t.branch=b.branchId and t.credit=mcredit.accountNo and t.debit=mdebit.accountNo "
-                + "and t.date<'" + date + "' order by t.date asc;";
+                + "and t.date='" + date + "' order by t.date asc;";
 	TableModel table = null;
         ResultSet rs = null;
 	try{

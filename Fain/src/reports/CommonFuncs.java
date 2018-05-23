@@ -37,8 +37,8 @@ import javax.swing.JOptionPane;
  * @author akshos
  */
 public class CommonFuncs {
-    private static final Font nameFont = new Font(Font.FontFamily.COURIER, 22);
-    private static final Font addressFont = new Font(Font.FontFamily.COURIER, 11);
+    private static final Font nameFont = new Font(Font.FontFamily.HELVETICA, 22);
+    private static final Font addressFont = new Font(Font.FontFamily.HELVETICA, 11);
     
     public static final Font titleFont = new Font(Font.FontFamily.COURIER, 14, Font.BOLD);
     public static final Font subTitleFont = new Font(Font.FontFamily.COURIER, 12);

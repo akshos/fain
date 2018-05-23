@@ -98,15 +98,17 @@ public class PStatements extends javax.swing.JInternalFrame{
         String branchCode = this.branchTbox.getText().trim();
         if(branchCode.isEmpty()){
             branchCode = "All";
+            accountData = MasterDB.getAccountHead(dbConnection.getStatement());
+        }else{
+            accountData = CustomerDB.getCustomersInBranch(this.dbConnection.getStatement(), branchCode);
         }
-        accountData = CustomerDB.getCustomersInBranch(this.dbConnection.getStatement(), branchCode);
     }
     
     private boolean validateAccount(){
         String accCode = this.accountTbox.getText();
         if(accCode.isEmpty())
             return true;
-        String accName = CustomerDB.getCustomerName(dbConnection.getStatement(), accCode);
+        String accName = MasterDB.getAccountHead(dbConnection.getStatement(), accCode);
         if(accName != null){
             this.accountNameLabel.setText(accName);
             return true;

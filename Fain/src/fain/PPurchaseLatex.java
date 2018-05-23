@@ -104,7 +104,7 @@ public class PPurchaseLatex extends javax.swing.JInternalFrame{
         
         String account = this.accountTbox.getText().trim();
         if(account.isEmpty()){
-            account = accountData[0][0];
+            account = "All";
         }else if(!validateAccount()){
             JOptionPane.showMessageDialog(this, "Please enter a valid Account From", "No Account", JOptionPane.WARNING_MESSAGE);
             return;

@@ -89,15 +89,15 @@ public class Statements {
         return ret;
     }
     
-    private static double calculatePreviousBalance(DBConnection con, String fromDate, String cashAccountId){
+    private static double calculatePreviousBalance(DBConnection con, String fromDate, String accountId){
         double debit, credit;
         debit = credit = 0.0;
         ResultSet rs = TransactionDB.getTransactionsBeforeDateRS(con.getStatement(), fromDate);
         try{
             while(rs.next()){
-                if(rs.getString("debit").compareTo(cashAccountId) == 0){
+                if(rs.getString("debit").compareTo(accountId) == 0){
                     debit += rs.getDouble("amount");
-                }else if(rs.getString("credit").compareTo(cashAccountId) == 0){
+                }else if(rs.getString("credit").compareTo(accountId) == 0){
                     credit += rs.getDouble("amount");
                 }
             }

@@ -1097,11 +1097,14 @@ public class Main extends javax.swing.JFrame {
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_RIGHT){
             System.out.println("Right Arrow");
             UtilityFuncs.click(this.fileMenu, 10, 10);
+            evt.consume();
         }
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_LEFT){
             System.out.println("Left Arrow");
             UtilityFuncs.click(this.editMenu, 10, 10);
+            evt.consume();
         }
+        
     }//GEN-LAST:event_mainDesktopPaneKeyPressed
 
     private void pPurchaseLatexMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pPurchaseLatexMenuItemActionPerformed
