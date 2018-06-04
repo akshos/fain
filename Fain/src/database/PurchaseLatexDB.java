@@ -99,7 +99,7 @@ public final class PurchaseLatexDB {
                 + "printf(\"%.3f\", l.drc) as 'DRC', printf(\"%.3f\", l.dryRubber) as 'Dry Rubber', "
                 + "printf(\"%.2f\", l.rate) as 'Rate' , printf(\"%.2f\", l.value) as 'Value' from "
                 + "purchaseLatex as l, branch as b, customer as c where l.party=c.customerCode and "
-                + "l.branch=b.branchId;";
+                + "l.branch=b.branchId order by cast(l.prBill as INTEGER) asc;";
 	
         TableModel table = null;
         ResultSet rs = null;
@@ -118,7 +118,7 @@ public final class PurchaseLatexDB {
                 + "printf(\"%.3f\", l.drc) as 'DRC', printf(\"%.3f\", l.dryRubber) as 'Dry Rubber', "
                 + "printf(\"%.2f\", l.rate) as 'Rate' , printf(\"%.2f\", l.value) as 'Value' from "
                 + "purchaseLatex as l, branch as b, customer as c where l.party=c.customerCode and "
-                + "l.branch=b.branchId and l.date='" + date + "' ;";
+                + "l.branch=b.branchId and l.date='" + date + "' order by cast(l.prBill as INTEGER) asc;";
 	
         TableModel table = null;
         ResultSet rs = null;
@@ -137,7 +137,7 @@ public final class PurchaseLatexDB {
                 + "printf(\"%.3f\", l.drc) as 'DRC', printf(\"%.3f\", l.dryRubber) as 'Dry Rubber', "
                 + "printf(\"%.2f\", l.rate) as 'Rate' , printf(\"%.2f\", l.value) as 'Value' from "
                 + "purchaseLatex as l, branch as b, customer as c where l.party=c.customerCode and "
-                + "l.branch=b.branchId and l.party='" + party + "' ;";
+                + "l.branch=b.branchId and l.party='" + party + "' order by cast(l.prBill as INTEGER) asc;";
 	
         TableModel table = null;
         ResultSet rs = null;
@@ -156,7 +156,7 @@ public final class PurchaseLatexDB {
                 + "printf(\"%.3f\", l.drc) as 'DRC', printf(\"%.3f\", l.dryRubber) as 'Dry Rubber', "
                 + "printf(\"%.2f\", l.rate) as 'Rate' , printf(\"%.2f\", l.value) as 'Value' from "
                 + "purchaseLatex as l, branch as b, customer as c where l.prBill='" + bill + "' and l.party=c.customerCode and "
-                + "l.branch=b.branchId ;";
+                + "l.branch=b.branchId order by cast(l.prBill as INTEGER) asc ;";
 	
         TableModel table = null;
         ResultSet rs = null;
@@ -278,7 +278,7 @@ public final class PurchaseLatexDB {
         if(party.compareTo("All") != 0){
             sql += "and party ='" + party + "' ";
         }
-        sql += " order by date asc;";
+        sql += " order by cast(prBill as INTEGER) asc;";
         try{
             return stmt.executeQuery(sql);
         }catch(SQLException se){
@@ -294,7 +294,7 @@ public final class PurchaseLatexDB {
         if(party.compareTo("All") != 0){
             sql += "and party ='" + party + "' ";
         }
-        sql += " order by date asc;";
+        sql += " order by cast(prBill as INTEGER) asc;";
         try{
             return stmt.executeQuery(sql);
         }catch(SQLException se){
@@ -304,7 +304,7 @@ public final class PurchaseLatexDB {
     }
     
     public static String[] getPurchaseDatesRange(Statement stmt, String from, String to, String party){
-        String sql = "select date from purchaseLatex where party='"+party+"' and date>='"+from+"' and date<='"+to+"' order by date asc;";
+        String sql = "select date from purchaseLatex where party='"+party+"' and date>='"+from+"' and date<='"+to+"' order by cast(prBill as INTEGER) asc;";
         try{
             ResultSet rs = stmt.executeQuery(sql);
             return ResultSetToStringArray.getStringArray1col(rs);
@@ -315,7 +315,7 @@ public final class PurchaseLatexDB {
     }
     
     public static ResultSet getPurchasesOnDateForParty(Statement stmt, String date, String party){
-        String sql = "select * from purchaseLatex where party='"+party+"' and date='"+date+"' ;";
+        String sql = "select * from purchaseLatex where party='"+party+"' and date='"+date+"' order by cast(prBill as INTEGER) asc ;";
         try{
             return stmt.executeQuery(sql);
         }catch(SQLException se){

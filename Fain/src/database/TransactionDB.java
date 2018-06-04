@@ -392,4 +392,18 @@ public final class TransactionDB {
         }
     }
     
+    public static int checkBranchCodePresent(Statement stmt, String branchCode){
+        String sql = "select * from transactions where branch='"+branchCode+"' ;";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next()){
+                return Codes.EXISTING_ENTRY;
+            }else{
+                return Codes.NOT_EXISTS;
+            }
+        }catch(SQLException se){
+            se.printStackTrace();
+            return Codes.FAIL;
+        }
+    }
 }

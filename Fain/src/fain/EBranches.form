@@ -144,6 +144,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="F3: Delete"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteButtonActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="findButton">
           <Properties>

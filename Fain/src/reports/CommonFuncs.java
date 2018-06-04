@@ -128,17 +128,21 @@ public class CommonFuncs {
             if(paper.compareTo("A4") == 0){
                 if(orientation.compareTo("Portrait") == 0){
                     doc.setPageSize(PageSize.A4);
+                    System.out.println("A4 Portrait");
                 }
                 else{
                     doc.setPageSize(PageSize.A4.rotate());
+                    System.out.println("A4 Landscape");
                 }
             }
             else if(paper.compareTo("Legal") == 0){
                 if(orientation.compareTo("Portrait") == 0){
                     doc.setPageSize(PageSize.LEGAL);
+                    System.out.println("Legal Portrait");
                 }
                 else{
                     doc.setPageSize(PageSize.LEGAL.rotate());
+                    System.out.println("Legal Landscape");
                 }
             }
             doc.setMargins(1, 1, 130, 20);

@@ -263,6 +263,7 @@ public class PartyWiseStatement {
                     totalDry += dryWt;
                     totalRate += rate;
                     totalValue += value;
+                    balance += value;
                 }
                 advanced = false;
                 rs = TransactionDB.getTransactionsOnDateForDebitId(con.getStatement(), date, accId);

@@ -7,8 +7,11 @@ package fain;
 
 import database.DBConnection;
 import database.BranchDB;
+import database.CustomerDB;
+import database.TransactionDB;
 import java.awt.Dimension;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
@@ -103,6 +106,36 @@ public class EBranches extends javax.swing.JInternalFrame implements RefreshOpti
             item.setSize(790, 470);
         }
         mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }
+    
+    private void deleteEntry(){
+        int row = this.dataTable.getSelectedRow();
+        String branchCode = this.dataTable.getModel().getValueAt(row, 0).toString();
+        String branchName = this.dataTable.getModel().getValueAt(row, 1).toString();
+        int ret = TransactionDB.checkBranchCodePresent(dbConnection.getStatement(), branchCode);
+        if(ret == Codes.EXISTING_ENTRY){
+            JOptionPane.showMessageDialog(this, "This Branch Cannot be deleted", "CANNOT DELETE", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if(ret == Codes.FAIL){
+            JOptionPane.showMessageDialog(this, "Cannot check transactions. Cannot delete.", "CANNOT DELETE", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        ret = CustomerDB.checkBranchCodePresent(dbConnection.getStatement(), branchCode);
+        if(ret == Codes.EXISTING_ENTRY){
+            JOptionPane.showMessageDialog(this, "This Branch Cannot be deleted", "CANNOT DELETE", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if(ret == Codes.FAIL){
+            JOptionPane.showMessageDialog(this, "Cannot check transactions. Cannot delete.", "CANNOT DELETE", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        ret = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete " + branchName, "SURE?", JOptionPane.WARNING_MESSAGE);
+        if(ret != JOptionPane.YES_OPTION){
+            return;
+        }
+        BranchDB.delete(dbConnection.getStatement(), branchCode);
+        this.updateTable();
     }
     
     /**
@@ -421,6 +454,11 @@ public class EBranches extends javax.swing.JInternalFrame implements RefreshOpti
 
         deleteButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         deleteButton.setText("F3: Delete");
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
         lowerPanel.add(deleteButton);
 
         findButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -472,7 +510,7 @@ public class EBranches extends javax.swing.JInternalFrame implements RefreshOpti
             this.updateTable();
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F3){
-        
+            this.deleteEntry();
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F5){
         
@@ -500,6 +538,10 @@ public class EBranches extends javax.swing.JInternalFrame implements RefreshOpti
     private void keyPressedHandler(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyPressedHandler
 
     }//GEN-LAST:event_keyPressedHandler
+
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+        this.deleteEntry();        // TODO add your handling code here:
+    }//GEN-LAST:event_deleteButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -93,7 +93,7 @@ public final class SalesDB {
                 + "printf(\"%.3f\", s.quantity) as 'Quantity', printf(\"%.3f\", s.drc) as 'DRC', "
                 + "printf(\"%.3f\", s.dryRubber) as 'Dry Rubber', printf(\"%.2f\", s.rate) as 'Rate', "
                 + "printf(\"%.2f\", s.value) as 'Value' from sales as s, branch as b, customer as c where "
-                + "s.branch=b.branchId and s.party=c.customerCode order by s.date asc;";
+                + "s.branch=b.branchId and s.party=c.customerCode order by s.date asc, cast(s.billNo as INTEGER) asc;";
 	TableModel table = null;
         ResultSet rs = null;
 	try{
@@ -112,7 +112,7 @@ public final class SalesDB {
                 + "printf(\"%.3f\", s.quantity) as 'Quantity', printf(\"%.3f\", s.drc) as 'DRC', "
                 + "printf(\"%.3f\", s.dryRubber) as 'Dry Rubber', printf(\"%.2f\", s.rate) as 'Rate', "
                 + "printf(\"%.2f\", s.value) as 'Value' from sales as s, branch as b, customer as c where "
-                + "s.branch=b.branchId and s.party=c.customerCode and s.billNo=" + bill + "' order by s.date asc;";
+                + "s.branch=b.branchId and s.party=c.customerCode and s.billNo=" + bill + "' order by s.date asc, cast(s.billNo as INTEGER) asc;";
 	TableModel table = null;
         ResultSet rs = null;
 	try{
@@ -131,7 +131,7 @@ public final class SalesDB {
                 + "printf(\"%.3f\", s.quantity) as 'Quantity', printf(\"%.3f\", s.drc) as 'DRC', "
                 + "printf(\"%.3f\", s.dryRubber) as 'Dry Rubber', printf(\"%.2f\", s.rate) as 'Rate', "
                 + "printf(\"%.2f\", s.value) as 'Value' from sales as s, branch as b, customer as c where "
-                + "s.branch=b.branchId and s.party=c.customerCode and s.date='" + date + "' order by d.date asc;";
+                + "s.branch=b.branchId and s.party=c.customerCode and s.date='" + date + "' order by s.date asc, cast(s.billNo as INTEGER) asc;";
 	TableModel table = null;
         ResultSet rs = null;
 	try{
@@ -150,7 +150,7 @@ public final class SalesDB {
                 + "printf(\"%.3f\", s.quantity) as 'Quantity', printf(\"%.3f\", s.drc) as 'DRC', "
                 + "printf(\"%.3f\", s.dryRubber) as 'Dry Rubber', printf(\"%.2f\", s.rate) as 'Rate', "
                 + "printf(\"%.2f\", s.value) as 'Value' from sales as s, branch as b, customer as c where "
-                + "s.branch=b.branchId and s.party=c.customerCode and s.party='" + account + "' order by s.date asc;";
+                + "s.branch=b.branchId and s.party=c.customerCode and s.party='" + account + "' order by s.date asc, cast(s.billNo as INTEGER) asc;";
 	TableModel table = null;
         ResultSet rs = null;
 	try{

@@ -168,7 +168,7 @@ public class ListOfAccounts {
                     
                     debitTotal += currentBalance;
                     pageDebitTotal += currentBalance;
-                }else if(currentBalance < 0){
+                }else if(currentBalance <= 0){
                     addTableRow(table, (PdfPCell.NO_BORDER),
                         CommonFuncs.tableBoldFont, accNo, accHead, 
                         "", new DecimalFormat("##,##,##0.00").format(Math.abs(currentBalance)));

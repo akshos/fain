@@ -10,6 +10,7 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.TableModel;
+import utility.Codes;
 
 /**
  *
@@ -196,5 +197,20 @@ public final class CustomerDB {
             se.printStackTrace();
         }
         return null;
+    }
+    
+    public static int checkBranchCodePresent(Statement stmt, String branchCode){
+        String sql = "select * from customer where branch='"+branchCode+"' ;";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next()){
+                return Codes.EXISTING_ENTRY;
+            }else{
+                return Codes.NOT_EXISTS;
+            }
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return Codes.FAIL;
     }
 }
