@@ -262,7 +262,6 @@ public class CommonFuncs {
             while(rs.next()){
                 creditAcc = accounts.get(rs.getString("credit"));
                 debitAcc = accounts.get(rs.getString("debit"));
-                
                 amount = rs.getDouble("amount");
                 creditAcc.addCredit(amount);
                 debitAcc.addDebit(amount);
@@ -297,7 +296,7 @@ public class CommonFuncs {
         ret = updateMaster(con, date);
         if(!ret) return ret;
         
-        ret = updateStockAccount(con, date);
+        //ret = updateStockAccount(con, date);
         return ret;
     }
 }

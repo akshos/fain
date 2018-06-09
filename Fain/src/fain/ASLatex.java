@@ -250,8 +250,8 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         
         String tid = TransactionDB.generateTid();
         
-        String purchaseAccount = StockDB.getLatexPurchaseAccount(dbConnection.getStatement());
-        if(purchaseAccount.compareTo("none") == 0){
+        String salesAccount = StockDB.getLatexSalesAccount(dbConnection.getStatement());
+        if(salesAccount.compareTo("none") == 0){
             int ret = JOptionPane.showConfirmDialog(this, "Item 'Latex' was not found in stock", "No stock Latex", JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -270,7 +270,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
             tid = SalesDB.getTidFromSid(stmt, editId);
             String narration = "SALE OF LATEX (BILL #" + bill +")";
             
-            ret = TransactionDB.updateByTid(stmt,date, branch, party, purchaseAccount, value, narration, tid);
+            ret = TransactionDB.updateByTid(stmt,date, branch, party, salesAccount, value, narration, tid);
             if(!ret){
                 JOptionPane.showMessageDialog(this, "Failed to update Transaction", "Failed", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -287,7 +287,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         
             String narration = "SALE OF LATEX (BILL #" + bill +")";
         
-            ret = TransactionDB.insert(stmt, date, branch, party, purchaseAccount, value, narration, tid);
+            ret = TransactionDB.insert(stmt, date, branch, party, salesAccount, value, narration, tid);
             if(!ret){
                 JOptionPane.showMessageDialog(this, "Failed to add Transaction", "Failed", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -315,6 +315,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
     }
     
     private boolean chechPrBill(){
+        /* remove only the comments to re enable pr bill duplication checks
         String billNo = this.prBillTbox.getText();
         if(this.mode == Codes.EDIT && billNo.compareTo(this.prevBillNo) == 0){
             return true;
@@ -328,6 +329,7 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
             return false;
         }
         this.billnumberLabel.setText("<html>Bill No.</html>");
+        */
         return true;
     }
     
@@ -649,7 +651,6 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(drcTbox);
 
-        dryRubberTbox.setEditable(false);
         dryRubberTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,###.000"))));
         dryRubberTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         dryRubberTbox.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -691,7 +692,6 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(rateTbox);
 
-        valueTbox.setEditable(false);
         valueTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,##0.00"))));
         valueTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         valueTbox.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -833,7 +833,6 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
 
     private void dryRubberTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_dryRubberTboxFocusGained
         this.dryRubberTbox.selectAll();
-        this.dryRubberTbox.transferFocus();
     }//GEN-LAST:event_dryRubberTboxFocusGained
 
     private void rateTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_rateTboxFocusGained
@@ -842,7 +841,6 @@ public class ASLatex extends javax.swing.JInternalFrame implements RefreshOption
 
     private void valueTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_valueTboxFocusGained
         this.valueTbox.selectAll();
-        this.valueTbox.transferFocus();
     }//GEN-LAST:event_valueTboxFocusGained
 
     private void formInternalFrameClosing(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosing

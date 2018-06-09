@@ -176,6 +176,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
     }
     
     private boolean chechPrBill(){
+        /* remove only the comments to re enable pr bill duplication checks
         String billNo = this.prBillTbox.getText();
         if(billNo.compareTo("") == 0){
             this.prbillLabel.setText("<html>Pr. Bill <span style=\"color:red\">Empty</span></html>");
@@ -186,6 +187,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
             return false;
         }
         this.prbillLabel.setText("<html>Pr. Bill</html>");
+        */
         return true;
     }
     
@@ -610,7 +612,6 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(drcTbox);
 
-        dryRubberTbox.setEditable(false);
         dryRubberTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,##0.000"))));
         dryRubberTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         dryRubberTbox.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -652,7 +653,6 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         });
         rightInerPannel.add(rateTbox);
 
-        valueTbox.setEditable(false);
         valueTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,##0.000"))));
         valueTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         valueTbox.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -748,13 +748,11 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
     }//GEN-LAST:event_valueTboxActionPerformed
 
     private void dryRubberTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_dryRubberTboxFocusGained
-        calculateDryRubber();
-        this.dryRubberTbox.transferFocus();
+        this.dryRubberTbox.selectAll();
     }//GEN-LAST:event_dryRubberTboxFocusGained
 
     private void valueTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_valueTboxFocusGained
-        calculateValue();
-        this.valueTbox.transferFocus();
+        this.valueTbox.selectAll();
     }//GEN-LAST:event_valueTboxFocusGained
 
     private void prBillTboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_prBillTboxFocusLost

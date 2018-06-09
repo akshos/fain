@@ -203,6 +203,20 @@ public final class StockDB {
         return null;
     }
     
+    public static String getLatexSalesAccount(Statement stmt){
+        String sql = "select saleAC from stock where itemName='Latex';";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            if( rs.next() )
+                return rs.getString(1);
+            else
+                return "none";
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
+    
     public static String getStockAccByName(Statement stmt, String name){
         String sql = "select stockAC from stock where itemName='"+name+"' ;";
         try{
