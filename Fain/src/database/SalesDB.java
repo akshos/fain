@@ -257,4 +257,15 @@ public final class SalesDB {
             return Codes.FAIL;
         }
     }
+    
+    public static ResultSet getSalesBetweenIncDatesRS(Statement stmt, String fromDate, String toDate){
+        String sql = "select date, billNo, accountHead, diff, quantity, drc, dryRubber, rate, value from "
+                + "sales, master where sales.party=master.accountNo and date<='"+toDate+"' and date>='"+fromDate+"' order by cast(billNo as INTEGER) asc;";
+        try{
+            return stmt.executeQuery(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
 }
