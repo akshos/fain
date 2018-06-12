@@ -261,6 +261,12 @@ public class ProfitLossBalanceSheet {
         double incomeTotal = 0.0;
         double expenseTotal = 0.0;
         
+        if(grossIncome < 0){
+            incomeTotal += grossIncome;
+        }else{
+            expenseTotal += grossIncome;
+        }
+        
         ResultSet rs;
         
         try{
@@ -288,14 +294,14 @@ public class ProfitLossBalanceSheet {
             
             addTableRow(table, (PdfPCell.TOP|PdfPCell.BOTTOM),
                         CommonFuncs.tableContentFont, "", "TOTALS",
-                        new DecimalFormat("##,##,##0.00").format(expenseTotal), 
+                        new DecimalFormat("##,##,##0.00").format(Math.abs(expenseTotal)), 
                         new DecimalFormat("##,##,##0.00").format(Math.abs(incomeTotal)));
             
             double balance = incomeTotal + expenseTotal;
             if(balance < 0){
             addTableRow(table, (PdfPCell.TOP|PdfPCell.BOTTOM),
                         CommonFuncs.tableContentFont, "", "NET PROFIT",
-                        "", new DecimalFormat("##,##,##0.00").format(balance));
+                        "", new DecimalFormat("##,##,##0.00").format(Math.abs(balance)));
             }else{
                 addTableRow(table, (PdfPCell.TOP|PdfPCell.BOTTOM),
                             CommonFuncs.tableContentFont, "", "NET LOSS",
