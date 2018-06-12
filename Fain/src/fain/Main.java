@@ -300,6 +300,7 @@ public class Main extends javax.swing.JFrame {
         pProfitLossBLMenuItem = new javax.swing.JMenuItem();
         pListOfAccountsMenuItem = new javax.swing.JMenuItem();
         pPartyWiseStatement = new javax.swing.JMenuItem();
+        pSalesLatexMenuItem = new javax.swing.JMenuItem();
         pPurchaseLatexMenuItem = new javax.swing.JMenuItem();
         expensesMenuItem = new javax.swing.JMenuItem();
         optionsMenu = new javax.swing.JMenu();
@@ -655,6 +656,15 @@ public class Main extends javax.swing.JFrame {
             }
         });
         printingMenu.add(pPartyWiseStatement);
+
+        pSalesLatexMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        pSalesLatexMenuItem.setText("Sales Latex");
+        pSalesLatexMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pSalesLatexMenuItemActionPerformed(evt);
+            }
+        });
+        printingMenu.add(pSalesLatexMenuItem);
 
         pPurchaseLatexMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         pPurchaseLatexMenuItem.setText("Purchase Latex");
@@ -1139,6 +1149,17 @@ public class Main extends javax.swing.JFrame {
         }
         addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_pListOfAccountsMenuItemActionPerformed
+
+    private void pSalesLatexMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pSalesLatexMenuItemActionPerformed
+        PSalesLatexReport item = new PSalesLatexReport(dbConnection, this, this.level+1);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }//GEN-LAST:event_pSalesLatexMenuItemActionPerformed
     
     /**
      * @param item the internal frame to be added to desktop pane
@@ -1240,6 +1261,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem pPartyWiseStatement;
     private javax.swing.JMenuItem pProfitLossBLMenuItem;
     private javax.swing.JMenuItem pPurchaseLatexMenuItem;
+    private javax.swing.JMenuItem pSalesLatexMenuItem;
     private javax.swing.JMenuItem pTrialBalanceMenuItem;
     private javax.swing.JMenu printingMenu;
     private javax.swing.JMenuItem sessionInfoMenuItem;
