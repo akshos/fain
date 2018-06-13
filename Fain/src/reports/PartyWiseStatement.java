@@ -117,6 +117,7 @@ public class PartyWiseStatement {
         return ret;
     }
     
+    //Calculate net balance from transactions before the start date (fromDate)
     private static boolean calculateBalance(DBConnection con, LinkedHashMap<String, Account> accounts, String fromDate, String toDate){
         String debitAcc, creditAcc;
         double amount;
@@ -226,11 +227,19 @@ public class PartyWiseStatement {
         boolean advanced = false;
         
         double balance = acc.balance;
+        //Add the opening balance of the account to the balance calculated from previous transactions
+        balance += MasterDB.getOpeningBalance(con.getStatement(), accId);
+        
         double advance = 0.0;
         
         double amount;
         String partyCode, partyName, bill;
         double qnty, drc, dryWt, rate, value;
+        
+        addTableRow(table, (PdfPCell.LEFT|PdfPCell.RIGHT),
+                                CommonFuncs.tableContentFont, "",
+                                "", "", "", "", "", "", "",
+                                new DecimalFormat("##,##,##0.00").format(balance));
         
         String[] dates = TransactionDB.getTrasnsationDatesBetweenIncDatesIdRS(con.getStatement(), fromDate, toDate, accId);
         if(dates == null){
@@ -297,13 +306,9 @@ public class PartyWiseStatement {
                                 new DecimalFormat("##,##,##0.000").format(totalDry),
                                 new DecimalFormat("##,##,##0.00").format(avgRate), 
                                 new DecimalFormat("##,##,##0.00").format(totalValue), 
-                                "", "");
+                                new DecimalFormat("##,##,##0.00").format(advance), 
+                                new DecimalFormat("##,##,##0.00").format(balance));
             
-            
-            addTableRow(table, (PdfPCell.TOP|PdfPCell.BOTTOM|PdfPCell.LEFT|PdfPCell.RIGHT),
-                                CommonFuncs.tableBoldFont,"",
-                                "", "", "", "", "", "",
-                                new DecimalFormat("##,##,##0.00").format(advance), "");
             
         }catch(Exception e){
             e.printStackTrace();

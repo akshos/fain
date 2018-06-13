@@ -257,16 +257,11 @@ public class SalesLatexReport {
             int base = 10;
             
             Phrase title = new Phrase("SALES LATEX REPORT", CommonFuncs.titleFont);
-            Phrase branch = new Phrase(sbranchName + " (" + sbranch + ")", CommonFuncs.subTitleFont);
             Phrase accounts = new Phrase("From : " + sfromDate + " To : " + stoDate, CommonFuncs.subTitleFont);
             ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
                     title,
                     (document.right() - document.left()) / 2 + document.leftMargin(),
-                    document.top() + base + 35, 0);
-            ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
-                    branch,
-                    (document.right() - document.left()) / 2 + document.leftMargin(),
-                    document.top() + base + 20, 0);
+                    document.top() + base + 30, 0);
             ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
                     accounts,
                     (document.right() - document.left()) / 2 + document.leftMargin(),
