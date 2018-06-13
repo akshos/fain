@@ -113,11 +113,31 @@ public final class Tables {
             + "address      varchar(200),"
             + "branch       varchar(20),"
             + "kgst         varchar(20),"
-            + "rbno         varchar(20));";
+            + "rbno         varchar(20)"
+            + "contact      varchar(20)"
+            + "barrels      int);";
     
     public static final String category = "create table category("
             + "code varchar(10) primary key,"
             + "name varchar(20));";
+    
+    public static final String barrel= "create table barrel("
+            + "barrelId integer primary key autoincrement,"
+            + "branch varchar(20),"
+            + "customerCode varchar(20),"
+            + "date date,"
+            + "stock int,"
+            + "issued int,"
+            + "lifted int,"
+            + "difference int);";
+    public static final String barrelDetails = "create table barrelDetails("
+            + "barrelDetailsId int primary key,"
+            + "companyTotal int,"
+            + "companyShortage int,"
+            + "customerIssued int,"
+            + "latexBarrel int,"
+            + "emptyBarrel int);";
+            
     
     public static void createTables(Statement stmt){
         System.out.println("Creating tables");
@@ -134,6 +154,11 @@ public final class Tables {
             stmt.execute(branchTable);
             stmt.execute(customerTable);
             stmt.execute(category);
+            stmt.execute(barrel);
+            stmt.execute(barrelDetails);
+            String branchDetailsSql="insert into branchDetails values(1,0,0,0,0,0);";
+            stmt.execute(branchDetailsSql);
+            
             CategoryDB.insert(stmt,"Asset","AS");
             CategoryDB.insert(stmt,"Liability","LI");
             CategoryDB.insert(stmt,"Share Capital","SH");

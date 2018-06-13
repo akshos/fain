@@ -17,13 +17,14 @@ import utility.Codes;
  * @author lenovo
  */
 public final class CustomerDB {
-    public static boolean insert(Statement stmt, String code, String name, String address,String branch, String kgst,String rbno ){
+    public static boolean insert(Statement stmt, String code, String name, String address,String branch, String kgst,String rbno,String contact ){
         String in ="insert into customer values('"      +code           +"','"
                                                         +name           + "','"
                                                         +address        + "','"
                                                         +branch       +"','"
                                                         +kgst           + "','"
-                                                        +rbno           + "')";
+                                                        +rbno           + "','"
+                                                        +contact        + "',0);";
         try{
             stmt.execute(in);
         }
@@ -34,12 +35,13 @@ public final class CustomerDB {
         return true;
     }
     
-    public static boolean update(Statement stmt, String code, String name, String address, String branch, String kgst,String rbno ){
+    public static boolean update(Statement stmt, String code, String name, String address, String branch, String kgst,String rbno,String contact ){
         String sql = "update customer set name='" + name + "', "
                 + "address='" + address + "', "
                 + "branch='" + branch + "', "
                 + "kgst='" + kgst + "', "
-                + "rbno='" + rbno + "' "
+                + "rbno='" + rbno + "',"
+                + "contact=' "+contact+"'"
                 + "where customerCode='" + code + "';";
         try{
             stmt.executeUpdate(sql);
@@ -109,7 +111,7 @@ public final class CustomerDB {
     
     public static TableModel getTable(Statement stmt){
         String sqlQuery = "select c.customerCode as 'ID', c.name as 'Name', c.address as 'Address', "
-                + "b.name AS 'Branch', c.kgst as 'GST', c.rbno as 'RBNO' from customer as c, branch as b "
+                + "b.name AS 'Branch', c.kgst as 'GST', c.rbno as 'RBNO',c.contact as 'Contact' from customer as c, branch as b "
                 + "where c.branch=b.branchId order by customerCode asc;";
 	TableModel table = null;
         ResultSet rs = null;
