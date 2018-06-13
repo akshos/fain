@@ -49,5 +49,6 @@ public final class Codes {
     public static int REFRESH_TRANSACTION = 40;
     public static int REFRESH_CATEGORY =  41;
     public static int REFRESH_ITEMS = 42;
+    public static int REFRESH_BARREL = 43;
     public static int CUSTOMER_ADDED = 41;
 }
