@@ -165,7 +165,7 @@ public class SalesLatexReport {
         double valueTotal = 0.0;
         double dryWtTotal = 0.0;
         double qntyTotal = 0.0;
-        int barrelsTotal = 0;
+        int barrelTotal = 0;
         
         double drc = 0.0;
         String date;
@@ -203,12 +203,13 @@ public class SalesLatexReport {
                 qntyTotal += qnty;
                 dryWtTotal += dryWt;
                 valueTotal += value;
-                barrelsTotal += barrels;
+                barrelTotal += barrels;
             }
             
             drc = (100*dryWtTotal/qntyTotal);
             addTableRow(table, (PdfPCell.TOP|PdfPCell.BOTTOM), 
-                            CommonFuncs.tableContentFont, "", "", "", "",
+                            CommonFuncs.tableContentFont, "", "", "", 
+                            new DecimalFormat("##,##,##0").format(barrelTotal),
                             new DecimalFormat("##,##,##0.000").format(qntyTotal), 
                         new DecimalFormat("##,##,##0.000").format(drc), 
                         new DecimalFormat("##,##,##0.000").format(dryWtTotal), 
