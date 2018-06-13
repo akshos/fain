@@ -163,23 +163,36 @@ public class BarrelSummary extends javax.swing.JInternalFrame implements Refresh
         businessPanel = new javax.swing.JPanel();
         businessAccountLabel = new javax.swing.JLabel();
         businessSummaryPanel = new javax.swing.JPanel();
+        leftPanel = new javax.swing.JPanel();
+        spacerPanel1 = new javax.swing.JPanel();
+        labelPanel = new javax.swing.JPanel();
         businessTotelLabel = new javax.swing.JLabel();
-        businessTotelTbox = new javax.swing.JTextField();
         businessShortageLabel = new javax.swing.JLabel();
-        businessShortageTbox = new javax.swing.JTextField();
         businessTotalLabel = new javax.swing.JLabel();
+        inputPanel = new javax.swing.JPanel();
+        businessShortageTbox = new javax.swing.JTextField();
+        spacesLabel1 = new javax.swing.JLabel();
         businessTotalTbox = new javax.swing.JTextField();
+        spacesLabel2 = new javax.swing.JLabel();
+        businessTotelTbox = new javax.swing.JTextField();
         customerPanel = new javax.swing.JPanel();
         customerAccountPanel = new javax.swing.JLabel();
         customerSummaryPanel = new javax.swing.JPanel();
+        rightPanel = new javax.swing.JPanel();
+        spacerPanel2 = new javax.swing.JPanel();
+        labelPanel2 = new javax.swing.JPanel();
         customerTotalIssuesLabel = new javax.swing.JLabel();
-        customerTotalIssuedTbox = new javax.swing.JTextField();
         customerLatexBarrelLabel = new javax.swing.JLabel();
+        emptyBarrelLabel = new javax.swing.JLabel();
+        customerTotalLabel = new javax.swing.JLabel();
+        inputPanel2 = new javax.swing.JPanel();
+        customerTotalIssuedTbox = new javax.swing.JTextField();
+        spacerLabel4 = new javax.swing.JLabel();
         customerLatexBarrelTbox = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        spacerLabel5 = new javax.swing.JLabel();
+        emptyBarrelsTbox = new javax.swing.JTextField();
+        spacerLabel6 = new javax.swing.JLabel();
+        customerTotalTbox = new javax.swing.JTextField();
         jInternalFrame1 = new javax.swing.JInternalFrame();
         upperPanel1 = new javax.swing.JPanel();
         tableScrollPane1 = new javax.swing.JScrollPane();
@@ -521,31 +534,55 @@ public class BarrelSummary extends javax.swing.JInternalFrame implements Refresh
 
         businessPanel.setLayout(new java.awt.BorderLayout());
 
-        businessAccountLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        businessAccountLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         businessAccountLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         businessAccountLabel.setText("BUSINESS ACCOUNT");
         businessAccountLabel.setPreferredSize(new java.awt.Dimension(137, 30));
         businessPanel.add(businessAccountLabel, java.awt.BorderLayout.PAGE_START);
 
-        businessSummaryPanel.setLayout(new java.awt.GridLayout(3, 0, 0, 10));
+        businessSummaryPanel.setLayout(new java.awt.GridLayout(1, 2, 0, 10));
 
-        businessTotelLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        leftPanel.setLayout(new java.awt.GridLayout(1, 2));
+        leftPanel.add(spacerPanel1);
+
+        labelPanel.setLayout(new java.awt.GridLayout(3, 0));
+
+        businessTotelLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         businessTotelLabel.setText("TOTEL :");
         businessTotelLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 5, 1, 1));
-        businessSummaryPanel.add(businessTotelLabel);
-        businessSummaryPanel.add(businessTotelTbox);
+        labelPanel.add(businessTotelLabel);
 
-        businessShortageLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        businessShortageLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         businessShortageLabel.setText("SHORTAGE :");
         businessShortageLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 5, 1, 1));
-        businessSummaryPanel.add(businessShortageLabel);
-        businessSummaryPanel.add(businessShortageTbox);
+        labelPanel.add(businessShortageLabel);
 
-        businessTotalLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        businessTotalLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         businessTotalLabel.setText("TOTAL :");
         businessTotalLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 5, 1, 1));
-        businessSummaryPanel.add(businessTotalLabel);
-        businessSummaryPanel.add(businessTotalTbox);
+        labelPanel.add(businessTotalLabel);
+
+        leftPanel.add(labelPanel);
+
+        businessSummaryPanel.add(leftPanel);
+
+        inputPanel.setLayout(new java.awt.GridLayout(3, 2, 0, 10));
+
+        businessShortageTbox.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        businessShortageTbox.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        inputPanel.add(businessShortageTbox);
+        inputPanel.add(spacesLabel1);
+
+        businessTotalTbox.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        businessTotalTbox.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        inputPanel.add(businessTotalTbox);
+        inputPanel.add(spacesLabel2);
+
+        businessTotelTbox.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        businessTotelTbox.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        inputPanel.add(businessTotelTbox);
+
+        businessSummaryPanel.add(inputPanel);
 
         businessPanel.add(businessSummaryPanel, java.awt.BorderLayout.CENTER);
 
@@ -553,37 +590,61 @@ public class BarrelSummary extends javax.swing.JInternalFrame implements Refresh
 
         customerPanel.setLayout(new java.awt.BorderLayout());
 
-        customerAccountPanel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        customerAccountPanel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         customerAccountPanel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         customerAccountPanel.setText("CUSTOMER ACCOUNT");
         customerAccountPanel.setPreferredSize(new java.awt.Dimension(137, 30));
         customerPanel.add(customerAccountPanel, java.awt.BorderLayout.PAGE_START);
 
-        customerSummaryPanel.setLayout(new java.awt.GridLayout(4, 0, 0, 4));
+        customerSummaryPanel.setLayout(new java.awt.GridLayout(1, 2));
 
-        customerTotalIssuesLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        rightPanel.setLayout(new java.awt.GridLayout(1, 2));
+        rightPanel.add(spacerPanel2);
+
+        labelPanel2.setLayout(new java.awt.GridLayout(4, 0));
+
+        customerTotalIssuesLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         customerTotalIssuesLabel.setText("TOTAL ISSUED :");
         customerTotalIssuesLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 0));
-        customerSummaryPanel.add(customerTotalIssuesLabel);
-        customerSummaryPanel.add(customerTotalIssuedTbox);
+        labelPanel2.add(customerTotalIssuesLabel);
 
-        customerLatexBarrelLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        customerLatexBarrelLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         customerLatexBarrelLabel.setText("LATEX BARREL :");
         customerLatexBarrelLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 0));
-        customerSummaryPanel.add(customerLatexBarrelLabel);
-        customerSummaryPanel.add(customerLatexBarrelTbox);
+        labelPanel2.add(customerLatexBarrelLabel);
 
-        jLabel3.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel3.setText("EMPTY BARREL :");
-        jLabel3.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 0));
-        customerSummaryPanel.add(jLabel3);
-        customerSummaryPanel.add(jTextField3);
+        emptyBarrelLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        emptyBarrelLabel.setText("EMPTY BARREL :");
+        emptyBarrelLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 0));
+        labelPanel2.add(emptyBarrelLabel);
 
-        jLabel4.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel4.setText("TOTAL :");
-        jLabel4.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 0));
-        customerSummaryPanel.add(jLabel4);
-        customerSummaryPanel.add(jTextField4);
+        customerTotalLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        customerTotalLabel.setText("TOTAL :");
+        customerTotalLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 0));
+        labelPanel2.add(customerTotalLabel);
+
+        rightPanel.add(labelPanel2);
+
+        customerSummaryPanel.add(rightPanel);
+
+        inputPanel2.setLayout(new java.awt.GridLayout(4, 2, 0, 4));
+
+        customerTotalIssuedTbox.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        inputPanel2.add(customerTotalIssuedTbox);
+        inputPanel2.add(spacerLabel4);
+
+        customerLatexBarrelTbox.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        inputPanel2.add(customerLatexBarrelTbox);
+        inputPanel2.add(spacerLabel5);
+
+        emptyBarrelsTbox.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        inputPanel2.add(emptyBarrelsTbox);
+        inputPanel2.add(spacerLabel6);
+
+        customerTotalTbox.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        inputPanel2.add(customerTotalTbox);
+
+        customerSummaryPanel.add(inputPanel2);
 
         customerPanel.add(customerSummaryPanel, java.awt.BorderLayout.CENTER);
 
@@ -1029,21 +1090,34 @@ public class BarrelSummary extends javax.swing.JInternalFrame implements Refresh
     private javax.swing.JPanel customerSummaryPanel;
     private javax.swing.JTextField customerTotalIssuedTbox;
     private javax.swing.JLabel customerTotalIssuesLabel;
+    private javax.swing.JLabel customerTotalLabel;
+    private javax.swing.JTextField customerTotalTbox;
     private javax.swing.JTable dataTable;
     private javax.swing.JTable dataTable1;
     private javax.swing.JButton deleteButton;
     private javax.swing.JButton deleteButton1;
     private javax.swing.JButton editButton;
     private javax.swing.JButton editButton1;
+    private javax.swing.JLabel emptyBarrelLabel;
+    private javax.swing.JTextField emptyBarrelsTbox;
     private javax.swing.JButton findButton;
     private javax.swing.JButton findButton1;
+    private javax.swing.JPanel inputPanel;
+    private javax.swing.JPanel inputPanel2;
     private javax.swing.JInternalFrame jInternalFrame1;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
+    private javax.swing.JPanel labelPanel;
+    private javax.swing.JPanel labelPanel2;
+    private javax.swing.JPanel leftPanel;
     private javax.swing.JPanel lowerPanel;
     private javax.swing.JPanel lowerPanel1;
+    private javax.swing.JPanel rightPanel;
+    private javax.swing.JLabel spacerLabel4;
+    private javax.swing.JLabel spacerLabel5;
+    private javax.swing.JLabel spacerLabel6;
+    private javax.swing.JPanel spacerPanel1;
+    private javax.swing.JPanel spacerPanel2;
+    private javax.swing.JLabel spacesLabel1;
+    private javax.swing.JLabel spacesLabel2;
     private javax.swing.JPanel summaryPanel;
     private javax.swing.JScrollPane tableScrollPane;
     private javax.swing.JScrollPane tableScrollPane1;

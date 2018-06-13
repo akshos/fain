@@ -228,7 +228,7 @@ public class PartyWiseStatement {
         
         double balance = acc.balance;
         //Add the opening balance of the account to the balance calculated from previous transactions
-        balance += MasterDB.getOpeningBalance(con.getStatement(), accId);
+        balance -= MasterDB.getOpeningBalance(con.getStatement(), accId);
         
         double advance = 0.0;
         

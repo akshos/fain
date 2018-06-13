@@ -287,6 +287,10 @@ public class Main extends javax.swing.JFrame {
         eBranchesMenuItem = new javax.swing.JMenuItem();
         eCustomersMenuItem = new javax.swing.JMenuItem();
         eConsumptionMenuItem = new javax.swing.JMenuItem();
+        barrelsMenu = new javax.swing.JMenu();
+        barrelsSummaryMenuItem = new javax.swing.JMenuItem();
+        addIssuesLiftsMenuItem = new javax.swing.JMenuItem();
+        showIssuesLiftsMenuItem = new javax.swing.JMenuItem();
         printingMenu = new javax.swing.JMenu();
         accountBooksMenu = new javax.swing.JMenu();
         dayBookMenuItem = new javax.swing.JMenuItem();
@@ -539,6 +543,33 @@ public class Main extends javax.swing.JFrame {
         editMenu.add(eConsumptionMenuItem);
 
         fainMainMenu.add(editMenu);
+
+        barrelsMenu.setText("Barrels");
+        barrelsMenu.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+
+        barrelsSummaryMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        barrelsSummaryMenuItem.setText("Barrels Summary");
+        barrelsSummaryMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                barrelsSummaryMenuItemActionPerformed(evt);
+            }
+        });
+        barrelsMenu.add(barrelsSummaryMenuItem);
+
+        addIssuesLiftsMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        addIssuesLiftsMenuItem.setText("Add Issues/Lifts");
+        addIssuesLiftsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addIssuesLiftsMenuItemActionPerformed(evt);
+            }
+        });
+        barrelsMenu.add(addIssuesLiftsMenuItem);
+
+        showIssuesLiftsMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        showIssuesLiftsMenuItem.setText("Show Issues/Lifts");
+        barrelsMenu.add(showIssuesLiftsMenuItem);
+
+        fainMainMenu.add(barrelsMenu);
 
         printingMenu.setMnemonic('p');
         printingMenu.setText("Printing");
@@ -1160,6 +1191,28 @@ public class Main extends javax.swing.JFrame {
         }
         addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_pSalesLatexMenuItemActionPerformed
+
+    private void barrelsSummaryMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barrelsSummaryMenuItemActionPerformed
+        BarrelSummary item = new BarrelSummary(dbConnection, this, this.level+1);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }//GEN-LAST:event_barrelsSummaryMenuItemActionPerformed
+
+    private void addIssuesLiftsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addIssuesLiftsMenuItemActionPerformed
+        BarrelIssueLift item = new BarrelIssueLift(dbConnection, Codes.NEW_ENTRY, null, this, this.level+1);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }//GEN-LAST:event_addIssuesLiftsMenuItemActionPerformed
     
     /**
      * @param item the internal frame to be added to desktop pane
@@ -1233,8 +1286,11 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem aStockMenuItem;
     private javax.swing.JMenuItem aTransactionMenuItem;
     private javax.swing.JMenu accountBooksMenu;
+    private javax.swing.JMenuItem addIssuesLiftsMenuItem;
     private javax.swing.JMenuItem addUserMenuItem;
     private javax.swing.JMenuItem bankBookMenuItem;
+    private javax.swing.JMenu barrelsMenu;
+    private javax.swing.JMenuItem barrelsSummaryMenuItem;
     private javax.swing.JMenuItem cashBookMenuItem;
     private javax.swing.JMenuItem creditorsMenuItem;
     private javax.swing.JLabel databaseNameStatus;
@@ -1265,6 +1321,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem pTrialBalanceMenuItem;
     private javax.swing.JMenu printingMenu;
     private javax.swing.JMenuItem sessionInfoMenuItem;
+    private javax.swing.JMenuItem showIssuesLiftsMenuItem;
     private javax.swing.JMenuItem startNewSessionMenuItem;
     private javax.swing.JMenuItem statementsMenuItem;
     private javax.swing.JPanel statusPanel;
