@@ -144,7 +144,9 @@ public class EPLatex extends javax.swing.JInternalFrame implements RefreshOption
     
     private void printBill(){
         int row = this.dataTable.getSelectedRow();
-        
+        if(row == -1){
+            return;
+        }
         String purchaseId = this.dataTable.getModel().getValueAt(row, 0).toString();
         PurchaseBill.createBill(dbConnection, purchaseId);
     }
