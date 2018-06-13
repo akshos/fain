@@ -390,6 +390,11 @@ public class BarrelIssueLift extends javax.swing.JInternalFrame implements Refre
                 branchTboxFocusLost(evt);
             }
         });
+        branchTbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                branchTboxActionPerformed(evt);
+            }
+        });
         branchTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 branchTboxKeyPressed(evt);
@@ -453,6 +458,7 @@ public class BarrelIssueLift extends javax.swing.JInternalFrame implements Refre
         rightInerPannel.add(dateTbox);
 
         stockTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,##0.000"))));
+        stockTbox.setText("0");
         stockTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         stockTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -472,6 +478,7 @@ public class BarrelIssueLift extends javax.swing.JInternalFrame implements Refre
         rightInerPannel.add(stockTbox);
 
         barrelsIssuedTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,##0.000"))));
+        barrelsIssuedTbox.setText("0");
         barrelsIssuedTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         barrelsIssuedTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -494,6 +501,7 @@ public class BarrelIssueLift extends javax.swing.JInternalFrame implements Refre
         rightInerPannel.add(barrelsIssuedTbox);
 
         barrelsLiftedTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,##0.000"))));
+        barrelsLiftedTbox.setText("0");
         barrelsLiftedTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         barrelsLiftedTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -513,6 +521,7 @@ public class BarrelIssueLift extends javax.swing.JInternalFrame implements Refre
         rightInerPannel.add(barrelsLiftedTbox);
 
         differenceTbox.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##,##,##0.000"))));
+        differenceTbox.setText("0");
         differenceTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         differenceTbox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -711,6 +720,10 @@ public class BarrelIssueLift extends javax.swing.JInternalFrame implements Refre
     private void partyTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_partyTboxFocusGained
         this.partyTbox.selectAll();        // TODO add your handling code here:
     }//GEN-LAST:event_partyTboxFocusGained
+
+    private void branchTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_branchTboxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_branchTboxActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
