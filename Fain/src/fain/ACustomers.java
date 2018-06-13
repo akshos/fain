@@ -109,6 +109,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         this.addressTarea.setText(data[2]);
         this.kgstTbox.setText(data[4]);
         this.rbregnoTbox.setText(data[5]);
+        this.contactNoTbox.setText(data[6]);
     }
     
     private void insertData(){
@@ -116,6 +117,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         String code     =codeTbox.getText();
         String name     =nameTbox.getText();
         String address  =addressTarea.getText();
+        String contact  =contactNoTbox.getText();
 
        String branch = branchTbox.getText();
         if(!validateBranch()){
@@ -129,7 +131,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         boolean ret;
         
         if(mode==Codes.EDIT){
-            ret = CustomerDB.update(stmt, code, name, address, branch, kgst, rbregno);
+            ret = CustomerDB.update(stmt, code, name, address, branch, kgst, rbregno,contact);
             if(ret){
                 JOptionPane.showMessageDialog(this, "The entry has been updated", "Success", JOptionPane.INFORMATION_MESSAGE);
             }else{
@@ -138,7 +140,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
             }
         }
         else{
-            ret = CustomerDB.insert(stmt, code, name, address, branch, kgst, rbregno);
+            ret = CustomerDB.insert(stmt, code, name, address, branch, kgst, rbregno,contact);
             if(ret){
                 JOptionPane.showMessageDialog(this, "New entry has been successfully added", "Success", JOptionPane.INFORMATION_MESSAGE);
             }else{
@@ -180,6 +182,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         categoryLabel = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
         rightInerPannel = new javax.swing.JPanel();
         codeTbox = new javax.swing.JTextField();
         nameTbox = new javax.swing.JTextField();
@@ -189,6 +192,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         branchNameLabel = new javax.swing.JLabel();
         kgstTbox = new javax.swing.JTextField();
         rbregnoTbox = new javax.swing.JTextField();
+        contactNoTbox = new javax.swing.JTextField();
         buttonPanel = new javax.swing.JPanel();
         enterButton = new javax.swing.JButton();
         titlePanel = new javax.swing.JPanel();
@@ -204,20 +208,20 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
             }
         });
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameClosing(evt);
             }
-            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
             }
         });
 
@@ -236,7 +240,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
 
         leftInerPannel.add(logoPanel);
 
-        labelsPanel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
+        labelsPanel.setLayout(new java.awt.GridLayout(8, 0, 0, 10));
 
         accountCodeLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         accountCodeLabel.setText("Code");
@@ -262,13 +266,16 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         jLabel3.setText("RB Registration Number");
         labelsPanel.add(jLabel3);
 
+        jLabel4.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        jLabel4.setText("Contact No:");
+        labelsPanel.add(jLabel4);
+
         leftInerPannel.add(labelsPanel);
 
         outerPanel.add(leftInerPannel);
 
-        rightInerPannel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
+        rightInerPannel.setLayout(new java.awt.GridLayout(8, 0, 0, 10));
 
-        codeTbox.setBackground(java.awt.Color.white);
         codeTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         codeTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -277,7 +284,6 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         });
         rightInerPannel.add(codeTbox);
 
-        nameTbox.setBackground(java.awt.Color.white);
         nameTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         nameTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -331,12 +337,30 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
                 rbregnoTboxFocusGained(evt);
             }
         });
+        rbregnoTbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbregnoTboxActionPerformed(evt);
+            }
+        });
         rbregnoTbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 enterButtonKeyPressed(evt);
             }
         });
         rightInerPannel.add(rbregnoTbox);
+
+        contactNoTbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        contactNoTbox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                contactNoTboxFocusGained(evt);
+            }
+        });
+        contactNoTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                contactNoTboxenterButtonKeyPressed(evt);
+            }
+        });
+        rightInerPannel.add(contactNoTbox);
 
         buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 60, 2, 60));
         buttonPanel.setLayout(new java.awt.BorderLayout());
@@ -445,6 +469,18 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         this.validateBranch();
     }//GEN-LAST:event_branchTboxKeyReleased
 
+    private void contactNoTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_contactNoTboxFocusGained
+        // TODO add your handling code here:
+    }//GEN-LAST:event_contactNoTboxFocusGained
+
+    private void contactNoTboxenterButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_contactNoTboxenterButtonKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_contactNoTboxenterButtonKeyPressed
+
+    private void rbregnoTboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbregnoTboxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rbregnoTboxActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel accountCodeLabel;
@@ -456,10 +492,12 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JLabel categoryLabel;
     private javax.swing.JTextField codeTbox;
+    private javax.swing.JTextField contactNoTbox;
     private javax.swing.JButton enterButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JTextField kgstTbox;
     private javax.swing.JPanel labelsPanel;
     private javax.swing.JPanel leftInerPannel;
