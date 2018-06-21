@@ -8,6 +8,7 @@ package fain;
 import database.BarrelDB;
 import database.DBConnection;
 import database.BranchDB;
+import database.CompanyBarrelDB;
 import database.CustomerDB;
 import database.TransactionDB;
 import java.awt.Dimension;
@@ -37,35 +38,44 @@ public class BarrelSummary extends javax.swing.JInternalFrame implements Refresh
         initComponents();
         updateTable();
         this.dataTable.requestFocus();
-        loadBarrelDetails();
+        loadBarrelSummary();
     }
     
-    private void loadBarrelDetails(){
-        String details[] = BarrelDB.getBarrelDetails(dbConnection.getStatement());
+    private void loadBarrelSummary(){
+        int companyOpStock = CompanyBarrelDB.getCompanyOpStock(dbConnection.getStatement());
+        int companyTotalIssued = CompanyBarrelDB.getTotalIssued(dbConnection.getStatement());
+        int companyTotalLifted = CompanyBarrelDB.getTotalLifted(dbConnection.getStatement());
         
-        this.companyBarrelsTbox.setText(details[1]);
-        this.companyShortageTbox.setText(details[2]);
         
-        int companyTotal = Integer.parseInt(details[1]) - Integer.parseInt(details[2]);
-        this.companyTotalTbox.setText(String.valueOf(companyTotal));
+        int companyBarrels = companyOpStock + companyTotalIssued - companyTotalLifted;
+        this.companyBarrelsTbox.setText(String.valueOf(companyBarrels));
         
-        int totalIssued = BarrelDB.getTotalIssued(dbConnection.getStatement());
-        int totalLifted = BarrelDB.getTotalLifted(dbConnection.getStatement());
-        int difference = totalIssued - totalLifted;
-        int emptyBarrels = companyTotal - difference;
-        this.customerTotalIssuedTbox.setText(String.valueOf(totalIssued));
-        this.customerLatexBarrelTbox.setText(String.valueOf(totalLifted));
+        int companyShortage = CompanyBarrelDB.getCompanyShortage(dbConnection.getStatement());
+        this.companyShortageTbox.setText(String.valueOf(companyShortage));
+        
+        //net number of barrels from company currently at hand/at customer
+        companyBarrels = companyBarrels - companyShortage;
+        this.companyTotalTbox.setText(String.valueOf(companyBarrels));
+        
+        int customerTotalIssued = BarrelDB.getTotalIssued(dbConnection.getStatement());
+        int customerTotalLifted = BarrelDB.getTotalLifted(dbConnection.getStatement());
+        
+        //get current number of issued barrels
+        int customerIssued = customerTotalIssued - customerTotalLifted;
+        //get the current number of latex barrels at hand
+        int latexBarrels = customerTotalLifted - companyTotalLifted;
+        //get the current number of empty barrels at hand
+        int emptyBarrels = companyBarrels - (customerIssued + latexBarrels);
+        
+        this.customerTotalIssuedTbox.setText(String.valueOf(customerIssued));
+        this.customerLatexBarrelTbox.setText(String.valueOf(latexBarrels));
         this.emptyBarrelsTbox.setText(String.valueOf(emptyBarrels));
-    }
-    
-    private void saveCompanyBarrels(){
-        String companyBarrels = this.companyBarrelsTbox.getText();
-        BarrelDB.setCompanyTotal(dbConnection.getStatement(), companyBarrels);
+        this.customerTotalTbox.setText(String.valueOf(customerIssued + latexBarrels + emptyBarrels));
     }
     
     private void saveCompanyShortage(){
         String shortage = this.companyShortageTbox.getText();
-        BarrelDB.setCompanyShortage(dbConnection.getStatement(), shortage);
+        CompanyBarrelDB.setCompanyShortage(dbConnection.getStatement(), shortage);
     }
     
     private void setMinWidth(){
@@ -582,7 +592,7 @@ public class BarrelSummary extends javax.swing.JInternalFrame implements Refresh
         labelPanel2.setLayout(new java.awt.GridLayout(4, 0));
 
         customerTotalIssuesLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        customerTotalIssuesLabel.setText("TOTAL ISSUED :");
+        customerTotalIssuesLabel.setText("ISSUED :");
         customerTotalIssuesLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 0));
         labelPanel2.add(customerTotalIssuesLabel);
 
@@ -710,7 +720,7 @@ public class BarrelSummary extends javax.swing.JInternalFrame implements Refresh
     }//GEN-LAST:event_keyPressedHandler
 
     private void companyBarrelsTboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_companyBarrelsTboxFocusLost
-        this.saveCompanyBarrels();        // TODO add your handling code here:
+
     }//GEN-LAST:event_companyBarrelsTboxFocusLost
 
     private void companyShortageTboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_companyShortageTboxFocusLost

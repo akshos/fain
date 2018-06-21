@@ -144,6 +144,7 @@ public final class Tables {
             + "date date,"
             + "issued int,"
             + "lifted int,"
+            + "emptyLifted int,"
             + "difference int);";
             
     

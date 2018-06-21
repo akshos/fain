@@ -122,6 +122,8 @@ public class BarrelCompanyShowIssueLift extends javax.swing.JInternalFrame imple
     
     private void setCompanyOpStock(){
         String opStockStr = JOptionPane.showInputDialog(this, "Enter Company Opening Stock: ", "Opening Stock", JOptionPane.QUESTION_MESSAGE);
+        if(opStockStr == null)
+            return;
         if(opStockStr.trim().compareTo("") == 0)
             return;
         try{

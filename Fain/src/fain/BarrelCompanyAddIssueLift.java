@@ -145,7 +145,7 @@ public class BarrelCompanyAddIssueLift extends javax.swing.JInternalFrame implem
         boolean ret;
         
         if(mode==Codes.EDIT){
-            ret = CompanyBarrelDB.update(stmt, this.editId, date, String.valueOf(issued), String.valueOf(lifted), String.valueOf(difference));
+            ret = CompanyBarrelDB.update(stmt, this.editId, date, String.valueOf(issued), String.valueOf(lifted), "0", String.valueOf(difference));
             if(ret){
                 JOptionPane.showMessageDialog(this, "The entry has been updated", "Success", JOptionPane.INFORMATION_MESSAGE);
             }else{
@@ -155,7 +155,7 @@ public class BarrelCompanyAddIssueLift extends javax.swing.JInternalFrame implem
             
         }
         else{
-            ret = CompanyBarrelDB.insert(stmt, date, String.valueOf(issued), String.valueOf(lifted), String.valueOf(difference));
+            ret = CompanyBarrelDB.insert(stmt, date, String.valueOf(issued), String.valueOf(lifted), "0", String.valueOf(difference));
             if(ret){
                 JOptionPane.showMessageDialog(this, "New entry has been successfully added", "Success", JOptionPane.INFORMATION_MESSAGE);
             }else{

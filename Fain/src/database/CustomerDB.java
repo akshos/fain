@@ -217,9 +217,13 @@ public final class CustomerDB {
     }
     
     public static void updateCustomerBarrelBalance(Statement stmt, String accId){
-        String sql = "update customer set barrels = (select sum(difference) from barrel "
-                + "where customerCode='" + accId + "' ) where customerCode='" + accId + "' ";
+        String sql = "select sum(difference) as 'diff' from barrel where customerCode='" + accId + "'; ";
         try{
+            ResultSet rs = stmt.executeQuery(sql);
+            int balance = 0;
+            if(rs.next())
+                balance = rs.getInt(1);
+            sql = "update customer set barrels=" + balance + " where cusotmerCode='" + accId + "' ;";
             stmt.executeUpdate(sql);
         }catch(SQLException se){
             se.printStackTrace();

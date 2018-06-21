@@ -16,10 +16,11 @@ import javax.swing.table.TableModel;
  * @author lenovo
  */
 public final class CompanyBarrelDB {
-    public static boolean insert(Statement stmt, String date, String issued, String lifted, String difference ){
+    public static boolean insert(Statement stmt, String date, String issued, String lifted, String emptyLifted, String difference ){
         String in ="insert into companyBarrel values(NULL, '"   +date       + "', "
                                                                 +issued     + " , "
                                                                 +lifted     + " , "
+                                                                +emptyLifted+ " , "
                                                                 +difference + "); ";
         try{
             stmt.execute(in);
@@ -30,10 +31,11 @@ public final class CompanyBarrelDB {
         }
             return true;
     }
-    public static boolean update(Statement stmt,String code, String date, String issued, String lifted, String difference ){
-        String sql = "update companyBarrel set date='"    +date + "',"
-                                                +"issued="  +issued   + ","
-                                                +"lifted="  +lifted   + ","
+    public static boolean update(Statement stmt,String code, String date, String issued, String lifted, String emptyLifted, String difference ){
+        String sql = "update companyBarrel set date='"    +date + "', "
+                                                +"issued="  +issued   + ", "
+                                                +"lifted="  +lifted   + ", "
+                                                +"emptyLifted=" +emptyLifted + ", "
                                                 +"difference="  +difference + " "
                                                 + "where cbarrelId=" + code + ";";
         try{
@@ -107,7 +109,7 @@ public final class CompanyBarrelDB {
         return null;
     }
     
-     public static int getTotalIssued(Statement stmt){
+    public static int getTotalIssued(Statement stmt){
         String sql = "select sum(issued) from companyBarrel;";
         try{
             ResultSet rs = stmt.executeQuery(sql);
@@ -118,16 +120,27 @@ public final class CompanyBarrelDB {
         return -1;
     }
     
-     public static int getTotalLifted(Statement stmt){
-         String sql = "select sum(lifted) from companyBarrel;";
-         try{
-             ResultSet rs = stmt.executeQuery(sql);
-             return rs.getInt(1);
-         }catch(SQLException se){
-             se.printStackTrace();
-         }
-         return -1;
-     }
+    public static int getTotalLifted(Statement stmt){
+        String sql = "select sum(lifted) from companyBarrel;";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            return rs.getInt(1);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return -1;
+    }
+    
+    public static int getTotalEmptyLifted(Statement stmt){
+        String sql = "select sum(emptyLifted) from companyBarrel;";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            return rs.getInt(1);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return -1;
+    }
      
     public static String[] getBarrelDetails(Statement stmt){
         String sql="select * from barrelDetails where barrelDetailsId=1;";
