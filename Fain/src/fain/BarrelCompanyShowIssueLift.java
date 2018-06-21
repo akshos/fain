@@ -8,9 +8,11 @@ package fain;
 import database.BarrelDB;
 import database.DBConnection;
 import database.BranchDB;
+import database.CompanyBarrelDB;
 import database.CustomerDB;
 import database.TransactionDB;
 import java.awt.Dimension;
+import java.text.ParseException;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -18,54 +20,31 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import utility.Codes;
 import utility.UtilityFuncs;
+import utility.ValidationChecks;
 
 /**
  *
  * @author akshos
  */
-public class BarrelSummary extends javax.swing.JInternalFrame implements RefreshOption{
+public class BarrelCompanyShowIssueLift extends javax.swing.JInternalFrame implements RefreshOption{
     DBConnection dbConnection;
     Main mainFrame;
     int level;
     /**
      * Creates new form EMaster
      */
-    public BarrelSummary(DBConnection db, Main frame, int level) {
+    public BarrelCompanyShowIssueLift(DBConnection db, Main frame, int level) {
         this.dbConnection = db;
         this.mainFrame = frame;
         this.level = level;
         initComponents();
         updateTable();
-        this.dataTable.requestFocus();
-        loadBarrelDetails();
+        loadOpeningStock();
     }
     
-    private void loadBarrelDetails(){
-        String details[] = BarrelDB.getBarrelDetails(dbConnection.getStatement());
-        
-        this.companyBarrelsTbox.setText(details[1]);
-        this.companyShortageTbox.setText(details[2]);
-        
-        int companyTotal = Integer.parseInt(details[1]) - Integer.parseInt(details[2]);
-        this.companyTotalTbox.setText(String.valueOf(companyTotal));
-        
-        int totalIssued = BarrelDB.getTotalIssued(dbConnection.getStatement());
-        int totalLifted = BarrelDB.getTotalLifted(dbConnection.getStatement());
-        int difference = totalIssued - totalLifted;
-        int emptyBarrels = companyTotal - difference;
-        this.customerTotalIssuedTbox.setText(String.valueOf(totalIssued));
-        this.customerLatexBarrelTbox.setText(String.valueOf(totalLifted));
-        this.emptyBarrelsTbox.setText(String.valueOf(emptyBarrels));
-    }
-    
-    private void saveCompanyBarrels(){
-        String companyBarrels = this.companyBarrelsTbox.getText();
-        BarrelDB.setCompanyTotal(dbConnection.getStatement(), companyBarrels);
-    }
-    
-    private void saveCompanyShortage(){
-        String shortage = this.companyShortageTbox.getText();
-        BarrelDB.setCompanyShortage(dbConnection.getStatement(), shortage);
+    private void loadOpeningStock(){
+        int opStock = CompanyBarrelDB.getCompanyOpStock(dbConnection.getStatement());
+        this.opStockTbox.setText(String.valueOf(opStock));
     }
     
     private void setMinWidth(){
@@ -80,27 +59,43 @@ public class BarrelSummary extends javax.swing.JInternalFrame implements Refresh
     private void setColumnAlignment(){
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        int[] centerIndex = {0, 3};
+        int[] centerIndex = {0, 1, 2, 4};
         for( int i = 0; i < centerIndex.length; i++){
             this.dataTable.getColumnModel().getColumn(centerIndex[i]).setCellRenderer(centerRenderer);
         }
     }
     
     private void resizeColumns(){
-        int screenWidth = this.getWidth();
+        /*
         int colCount = this.dataTable.getColumnCount();
         if(colCount == 0) return;
-        int colWidth  = (screenWidth / (colCount-1)) - (100/(colCount)+10);
+        TableColumnModel col = this.dataTable.getColumnModel();
+        col.getColumn(1).setPreferredWidth(150);
+        col.getColumn(2).setPreferredWidth(150);
+        col.getColumn(3).setPreferredWidth(150);
+        col.getColumn(4).setPreferredWidth(150);
+        */
+        int colCount = this.dataTable.getColumnCount();
+        int screenWidth = this.getWidth();
+        if(colCount == 0) return;
+        int colWidth  = (screenWidth / (colCount-1)) - (100/(colCount)+5);
+        TableColumnModel col = this.dataTable.getColumnModel();
         if(colWidth > 100){
-            TableColumnModel col = this.dataTable.getColumnModel();
             for(int i = 1; i < colCount; i++){
                 col.getColumn(i).setPreferredWidth(colWidth);
             }
         }
     }
     
+    private void setTableAppearance(){
+        UtilityFuncs.setTableFont(dataTable);
+        setMinWidth();
+        resizeColumns();
+        setColumnAlignment();
+    }
+    
     public void updateTable(){
-        TableModel table = BarrelDB.getBarrelSummary(dbConnection.getStatement());
+        TableModel table = CompanyBarrelDB.getTable(dbConnection.getStatement());
         this.dataTable.setModel(table);
         UtilityFuncs.setTableFont(dataTable);
         setMinWidth();
@@ -108,11 +103,85 @@ public class BarrelSummary extends javax.swing.JInternalFrame implements Refresh
         setColumnAlignment();
     }
     
-
+    private void addEntry(){
+        BarrelCompanyAddIssueLift item = new BarrelCompanyAddIssueLift(dbConnection, Codes.NEW_ENTRY, null, mainFrame, this.level+1, this);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }
+      
     public void refreshContents(int code){
         if(code == Codes.REFRESH_BARREL){
             updateTable();
         }
+    }
+    
+    private void setCompanyOpStock(){
+        String opStockStr = JOptionPane.showInputDialog(this, "Enter Company Opening Stock: ", "Opening Stock", JOptionPane.QUESTION_MESSAGE);
+        if(opStockStr.trim().compareTo("") == 0)
+            return;
+        try{
+            int opStock = Integer.parseInt(opStockStr);
+            CompanyBarrelDB.setCompanyOpStock(dbConnection.getStatement(), String.valueOf(opStock));
+            this.opStockTbox.setText(String.valueOf(opStock));
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
+    private void editEntry(){
+        int index = this.dataTable.getSelectedRow();
+        if(index == -1 ) return;
+        String id = this.dataTable.getModel().getValueAt(index, 0).toString();
+        BarrelCompanyAddIssueLift item = new BarrelCompanyAddIssueLift(dbConnection, Codes.EDIT, id, mainFrame, this.level+1, this);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }
+    
+    private void deleteEntry(){
+        int row = this.dataTable.getSelectedRow();
+        int ret;
+        String barrelId = this.dataTable.getModel().getValueAt(row, 0).toString();
+        ret = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete " + barrelId, "SURE?", JOptionPane.WARNING_MESSAGE);
+        if(ret != JOptionPane.YES_OPTION){
+            return;
+        }
+        CompanyBarrelDB.delete(dbConnection.getStatement(), barrelId);
+        this.updateTable();
+    }
+    
+    private void find(){
+        String searchTerm = JOptionPane.showInputDialog(this, "Enter Search : ", "FILTER", JOptionPane.QUESTION_MESSAGE);
+        if(searchTerm != null){
+            System.out.println("Search " + searchTerm);
+            if(ValidationChecks.isDateValid(searchTerm.trim())){
+                filterTableDate(searchTerm.trim());
+            }else{
+                filterTableAccount(searchTerm.trim());
+            }
+         
+        }
+    }
+    
+    private void filterTableDate(String date){
+        TableModel table = BarrelDB.getTableFilteredDate(dbConnection.getStatement(), UtilityFuncs.dateUserToSql(date));
+        this.dataTable.setModel(table);
+        setTableAppearance();
+    }
+    
+    private void filterTableAccount(String account){
+        TableModel table = BarrelDB.getTableFilteredAccount(dbConnection.getStatement(), account);
+        this.dataTable.setModel(table);
+        setTableAppearance();
     }
     
     /**
@@ -128,50 +197,24 @@ public class BarrelSummary extends javax.swing.JInternalFrame implements Refresh
         tableScrollPane = new javax.swing.JScrollPane();
         dataTable = new javax.swing.JTable();
         lowerPanel = new javax.swing.JPanel();
+        editButton = new javax.swing.JButton();
+        addButton = new javax.swing.JButton();
+        deleteButton = new javax.swing.JButton();
         findButton = new javax.swing.JButton();
         topButton = new javax.swing.JButton();
         bottomButton = new javax.swing.JButton();
         titlePanel = new javax.swing.JPanel();
         titleLabel = new javax.swing.JLabel();
-        summaryPanel = new javax.swing.JPanel();
-        businessPanel = new javax.swing.JPanel();
-        businessAccountLabel = new javax.swing.JLabel();
-        businessSummaryPanel = new javax.swing.JPanel();
-        leftPanel = new javax.swing.JPanel();
-        spacerPanel1 = new javax.swing.JPanel();
-        labelPanel = new javax.swing.JPanel();
-        businessTotelLabel = new javax.swing.JLabel();
-        businessShortageLabel = new javax.swing.JLabel();
-        businessTotalLabel = new javax.swing.JLabel();
-        inputPanel = new javax.swing.JPanel();
-        companyBarrelsTbox = new javax.swing.JTextField();
-        spacesLabel1 = new javax.swing.JLabel();
-        companyShortageTbox = new javax.swing.JTextField();
-        spacesLabel2 = new javax.swing.JLabel();
-        companyTotalTbox = new javax.swing.JTextField();
-        customerPanel = new javax.swing.JPanel();
-        customerAccountPanel = new javax.swing.JLabel();
-        customerSummaryPanel = new javax.swing.JPanel();
-        rightPanel = new javax.swing.JPanel();
-        spacerPanel2 = new javax.swing.JPanel();
-        labelPanel2 = new javax.swing.JPanel();
-        customerTotalIssuesLabel = new javax.swing.JLabel();
-        customerLatexBarrelLabel = new javax.swing.JLabel();
-        emptyBarrelLabel = new javax.swing.JLabel();
-        customerTotalLabel = new javax.swing.JLabel();
-        inputPanel2 = new javax.swing.JPanel();
-        customerTotalIssuedTbox = new javax.swing.JTextField();
-        spacerLabel4 = new javax.swing.JLabel();
-        customerLatexBarrelTbox = new javax.swing.JTextField();
-        spacerLabel5 = new javax.swing.JLabel();
-        emptyBarrelsTbox = new javax.swing.JTextField();
-        spacerLabel6 = new javax.swing.JLabel();
-        customerTotalTbox = new javax.swing.JTextField();
+        opStockPanel = new javax.swing.JPanel();
+        buttonPanel = new javax.swing.JPanel();
+        setOpStockButton = new javax.swing.JButton();
+        opStockLabel = new javax.swing.JLabel();
+        opStockTbox = new javax.swing.JTextField();
 
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
-        setTitle("Barrel Summary");
+        setTitle("Barrel Issues and Lifts");
         setMinimumSize(new java.awt.Dimension(785, 450));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
@@ -440,223 +483,95 @@ public class BarrelSummary extends javax.swing.JInternalFrame implements Refresh
         lowerPanel.setPreferredSize(new java.awt.Dimension(639, 50));
         lowerPanel.setLayout(new java.awt.GridLayout(1, 6, 20, 0));
 
+        editButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        editButton.setMnemonic(java.awt.event.KeyEvent.VK_F1);
+        editButton.setText("ENT: Edit");
+        editButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editButtonActionPerformed(evt);
+            }
+        });
+        lowerPanel.add(editButton);
+
+        addButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        addButton.setMnemonic(java.awt.event.KeyEvent.VK_A);
+        addButton.setText("F2: Add");
+        addButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addButtonActionPerformed(evt);
+            }
+        });
+        lowerPanel.add(addButton);
+
+        deleteButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        deleteButton.setText("F3: Delete");
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
+        lowerPanel.add(deleteButton);
+
         findButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         findButton.setText("F5: Find");
-        findButton.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
+        findButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                findButtonActionPerformed(evt);
             }
         });
         lowerPanel.add(findButton);
 
         topButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         topButton.setText("F6: Top");
-        topButton.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
-            }
-        });
         lowerPanel.add(topButton);
 
         bottomButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         bottomButton.setText("F7: Bottom");
-        bottomButton.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
-            }
-        });
         lowerPanel.add(bottomButton);
 
         getContentPane().add(lowerPanel, java.awt.BorderLayout.SOUTH);
 
-        titlePanel.setPreferredSize(new java.awt.Dimension(248, 200));
         titlePanel.setLayout(new java.awt.BorderLayout());
 
         titleLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        titleLabel.setText("BARREL SUMMARY");
+        titleLabel.setText("BARREL COMPANY ISSUES AND LIFTS");
         titlePanel.add(titleLabel, java.awt.BorderLayout.NORTH);
 
-        summaryPanel.setLayout(new java.awt.GridLayout(1, 2));
+        opStockPanel.setPreferredSize(new java.awt.Dimension(100, 50));
+        opStockPanel.setLayout(new java.awt.GridLayout(1, 3, 50, 20));
 
-        businessPanel.setLayout(new java.awt.BorderLayout());
+        buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        buttonPanel.setLayout(new java.awt.BorderLayout(10, 10));
 
-        businessAccountLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        businessAccountLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        businessAccountLabel.setText("BUSINESS ACCOUNT");
-        businessAccountLabel.setPreferredSize(new java.awt.Dimension(137, 30));
-        businessPanel.add(businessAccountLabel, java.awt.BorderLayout.PAGE_START);
-
-        businessSummaryPanel.setLayout(new java.awt.GridLayout(1, 2, 0, 10));
-
-        leftPanel.setLayout(new java.awt.GridLayout(1, 2));
-
-        spacerPanel1.setLayout(new java.awt.GridLayout(3, 0, 50, 10));
-        leftPanel.add(spacerPanel1);
-
-        labelPanel.setLayout(new java.awt.GridLayout(3, 0));
-
-        businessTotelLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        businessTotelLabel.setText("COMPANY:");
-        businessTotelLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 5, 1, 1));
-        labelPanel.add(businessTotelLabel);
-
-        businessShortageLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        businessShortageLabel.setText("SHORTAGE :");
-        businessShortageLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 5, 1, 1));
-        labelPanel.add(businessShortageLabel);
-
-        businessTotalLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        businessTotalLabel.setText("TOTAL :");
-        businessTotalLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 5, 1, 1));
-        labelPanel.add(businessTotalLabel);
-
-        leftPanel.add(labelPanel);
-
-        businessSummaryPanel.add(leftPanel);
-
-        inputPanel.setLayout(new java.awt.GridLayout(3, 2, 0, 10));
-
-        companyBarrelsTbox.setEditable(false);
-        companyBarrelsTbox.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        companyBarrelsTbox.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        companyBarrelsTbox.setRequestFocusEnabled(false);
-        companyBarrelsTbox.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                companyBarrelsTboxFocusLost(evt);
+        setOpStockButton.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        setOpStockButton.setText("Set Opening Stock");
+        setOpStockButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setOpStockButtonActionPerformed(evt);
             }
         });
-        companyBarrelsTbox.addKeyListener(new java.awt.event.KeyAdapter() {
+        setOpStockButton.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
+                setOpStockButtonKeyPressed(evt);
             }
         });
-        inputPanel.add(companyBarrelsTbox);
-        inputPanel.add(spacesLabel1);
+        buttonPanel.add(setOpStockButton, java.awt.BorderLayout.CENTER);
 
-        companyShortageTbox.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        companyShortageTbox.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        companyShortageTbox.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                companyShortageTboxFocusLost(evt);
-            }
-        });
-        companyShortageTbox.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
-            }
-        });
-        inputPanel.add(companyShortageTbox);
-        inputPanel.add(spacesLabel2);
+        opStockPanel.add(buttonPanel);
 
-        companyTotalTbox.setEditable(false);
-        companyTotalTbox.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        companyTotalTbox.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        companyTotalTbox.setRequestFocusEnabled(false);
-        companyTotalTbox.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
-            }
-        });
-        inputPanel.add(companyTotalTbox);
+        opStockLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        opStockLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        opStockLabel.setText("Company Op. Stock :");
+        opStockPanel.add(opStockLabel);
 
-        businessSummaryPanel.add(inputPanel);
+        opStockTbox.setEditable(false);
+        opStockTbox.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        opStockTbox.setFocusable(false);
+        opStockTbox.setRequestFocusEnabled(false);
+        opStockPanel.add(opStockTbox);
 
-        businessPanel.add(businessSummaryPanel, java.awt.BorderLayout.CENTER);
-
-        summaryPanel.add(businessPanel);
-
-        customerPanel.setLayout(new java.awt.BorderLayout());
-
-        customerAccountPanel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        customerAccountPanel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        customerAccountPanel.setText("CUSTOMER ACCOUNT");
-        customerAccountPanel.setPreferredSize(new java.awt.Dimension(137, 30));
-        customerPanel.add(customerAccountPanel, java.awt.BorderLayout.PAGE_START);
-
-        customerSummaryPanel.setLayout(new java.awt.GridLayout(1, 2));
-
-        rightPanel.setLayout(new java.awt.GridLayout(1, 2));
-        rightPanel.add(spacerPanel2);
-
-        labelPanel2.setLayout(new java.awt.GridLayout(4, 0));
-
-        customerTotalIssuesLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        customerTotalIssuesLabel.setText("TOTAL ISSUED :");
-        customerTotalIssuesLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 0));
-        labelPanel2.add(customerTotalIssuesLabel);
-
-        customerLatexBarrelLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        customerLatexBarrelLabel.setText("LATEX BARREL :");
-        customerLatexBarrelLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 0));
-        labelPanel2.add(customerLatexBarrelLabel);
-
-        emptyBarrelLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        emptyBarrelLabel.setText("EMPTY BARREL :");
-        emptyBarrelLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 0));
-        labelPanel2.add(emptyBarrelLabel);
-
-        customerTotalLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        customerTotalLabel.setText("TOTAL :");
-        customerTotalLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 0));
-        labelPanel2.add(customerTotalLabel);
-
-        rightPanel.add(labelPanel2);
-
-        customerSummaryPanel.add(rightPanel);
-
-        inputPanel2.setLayout(new java.awt.GridLayout(4, 2, 0, 4));
-
-        customerTotalIssuedTbox.setEditable(false);
-        customerTotalIssuedTbox.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        customerTotalIssuedTbox.setRequestFocusEnabled(false);
-        customerTotalIssuedTbox.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
-            }
-        });
-        inputPanel2.add(customerTotalIssuedTbox);
-        inputPanel2.add(spacerLabel4);
-
-        customerLatexBarrelTbox.setEditable(false);
-        customerLatexBarrelTbox.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        customerLatexBarrelTbox.setRequestFocusEnabled(false);
-        customerLatexBarrelTbox.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
-            }
-        });
-        inputPanel2.add(customerLatexBarrelTbox);
-        inputPanel2.add(spacerLabel5);
-
-        emptyBarrelsTbox.setEditable(false);
-        emptyBarrelsTbox.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        emptyBarrelsTbox.setRequestFocusEnabled(false);
-        emptyBarrelsTbox.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
-            }
-        });
-        inputPanel2.add(emptyBarrelsTbox);
-        inputPanel2.add(spacerLabel6);
-
-        customerTotalTbox.setEditable(false);
-        customerTotalTbox.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        customerTotalTbox.setRequestFocusEnabled(false);
-        customerTotalTbox.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyPressedHandler(evt);
-            }
-        });
-        inputPanel2.add(customerTotalTbox);
-
-        customerSummaryPanel.add(inputPanel2);
-
-        customerPanel.add(customerSummaryPanel, java.awt.BorderLayout.CENTER);
-
-        summaryPanel.add(customerPanel);
-
-        titlePanel.add(summaryPanel, java.awt.BorderLayout.CENTER);
+        titlePanel.add(opStockPanel, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(titlePanel, java.awt.BorderLayout.PAGE_START);
 
@@ -667,12 +582,29 @@ public class BarrelSummary extends javax.swing.JInternalFrame implements Refresh
         Preferences.storeInternalFrameDimension(this);
     }//GEN-LAST:event_formInternalFrameClosing
 
+    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
+        System.out.println("Add Button Action Performed");
+        addEntry();
+    }//GEN-LAST:event_addButtonActionPerformed
+
     private void dataTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dataTableKeyPressed
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_R){
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            this.editEntry();
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F2){
+            addEntry();
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F2){
+        
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_R){
             this.updateTable();
         }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F3){
+            this.deleteEntry();
+        }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F5){
-        
+            find();
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F6){
             this.dataTable.setRowSelectionInterval(0, 0);
@@ -685,78 +617,61 @@ public class BarrelSummary extends javax.swing.JInternalFrame implements Refresh
             this.doDefaultCloseAction();
         }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
             if(this.dataTable.getSelectedRow() == 0){
-                this.companyShortageTbox.requestFocus();
+                this.setOpStockButton.requestFocus();
             }
         }
     }//GEN-LAST:event_dataTableKeyPressed
+
+    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
+        editEntry();
+    }//GEN-LAST:event_editButtonActionPerformed
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
         resizeColumns();
     }//GEN-LAST:event_formComponentResized
 
     private void keyPressedHandler(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyPressedHandler
+
+    }//GEN-LAST:event_keyPressedHandler
+
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+        this.deleteEntry();        // TODO add your handling code here:
+    }//GEN-LAST:event_deleteButtonActionPerformed
+
+    private void findButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findButtonActionPerformed
+        find();        // TODO add your handling code here:
+    }//GEN-LAST:event_findButtonActionPerformed
+
+    private void setOpStockButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setOpStockButtonActionPerformed
+        setCompanyOpStock();        // TODO add your handling code here:
+    }//GEN-LAST:event_setOpStockButtonActionPerformed
+
+    private void setOpStockButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_setOpStockButtonKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
         }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
-            cmp.transferFocus();
+            setCompanyOpStock();
         }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
-            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
-            cmp.transferFocusBackward();
+            this.dataTable.requestFocus();
         }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN){
-            javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
-            cmp.transferFocus();
+            this.dataTable.requestFocus();
         }
-    }//GEN-LAST:event_keyPressedHandler
-
-    private void companyBarrelsTboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_companyBarrelsTboxFocusLost
-        this.saveCompanyBarrels();        // TODO add your handling code here:
-    }//GEN-LAST:event_companyBarrelsTboxFocusLost
-
-    private void companyShortageTboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_companyShortageTboxFocusLost
-        saveCompanyShortage();
-    }//GEN-LAST:event_companyShortageTboxFocusLost
+    }//GEN-LAST:event_setOpStockButtonKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addButton;
     private javax.swing.JButton bottomButton;
-    private javax.swing.JLabel businessAccountLabel;
-    private javax.swing.JPanel businessPanel;
-    private javax.swing.JLabel businessShortageLabel;
-    private javax.swing.JPanel businessSummaryPanel;
-    private javax.swing.JLabel businessTotalLabel;
-    private javax.swing.JLabel businessTotelLabel;
-    private javax.swing.JTextField companyBarrelsTbox;
-    private javax.swing.JTextField companyShortageTbox;
-    private javax.swing.JTextField companyTotalTbox;
-    private javax.swing.JLabel customerAccountPanel;
-    private javax.swing.JLabel customerLatexBarrelLabel;
-    private javax.swing.JTextField customerLatexBarrelTbox;
-    private javax.swing.JPanel customerPanel;
-    private javax.swing.JPanel customerSummaryPanel;
-    private javax.swing.JTextField customerTotalIssuedTbox;
-    private javax.swing.JLabel customerTotalIssuesLabel;
-    private javax.swing.JLabel customerTotalLabel;
-    private javax.swing.JTextField customerTotalTbox;
+    private javax.swing.JPanel buttonPanel;
     private javax.swing.JTable dataTable;
-    private javax.swing.JLabel emptyBarrelLabel;
-    private javax.swing.JTextField emptyBarrelsTbox;
+    private javax.swing.JButton deleteButton;
+    private javax.swing.JButton editButton;
     private javax.swing.JButton findButton;
-    private javax.swing.JPanel inputPanel;
-    private javax.swing.JPanel inputPanel2;
-    private javax.swing.JPanel labelPanel;
-    private javax.swing.JPanel labelPanel2;
-    private javax.swing.JPanel leftPanel;
     private javax.swing.JPanel lowerPanel;
-    private javax.swing.JPanel rightPanel;
-    private javax.swing.JLabel spacerLabel4;
-    private javax.swing.JLabel spacerLabel5;
-    private javax.swing.JLabel spacerLabel6;
-    private javax.swing.JPanel spacerPanel1;
-    private javax.swing.JPanel spacerPanel2;
-    private javax.swing.JLabel spacesLabel1;
-    private javax.swing.JLabel spacesLabel2;
-    private javax.swing.JPanel summaryPanel;
+    private javax.swing.JLabel opStockLabel;
+    private javax.swing.JPanel opStockPanel;
+    private javax.swing.JTextField opStockTbox;
+    private javax.swing.JButton setOpStockButton;
     private javax.swing.JScrollPane tableScrollPane;
     private javax.swing.JLabel titleLabel;
     private javax.swing.JPanel titlePanel;

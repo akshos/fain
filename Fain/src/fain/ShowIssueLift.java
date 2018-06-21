@@ -99,7 +99,7 @@ public class ShowIssueLift extends javax.swing.JInternalFrame implements Refresh
     }
     
     private void addEntry(){
-        BarrelIssueLift item = new BarrelIssueLift(dbConnection, Codes.NEW_ENTRY, null, this.mainFrame, this.level+1, this);
+        BarrelAddIssueLift item = new BarrelAddIssueLift(dbConnection, Codes.NEW_ENTRY, null, this.mainFrame, this.level+1, this);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             System.out.println("setting size");
@@ -114,7 +114,7 @@ public class ShowIssueLift extends javax.swing.JInternalFrame implements Refresh
         int index = this.dataTable.getSelectedRow();
         if(index == -1 ) return;
         String id = this.dataTable.getModel().getValueAt(index, 0).toString();
-        BarrelIssueLift item = new BarrelIssueLift(dbConnection, Codes.EDIT, id, mainFrame, this.level+1, this);
+        BarrelAddIssueLift item = new BarrelAddIssueLift(dbConnection, Codes.EDIT, id, mainFrame, this.level+1, this);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);

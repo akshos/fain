@@ -17,13 +17,13 @@ import javax.swing.table.TableModel;
  */
 public final class BarrelDB {
     public static boolean insert(Statement stmt, String branch, String customerCode, String date,String stock, String issued, String lifted, String difference ){
-        String in ="insert into barrel values(NULL,'"      +branch   + "','"
-                                                            +customerCode  + "','"
-                                                            +date + "',"
-                                                            +stock   + ")"
-                                                            +issued   + ")"
-                                                            +lifted   + ")"
-                                                            +difference   + ")";
+        String in ="insert into barrel values(NULL, '"      +branch   + "', '"
+                                                            +customerCode  + "', '"
+                                                            +date + "', "
+                                                            +stock   + ", "
+                                                            +issued   + ", "
+                                                            +lifted   + ", "
+                                                            +difference   + "); ";
         try{
             stmt.execute(in);
         }
@@ -40,8 +40,8 @@ public final class BarrelDB {
                                                 +"stock="  +stock   + ","
                                                 +"issued="  +issued   + ","
                                                 +"lifted="  +lifted   + ","
-                                                +"difference="  +difference   + ","
-                                        + "where barrelId=" + code + ";";
+                                                +"difference="  +difference + " "
+                                                + "where barrelId=" + code + ";";
         try{
             stmt.executeUpdate(sql);
         }catch(SQLException se){
@@ -72,8 +72,9 @@ public final class BarrelDB {
         return false;
     }
     public static TableModel getTable(Statement stmt){
-        String sqlQuery = "select barrelId as 'ID', customerCode as 'CustCode', accountHead as 'Customer', "
-                + "date as 'Date', stock as 'Stock', issued as 'Issued', lifted as 'Lifted', difference as 'Difference' from branch,master where customerCode=accountCode;";
+        String sqlQuery = "select barrelId as 'ID', date as 'Date', customerCode as 'CustCode', accountHead as 'Customer', "
+                + "stock as 'Stock', issued as 'Issued', lifted as 'Lifted', difference as 'Difference' "
+                + "from barrel ,master where customerCode=accountNo order by date asc;";
 	TableModel table = null;
         ResultSet rs = null;
 	try{
@@ -83,7 +84,46 @@ public final class BarrelDB {
             se.printStackTrace();
 	}
 	return table;
-    }    
+    }
+    
+    public static TableModel getBarrelSummary(Statement stmt){
+        String sql = "select customerCode as 'Cust. Code', accountHead as 'Customer', contact as 'Contact', "
+                + "barrels as 'Balance' from customer, master where customerCode=accountNo;";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            return ResultSetToTableModel.getTableModel(rs);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static TableModel getTableFilteredDate(Statement stmt, String date){
+        String sql = "select barrelId as 'ID', date as 'Date', customerCode as 'CustCode', accountHead as 'Customer', "
+                + "stock as 'Stock', issued as 'Issued', lifted as 'Lifted', difference as 'Difference' "
+                + "from barrel ,master where customerCode=accountNo and date='" + date + "' order by date asc;";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            return ResultSetToTableModel.getTableModel(rs);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static TableModel getTableFilteredAccount(Statement stmt, String custCode){
+        String sql = "select barrelId as 'ID', date as 'Date', customerCode as 'CustCode', accountHead as 'Customer', "
+                + "stock as 'Stock', issued as 'Issued', lifted as 'Lifted', difference as 'Difference' "
+                + "from barrel ,master where customerCode=accountNo and customerCode='" + custCode + "' order by date asc;";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            return ResultSetToTableModel.getTableModel(rs);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
+    
     public static String[] selectOneId(Statement stmt, String id){
         String sql="select * from barrel where barrelId="+id+";";
         ResultSet rs=null;
@@ -96,8 +136,31 @@ public final class BarrelDB {
         }
         return null;
     }
+    
+     public static int getTotalIssued(Statement stmt){
+        String sql = "select sum(issued) from barrel;";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            return rs.getInt(1);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return -1;
+    }
+    
+     public static int getTotalLifted(Statement stmt){
+         String sql = "select sum(lifted) from barrel;";
+         try{
+             ResultSet rs = stmt.executeQuery(sql);
+             return rs.getInt(1);
+         }catch(SQLException se){
+             se.printStackTrace();
+         }
+         return -1;
+     }
+     
     public static String[] getBarrelDetails(Statement stmt){
-        String sql="select * from barrelDetails where barrelId=1;";
+        String sql="select * from barrelDetails where barrelDetailsId=1;";
         ResultSet rs=null;
         try{
             rs=stmt.executeQuery(sql);
@@ -162,6 +225,38 @@ public final class BarrelDB {
             return false;
         }
         return true;
+    }
+    
+    public static ResultSet getBarrelsOnDateRS(Statement stmt, String date){
+        String sql = "select customerCode, accountHead, stock, issued, lifted, difference"
+                + " from barrel, master where customerCode=accountNo and date='" + date + "' ;";
+        try{
+            return stmt.executeQuery(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static ResultSet getBarrelsForCustomerRS(Statement stmt, String custCode){
+        String sql = "select date, stock, issued, lifted, difference from barrel "
+                + "where customerCode='" + custCode + "' ;";
+        try{
+            return stmt.executeQuery(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static ResultSet getBarrelsSummaryRS(Statement stmt){
+        String sql = "select customerCode, name, contact, barrels from customer";
+        try{
+            return stmt.executeQuery(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
     }
 
 }

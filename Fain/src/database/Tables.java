@@ -113,8 +113,8 @@ public final class Tables {
             + "address      varchar(200),"
             + "branch       varchar(20),"
             + "kgst         varchar(20),"
-            + "rbno         varchar(20)"
-            + "contact      varchar(20)"
+            + "rbno         varchar(20),"
+            + "contact      varchar(20),"
             + "barrels      int);";
     
     public static final String category = "create table category("
@@ -130,13 +130,21 @@ public final class Tables {
             + "issued int,"
             + "lifted int,"
             + "difference int);";
+    
     public static final String barrelDetails = "create table barrelDetails("
             + "barrelDetailsId int primary key,"
-            + "companyTotal int,"
+            + "companyOpStock int,"
             + "companyShortage int,"
             + "customerIssued int,"
             + "latexBarrel int,"
             + "emptyBarrel int);";
+    
+    public static final String companyBarrel="create table companyBarrel("
+            + "cbarrelId integer primary key autoincrement,"
+            + "date date,"
+            + "issued int,"
+            + "lifted int,"
+            + "difference int);";
             
     
     public static void createTables(Statement stmt){
@@ -156,7 +164,8 @@ public final class Tables {
             stmt.execute(category);
             stmt.execute(barrel);
             stmt.execute(barrelDetails);
-            String branchDetailsSql="insert into branchDetails values(1,0,0,0,0,0);";
+            stmt.execute(companyBarrel);
+            String branchDetailsSql="insert into barrelDetails values(1,0,0,0,0,0);";
             stmt.execute(branchDetailsSql);
             
             CategoryDB.insert(stmt,"Asset","AS");

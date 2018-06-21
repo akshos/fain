@@ -289,7 +289,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         if(ValidationChecks.validateCode(code.trim())){
             if(MasterDB.checkExisting(dbConnection.getStatement(), code)){
                 this.existing = true;
-                this.accountCodeLabel.setText("<html>Account Code <span style=\"color:red\">Existing Code</span></html>");
+                this.accountCodeLabel.setText("<html>Account Code <span style=\"color:red\">Duplicate</span></html>");
             }
             else{
                 existing = false;

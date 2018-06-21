@@ -131,7 +131,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         boolean ret;
         
         if(mode==Codes.EDIT){
-            ret = CustomerDB.update(stmt, code, name, address, branch, kgst, rbregno,contact);
+            ret = CustomerDB.update(stmt, code, name, address, branch, kgst, rbregno, contact);
             if(ret){
                 JOptionPane.showMessageDialog(this, "The entry has been updated", "Success", JOptionPane.INFORMATION_MESSAGE);
             }else{
@@ -140,7 +140,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
             }
         }
         else{
-            ret = CustomerDB.insert(stmt, code, name, address, branch, kgst, rbregno,contact);
+            ret = CustomerDB.insert(stmt, code, name, address, branch, kgst, rbregno, contact);
             if(ret){
                 JOptionPane.showMessageDialog(this, "New entry has been successfully added", "Success", JOptionPane.INFORMATION_MESSAGE);
             }else{

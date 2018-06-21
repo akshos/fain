@@ -18,10 +18,10 @@ import utility.Codes;
  */
 public final class CustomerDB {
     public static boolean insert(Statement stmt, String code, String name, String address,String branch, String kgst,String rbno,String contact ){
-        String in ="insert into customer values('"      +code           +"','"
+        String in ="insert into customer values('"      +code           + "','"
                                                         +name           + "','"
                                                         +address        + "','"
-                                                        +branch       +"','"
+                                                        +branch         + "','"
                                                         +kgst           + "','"
                                                         +rbno           + "','"
                                                         +contact        + "',0);";
@@ -41,7 +41,7 @@ public final class CustomerDB {
                 + "branch='" + branch + "', "
                 + "kgst='" + kgst + "', "
                 + "rbno='" + rbno + "',"
-                + "contact=' "+contact+"'"
+                + "contact=' "+contact + "'"
                 + "where customerCode='" + code + "';";
         try{
             stmt.executeUpdate(sql);
@@ -214,5 +214,15 @@ public final class CustomerDB {
             se.printStackTrace();
         }
         return Codes.FAIL;
+    }
+    
+    public static void updateCustomerBarrelBalance(Statement stmt, String accId){
+        String sql = "update customer set barrels = (select sum(difference) from barrel "
+                + "where customerCode='" + accId + "' ) where customerCode='" + accId + "' ";
+        try{
+            stmt.executeUpdate(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
     }
 }
