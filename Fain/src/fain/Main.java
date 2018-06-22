@@ -308,6 +308,7 @@ public class Main extends javax.swing.JFrame {
         pProfitLossBLMenuItem = new javax.swing.JMenuItem();
         pListOfAccountsMenuItem = new javax.swing.JMenuItem();
         pPartyWiseStatement = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         pSalesLatexMenuItem = new javax.swing.JMenuItem();
         pPurchaseLatexMenuItem = new javax.swing.JMenuItem();
         pExpensesMenuItem = new javax.swing.JMenuItem();
@@ -717,6 +718,15 @@ public class Main extends javax.swing.JFrame {
             }
         });
         printingMenu.add(pPartyWiseStatement);
+
+        jMenuItem1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        jMenuItem1.setText("Party Wise Stmt & Voucher");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        printingMenu.add(jMenuItem1);
 
         pSalesLatexMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         pSalesLatexMenuItem.setText("Sales Latex");
@@ -1336,6 +1346,17 @@ public class Main extends javax.swing.JFrame {
         }
         addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_companyShowIssuesListsMenuItemActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        PPartyWiseStatementVoucher item = new PPartyWiseStatementVoucher(dbConnection, this, this.level+1);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
     
     /**
      * @param item the internal frame to be added to desktop pane
@@ -1433,6 +1454,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuBar fainMainMenu;
     private javax.swing.JMenu fileMenu;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem loadSessionMenuItem;
     private javax.swing.JDesktopPane mainDesktopPane;
     private javax.swing.JMenu optionsMenu;

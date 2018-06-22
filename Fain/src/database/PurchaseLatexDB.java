@@ -209,6 +209,19 @@ public final class PurchaseLatexDB {
         return null;
     }
     
+    public static String getAccIdFromBillNo(Statement stmt, String billNo){
+        String sql = "select party from purchaseLatex where prBill='" + billNo + "' ;";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next()){
+                return rs.getString(1);
+            }
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
+    
     public static String[] selectOneId(Statement stmt, String id){
         String sql="select purchaseLatexId as 'ID', branch, date as 'Date', "
                 + "prBill as 'Pr. Bill', party, printf(\"%.3f\", quantity) as 'Quantity', "
