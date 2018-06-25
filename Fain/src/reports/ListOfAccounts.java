@@ -229,7 +229,7 @@ public class ListOfAccounts {
         try{
             int base = 10;
                 
-                Phrase title = new Phrase("TRIAL BALANCE", CommonFuncs.titleFont);
+                Phrase title = new Phrase("LIST OF ACCOUNTS", CommonFuncs.titleFont);
                 Phrase date = new Phrase("As on : " + sdate);
                 
                 ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
