@@ -8,6 +8,7 @@ package reports;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.ColumnText;
 import com.itextpdf.text.pdf.PdfContentByte;
@@ -19,12 +20,18 @@ import database.CustomerDB;
 import database.DBConnection;
 import database.MasterDB;
 import database.PurchaseLatexDB;
+import database.SessionInfoDB;
 import database.TransactionDB;
 import java.io.FileOutputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -41,10 +48,10 @@ public class PartyWiseStatementVoucher {
     private static final String PREFIX = "partywisestatement";
     
     private static DBConnection scon;
-    private static String sdate;
+    private static String sfromDate;
+    private static String stoDate;
     private static String saccountId;
     private static String saccountName;
-    private static String sbillNo;
     private static String sbranch;
     private static int pageNum;
     
@@ -64,24 +71,26 @@ public class PartyWiseStatementVoucher {
         return null;
     }
     
-    public static int createReport(DBConnection con, String paper, String orientation, String date, String billNo){
+    public static int createReport(DBConnection con, String paper, String orientation, String fromDate, String toDate, String branch, String accountId){
         scon = con;
-        sdate = UtilityFuncs.dateSqlToUser(date);
+        sfromDate = UtilityFuncs.dateSqlToUser(fromDate);
+        stoDate = UtilityFuncs.dateSqlToUser(toDate);
         pageNum = 1;
-        sbillNo = billNo;
+        sbranch = branch;
+        
         int ret = 0;
 
         Document doc;
         try{
-            String accountId = PurchaseLatexDB.getAccIdFromBillNo(con.getStatement(), billNo);
-            String[][] accountData = CustomerDB.getCustomersFilteredCode(con.getStatement(), accountId);
+            
+            String[][] accountData = CustomerDB.getCustomersFilteredCodeBranch(con.getStatement(), branch, accountId);
             if(accountData == null){
                 JOptionPane.showMessageDialog(null, "No Customer Accounts Available", "No Customers", JOptionPane.ERROR_MESSAGE);
                 return Codes.FAIL;
             }
             
             LinkedHashMap<String, Account> accounts = CommonFuncs.addToHashMapLinked(accountData, false);
-            calculateBalance(con, accounts, date);
+            calculateBalance(con, accounts, fromDate, toDate);
             
             List<String> keyList = new ArrayList<String>(accounts.keySet());
             int len = keyList.size();
@@ -95,7 +104,7 @@ public class PartyWiseStatementVoucher {
                saccountId = key;
                saccountName = MasterDB.getAccountHead(con.getStatement(), saccountId);
                acc = accounts.get(key);               
-               ret = createTable(con, doc, date, key, acc);
+               ret = createTable(con, doc, fromDate, toDate, key, acc);
                if(ret == Codes.FAIL){
                    return ret;
                }
@@ -104,6 +113,7 @@ public class PartyWiseStatementVoucher {
                }
             }
             
+            addVoucher(con, doc, accountId, branch, "0");
             
             doc.close();
         }catch(Exception e){
@@ -116,12 +126,12 @@ public class PartyWiseStatementVoucher {
     }
     
     //Calculate net balance from transactions before the start date (fromDate)
-    private static boolean calculateBalance(DBConnection con, LinkedHashMap<String, Account> accounts, String date){
+    private static boolean calculateBalance(DBConnection con, LinkedHashMap<String, Account> accounts, String fromDate, String toDate){
         String debitAcc, creditAcc;
         double amount;
         Account acc;
         try{
-            ResultSet rs = TransactionDB.getTransactionsBeforeDateRS(con.getStatement(), date);
+            ResultSet rs = TransactionDB.getTransactionsBeforeDateRS(con.getStatement(), fromDate);
             while(rs.next()){
                 debitAcc = rs.getString("debit");
                 creditAcc = rs.getString("credit");
@@ -201,8 +211,8 @@ public class PartyWiseStatementVoucher {
         table.addCell(cell);
     }
     
-    private static int createTable(DBConnection con, Document doc, String billDate, String accId, Account acc){
-        float columns[] = {1, 0.7f, 2, 1, 1, 1, 1, 1, 1};
+    private static int createTable(DBConnection con, Document doc, String fromDate, String toDate, String accId, Account acc){
+        float columns[] = {0.7f, 0.7f, 0.7f, 0.8f, 0.8f, 0.7f, 1, 1, 1};
         PdfPTable table = new PdfPTable(columns);
         table.setWidthPercentage(90);
         addHeaderCell(table, "Date");
@@ -239,7 +249,7 @@ public class PartyWiseStatementVoucher {
                                 "", "", "", "", "", "", "",
                                 new DecimalFormat("##,##,##0.00").format(balance));
         
-        String[] dates = TransactionDB.getTrasnsationDatesBetweenIncDatesIdRS(con.getStatement(), billDate, billDate, accId);
+        String[] dates = TransactionDB.getTrasnsationDatesBetweenIncDatesIdRS(con.getStatement(), fromDate, toDate, accId);
         if(dates == null){
             return Codes.NOT_EXISTS;
         }
@@ -321,6 +331,103 @@ public class PartyWiseStatementVoucher {
         return Codes.SUCCESS;
     }
     
+    private static void addVoucherRow(PdfPTable table, int border, Font font, String col1, String col2, String col3){
+        PdfPCell cell;
+        
+        cell = new PdfPCell(new Phrase(col1, font));
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setBorder(border);
+        table.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase(col2, font));
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setBorder(border);
+        table.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase(col3, font));
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setBorder(border);
+        table.addCell(cell);
+    }
+    
+    private static void addVoucherTableHeader(PdfPTable table){
+        PdfPCell cell;
+        
+        cell = new PdfPCell(new Phrase("Particulars", CommonFuncs.tableBoldFont));
+        cell.setRowspan(2);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_CENTER);
+        cell.setBorder(PdfPCell.BOX);
+        
+        table.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase("Amount", CommonFuncs.tableBoldFont));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setBorder(PdfPCell.BOX);
+        cell.setColspan(2);
+        table.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase("Rs.", CommonFuncs.tableBoldFont));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setBorder(PdfPCell.BOX);
+        table.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase("Ps.", CommonFuncs.tableBoldFont));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setBorder(PdfPCell.BOX);
+        table.addCell(cell);
+        
+    }
+    
+    private static void addVoucher(DBConnection con, Document doc, String accId, String branch, String amount){
+            LocalDateTime now = LocalDateTime.now();
+            Date currDate = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+            String date = df.format(currDate);
+            
+            String accName = MasterDB.getAccountHead(con.getStatement(), accId);
+            
+            CommonFuncs.addEmptyLine(doc, 1);
+            
+            CommonFuncs.addHeader(con, doc);
+            
+            Paragraph title = new Paragraph();
+            title.add(CommonFuncs.alignCenter("VOUCHER", CommonFuncs.titleFont));
+            title.add(CommonFuncs.alignCenter(accName + " (" + accId  + ") Br No. " + branch, CommonFuncs.smallNameFont));
+            title.add(CommonFuncs.alignCenter("Date : " + date, CommonFuncs.subTitleFont));
+            
+            float columns[] = {5, 1.0f, 0.6f};
+            PdfPTable table = new PdfPTable(columns);
+            table.setWidthPercentage(90);
+            
+            addVoucherTableHeader(table);
+            
+            addVoucherRow(table, PdfPCell.LEFT|PdfPCell.RIGHT, CommonFuncs.tableContentFont, " ", "", "");
+            addVoucherRow(table, PdfPCell.LEFT|PdfPCell.RIGHT, CommonFuncs.tableContentFont, " ", "", "");
+            addVoucherRow(table, PdfPCell.LEFT|PdfPCell.RIGHT, CommonFuncs.tableContentFont, " ", "", "");
+            addVoucherRow(table, PdfPCell.LEFT|PdfPCell.RIGHT, CommonFuncs.tableContentFont, " ", "", "");
+            addVoucherRow(table, PdfPCell.LEFT|PdfPCell.RIGHT, CommonFuncs.tableContentFont, " ", "", "");
+            addVoucherRow(table, PdfPCell.LEFT|PdfPCell.RIGHT, CommonFuncs.tableContentFont, " ", "", "");
+            
+            addVoucherRow(table, PdfPCell.BOX, CommonFuncs.tableBoldFont, "TOTALS", "", "");
+            
+            try{
+                doc.add(title);
+                CommonFuncs.addEmptyLine(doc, 1);
+                doc.add(table);
+                CommonFuncs.addEmptyLine(doc, 3);
+                
+                Paragraph sign = new Paragraph("Signature         ", CommonFuncs.titleFont);
+                sign.setAlignment(Element.ALIGN_RIGHT);
+                doc.add(sign);
+                
+            }
+            catch(Exception e){
+                    e.printStackTrace();
+            }
+            
+    }
+    
     private static class ShowHeader extends PdfPageEventHelper{        
         
         public void onEndPage(PdfWriter writer, Document document) {
@@ -345,7 +452,7 @@ public class PartyWiseStatementVoucher {
 
                 Phrase title = new Phrase("PARTY WISE STATEMENT", CommonFuncs.titleFont);
                 Phrase account = new Phrase(saccountName + " ("+ saccountId + ")", CommonFuncs.subTitleFont);
-                Phrase date = new Phrase("Date : " + sdate, CommonFuncs.subTitleFont);
+                Phrase date = new Phrase("From : " + sfromDate + "  To : " + stoDate, CommonFuncs.subTitleFont);
                 ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
                     title,
                     (document.right() - document.left()) / 2 + document.leftMargin(),

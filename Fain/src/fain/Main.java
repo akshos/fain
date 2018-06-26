@@ -24,6 +24,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JComboBox;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
+import reports.ViewPdf;
 import utility.UtilityFuncs;
 
 /**
@@ -315,6 +316,7 @@ public class Main extends javax.swing.JFrame {
         pBarrelDailyReportMenuItem = new javax.swing.JMenuItem();
         pBarrelCustomerReportMenuItem = new javax.swing.JMenuItem();
         pBarrelSummaryReportMenuItem = new javax.swing.JMenuItem();
+        pDeliveryChallan = new javax.swing.JMenuItem();
         optionsMenu = new javax.swing.JMenu();
         startNewSessionMenuItem = new javax.swing.JMenuItem();
         loadSessionMenuItem = new javax.swing.JMenuItem();
@@ -781,6 +783,15 @@ public class Main extends javax.swing.JFrame {
             }
         });
         printingMenu.add(pBarrelSummaryReportMenuItem);
+
+        pDeliveryChallan.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        pDeliveryChallan.setText("Delivery Challan");
+        pDeliveryChallan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pDeliveryChallanActionPerformed(evt);
+            }
+        });
+        printingMenu.add(pDeliveryChallan);
 
         fainMainMenu.add(printingMenu);
 
@@ -1357,6 +1368,10 @@ public class Main extends javax.swing.JFrame {
         }
         addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void pDeliveryChallanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pDeliveryChallanActionPerformed
+        ViewPdf.openPdfViewer("DeliveryChallan.pdf");        // TODO add your handling code here:
+    }//GEN-LAST:event_pDeliveryChallanActionPerformed
     
     /**
      * @param item the internal frame to be added to desktop pane
@@ -1461,6 +1476,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem pBarrelCustomerReportMenuItem;
     private javax.swing.JMenuItem pBarrelDailyReportMenuItem;
     private javax.swing.JMenuItem pBarrelSummaryReportMenuItem;
+    private javax.swing.JMenuItem pDeliveryChallan;
     private javax.swing.JMenuItem pExpensesMenuItem;
     private javax.swing.JMenuItem pLedgerMenuItem;
     private javax.swing.JMenuItem pListOfAccountsMenuItem;

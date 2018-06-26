@@ -26,7 +26,6 @@ import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
-import reports.PartyWiseStatement;
 import reports.PartyWiseStatementVoucher;
 import utility.UtilityFuncs;
 import utility.ValidationChecks;
@@ -64,7 +63,8 @@ public class PPartyWiseStatementVoucher extends javax.swing.JInternalFrame{
         Date currDate = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String date=df.format(currDate);
-        this.datePicker.setText(date);
+        this.fromDatePicker.setText(date);
+        this.toDatePicker.setText(date);
     }
     
     private void loadBranchData(){
@@ -149,18 +149,25 @@ public class PPartyWiseStatementVoucher extends javax.swing.JInternalFrame{
             return;
         }
         
-
+        String fromDate=this.fromDatePicker.getText();
+        if(!ValidationChecks.isDateValid(fromDate)){
+            JOptionPane.showMessageDialog(this, "Please enter valid Date From", "INVALID DATE", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        fromDate = UtilityFuncs.dateUserToSql(fromDate);
+        System.out.println("From Date " + fromDate);
         
-        String date=this.datePicker.getText();
-        if(!ValidationChecks.isDateValid(date)){
+        String toDate=this.toDatePicker.getText();
+        if(!ValidationChecks.isDateValid(toDate)){
             JOptionPane.showMessageDialog(this, "Please enter valid Date To", "INVALID DATE", JOptionPane.WARNING_MESSAGE);
             return;
         }       
-        date = UtilityFuncs.dateUserToSql(date);  
+        toDate = UtilityFuncs.dateUserToSql(toDate);  
         
         final String fbranch = branch;
         final String faccount = account;
-        final String billDate = date;
+        final String dateFrom = fromDate;
+        final String dateTo = toDate;
         String paper = this.paperCbox.getSelectedItem().toString();
         String orientation = this.orientationCbox.getSelectedItem().toString();
         
@@ -171,7 +178,7 @@ public class PPartyWiseStatementVoucher extends javax.swing.JInternalFrame{
                 wait.setSize(new Dimension(700, 400));
                 wait.setVisible(true);
                 mainFrame.addToMainDesktopPane(wait, level+1, Codes.NO_DATABASE);
-                int ret = PartyWiseStatementVoucher.createReport(dbConnection, paper, orientation, billDate, faccount);
+                int ret = PartyWiseStatementVoucher.createReport(dbConnection, paper, orientation, dateFrom, dateTo, fbranch, faccount);
                 wait.closeWait();
             }
         });
@@ -207,6 +214,7 @@ public class PPartyWiseStatementVoucher extends javax.swing.JInternalFrame{
         labelsPanel = new javax.swing.JPanel();
         branchLabel = new javax.swing.JLabel();
         cashAccountLabel = new javax.swing.JLabel();
+        dateFromLabel = new javax.swing.JLabel();
         asOnLabel = new javax.swing.JLabel();
         paperLabel = new javax.swing.JLabel();
         orientationLabel = new javax.swing.JLabel();
@@ -217,7 +225,8 @@ public class PPartyWiseStatementVoucher extends javax.swing.JInternalFrame{
         accountPanel = new javax.swing.JPanel();
         accountTbox = new javax.swing.JTextField();
         accountNameLabel = new javax.swing.JLabel();
-        datePicker = new javax.swing.JFormattedTextField();
+        fromDatePicker = new javax.swing.JFormattedTextField();
+        toDatePicker = new javax.swing.JFormattedTextField();
         paperCbox = new javax.swing.JComboBox<>();
         orientationCbox = new javax.swing.JComboBox<>();
         buttonPanel = new javax.swing.JPanel();
@@ -263,7 +272,7 @@ public class PPartyWiseStatementVoucher extends javax.swing.JInternalFrame{
 
         leftInerPannel.add(logoPanel);
 
-        labelsPanel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
+        labelsPanel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
 
         branchLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         branchLabel.setText("Branch");
@@ -273,8 +282,12 @@ public class PPartyWiseStatementVoucher extends javax.swing.JInternalFrame{
         cashAccountLabel.setText("Account");
         labelsPanel.add(cashAccountLabel);
 
+        dateFromLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        dateFromLabel.setText("Date from");
+        labelsPanel.add(dateFromLabel);
+
         asOnLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        asOnLabel.setText("Date");
+        asOnLabel.setText("Date To");
         labelsPanel.add(asOnLabel);
 
         paperLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
@@ -289,7 +302,7 @@ public class PPartyWiseStatementVoucher extends javax.swing.JInternalFrame{
 
         outerPanel.add(leftInerPannel);
 
-        rightInerPannel.setLayout(new java.awt.GridLayout(6, 0, 0, 10));
+        rightInerPannel.setLayout(new java.awt.GridLayout(7, 0, 0, 10));
 
         branchPanel.setLayout(new java.awt.BorderLayout());
 
@@ -343,22 +356,40 @@ public class PPartyWiseStatementVoucher extends javax.swing.JInternalFrame{
         rightInerPannel.add(accountPanel);
 
         try {
-            datePicker.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
+            fromDatePicker.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        datePicker.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        datePicker.addFocusListener(new java.awt.event.FocusAdapter() {
+        fromDatePicker.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        fromDatePicker.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                datePickerFocusGained(evt);
+                fromDatePickerFocusGained(evt);
             }
         });
-        datePicker.addKeyListener(new java.awt.event.KeyAdapter() {
+        fromDatePicker.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keyPressedHandler(evt);
             }
         });
-        rightInerPannel.add(datePicker);
+        rightInerPannel.add(fromDatePicker);
+
+        try {
+            toDatePicker.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        toDatePicker.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        toDatePicker.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                toDatePickerFocusGained(evt);
+            }
+        });
+        toDatePicker.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                keyPressedHandler(evt);
+            }
+        });
+        rightInerPannel.add(toDatePicker);
 
         paperCbox.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         paperCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A4", "Legal" }));
@@ -498,9 +529,13 @@ public class PPartyWiseStatementVoucher extends javax.swing.JInternalFrame{
         }// TODO add your handling code here:
     }//GEN-LAST:event_keyPressedHandler
 
-    private void datePickerFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_datePickerFocusGained
-        this.datePicker.setCaretPosition(0);        // TODO add your handling code here:
-    }//GEN-LAST:event_datePickerFocusGained
+    private void fromDatePickerFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_fromDatePickerFocusGained
+        this.fromDatePicker.setCaretPosition(0);        // TODO add your handling code here:
+    }//GEN-LAST:event_fromDatePickerFocusGained
+
+    private void toDatePickerFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_toDatePickerFocusGained
+        this.toDatePicker.setCaretPosition(0);        // TODO add your handling code here:
+    }//GEN-LAST:event_toDatePickerFocusGained
 
     private void accountTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_accountTboxFocusGained
         this.accountTbox.selectAll();        // TODO add your handling code here:
@@ -521,8 +556,9 @@ public class PPartyWiseStatementVoucher extends javax.swing.JInternalFrame{
     private javax.swing.JTextField branchTbox;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JLabel cashAccountLabel;
-    private javax.swing.JFormattedTextField datePicker;
+    private javax.swing.JLabel dateFromLabel;
     private javax.swing.JButton enterButton;
+    private javax.swing.JFormattedTextField fromDatePicker;
     private javax.swing.JPanel labelsPanel;
     private javax.swing.JPanel leftInerPannel;
     private javax.swing.JLabel logoLabel;
@@ -535,5 +571,6 @@ public class PPartyWiseStatementVoucher extends javax.swing.JInternalFrame{
     private javax.swing.JPanel rightInerPannel;
     private javax.swing.JLabel titleLabel;
     private javax.swing.JPanel titlePanel;
+    private javax.swing.JFormattedTextField toDatePicker;
     // End of variables declaration//GEN-END:variables
 }

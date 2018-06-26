@@ -37,8 +37,9 @@ import javax.swing.JOptionPane;
  * @author akshos
  */
 public class CommonFuncs {
-    private static final Font nameFont = new Font(Font.FontFamily.HELVETICA, 22);
-    private static final Font addressFont = new Font(Font.FontFamily.HELVETICA, 11);
+    public static final Font nameFont = new Font(Font.FontFamily.HELVETICA, 22);
+    public static final Font smallNameFont = new Font(Font.FontFamily.HELVETICA, 13);
+    public static final Font addressFont = new Font(Font.FontFamily.HELVETICA, 11);
     
     public static final Font titleFont = new Font(Font.FontFamily.COURIER, 14, Font.BOLD);
     public static final Font subTitleFont = new Font(Font.FontFamily.COURIER, 12);
@@ -48,7 +49,7 @@ public class CommonFuncs {
     
     public static final Font spacingFont = new Font(Font.FontFamily.COURIER, 12);
     public static final Font tableHeaderFont = new Font(Font.FontFamily.COURIER, 12, Font.BOLD);
-    public static final Font tableContentFont = new Font(Font.FontFamily.COURIER, 12);
+    public static final Font tableContentFont = new Font(Font.FontFamily.COURIER, 11);
     public static final Font tableBoldFont = new Font(Font.FontFamily.COURIER, 12 , Font.BOLD);
     
     public static final Font footerFont = new Font(Font.FontFamily.COURIER, 12);
@@ -73,7 +74,7 @@ public class CommonFuncs {
             header.add(alignCenter(name, nameFont));
             header.add(alignCenter(address + "  Phone: " + phone1 + ", " + phone2, addressFont));
             header.add(alignCenter("GST: " + gst + "  RB REG: " + rbreg, addressFont));
-            addEmptyLine(header, 1);
+            //addEmptyLine(header, 1);
             doc.add(header);
         }catch(Exception e){
             e.printStackTrace();
