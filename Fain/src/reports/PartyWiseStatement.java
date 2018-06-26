@@ -204,7 +204,7 @@ public class PartyWiseStatement {
     }
     
     private static int createTable(DBConnection con, Document doc, String fromDate, String toDate, String accId, Account acc){
-        float columns[] = {1, 0.7f, 2, 1, 1, 1, 1, 1, 1};
+        float columns[] = {0.7f, 0.7f, 0.7f, 0.8f, 0.8f, 0.7f, 1, 1, 1};
         PdfPTable table = new PdfPTable(columns);
         table.setWidthPercentage(90);
         addHeaderCell(table, "Date");
