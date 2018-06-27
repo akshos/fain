@@ -79,7 +79,7 @@ public class PartyWiseStatementVoucher {
         sbranch = branch;
         
         int ret = 0;
-
+        double amount = 0.0;
         Document doc;
         try{
             
@@ -104,7 +104,7 @@ public class PartyWiseStatementVoucher {
                saccountId = key;
                saccountName = MasterDB.getAccountHead(con.getStatement(), saccountId);
                acc = accounts.get(key);               
-               ret = createTable(con, doc, fromDate, toDate, key, acc);
+               amount = createTable(con, doc, fromDate, toDate, key, acc);
                if(ret == Codes.FAIL){
                    return ret;
                }
@@ -113,7 +113,7 @@ public class PartyWiseStatementVoucher {
                }
             }
             
-            addVoucher(con, doc, accountId, branch, "0");
+            addVoucher(con, doc, accountId, branch, new DecimalFormat("##,##,##0.00").format(amount));
             
             doc.close();
         }catch(Exception e){
@@ -211,7 +211,7 @@ public class PartyWiseStatementVoucher {
         table.addCell(cell);
     }
     
-    private static int createTable(DBConnection con, Document doc, String fromDate, String toDate, String accId, Account acc){
+    private static double createTable(DBConnection con, Document doc, String fromDate, String toDate, String accId, Account acc){
         float columns[] = {0.7f, 0.7f, 0.7f, 0.8f, 0.8f, 0.7f, 1, 1, 1};
         PdfPTable table = new PdfPTable(columns);
         table.setWidthPercentage(90);
@@ -328,7 +328,7 @@ public class PartyWiseStatementVoucher {
             e.printStackTrace();
             return Codes.FAIL;
         }
-        return Codes.SUCCESS;
+        return balance;
     }
     
     private static void addVoucherRow(PdfPTable table, int border, Font font, String col1, String col2, String col3){
@@ -340,21 +340,22 @@ public class PartyWiseStatementVoucher {
         table.addCell(cell);
         
         cell = new PdfPCell(new Phrase(col2, font));
-        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell.setBorder(border);
         table.addCell(cell);
         
+        /*
         cell = new PdfPCell(new Phrase(col3, font));
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         cell.setBorder(border);
         table.addCell(cell);
+        */
     }
     
     private static void addVoucherTableHeader(PdfPTable table){
         PdfPCell cell;
         
         cell = new PdfPCell(new Phrase("Particulars", CommonFuncs.tableBoldFont));
-        cell.setRowspan(2);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell.setVerticalAlignment(Element.ALIGN_CENTER);
         cell.setBorder(PdfPCell.BOX);
@@ -364,18 +365,19 @@ public class PartyWiseStatementVoucher {
         cell = new PdfPCell(new Phrase("Amount", CommonFuncs.tableBoldFont));
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell.setBorder(PdfPCell.BOX);
-        cell.setColspan(2);
         table.addCell(cell);
         
+        /*
         cell = new PdfPCell(new Phrase("Rs.", CommonFuncs.tableBoldFont));
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell.setBorder(PdfPCell.BOX);
         table.addCell(cell);
-        
+                cell.setColspan(2);
         cell = new PdfPCell(new Phrase("Ps.", CommonFuncs.tableBoldFont));
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell.setBorder(PdfPCell.BOX);
         table.addCell(cell);
+    */
         
     }
     
@@ -387,7 +389,7 @@ public class PartyWiseStatementVoucher {
             
             String accName = MasterDB.getAccountHead(con.getStatement(), accId);
             
-            CommonFuncs.addEmptyLine(doc, 1);
+            CommonFuncs.addEmptyLine(doc, 5);
             
             CommonFuncs.addHeader(con, doc);
             
@@ -396,20 +398,20 @@ public class PartyWiseStatementVoucher {
             title.add(CommonFuncs.alignCenter(accName + " (" + accId  + ") Br No. " + branch, CommonFuncs.smallNameFont));
             title.add(CommonFuncs.alignCenter("Date : " + date, CommonFuncs.subTitleFont));
             
-            float columns[] = {5, 1.0f, 0.6f};
+            float columns[] = {4.5f, 1.5f};
             PdfPTable table = new PdfPTable(columns);
             table.setWidthPercentage(90);
             
             addVoucherTableHeader(table);
             
-            addVoucherRow(table, PdfPCell.LEFT|PdfPCell.RIGHT, CommonFuncs.tableContentFont, " ", "", "");
+            addVoucherRow(table, PdfPCell.LEFT|PdfPCell.RIGHT, CommonFuncs.tableContentFont, "Payment : Cash / Cheque No. ", amount, "");
             addVoucherRow(table, PdfPCell.LEFT|PdfPCell.RIGHT, CommonFuncs.tableContentFont, " ", "", "");
             addVoucherRow(table, PdfPCell.LEFT|PdfPCell.RIGHT, CommonFuncs.tableContentFont, " ", "", "");
             addVoucherRow(table, PdfPCell.LEFT|PdfPCell.RIGHT, CommonFuncs.tableContentFont, " ", "", "");
             addVoucherRow(table, PdfPCell.LEFT|PdfPCell.RIGHT, CommonFuncs.tableContentFont, " ", "", "");
             addVoucherRow(table, PdfPCell.LEFT|PdfPCell.RIGHT, CommonFuncs.tableContentFont, " ", "", "");
             
-            addVoucherRow(table, PdfPCell.BOX, CommonFuncs.tableBoldFont, "TOTALS", "", "");
+            addVoucherRow(table, PdfPCell.BOX, CommonFuncs.tableBoldFont, "TOTALS", amount, "");
             
             try{
                 doc.add(title);
@@ -417,7 +419,7 @@ public class PartyWiseStatementVoucher {
                 doc.add(table);
                 CommonFuncs.addEmptyLine(doc, 3);
                 
-                Paragraph sign = new Paragraph("Signature         ", CommonFuncs.titleFont);
+                Paragraph sign = new Paragraph("Customer Signature         ", CommonFuncs.titleFont);
                 sign.setAlignment(Element.ALIGN_RIGHT);
                 doc.add(sign);
                 

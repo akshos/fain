@@ -240,6 +240,7 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="barrelsMenu">
           <Properties>
+            <Property name="mnemonic" type="int" value="98"/>
             <Property name="text" type="java.lang.String" value="Barrels"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Dialog" size="24" style="1"/>

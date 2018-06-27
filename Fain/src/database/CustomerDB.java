@@ -238,7 +238,7 @@ public final class CustomerDB {
             int balance = 0;
             if(rs.next())
                 balance = rs.getInt(1);
-            sql = "update customer set barrels=" + balance + " where cusotmerCode='" + accId + "' ;";
+            sql = "update customer set barrels=" + balance + " where customerCode='" + accId + "' ;";
             stmt.executeUpdate(sql);
         }catch(SQLException se){
             se.printStackTrace();

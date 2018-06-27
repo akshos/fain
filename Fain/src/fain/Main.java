@@ -554,6 +554,7 @@ public class Main extends javax.swing.JFrame {
 
         fainMainMenu.add(editMenu);
 
+        barrelsMenu.setMnemonic('b');
         barrelsMenu.setText("Barrels");
         barrelsMenu.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
 
