@@ -17,6 +17,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfWriter;
 import database.BarrelDB;
+import database.CompanyBarrelDB;
 import database.MasterDB;
 import java.io.FileOutputStream;
 import java.sql.ResultSet;
@@ -56,6 +57,8 @@ public class BarrelSummaryReport {
         try{
             doc = startDocument(paper, orientation);
             
+            addBarrelSummary(con, doc);
+            CommonFuncs.addEmptyLine(doc, 1);
             ret = addTable(con, doc);
             
             doc.close();
@@ -67,6 +70,128 @@ public class BarrelSummaryReport {
         ViewPdf.openPdfViewer(PREFIX + ".pdf");
         wait.closeWait();
         return ret;
+    }
+    
+    private static void addBarrelSummary(DBConnection dbConnection, Document doc){
+        float columns[] = {1f, 0.5f, 1f, 0.5f};
+        PdfPTable table = new PdfPTable(columns);
+        PdfPCell cell;
+        
+        int companyOpStock = CompanyBarrelDB.getCompanyOpStock(dbConnection.getStatement());
+        int companyTotalIssued = CompanyBarrelDB.getTotalIssued(dbConnection.getStatement());
+        int companyTotalLifted = CompanyBarrelDB.getTotalLifted(dbConnection.getStatement());
+        
+        
+        int companyInitBarrels = companyOpStock + companyTotalIssued - companyTotalLifted;
+        
+        int companyShortage = CompanyBarrelDB.getCompanyShortage(dbConnection.getStatement());
+        
+        //net number of barrels from company currently at hand/at customer
+        int companyBarrels = companyInitBarrels - companyShortage;
+        
+        int customerTotalIssued = BarrelDB.getTotalIssued(dbConnection.getStatement());
+        int customerTotalLifted = BarrelDB.getTotalLifted(dbConnection.getStatement());
+        
+        //get current number of issued barrels
+        int customerIssued = customerTotalIssued - customerTotalLifted;
+        //get the current number of latex barrels at hand
+        int latexBarrels = customerTotalLifted - companyTotalLifted;
+        //get the current number of empty barrels at hand
+        int emptyBarrels = companyBarrels - (customerIssued + latexBarrels);
+        
+        
+        cell = new PdfPCell(new Phrase("Business Account", CommonFuncs.tableContentFont));
+        cell.setColspan(2);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setBorder(PdfPCell.NO_BORDER);
+        table.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase("Customer Account", CommonFuncs.tableContentFont));
+        cell.setColspan(2);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setBorder(PdfPCell.NO_BORDER);
+        table.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase("Company : ", CommonFuncs.tableContentFont));
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setBorder(PdfPCell.NO_BORDER);
+        table.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase(String.valueOf(companyInitBarrels), CommonFuncs.tableContentFont));
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setBorder(PdfPCell.NO_BORDER);
+        table.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase("Issued : ", CommonFuncs.tableContentFont));
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setBorder(PdfPCell.NO_BORDER);
+        table.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase(String.valueOf(customerIssued), CommonFuncs.tableContentFont));
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setBorder(PdfPCell.NO_BORDER);
+        table.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase("Shortage : ", CommonFuncs.tableContentFont));
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setBorder(PdfPCell.NO_BORDER);
+        table.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase(String.valueOf(companyShortage), CommonFuncs.tableContentFont));
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setBorder(PdfPCell.NO_BORDER);
+        table.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase("Latex Barrels : ", CommonFuncs.tableContentFont));
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setBorder(PdfPCell.NO_BORDER);
+        table.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase(String.valueOf(latexBarrels), CommonFuncs.tableContentFont));
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setBorder(PdfPCell.NO_BORDER);
+        table.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase("Total : ", CommonFuncs.tableContentFont));
+        cell.setRowspan(2);
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setVerticalAlignment(Element.ALIGN_BOTTOM);
+        cell.setBorder(PdfPCell.NO_BORDER);
+        table.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase(String.valueOf(companyBarrels), CommonFuncs.tableBoldFont));
+        cell.setRowspan(2);
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setVerticalAlignment(Element.ALIGN_BOTTOM);
+        cell.setBorder(PdfPCell.NO_BORDER);
+        table.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase("Empty Barrels : ", CommonFuncs.tableContentFont));
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setBorder(PdfPCell.NO_BORDER);
+        table.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase(String.valueOf(emptyBarrels), CommonFuncs.tableContentFont));
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setBorder(PdfPCell.NO_BORDER);
+        table.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase("Total : ", CommonFuncs.tableContentFont));
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setBorder(PdfPCell.NO_BORDER);
+        table.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase(String.valueOf(customerIssued + latexBarrels + emptyBarrels), CommonFuncs.tableBoldFont));
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setBorder(PdfPCell.NO_BORDER);
+        table.addCell(cell);
+        
+        try{
+            doc.add(table);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        
     }
     
     private static void addHeaderCell(PdfPTable table, String header){

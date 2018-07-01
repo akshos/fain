@@ -309,11 +309,12 @@ public class Main extends javax.swing.JFrame {
         pProfitLossBLMenuItem = new javax.swing.JMenuItem();
         pListOfAccountsMenuItem = new javax.swing.JMenuItem();
         pPartyWiseStatement = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        pPartyWiseStmtVoucherMenuItem = new javax.swing.JMenuItem();
         pSalesLatexMenuItem = new javax.swing.JMenuItem();
         pPurchaseLatexMenuItem = new javax.swing.JMenuItem();
         pExpensesMenuItem = new javax.swing.JMenuItem();
         pBarrelDailyReportMenuItem = new javax.swing.JMenuItem();
+        pBarrelMonthlyReportMenuItem = new javax.swing.JMenuItem();
         pBarrelCustomerReportMenuItem = new javax.swing.JMenuItem();
         pBarrelSummaryReportMenuItem = new javax.swing.JMenuItem();
         pDeliveryChallan = new javax.swing.JMenuItem();
@@ -722,14 +723,14 @@ public class Main extends javax.swing.JFrame {
         });
         printingMenu.add(pPartyWiseStatement);
 
-        jMenuItem1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        jMenuItem1.setText("Party Wise Stmt & Voucher");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        pPartyWiseStmtVoucherMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        pPartyWiseStmtVoucherMenuItem.setText("Party Wise Stmt & Voucher");
+        pPartyWiseStmtVoucherMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                pPartyWiseStmtVoucherMenuItemActionPerformed(evt);
             }
         });
-        printingMenu.add(jMenuItem1);
+        printingMenu.add(pPartyWiseStmtVoucherMenuItem);
 
         pSalesLatexMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         pSalesLatexMenuItem.setText("Sales Latex");
@@ -766,6 +767,15 @@ public class Main extends javax.swing.JFrame {
             }
         });
         printingMenu.add(pBarrelDailyReportMenuItem);
+
+        pBarrelMonthlyReportMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        pBarrelMonthlyReportMenuItem.setText("Barrel Monthly Report");
+        pBarrelMonthlyReportMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pBarrelMonthlyReportMenuItemActionPerformed(evt);
+            }
+        });
+        printingMenu.add(pBarrelMonthlyReportMenuItem);
 
         pBarrelCustomerReportMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         pBarrelCustomerReportMenuItem.setText("Barrel Customer Report");
@@ -1359,7 +1369,7 @@ public class Main extends javax.swing.JFrame {
         addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_companyShowIssuesListsMenuItemActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void pPartyWiseStmtVoucherMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pPartyWiseStmtVoucherMenuItemActionPerformed
         PPartyWiseStatementVoucher item = new PPartyWiseStatementVoucher(dbConnection, this, this.level+1);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
@@ -1368,11 +1378,22 @@ public class Main extends javax.swing.JFrame {
             item.setSize(790, 470);
         }
         addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_pPartyWiseStmtVoucherMenuItemActionPerformed
 
     private void pDeliveryChallanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pDeliveryChallanActionPerformed
         ViewPdf.openPdfViewer("DeliveryChallan.pdf");        // TODO add your handling code here:
     }//GEN-LAST:event_pDeliveryChallanActionPerformed
+
+    private void pBarrelMonthlyReportMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pBarrelMonthlyReportMenuItemActionPerformed
+        PBarrelMonthlyReport item = new PBarrelMonthlyReport(dbConnection, this, this.level+1);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+            item.setSize(dim);
+        }else{
+            item.setSize(790, 470);
+        }
+        addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
+    }//GEN-LAST:event_pBarrelMonthlyReportMenuItemActionPerformed
     
     /**
      * @param item the internal frame to be added to desktop pane
@@ -1470,18 +1491,19 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuBar fainMainMenu;
     private javax.swing.JMenu fileMenu;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem loadSessionMenuItem;
     private javax.swing.JDesktopPane mainDesktopPane;
     private javax.swing.JMenu optionsMenu;
     private javax.swing.JMenuItem pBarrelCustomerReportMenuItem;
     private javax.swing.JMenuItem pBarrelDailyReportMenuItem;
+    private javax.swing.JMenuItem pBarrelMonthlyReportMenuItem;
     private javax.swing.JMenuItem pBarrelSummaryReportMenuItem;
     private javax.swing.JMenuItem pDeliveryChallan;
     private javax.swing.JMenuItem pExpensesMenuItem;
     private javax.swing.JMenuItem pLedgerMenuItem;
     private javax.swing.JMenuItem pListOfAccountsMenuItem;
     private javax.swing.JMenuItem pPartyWiseStatement;
+    private javax.swing.JMenuItem pPartyWiseStmtVoucherMenuItem;
     private javax.swing.JMenuItem pProfitLossBLMenuItem;
     private javax.swing.JMenuItem pPurchaseLatexMenuItem;
     private javax.swing.JMenuItem pSalesLatexMenuItem;

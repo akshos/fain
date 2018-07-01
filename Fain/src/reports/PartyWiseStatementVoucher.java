@@ -417,11 +417,23 @@ public class PartyWiseStatementVoucher {
                 doc.add(title);
                 CommonFuncs.addEmptyLine(doc, 1);
                 doc.add(table);
-                CommonFuncs.addEmptyLine(doc, 3);
+                CommonFuncs.addEmptyLine(doc, 4);
                 
-                Paragraph sign = new Paragraph("Customer Signature         ", CommonFuncs.titleFont);
-                sign.setAlignment(Element.ALIGN_RIGHT);
-                doc.add(sign);
+                float signColumns[] = {1f, 1f};
+                PdfPTable signTable = new PdfPTable(signColumns);
+                PdfPCell cell;
+        
+                cell = new PdfPCell(new Phrase("Prepared By", CommonFuncs.tableBoldFont));
+                cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+                cell.setBorder(PdfPCell.NO_BORDER);
+                signTable.addCell(cell);
+                
+                cell = new PdfPCell(new Phrase("Customer Signature", CommonFuncs.tableBoldFont));
+                cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                cell.setBorder(PdfPCell.NO_BORDER);
+                signTable.addCell(cell);
+                
+                doc.add(signTable);
                 
             }
             catch(Exception e){

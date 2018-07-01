@@ -159,7 +159,19 @@ public final class BarrelDB {
          return -1;
      }
     
-    public static ResultSet getBarrelsOnDateRS(Statement stmt, String date){
+    public static ResultSet getBarrelsBetweenDatesIncl(Statement stmt, String fromdate, String toDate){
+        String sql = "select date, customerCode, accountHead, stock, issued, lifted, difference"
+                + " from barrel, master where customerCode=accountNo and date>='" + fromdate + "' and date<='" + toDate + "'"
+                + "order by date asc;";
+        try{
+            return stmt.executeQuery(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static ResultSet getBarrelsOnDateRS(Statement stmt, String date){        
         String sql = "select customerCode, accountHead, stock, issued, lifted, difference"
                 + " from barrel, master where customerCode=accountNo and date='" + date + "' ;";
         try{
