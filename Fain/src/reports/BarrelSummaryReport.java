@@ -282,7 +282,7 @@ public class BarrelSummaryReport {
         try{
             int base = 10;
                 
-                Phrase title = new Phrase("BARREL CUSTOMER REPORT", CommonFuncs.titleFont);
+                Phrase title = new Phrase("BARREL SUMMARY REPORT", CommonFuncs.titleFont);
                 
                 ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
                     title,

@@ -27,7 +27,7 @@ import utility.Wait;
  * @author akshos
  */
 public class BarrelMonthlyReport {
-    private static String PREFIX = "barreldailyreport";
+    private static String PREFIX = "barrelmonthlyreport";
     
     private static int pageNum;
     private static String sdateFrom;
