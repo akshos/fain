@@ -194,7 +194,8 @@ public final class BarrelDB {
     }
     
     public static ResultSet getBarrelsSummaryRS(Statement stmt){
-        String sql = "select customerCode, name, contact, barrels from customer order by cast(customerCode as INTEGER) asc";
+        String sql = "select customerCode, name, contact, barrels from customer, master "
+                + "where customerCode=accountNo and category='DB' order by cast(customerCode as INTEGER) asc";
         try{
             return stmt.executeQuery(sql);
         }catch(SQLException se){
