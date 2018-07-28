@@ -88,24 +88,7 @@ public class PSalesBill extends javax.swing.JInternalFrame implements RefreshOpt
     }
 
     
-    private void setDifference(){
-        int issued, lifted, difference;
-        try{
-            issued = Integer.parseInt(this.invoiceNoTbox.getText());
-        }catch(Exception e){
-            System.out.println("Resetting issued to 0");
-            issued = 0;
-        }
-        try{
-            lifted = Integer.parseInt(this.challanNoTbox.getText());
-        }catch(Exception e){
-            System.out.println("Resetting lifted to 0");
-            lifted = 0;
-        }
-        difference = issued - lifted;
-        this.transportationModeTbox.setText(String.valueOf(difference));
-    }
-    
+
     @Override
     public void refreshContents(int type) {
 
@@ -173,6 +156,8 @@ public class PSalesBill extends javax.swing.JInternalFrame implements RefreshOpt
     }
     
     private void nextEntry(){
+        this.vehicleNoTbox.setText("");
+        this.timeOfSupplyTbox.setText("");
         this.invoiceNoTbox.setText("");
         this.challanNoTbox.setText("");
         this.transportationModeTbox.setText("");
@@ -487,15 +472,15 @@ public class PSalesBill extends javax.swing.JInternalFrame implements RefreshOpt
     }//GEN-LAST:event_invoiceNoTboxFocusGained
 
     private void transportationModeTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_transportationModeTboxFocusGained
-        this.setDifference();
-        this.transportationModeTbox.selectAll();
     }//GEN-LAST:event_transportationModeTboxFocusGained
 
     private void enterButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterButtonKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();
         }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.insertData();
+            //ADD CODE HERE TO CONNECT FRONTEND AND BACKEND
+            //CHECK AND DELETE insertData() if not required;
+            //this.insertData();
         }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
             javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
             cmp.transferFocusBackward();
@@ -526,7 +511,6 @@ public class PSalesBill extends javax.swing.JInternalFrame implements RefreshOpt
     }//GEN-LAST:event_invoiceNoTboxFocusLost
 
     private void challanNoTboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_challanNoTboxFocusLost
-        this.setDifference();
     }//GEN-LAST:event_challanNoTboxFocusLost
 
     private void timeOfSupplyTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_timeOfSupplyTboxFocusGained
