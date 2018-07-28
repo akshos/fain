@@ -48,7 +48,7 @@ public class SalesBill {
         return (amount * (rate / 100));
     }
       
-    public static void createSalesBill(List<SalesEntry> salesEntries){
+    public static void createSalesBill(SalesHeader salesHeader, List<SalesEntry> salesEntries){
         try{
             File file = new File(FILENAME);
             FileInputStream fin = new FileInputStream(file);
@@ -57,6 +57,20 @@ public class SalesBill {
             HSSFSheet sheet = workbook.getSheetAt(0);
             Cell cell = null;
             Row row = null;
+            
+            //Write header information
+            //Invoice Number
+            sheet.getRow(4).getCell(2).setCellValue(salesHeader.getInvoiceNumber());
+            //Chalan No
+            sheet.getRow(8).getCell(2).setCellValue(salesHeader.getChallanNumber());
+            //Invoice No
+            sheet.getRow(9).getCell(2).setCellValue(salesHeader.getInvoiceDate());
+            //Transportation Mode
+            sheet.getRow(7).getCell(10).setCellValue(salesHeader.getTransportationMode());
+            //Vehicle No:
+            sheet.getRow(8).getCell(10).setCellValue(salesHeader.getVehicleNo());
+            //Time of Supply:
+            sheet.getRow(9).getCell(10).setCellValue(salesHeader.getTimeOfSupply());        
             
             salesEntries.forEach(System.out::println);
             double totalAmount = 0;
@@ -143,22 +157,25 @@ public class SalesBill {
         }
     }
     
+    public static class SalesHeader{
 
-    
-    public static class SalesEntry{
-        
-        private int slno;
-        double qnty;
-        double rate;
-        double amount;
-        String invoiceNumber;
-        String challanNumber;
         String transportationMode;
         String vehicleNo;
+        String challanNumber;
+        String invoiceDate;
         String timeOfSupply;
+        String invoiceNumber;
+        
+        public String getInvoiceDate() {
+            return this.invoiceDate;
+        }
 
+        public void setInvoiceDate(String invoiceDate) {
+            this.invoiceDate = invoiceDate;
+        }
+        
         public String getInvoiceNumber() {
-            return invoiceNumber;
+            return this.invoiceNumber;
         }
 
         public void setInvoiceNumber(String invoiceNumber) {
@@ -166,7 +183,7 @@ public class SalesBill {
         }
 
         public String getChallanNumber() {
-            return challanNumber;
+            return this.challanNumber;
         }
 
         public void setChallanNumber(String challanNumber) {
@@ -174,7 +191,7 @@ public class SalesBill {
         }
 
         public String getTransportationMode() {
-            return transportationMode;
+            return this.transportationMode;
         }
 
         public void setTransportationMode(String transportationMode) {
@@ -182,7 +199,7 @@ public class SalesBill {
         }
 
         public String getVehicleNo() {
-            return vehicleNo;
+            return this.vehicleNo;
         }
 
         public void setVehicleNo(String vehicleNo) {
@@ -190,12 +207,23 @@ public class SalesBill {
         }
 
         public String getTimeOfSupply() {
-            return timeOfSupply;
+            return this.timeOfSupply;
         }
 
         public void setTimeOfSupply(String timeOfSupply) {
             this.timeOfSupply = timeOfSupply;
         }
+        
+    }
+    
+    public static class SalesEntry{
+        
+        private int slno;
+        double qnty;
+        double rate;
+        double amount;
+
+
         
         public int getSlno() {
             return slno;
@@ -258,6 +286,14 @@ public class SalesBill {
         salesEntry.setAmount(201282.40);
         entryList.add(salesEntry);
         
-        SalesBill.createSalesBill(entryList);
+        SalesHeader header = new SalesHeader();
+        header.setChallanNumber("2");
+        header.setInvoiceDate("date");
+        header.setInvoiceNumber("2");
+        header.setTimeOfSupply("time");
+        header.setTransportationMode("transportation mode");
+        header.setVehicleNo("vehicle no");
+        
+        SalesBill.createSalesBill(header, entryList);
     }
 }
