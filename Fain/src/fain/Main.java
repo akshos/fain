@@ -289,6 +289,7 @@ public class Main extends javax.swing.JFrame {
         eSalesLatexMenuItem = new javax.swing.JMenuItem();
         eBranchesMenuItem = new javax.swing.JMenuItem();
         eCustomersMenuItem = new javax.swing.JMenuItem();
+        eSalesBillTemplateMenuItem = new javax.swing.JMenuItem();
         eConsumptionMenuItem = new javax.swing.JMenuItem();
         barrelsMenu = new javax.swing.JMenu();
         barrelsSummaryMenuItem = new javax.swing.JMenuItem();
@@ -542,6 +543,15 @@ public class Main extends javax.swing.JFrame {
             }
         });
         editMenu.add(eCustomersMenuItem);
+
+        eSalesBillTemplateMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        eSalesBillTemplateMenuItem.setText("Sales Bill Template");
+        eSalesBillTemplateMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eSalesBillTemplateMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(eSalesBillTemplateMenuItem);
 
         eConsumptionMenuItem.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         eConsumptionMenuItem.setText("Consumption");
@@ -1394,6 +1404,10 @@ public class Main extends javax.swing.JFrame {
         }
         addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }//GEN-LAST:event_pBarrelMonthlyReportMenuItemActionPerformed
+
+    private void eSalesBillTemplateMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eSalesBillTemplateMenuItemActionPerformed
+        ViewPdf.openPdfViewer("salesbill.xls");
+    }//GEN-LAST:event_eSalesBillTemplateMenuItemActionPerformed
     
     /**
      * @param item the internal frame to be added to desktop pane
@@ -1485,6 +1499,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem eMasterMenuItem;
     private javax.swing.JMenuItem ePurchaseLatexMenuItem;
     private javax.swing.JMenuItem ePurchaseOthersMenuItem;
+    private javax.swing.JMenuItem eSalesBillTemplateMenuItem;
     private javax.swing.JMenuItem eSalesLatexMenuItem;
     private javax.swing.JMenuItem eStockMenuItem;
     private javax.swing.JMenuItem eTransactionMenuItem;

@@ -13,9 +13,14 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.util.CellAddress;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 /**
  *
@@ -25,11 +30,13 @@ public class SalesBill {
     private static final String FILENAME = "salesbill.xls";
     private static final String OUTPUTFILE = "salesbill_output.xls";
     private static final int ENTRYBASEROW = 19;
-    private static final int TOTALBASEROW = 23;
+    private static final int TOTALBASEROW = 21;
     private static final int TOTALCOL = 10;
     private static final int CGSTRATECOL = 8;
     private static final int SGSTRATECOL = 10;
     private static final int IGSTRATECOL = 12;
+    private static final int DEFAULTROWCOUNT = 2;
+    private static final int CELLWIDTHCOUNT = 15;
     
     public static double getGSTRate(HSSFSheet sheet, int col){
         try{
@@ -63,6 +70,100 @@ public class SalesBill {
     
     public static double calculateTax(double amount, double rate){
         return (amount * (rate / 100));
+    }
+    
+    public static void addExtraRows(HSSFWorkbook workbook, int rowCount){
+        try{
+            HSSFFont font = workbook.createFont();
+            font.setFontHeightInPoints((short) 12);
+            font.setFontName("Arial");
+            
+            HSSFCellStyle style=workbook.createCellStyle();
+            style.setBorderBottom(BorderStyle.THIN);
+            style.setBorderTop(BorderStyle.THIN);
+            style.setBorderRight(BorderStyle.THIN);
+            style.setBorderLeft(BorderStyle.THIN);
+            style.setFont(font);
+            
+            HSSFCellStyle styleNumeric=workbook.createCellStyle();
+            styleNumeric.setBorderBottom(BorderStyle.THIN);
+            styleNumeric.setBorderTop(BorderStyle.THIN);
+            styleNumeric.setBorderRight(BorderStyle.THIN);
+            styleNumeric.setBorderLeft(BorderStyle.THIN);
+            styleNumeric.setDataFormat(workbook.createDataFormat().getFormat("0.00"));
+            styleNumeric.setFont(font);
+            
+            HSSFCellStyle styleCenter=workbook.createCellStyle();
+            styleCenter.setAlignment(HorizontalAlignment.CENTER);
+            styleCenter.setBorderBottom(BorderStyle.THIN);
+            styleCenter.setBorderTop(BorderStyle.THIN);
+            styleCenter.setBorderRight(BorderStyle.THIN);
+            styleCenter.setBorderLeft(BorderStyle.THIN);
+            styleCenter.setFont(font);
+            
+            
+            HSSFSheet sheet = workbook.getSheetAt(0);
+            Row row;
+            Cell cell;
+            int rows = sheet.getLastRowNum();
+            sheet.shiftRows(ENTRYBASEROW+1, rows, rowCount);
+            for(int i = 1; i <= rowCount; i++){
+                row = sheet.createRow(ENTRYBASEROW+i);
+                row.setHeight(sheet.getRow(ENTRYBASEROW).getHeight());
+
+                //Sl No
+                cell = row.createCell(0);
+                cell.setCellStyle(styleCenter);
+                //Name of Product
+                cell = row.createCell(1);
+                cell.setCellStyle(style);
+                cell = row.createCell(2);
+                cell.setCellStyle(style);
+                //HSN COde
+                cell = row.createCell(3);
+                cell.setCellStyle(styleCenter);
+                //Qty
+                cell = row.createCell(4);
+                cell.setCellStyle(style);
+                //Rate to Total
+                for(int j = 5; j < 15; j++){
+                    cell = row.createCell(j);
+                    cell.setCellType(CellType.NUMERIC);
+                    cell.setCellStyle(styleNumeric);
+                    
+                }
+                
+                //Cell Formulas
+                //Taxable Value (H)
+                cell = row.getCell(7);
+                cell.setCellType(CellType.FORMULA);
+                cell.setCellFormula("G" + (ENTRYBASEROW+1+i));
+                //CGST Amount (J)
+                cell = row.getCell(9);
+                cell.setCellType(CellType.FORMULA);
+                cell.setCellFormula("H" + (ENTRYBASEROW+1+i) + " * I" + (ENTRYBASEROW+1+i) + " / 100" );
+                //SGST Amount (L)
+                cell = row.getCell(11);
+                cell.setCellType(CellType.FORMULA);
+                cell.setCellFormula("H" + (ENTRYBASEROW+1+i) + " * K" + (ENTRYBASEROW+1+i) + " / 100" );
+                //IGST Amount (N)
+                cell = row.getCell(13);
+                cell.setCellType(CellType.FORMULA);
+                cell.setCellFormula("H" + (ENTRYBASEROW+1+i) + " * M" + (ENTRYBASEROW+1+i) + " / 100" );
+                //Total (O)
+                cell = row.getCell(14);
+                cell.setCellType(CellType.FORMULA);
+                cell.setCellFormula("H" + (ENTRYBASEROW+1+i) + "+J" + (ENTRYBASEROW+1+i) + "+L" + (ENTRYBASEROW+1+i) + "+N" + (ENTRYBASEROW+1+i));
+                
+                sheet.addMergedRegion(
+                        new CellRangeAddress(ENTRYBASEROW+i, ENTRYBASEROW+i, 1, 2));
+                
+                
+            }
+            //sheet.setActiveCell(new CellAddress(0, 0));
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
       
     public static void createSalesBill(SalesHeader salesHeader, List<SalesEntry> salesEntries){
@@ -98,6 +199,14 @@ public class SalesBill {
             double amount;
             double currTotal;
             String hsnCode = getHsnCode(sheet);
+            
+            int extraRows = 0;
+            if(salesEntries.size() > DEFAULTROWCOUNT){
+                extraRows = salesEntries.size() - DEFAULTROWCOUNT;
+                addExtraRows(workbook, extraRows);
+            }
+            
+            sheet = workbook.getSheetAt(0);
             
             for(SalesEntry entry: salesEntries){
                 row = sheet.getRow(ENTRYBASEROW+entry.getSlno()-1);
@@ -150,33 +259,33 @@ public class SalesBill {
             }
             
             //Total Amount
-            sheet.getRow(TOTALBASEROW).getCell(TOTALCOL).setCellValue(totalAmount);
+            sheet.getRow(TOTALBASEROW + extraRows).getCell(TOTALCOL).setCellValue(totalAmount);
             //Add: CGST
-            sheet.getRow(TOTALBASEROW+1).getCell(TOTALCOL).setCellValue(totalCGST);
+            sheet.getRow(TOTALBASEROW + extraRows+1).getCell(TOTALCOL).setCellValue(totalCGST);
             //Add: SGST
-            sheet.getRow(TOTALBASEROW+2).getCell(TOTALCOL).setCellValue(totalSGST);
+            sheet.getRow(TOTALBASEROW + extraRows+2).getCell(TOTALCOL).setCellValue(totalSGST);
             //Add: IGST
-            sheet.getRow(TOTALBASEROW+3).getCell(TOTALCOL).setCellValue(totalIGST);
+            sheet.getRow(TOTALBASEROW + extraRows+3).getCell(TOTALCOL).setCellValue(totalIGST);
             
             //Total Amount GST
             double totalGST = totalCGST+totalSGST+totalIGST;
-            sheet.getRow(TOTALBASEROW+4).getCell(TOTALCOL).setCellValue(totalGST);
+            sheet.getRow(TOTALBASEROW + extraRows+4).getCell(TOTALCOL).setCellValue(totalGST);
             
             //Total Amount
             totalAmount += totalGST;
-            sheet.getRow(TOTALBASEROW+5).getCell(TOTALCOL).setCellValue(totalAmount);
+            sheet.getRow(TOTALBASEROW + extraRows+5).getCell(TOTALCOL).setCellValue(totalAmount);
             
             //Rounded Total 
             double grandTotal = Math.round(totalAmount);
             double roundOff = grandTotal - totalAmount;
             //Round Off
-            sheet.getRow(TOTALBASEROW+6).getCell(TOTALCOL).setCellValue(roundOff);
+            sheet.getRow(TOTALBASEROW + extraRows+6).getCell(TOTALCOL).setCellValue(roundOff);
             //Grand Total
-            sheet.getRow(TOTALBASEROW+7).getCell(TOTALCOL).setCellValue(grandTotal);
+            sheet.getRow(TOTALBASEROW + extraRows+7).getCell(TOTALCOL).setCellValue(grandTotal);
             
             //Grand Total in wordings
             String wordings = CommonFuncs.numberToWords((int)grandTotal);
-            sheet.getRow(TOTALBASEROW).getCell(0).setCellValue("Total Invoice Amount in Words: " + wordings + " Only");
+            sheet.getRow(TOTALBASEROW + extraRows).getCell(0).setCellValue("Total Invoice Amount in Words: " + wordings + " Only");
             
             
             fin.close();

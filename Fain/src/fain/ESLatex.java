@@ -10,11 +10,14 @@ import database.PurchaseLatexDB;
 import database.SalesDB;
 import database.TransactionDB;
 import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
+import reports.SalesBill;
 import utility.Codes;
 import utility.UtilityFuncs;
 import utility.ValidationChecks;
@@ -96,6 +99,44 @@ public class ESLatex extends javax.swing.JInternalFrame implements RefreshOption
         if(code == Codes.REFRESH_SLATEX){
             updateTable();
         }
+    }
+    
+    private void printSalesBill(){
+        int rowCount = this.dataTable.getSelectedRowCount();
+        if(rowCount <= 0){
+            JOptionPane.showMessageDialog(this, "Select atleast one entry to print", "No Selection", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        int selectedRows[] = this.dataTable.getSelectedRows();
+        
+        List<SalesBill.SalesEntry> salesEntries = new ArrayList();
+        SalesBill.SalesEntry entry = null;
+        SalesBill.SalesHeader salesHeader = new SalesBill.SalesHeader();
+        
+        TableModel tableModel = this.dataTable.getModel();
+        
+        salesHeader.setInvoiceDate(UtilityFuncs
+                .dateSqlToUser((String)tableModel.getValueAt(selectedRows[0], 2)));
+        salesHeader.setInvoiceNumber((String)tableModel.getValueAt(selectedRows[0], 3));
+        salesHeader.setChallanNumber(salesHeader.getInvoiceNumber());
+        
+        int slno = 1;
+        for(int i: selectedRows){
+            entry = new SalesBill.SalesEntry();
+            entry.setSlno(slno++);
+            entry.setQnty(Double.parseDouble((String)tableModel.getValueAt(i, 10)));
+            entry.setRate(Double.parseDouble((String)tableModel.getValueAt(i, 11)));
+            entry.setAmount(Double.parseDouble((String)tableModel.getValueAt(i, 12)));
+            salesEntries.add(entry);
+        }
+        PSalesBill item = new PSalesBill(this.mainFrame, this.level+1, salesHeader, salesEntries);
+        Dimension dim = Preferences.getInternalFrameDimension(item);
+        if(dim != null){
+           item.setSize(dim);
+        }else{
+            item.setSize(850, 470);
+        } 
+        mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }
     
     private void addEntry(){
@@ -520,6 +561,9 @@ public class ESLatex extends javax.swing.JInternalFrame implements RefreshOption
     private void dataTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dataTableKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             this.editEntry();
+        }
+        else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_P){
+            printSalesBill();
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F2){
             addEntry();
