@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.poi.hssf.usermodel.*;
@@ -37,11 +38,27 @@ public class SalesBill {
             if(cell.getCellTypeEnum() == CellType.NUMERIC){
                 double rate = cell.getNumericCellValue();
                 return rate;
+            }else{
+                System.out.println("Invalid GST Rate on column " + col);
             }
+            
         }catch(Exception e){
             e.printStackTrace();
         }
         return 0.0;
+    }
+    
+    public static String getHsnCode(HSSFSheet sheet){
+        try{
+            Cell cell = sheet.getRow(ENTRYBASEROW).getCell(3);
+            if(cell.getCellTypeEnum() == CellType.NUMERIC) {
+                BigDecimal decimal = new BigDecimal(cell.getNumericCellValue());
+                return decimal.toPlainString();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return "";
     }
     
     public static double calculateTax(double amount, double rate){
@@ -63,7 +80,7 @@ public class SalesBill {
             sheet.getRow(4).getCell(2).setCellValue(salesHeader.getInvoiceNumber());
             //Chalan No
             sheet.getRow(8).getCell(2).setCellValue(salesHeader.getChallanNumber());
-            //Invoice No
+            //Invoice Date
             sheet.getRow(9).getCell(2).setCellValue(salesHeader.getInvoiceDate());
             //Transportation Mode
             sheet.getRow(7).getCell(10).setCellValue(salesHeader.getTransportationMode());
@@ -80,14 +97,24 @@ public class SalesBill {
             double tax;
             double amount;
             double currTotal;
+            String hsnCode = getHsnCode(sheet);
+            
             for(SalesEntry entry: salesEntries){
                 row = sheet.getRow(ENTRYBASEROW+entry.getSlno()-1);
+                //Sl No
                 row.getCell(0).setCellValue(entry.getSlno());
+                //Name of Product/Service
                 row.getCell(1).setCellValue("NATURAL RUBBER LATEX");
+                //HSN Code
+                row.getCell(3).setCellValue(hsnCode);
+                //Qty
                 row.getCell(4).setCellValue(entry.getQnty());
+                //Rate
                 row.getCell(5).setCellValue(entry.getRate());
+                //Amount
                 amount = entry.getAmount();
                 row.getCell(6).setCellValue(amount);
+                //Taxable Value
                 row.getCell(7).setCellValue(amount);
                 
                 totalAmount += amount;
@@ -95,20 +122,27 @@ public class SalesBill {
                                 
                 //Calculate and set CGST Amount
                 tax = calculateTax(amount, getGSTRate(sheet, CGSTRATECOL));
+                row.getCell(CGSTRATECOL).setCellValue(getGSTRate(sheet, CGSTRATECOL));
                 row.getCell(CGSTRATECOL+1).setCellValue(tax);
                 totalCGST += tax;
                 currTotal += tax;
+                System.out.print("CGST: " + tax);
+                
                 //Calculate and set SGST Amount
-                tax = calculateTax(amount, 
-                                getGSTRate(sheet, SGSTRATECOL));
+                tax = calculateTax(amount, getGSTRate(sheet, SGSTRATECOL));
+                row.getCell(SGSTRATECOL).setCellValue(getGSTRate(sheet, SGSTRATECOL));
                 row.getCell(SGSTRATECOL+1).setCellValue(tax);
                 totalSGST += tax;
+                System.out.print("\tSGST: " + tax);
                 currTotal += tax;
+                
                 //Calculate and set IGST Amount
                 tax = calculateTax(amount, getGSTRate(sheet, IGSTRATECOL));
+                row.getCell(IGSTRATECOL).setCellValue(getGSTRate(sheet, IGSTRATECOL));
                 row.getCell(IGSTRATECOL+1).setCellValue(tax);
                 totalIGST += tax;
                 currTotal += tax;
+                System.out.println("\tIGST: " + tax);
                 
                 //Set current Row Total
                 row.getCell(14).setCellValue(currTotal);
@@ -151,6 +185,8 @@ public class SalesBill {
             FileOutputStream fout = new FileOutputStream(file);
             workbook.write(fout);
             fout.close();
+            
+            ViewPdf.openPdfViewer(OUTPUTFILE);
             
         }catch(IOException e){
             e.printStackTrace();
