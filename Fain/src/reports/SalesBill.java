@@ -177,6 +177,16 @@ public class SalesBill {
             Row row = null;
             
             //Write header information
+            //Name
+            sheet.getRow(0).getCell(0).setCellValue(salesHeader.getName());
+            //Address
+            sheet.getRow(2).getCell(0).setCellValue(salesHeader.getAddress());
+            //GSTIN
+            sheet.getRow(2).getCell(13).setCellValue(salesHeader.getKgst());
+            //RB Reg No
+            sheet.getRow(3).getCell(13).setCellValue(salesHeader.getRbno());
+            //Phone Number
+            sheet.getRow(3).getCell(0).setCellValue(salesHeader.getPhone1() + ", " + salesHeader.getPhone2());
             //Invoice Number
             sheet.getRow(4).getCell(2).setCellValue(salesHeader.getInvoiceNumber());
             //Chalan No
@@ -303,13 +313,69 @@ public class SalesBill {
     }
     
     public static class SalesHeader{
-
+        
+        String name;
+        String address;
+        String phone1;
+        String phone2;
+        String kgst;
+        String rbno;
+        
         String transportationMode;
         String vehicleNo;
         String challanNumber;
         String invoiceDate;
         String timeOfSupply;
         String invoiceNumber;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+
+        public String getPhone1() {
+            return phone1;
+        }
+
+        public void setPhone1(String phone1) {
+            this.phone1 = phone1;
+        }
+
+        public String getPhone2() {
+            return phone2;
+        }
+
+        public void setPhone2(String phone2) {
+            this.phone2 = phone2;
+        }
+
+        public String getKgst() {
+            return kgst;
+        }
+
+        public void setKgst(String kgst) {
+            this.kgst = kgst;
+        }
+
+        public String getRbno() {
+            return rbno;
+        }
+
+        public void setRbno(String rbno) {
+            this.rbno = rbno;
+        }
+        
         
         public String getInvoiceDate() {
             return this.invoiceDate;

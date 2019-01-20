@@ -8,6 +8,7 @@ package fain;
 import database.DBConnection;
 import database.PurchaseLatexDB;
 import database.SalesDB;
+import database.SessionInfoDB;
 import database.TransactionDB;
 import java.awt.Dimension;
 import java.util.ArrayList;
@@ -119,6 +120,14 @@ public class ESLatex extends javax.swing.JInternalFrame implements RefreshOption
                 .dateSqlToUser((String)tableModel.getValueAt(selectedRows[0], 2)));
         salesHeader.setInvoiceNumber((String)tableModel.getValueAt(selectedRows[0], 3));
         salesHeader.setChallanNumber(salesHeader.getInvoiceNumber());
+        
+        String[] details = SessionInfoDB.getDetails(dbConnection.getStatement());
+        salesHeader.setName(details[1]);
+        salesHeader.setAddress(details[2]);
+        salesHeader.setKgst(details[3]);
+        salesHeader.setRbno(details[4]);
+        salesHeader.setPhone1(details[5]);
+        salesHeader.setPhone2(details[6]);
         
         int slno = 1;
         for(int i: selectedRows){
