@@ -56,16 +56,18 @@ public class BarrelDailyReport {
         Document doc;
         try{
             doc = startDocument(paper, orientation);
-            
+            Thread.sleep(500);
             ret = addTable(con, doc, date);
-            
-            doc.close();
+            if(ret == true)
+                doc.close();
+            Thread.sleep(500);
         }catch(Exception e){
             e.printStackTrace();
             wait.closeWait();
             return false;
         }
-        ViewPdf.openPdfViewer(PREFIX + ".pdf");
+        if(ret == true)
+            ViewPdf.openPdfViewer(PREFIX + ".pdf");
         wait.closeWait();
         return ret;
     }

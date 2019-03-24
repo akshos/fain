@@ -11,6 +11,8 @@ import database.StockDB;
 import java.awt.Dimension;
 import java.sql.Statement;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
@@ -48,7 +50,7 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         this.prevFrame = null;
     }
     
-    public AStock(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame){
+    public AStock(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame) throws Exception{
         this.prevFrame = prevFrame;
         this.level = level;
         this.mainFrame = frame;
@@ -125,7 +127,7 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         this.itemNameTbox.requestFocus();
     }
     
-    private void loadPurchaseAccounts(){
+    private void loadPurchaseAccounts() throws Exception{
         System.out.println("loading purchaseCbox");
         purchaseData = MasterDB.getPurchaseAC(this.dbConnection.getStatement());
         int len;
@@ -142,7 +144,7 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         this.purchasesCbox.setModel(new DefaultComboBoxModel(cboxData));
     }
     
-    private void loadSalesAccounts(){
+    private void loadSalesAccounts() throws Exception{
         System.out.println("loading salesCbox");
         salesData = MasterDB.getSalesAC(this.dbConnection.getStatement());
         int len;
@@ -159,7 +161,7 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         this.salesCbox.setModel(new DefaultComboBoxModel(cboxData));
     }
     
-    private void loadStockAccounts(){
+    private void loadStockAccounts() throws Exception{
         System.out.println("loading salesCbox");
         stockData = MasterDB.getStockAC(this.dbConnection.getStatement());
         int len;
@@ -175,7 +177,7 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
         cboxData[len] = "Add New";
         this.stockCbox.setModel(new DefaultComboBoxModel(cboxData));
     }
-        private void loadContents(){
+        private void loadContents() throws Exception{
         String[] data = StockDB.selectOneId(dbConnection.getStatement(), editId);
         if(data == null){
             System.out.println("Load Contents : selectedOneId has returned null");
@@ -199,21 +201,45 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
     
     public void refreshContents(int code) {
         if(code == Codes.REFRESH_ALL){
-            this.loadPurchaseAccounts();
-            this.loadSalesAccounts();
-            this.loadStockAccounts();
+            try {
+                this.loadPurchaseAccounts();
+            } catch (Exception ex) {
+                Logger.getLogger(AStock.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                this.loadSalesAccounts();
+            } catch (Exception ex) {
+                Logger.getLogger(AStock.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                this.loadStockAccounts();
+            } catch (Exception ex) {
+                Logger.getLogger(AStock.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if(code == Codes.REFRESH_MASTER){
             if(this.purchasesCbox.getSelectedItem().toString().compareTo("Add New") == 0)
-                this.loadPurchaseAccounts();
+                try {
+                    this.loadPurchaseAccounts();
+            } catch (Exception ex) {
+                Logger.getLogger(AStock.class.getName()).log(Level.SEVERE, null, ex);
+            }
             if(this.salesCbox.getSelectedItem().toString().compareTo("Add New") == 0)
-                this.loadSalesAccounts();
+                try {
+                    this.loadSalesAccounts();
+            } catch (Exception ex) {
+                Logger.getLogger(AStock.class.getName()).log(Level.SEVERE, null, ex);
+            }
             if(this.stockCbox.getSelectedItem().toString().compareTo("Add New") == 0)
-                this.loadStockAccounts();
+                try {
+                    this.loadStockAccounts();
+            } catch (Exception ex) {
+                Logger.getLogger(AStock.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     
-    private void addNewMasterAccount(){
+    private void addNewMasterAccount() throws Exception{
         AMaster item = new AMaster(dbConnection, Codes.NEW_ENTRY, null, mainFrame, this.level+1, this);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
@@ -228,13 +254,17 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
     private void checkPurchasesChangedItem(){
         String item = this.purchasesCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
-            addNewMasterAccount();
+            try {
+                addNewMasterAccount();
+            } catch (Exception ex) {
+                Logger.getLogger(AStock.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }else{
             this.purchasesCbox.transferFocus();
         }
     }
     
-    private void checkSalesChangedItem(){
+    private void checkSalesChangedItem() throws Exception{
         String item = this.salesCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
             addNewMasterAccount();
@@ -242,7 +272,7 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
             this.salesCbox.transferFocus();
         }
     }
-    private void checkStockChangedItem(){
+    private void checkStockChangedItem() throws Exception{
         String item = this.stockCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
             addNewMasterAccount();
@@ -488,7 +518,11 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
             this.doDefaultCloseAction();
         }
        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.checkSalesChangedItem();
+            try {
+                this.checkSalesChangedItem();
+            } catch (Exception ex) {
+                Logger.getLogger(AStock.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_salesCboxKeyPressed
 
@@ -497,7 +531,11 @@ public class AStock extends javax.swing.JInternalFrame implements RefreshOption{
             this.doDefaultCloseAction();
         }
        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.checkStockChangedItem();
+            try {
+                this.checkStockChangedItem();
+            } catch (Exception ex) {
+                Logger.getLogger(AStock.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_stockCboxKeyPressed
 

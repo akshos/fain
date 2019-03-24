@@ -16,6 +16,8 @@ import database.TransactionDB;
 import java.awt.Dimension;
 import java.sql.Statement;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
@@ -50,7 +52,7 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         refreshContents(Codes.REFRESH_ALL);
     }
     
-    public APOthers(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame){
+    public APOthers(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame) throws Exception{
         this.prevFrame = prevFrame;
         this.level =  level;
         this.mainFrame  = frame;
@@ -61,7 +63,7 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         if(mode == Codes.EDIT) this.loadContents();
         else refreshContents(Codes.REFRESH_ALL);
     }
-    private void loadContents(){
+    private void loadContents() throws Exception{
         String[] data = PurchaseDB.selectOneId(dbConnection.getStatement(), editId);
         if(data == null){
             System.out.println("Load Contents : selectedOneId has returned null");
@@ -174,7 +176,7 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         this.itemnameTbox.setText(itemName);
     }
     
-    private void loadItems(){
+    private void loadItems() throws Exception{
         System.out.println("loading itemcbox");
         itemData = StockDB.getItems(this.dbConnection.getStatement());
         int len;
@@ -191,7 +193,7 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         this.itemCodeCbox.setModel(new DefaultComboBoxModel(cboxData));
     }
     
-    private void loadBranch(){
+    private void loadBranch() throws Exception{
         System.out.println("loading branchcbox");
         branchData = BranchDB.getBranch(this.dbConnection.getStatement());
         int len;
@@ -215,7 +217,7 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         this.partyCbox.setEnabled(false);
     }
     
-    private void loadParty(){
+    private void loadParty() throws Exception{
         String item = this.branchCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
             resetParty();
@@ -267,18 +269,42 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
      @Override
     public void refreshContents(int code) {
         if(code == Codes.REFRESH_ALL){
-            loadBranch();
-            loadParty();
-            loadItems();
+            try {
+                loadBranch();
+            } catch (Exception ex) {
+                Logger.getLogger(APOthers.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                loadParty();
+            } catch (Exception ex) {
+                Logger.getLogger(APOthers.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                loadItems();
+            } catch (Exception ex) {
+                Logger.getLogger(APOthers.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if(code == Codes.REFRESH_BRANCHES){
-            loadBranch();
+            try {
+                loadBranch();
+            } catch (Exception ex) {
+                Logger.getLogger(APOthers.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if(code == Codes.REFRESH_MASTER){
-            loadParty();
+            try {
+                loadParty();
+            } catch (Exception ex) {
+                Logger.getLogger(APOthers.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if(code == Codes.REFRESH_STOCK){
-            loadItems();
+            try {
+                loadItems();
+            } catch (Exception ex) {
+                Logger.getLogger(APOthers.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     
@@ -314,7 +340,7 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         }
     }
     
-    private void addNewMasterAccount(){
+    private void addNewMasterAccount() throws Exception{
         AMaster item = new AMaster(dbConnection, Codes.NEW_ENTRY, null, mainFrame, this.level+1, this);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
@@ -326,7 +352,7 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }
     
-    private void checkPartyChangedItem(){
+    private void checkPartyChangedItem() throws Exception{
         String item = this.partyCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
             addNewMasterAccount();
@@ -335,7 +361,7 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         }
     }
     
-    private void addNewStock(){
+    private void addNewStock() throws Exception{
         AStock item = new AStock(dbConnection, Codes.NEW_ENTRY, null, mainFrame, this.level+1, this);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
@@ -346,7 +372,7 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
         mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }
     
-    private void checkItemChangedItem(){
+    private void checkItemChangedItem() throws Exception{
         String item = this.itemCodeCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
             addNewStock();
@@ -631,7 +657,11 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
     }//GEN-LAST:event_partyCboxItemStateChanged
 
     private void branchCboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_branchCboxItemStateChanged
-        this.loadParty();
+        try {
+            this.loadParty();
+        } catch (Exception ex) {
+            Logger.getLogger(APOthers.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_branchCboxItemStateChanged
 
     private void partyCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_partyCboxKeyPressed
@@ -639,7 +669,11 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
             this.doDefaultCloseAction();
         }
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.checkPartyChangedItem();
+            try {
+                this.checkPartyChangedItem();
+            } catch (Exception ex) {
+                Logger.getLogger(APOthers.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_partyCboxKeyPressed
 
@@ -649,7 +683,11 @@ public class APOthers extends javax.swing.JInternalFrame implements RefreshOptio
 
     private void itemCodeCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_itemCodeCboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.checkItemChangedItem();
+            try {
+                this.checkItemChangedItem();
+            } catch (Exception ex) {
+                Logger.getLogger(APOthers.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_itemCodeCboxKeyPressed
 

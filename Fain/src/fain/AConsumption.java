@@ -13,6 +13,8 @@ import database.StockDB;
 import java.awt.Dimension;
 import java.sql.Statement;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
@@ -48,7 +50,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         prevFrame = null;
     }  
     
-    public AConsumption(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame){
+    public AConsumption(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame) throws Exception{
         this.prevFrame = prevFrame;
         this.mainFrame = frame;
         this.level = level;
@@ -60,7 +62,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         else refreshContents(Codes.REFRESH_ALL);
     }
     
-    private void loadBranch(){
+    private void loadBranch() throws Exception{
         System.out.println("loading branchcbox");
         branchData = BranchDB.getBranch(this.dbConnection.getStatement());
         int len;
@@ -77,7 +79,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         this.branchCbox.setModel(new DefaultComboBoxModel(cboxData));
     }
         
-    private void loadContents(){
+    private void loadContents() throws Exception{
         String[] data = ConsumptionDB.selectOneId(dbConnection.getStatement(), editId);
         if(data == null){
             System.out.println("Load Contents : selectedOneId has returned null");
@@ -96,7 +98,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         this.quantityTbox.setText(data[7]);
     }
     
-    private void loadItem(){
+    private void loadItem() throws Exception{
         System.out.println("loading itemcbox");
         itemData = StockDB.getItems(this.dbConnection.getStatement());
         int len;
@@ -116,14 +118,30 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
     @Override
     public void refreshContents(int type) {
         if(type == Codes.REFRESH_ALL){
-            loadBranch();
-            loadItem();
+            try {
+                loadBranch();
+            } catch (Exception ex) {
+                Logger.getLogger(AConsumption.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                loadItem();
+            } catch (Exception ex) {
+                Logger.getLogger(AConsumption.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if(type == Codes.REFRESH_STOCK){
-            loadItem();
+            try {
+                loadItem();
+            } catch (Exception ex) {
+                Logger.getLogger(AConsumption.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if(type == Codes.REFRESH_BRANCHES){
-            loadBranch();
+            try {
+                loadBranch();
+            } catch (Exception ex) {
+                Logger.getLogger(AConsumption.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     
@@ -211,7 +229,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }
     
-    private void addNewItem(){
+    private void addNewItem() throws Exception{
         AStock item = new AStock(dbConnection, Codes.NEW_ENTRY, null, mainFrame, this.level+1, this);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
@@ -231,7 +249,7 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
         }
     }
     
-    private void checkItemChangedItem(){
+    private void checkItemChangedItem() throws Exception{
         String item = this.itemCodeCbox.getSelectedItem().toString();
         if(item.compareTo("Add New") == 0){
             addNewItem();
@@ -487,7 +505,11 @@ public class AConsumption extends javax.swing.JInternalFrame implements RefreshO
 
     private void itemCodeCboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_itemCodeCboxKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            checkItemChangedItem();
+            try {
+                checkItemChangedItem();
+            } catch (Exception ex) {
+                Logger.getLogger(AConsumption.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             this.doDefaultCloseAction();

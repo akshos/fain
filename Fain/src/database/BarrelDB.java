@@ -49,7 +49,14 @@ public final class BarrelDB {
             return false;
         }
         return true;
-    }    
+    }
+
+    public static ResultSet selectAll(Statement stmt) throws SQLException{
+        String sql = "select * from barrel;";
+        ResultSet rs = stmt.executeQuery(sql);
+        return rs;
+    }
+    
     public static void delete(Statement stmt,String id){
         String del="delete from barrel where barrelId="+id+";";
         try {
@@ -124,7 +131,7 @@ public final class BarrelDB {
         return null;
     }
     
-    public static String[] selectOneId(Statement stmt, String id){
+    public static String[] selectOneId(Statement stmt, String id) throws Exception{
         String sql="select * from barrel where barrelId="+id+";";
         ResultSet rs=null;
         try{

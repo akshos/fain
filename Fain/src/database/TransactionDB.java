@@ -198,7 +198,7 @@ public final class TransactionDB {
         return rs;
     }
     
-    public static String[] selectOneId(Statement stmt, String id){
+    public static String[] selectOneId(Statement stmt, String id) throws Exception{
         String sql="select * from transactions where transactionNo="+id+";";
         ResultSet rs=null;
         try{
@@ -275,7 +275,7 @@ public final class TransactionDB {
         return Codes.FAIL;
     }
     
-    public static String[] getTrasnsationDatesBetweenIncDatesIdRS(Statement stmt, String from, String to, String id){
+    public static String[] getTrasnsationDatesBetweenIncDatesIdRS(Statement stmt, String from, String to, String id) throws Exception{
         String sql = "select distinct date from transactions where date>='"+from+"' and date<='"+to+"' ";
         if(id.compareTo("All") != 0){
             sql += " and (credit='"+id+"' or debit='"+id+"') ";

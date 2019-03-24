@@ -93,15 +93,16 @@ public class CashBankAccount {
             
             saccId = accountId;
             saccName = MasterDB.getAccountHead(con.getStatement(), accountId);
-            
+            Thread.sleep(500);
             doc = startDocument(paper, orientation);
                         
             //calculate the opening balance till fromDate
             double balance = calculatePreviousBalance(con, fromDate, accountId);
             //generate report from fromDate to toDate with the previous opening balance
             ret = createTable(con, doc, fromDate, toDate, accountId, balance);
-            
-            doc.close();
+            if(ret)
+                doc.close();
+            Thread.sleep(500);
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -162,7 +163,7 @@ public class CashBankAccount {
         table.addCell(cell);
     }
     
-    private static boolean createTable(DBConnection con, Document doc, String fromDate, String toDate, String accountId, double prevBalance){
+    private static boolean createTable(DBConnection con, Document doc, String fromDate, String toDate, String accountId, double prevBalance) throws Exception{
         float columns[] = {0.7f, 2, 1, 1};
         PdfPTable table = new PdfPTable(columns);
         table.setWidthPercentage(90);

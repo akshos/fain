@@ -85,7 +85,11 @@ public class PProfitLossBalanceSheet extends javax.swing.JInternalFrame{
                 wait.setSize(new Dimension(700, 400));
                 wait.setVisible(true);
                 mainFrame.addToMainDesktopPane(wait, level+1, Codes.NO_DATABASE);
-                boolean ret = ProfitLossBalanceSheet.createReport(dbConnection, paper, orientation, date);
+                try {
+                    boolean ret = ProfitLossBalanceSheet.createReport(dbConnection, paper, orientation, date);
+                } catch (Exception ex) {
+                    Logger.getLogger(PProfitLossBalanceSheet.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 wait.closeWait();
             }
         });

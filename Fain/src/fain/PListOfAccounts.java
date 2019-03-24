@@ -20,6 +20,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
@@ -45,7 +47,7 @@ public class PListOfAccounts extends javax.swing.JInternalFrame{
         initComponents();
     }
     
-    public PListOfAccounts(DBConnection db, Main frame, int level){
+    public PListOfAccounts(DBConnection db, Main frame, int level) throws Exception{
         this.dbConnection = db;
         this.level = level;
         this.mainFrame = frame;
@@ -62,7 +64,7 @@ public class PListOfAccounts extends javax.swing.JInternalFrame{
         this.asOnTbox.setText(date);
     }
     
-    private void loadAccountData(){
+    private void loadAccountData() throws Exception{
         accountData = MasterDB.getAccountHead(dbConnection.getStatement());
     }
     
@@ -155,7 +157,11 @@ public class PListOfAccounts extends javax.swing.JInternalFrame{
                 wait.setVisible(true);
                 mainFrame.addToMainDesktopPane(wait, level+1, Codes.NO_DATABASE);
         
-                ListOfAccounts.createReport(dbConnection, wait, paper, orientation, date, fromAccount, toAccount);
+                try {
+                    ListOfAccounts.createReport(dbConnection, wait, paper, orientation, date, fromAccount, toAccount);
+                } catch (Exception ex) {
+                    Logger.getLogger(PListOfAccounts.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         t.start();

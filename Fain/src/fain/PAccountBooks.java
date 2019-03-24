@@ -49,7 +49,7 @@ public class PAccountBooks extends javax.swing.JInternalFrame{
         initComponents();
     }
     
-    public PAccountBooks(DBConnection db, Main frame, int level, String type){
+    public PAccountBooks(DBConnection db, Main frame, int level, String type) throws Exception{
         this.dbConnection = db;
         this.level = level;
         this.mainFrame = frame;
@@ -82,7 +82,7 @@ public class PAccountBooks extends javax.swing.JInternalFrame{
         }
     }
     
-    private void loadAccountData(){
+    private void loadAccountData() throws Exception{
         String cat;
         if(this.type.compareTo("DAY") == 0){
             cat = "CH";

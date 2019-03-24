@@ -117,7 +117,7 @@ public final class PurchaseDB {
         return rs;
     }
     
-    public static String[] selectOneId(Statement stmt, String id){
+    public static String[] selectOneId(Statement stmt, String id) throws Exception{
         String sql="select * from purchase where purchaseId="+id+";";
         ResultSet rs=null;
         try{

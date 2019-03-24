@@ -96,7 +96,8 @@ public class PartyWiseStatement {
                key = keyList.get(i);
                saccountId = key;
                saccountName = MasterDB.getAccountHead(con.getStatement(), saccountId);
-               acc = accounts.get(key);               
+               acc = accounts.get(key);
+               Thread.sleep(100);
                ret = createTable(con, doc, fromDate, toDate, key, acc);
                if(ret == Codes.FAIL){
                    return ret;
@@ -106,10 +107,14 @@ public class PartyWiseStatement {
                }
             }
             
-            
-            doc.close();
+            if(ret != Codes.FAIL)
+                doc.close();
+            Thread.sleep(100);
         }catch(Exception e){
             e.printStackTrace();
+        }
+        finally{
+            con.connect();
         }
         if(ret != Codes.FAIL)
             ViewPdf.openPdfViewer(PREFIX + ".pdf");
@@ -141,6 +146,7 @@ public class PartyWiseStatement {
             }
         }catch(Exception e){
             e.printStackTrace();
+            con.connect();
         }
         return true;
     }
@@ -203,7 +209,7 @@ public class PartyWiseStatement {
         table.addCell(cell);
     }
     
-    private static int createTable(DBConnection con, Document doc, String fromDate, String toDate, String accId, Account acc){
+    private static int createTable(DBConnection con, Document doc, String fromDate, String toDate, String accId, Account acc) throws Exception{
         float columns[] = {0.7f, 0.7f, 0.7f, 0.8f, 0.8f, 0.7f, 1, 1, 1};
         PdfPTable table = new PdfPTable(columns);
         table.setWidthPercentage(90);
@@ -312,12 +318,14 @@ public class PartyWiseStatement {
             
         }catch(Exception e){
             e.printStackTrace();
+            con.connect();
             return Codes.FAIL;
         }
         try{
             doc.add(table);
         }catch(Exception e){
             e.printStackTrace();
+            con.connect();
             return Codes.FAIL;
         }
         return Codes.SUCCESS;

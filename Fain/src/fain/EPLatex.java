@@ -11,6 +11,8 @@ import database.MasterDB;
 import database.PurchaseLatexDB;
 import database.TransactionDB;
 import java.awt.Dimension;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -100,7 +102,7 @@ public class EPLatex extends javax.swing.JInternalFrame implements RefreshOption
         }
     }
     
-    private void addEntry(){
+    private void addEntry() throws Exception{
         APLatex item = new APLatex(dbConnection, Codes.NEW_ENTRY, null, this.mainFrame, this.level+1, this);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
@@ -110,7 +112,7 @@ public class EPLatex extends javax.swing.JInternalFrame implements RefreshOption
         }
         mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }
-    private void editEntry(){
+    private void editEntry() throws Exception{
         int index = this.dataTable.getSelectedRow();
         if(index == -1 ) return;
         String id = this.dataTable.getModel().getValueAt(index, 0).toString();
@@ -524,15 +526,27 @@ public class EPLatex extends javax.swing.JInternalFrame implements RefreshOption
     }//GEN-LAST:event_formInternalFrameClosing
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        addEntry();
+        try {
+            addEntry();
+        } catch (Exception ex) {
+            Logger.getLogger(EPLatex.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void dataTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dataTableKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            editEntry();
+            try {
+                editEntry();
+            } catch (Exception ex) {
+                Logger.getLogger(EPLatex.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F2){
-            addEntry();
+            try {
+                addEntry();
+            } catch (Exception ex) {
+                Logger.getLogger(EPLatex.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F3){
             deleteEntry();

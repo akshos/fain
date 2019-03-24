@@ -97,7 +97,7 @@ public static void delete(Statement stmt,String id){
         return rs;
     }
     
-    public static String[] selectOneId(Statement stmt, String id){
+    public static String[] selectOneId(Statement stmt, String id) throws Exception{
         String sql="select * from consumption where consumptionId="+id+";";
         ResultSet rs=null;
         

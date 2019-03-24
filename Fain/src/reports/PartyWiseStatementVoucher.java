@@ -82,7 +82,7 @@ public class PartyWiseStatementVoucher {
         double amount = 0.0;
         Document doc;
         try{
-            
+            Thread.sleep(500);
             String[][] accountData = CustomerDB.getCustomersFilteredCodeBranch(con.getStatement(), branch, accountId);
             if(accountData == null){
                 JOptionPane.showMessageDialog(null, "No Customer Accounts Available", "No Customers", JOptionPane.ERROR_MESSAGE);
@@ -114,8 +114,14 @@ public class PartyWiseStatementVoucher {
             }
             
             addVoucher(con, doc, accountId, branch, new DecimalFormat("##,##,##0.00").format(amount));
-            
-            doc.close();
+            try{
+                doc.close();
+            }
+            catch(Exception e){
+                e.printStackTrace();
+                ret = Codes.FAIL;
+            }
+            Thread.sleep(500);
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -211,7 +217,7 @@ public class PartyWiseStatementVoucher {
         table.addCell(cell);
     }
     
-    private static double createTable(DBConnection con, Document doc, String fromDate, String toDate, String accId, Account acc){
+    private static double createTable(DBConnection con, Document doc, String fromDate, String toDate, String accId, Account acc) throws Exception{
         float columns[] = {0.7f, 0.7f, 0.7f, 0.8f, 0.8f, 0.7f, 1, 1, 1};
         PdfPTable table = new PdfPTable(columns);
         table.setWidthPercentage(90);

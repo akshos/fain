@@ -222,7 +222,7 @@ public final class PurchaseLatexDB {
         return null;
     }
     
-    public static String[] selectOneId(Statement stmt, String id){
+    public static String[] selectOneId(Statement stmt, String id) throws Exception{
         String sql="select purchaseLatexId as 'ID', branch, date as 'Date', "
                 + "prBill as 'Pr. Bill', party, printf(\"%.3f\", quantity) as 'Quantity', "
                 + "printf(\"%.3f\", drc) as 'DRC', printf(\"%.3f\", dryRubber) as 'Dry Rubber', "
@@ -316,7 +316,7 @@ public final class PurchaseLatexDB {
         return null;
     }
     
-    public static String[] getPurchaseDatesRange(Statement stmt, String from, String to, String party){
+    public static String[] getPurchaseDatesRange(Statement stmt, String from, String to, String party) throws Exception{
         String sql = "select date from purchaseLatex where party='"+party+"' and date>='"+from+"' and date<='"+to+"' order by cast(prBill as INTEGER) asc;";
         try{
             ResultSet rs = stmt.executeQuery(sql);

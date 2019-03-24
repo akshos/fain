@@ -60,7 +60,7 @@ public class TrialBalance {
         return null;
     }
     
-    public static boolean createReport(DBConnection con, Wait wait, String paper, String orientation, String date){
+    public static boolean createReport(DBConnection con, Wait wait, String paper, String orientation, String date) throws Exception{
         scon = con;
         currAcc = "";
         pageDebitTotal = 0.0;
@@ -79,16 +79,18 @@ public class TrialBalance {
         Document doc;
         try{
             doc = startDocument(paper, orientation);
-            
+            Thread.sleep(500);
             ret = addTable(con, doc);
-            
-            doc.close();
+            if(ret)
+                doc.close();
+            Thread.sleep(500);
         }catch(Exception e){
             e.printStackTrace();
             wait.closeWait();
             return false;
         }
-        ViewPdf.openPdfViewer(PREFIX + ".pdf");
+        if(ret)
+            ViewPdf.openPdfViewer(PREFIX + ".pdf");
         wait.closeWait();
         return ret;
     }

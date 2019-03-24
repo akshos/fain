@@ -116,13 +116,14 @@ public class DebtorCreditor {
             CommonFuncs.updateMaster(con, df.format(now)); //pass current date
             
             Document doc = startDocument(paper, orientation);
+            Thread.sleep(500);
             boolean ret = addTable(con, doc, accountData, startIndex, endIndex, type);
             if(!ret){
                 JOptionPane.showMessageDialog(null, "Failed to Create Report", "FAILED", JOptionPane.WARNING_MESSAGE);
+            }else{
                 doc.close();
-                return false;
             }
-            doc.close();
+            Thread.sleep(500);
         }catch(Exception e){
             e.printStackTrace();
             return false;

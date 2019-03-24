@@ -45,7 +45,13 @@ public final class CompanyBarrelDB {
             return false;
         }
         return true;
-    }    
+    }
+
+    public static ResultSet selectAll(Statement stmt) throws SQLException{
+        String sql = "select * from companyBarrel";
+        return stmt.executeQuery(sql);
+    }
+    
     public static void delete(Statement stmt,String id){
         String del="delete from companyBarrel where cbarrelId="+id+";";
         try {
@@ -96,7 +102,7 @@ public final class CompanyBarrelDB {
         return null;
     }
     
-    public static String[] selectOneId(Statement stmt, String id){
+    public static String[] selectOneId(Statement stmt, String id) throws Exception{
         String sql="select * from companyBarrel where cbarrelId="+id+";";
         ResultSet rs=null;
         try{
@@ -142,7 +148,7 @@ public final class CompanyBarrelDB {
         return -1;
     }
      
-    public static String[] getBarrelDetails(Statement stmt){
+    public static String[] getBarrelDetails(Statement stmt) throws Exception{
         String sql="select * from barrelDetails where barrelDetailsId=1;";
         ResultSet rs=null;
         try{
@@ -169,6 +175,42 @@ public final class CompanyBarrelDB {
     
     public static int getCompanyShortage(Statement stmt){
         String sql = "select companyShortage from barrelDetails where barrelDetailsId=1; ";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            rs.next();
+            return rs.getInt(1);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return -1;
+    }
+    
+    public static int getCustomerIssued(Statement stmt){
+        String sql = "select customerIssued from barrelDetails where barrelDetailsId=1; ";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            rs.next();
+            return rs.getInt(1);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return -1;
+    }
+    
+    public static int getLatexBarrel(Statement stmt){
+        String sql = "select latexBarrel from barrelDetails where barrelDetailsId=1; ";
+        try{
+            ResultSet rs = stmt.executeQuery(sql);
+            rs.next();
+            return rs.getInt(1);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return -1;
+    }
+    
+    public static int getEmptyBarrel(Statement stmt){
+        String sql = "select emptyBarrel from barrelDetails where barrelDetailsId=1; ";
         try{
             ResultSet rs = stmt.executeQuery(sql);
             rs.next();

@@ -13,6 +13,8 @@ import database.TransactionDB;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -102,7 +104,7 @@ public class ESLatex extends javax.swing.JInternalFrame implements RefreshOption
         }
     }
     
-    private void printSalesBill(){
+    private void printSalesBill() throws Exception{
         int rowCount = this.dataTable.getSelectedRowCount();
         if(rowCount <= 0){
             JOptionPane.showMessageDialog(this, "Select atleast one entry to print", "No Selection", JOptionPane.WARNING_MESSAGE);
@@ -148,7 +150,7 @@ public class ESLatex extends javax.swing.JInternalFrame implements RefreshOption
         mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }
     
-    private void addEntry(){
+    private void addEntry() throws Exception{
         ASLatex item = new ASLatex(dbConnection, Codes.NEW_ENTRY, null, this.mainFrame, this.level+1, this);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
@@ -159,7 +161,7 @@ public class ESLatex extends javax.swing.JInternalFrame implements RefreshOption
         mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }
     
-    private void editEntry(){
+    private void editEntry() throws Exception{
         int index = this.dataTable.getSelectedRow();
         if(index == -1 ) return;
         String id = this.dataTable.getModel().getValueAt(index, 0).toString();
@@ -564,18 +566,34 @@ public class ESLatex extends javax.swing.JInternalFrame implements RefreshOption
     }//GEN-LAST:event_formInternalFrameClosing
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        addEntry();        // TODO add your handling code here:
+        try {
+            addEntry();        // TODO add your handling code here:
+        } catch (Exception ex) {
+            Logger.getLogger(ESLatex.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void dataTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dataTableKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.editEntry();
+            try {
+                this.editEntry();
+            } catch (Exception ex) {
+                Logger.getLogger(ESLatex.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_P){
-            printSalesBill();
+            try {
+                printSalesBill();
+            } catch (Exception ex) {
+                Logger.getLogger(ESLatex.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F2){
-            addEntry();
+            try {
+                addEntry();
+            } catch (Exception ex) {
+                Logger.getLogger(ESLatex.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F3){
             deleteEntry();

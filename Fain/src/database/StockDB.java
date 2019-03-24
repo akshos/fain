@@ -140,7 +140,7 @@ public final class StockDB {
         return rs;
     }
     
-    public static String[] selectOneId(Statement stmt, String id){
+    public static String[] selectOneId(Statement stmt, String id) throws Exception{
         String sql="select * from stock where itemCode="+id+";";
         ResultSet rs=null;
         try{
@@ -153,7 +153,7 @@ public final class StockDB {
         return null;
     }
     
-    public static String[][] getItems(Statement stmt){
+    public static String[][] getItems(Statement stmt) throws Exception{
         String sql="select itemCode, itemName from stock;";
         try {
             ResultSet rs=stmt.executeQuery(sql);

@@ -60,7 +60,7 @@ public class ListOfAccounts {
         return null;
     }
     
-    public static boolean createReport(DBConnection con, Wait wait, String paper, String orientation, String date, String accFrom, String accTo){
+    public static boolean createReport(DBConnection con, Wait wait, String paper, String orientation, String date, String accFrom, String accTo) throws Exception{
         scon = con;
         currAcc = "";
         pageDebitTotal = 0.0;
@@ -79,16 +79,17 @@ public class ListOfAccounts {
         Document doc;
         try{
             doc = startDocument(paper, orientation);
-            
+            Thread.sleep(500);
             ret = addTable(con, doc, accFrom, accTo);
-            
-            doc.close();
+            if(ret)
+                doc.close();
         }catch(Exception e){
             e.printStackTrace();
             wait.closeWait();
             return false;
         }
-        ViewPdf.openPdfViewer(PREFIX + ".pdf");
+        if(ret)
+            ViewPdf.openPdfViewer(PREFIX + ".pdf");
         wait.closeWait();
         return ret;
     }

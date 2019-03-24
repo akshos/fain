@@ -14,6 +14,8 @@ import database.MasterDB;
 import java.awt.Dimension;
 import java.sql.Statement;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
@@ -47,7 +49,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         refreshContents(Codes.REFRESH_BRANCHES);
     }
     
-    public ACustomers(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame, String code, String name){
+    public ACustomers(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame, String code, String name) throws Exception{
         this.level = level;
         this.mainFrame = frame;
         this.dbConnection = db;
@@ -68,7 +70,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         this.addressTarea.requestFocus();
     }
     
-    private void loadBranchData(){
+    private void loadBranchData() throws Exception{
         System.out.println("loading branch data");
         branchData = BranchDB.getBranch(this.dbConnection.getStatement());
     }
@@ -93,7 +95,7 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
         }
     }
     
-    private void loadContents(){
+    private void loadContents() throws Exception{
         String[] data = CustomerDB.selectOneId(dbConnection.getStatement(), editId);
         if(data == null){
             System.out.println("Load Contents : selectedOneId has returned null");
@@ -158,7 +160,11 @@ public class ACustomers extends javax.swing.JInternalFrame implements RefreshOpt
     @Override
     public void refreshContents(int type) {
         if(type == Codes.REFRESH_BRANCHES){
-            loadBranchData();
+            try {
+                loadBranchData();
+            } catch (Exception ex) {
+                Logger.getLogger(ACustomers.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     

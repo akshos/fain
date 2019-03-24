@@ -10,6 +10,8 @@ import database.PurchaseLatexDB;
 import database.SalesDB;
 import database.TransactionDB;
 import java.awt.Dimension;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -101,7 +103,7 @@ public class ETransaction extends javax.swing.JInternalFrame implements RefreshO
         }
     }
         
-    private void editEntry(){
+    private void editEntry() throws Exception{
         int index = this.dataTable.getSelectedRow();
         if(index == -1 ) return;
         String id = this.dataTable.getModel().getValueAt(index, 0).toString();
@@ -115,7 +117,7 @@ public class ETransaction extends javax.swing.JInternalFrame implements RefreshO
         mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }
     
-    private void addEntry(){
+    private void addEntry() throws Exception{
         ATransaction item = new ATransaction(dbConnection, Codes.NEW_ENTRY, null, this.mainFrame, this.level+1, this);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
@@ -529,15 +531,27 @@ public class ETransaction extends javax.swing.JInternalFrame implements RefreshO
     }//GEN-LAST:event_formInternalFrameClosing
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        addEntry();        // TODO add your handling code here:
+        try {
+            addEntry();        // TODO add your handling code here:
+        } catch (Exception ex) {
+            Logger.getLogger(ETransaction.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void dataTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dataTableKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.editEntry();
+            try {
+                this.editEntry();
+            } catch (Exception ex) {
+                Logger.getLogger(ETransaction.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F2){
-            addEntry();
+            try {
+                addEntry();
+            } catch (Exception ex) {
+                Logger.getLogger(ETransaction.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F3){
             deleteEntry();
@@ -560,7 +574,11 @@ public class ETransaction extends javax.swing.JInternalFrame implements RefreshO
     }//GEN-LAST:event_dataTableKeyPressed
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
-        editEntry();        
+        try {        
+            editEntry();
+        } catch (Exception ex) {
+            Logger.getLogger(ETransaction.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_editButtonActionPerformed
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized

@@ -64,15 +64,19 @@ public class ABranches extends javax.swing.JInternalFrame implements RefreshOpti
     }
     
     private void loadContents(){
-        String[] data = BranchDB.selectOneId(dbConnection.getStatement(), editId);
-        if(data == null){
-            System.out.println("Load Contents : selectedOneId has returned null");
-            return;
+        try{
+            String[] data = BranchDB.selectOneId(dbConnection.getStatement(), editId);
+            if(data == null){
+                System.out.println("Load Contents : selectedOneId has returned null");
+                return;
+            }
+            this.nameTbox.setText(data[1]);
+            this.addressTarea.setText(data[2]);
+            this.kgstTbox.setText(data[3]);
+            this.rbregnoTbox.setText(data[4]);
+        }catch(Exception e){
+            e.printStackTrace();
         }
-        this.nameTbox.setText(data[1]);
-        this.addressTarea.setText(data[2]);
-        this.kgstTbox.setText(data[3]);
-        this.rbregnoTbox.setText(data[4]);
     }
     
     private boolean validateFields(String name, String address, String kgst, String rbno){

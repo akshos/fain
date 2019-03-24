@@ -94,6 +94,24 @@ public class DBConnection {
     
     public void connect(){
         try{
+            try{
+                if(stmt != null){
+                    stmt.close();
+                }
+            }catch(SQLException se){
+                se.printStackTrace();
+            }
+            try{
+                if(conn != null){
+                    conn.close();
+                }
+            }catch(SQLException se){
+                se.printStackTrace();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        try{
             String location = Preferences.getDatabaseLocation();
             String url = "jdbc:sqlite:"+location+databaseName;
             if( !checkExisting(databaseName) ){

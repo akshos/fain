@@ -13,6 +13,8 @@ import database.TransactionDB;
 import java.awt.Dimension;
 import java.sql.Statement;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import utility.Codes;
@@ -44,7 +46,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         initComponents();
     }
     
-    public AMaster(DBConnection db, int mode, String id, Main frame, int level){
+    public AMaster(DBConnection db, int mode, String id, Main frame, int level) throws Exception{
         this.dbConnection = db;
         this.level = level;
         this.mainFrame = frame;
@@ -56,7 +58,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         prevFrame = null;
     }
     
-    public AMaster(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame){
+    public AMaster(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame) throws Exception{
         this.dbConnection = db;
         this.editId = id;
         this.level = level;
@@ -71,7 +73,11 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
     @Override
     public final void refreshContents(int code){
         if(code == Codes.REFRESH_ALL){
-            loadCategoryData();
+            try {
+                loadCategoryData();
+            } catch (Exception ex) {
+                Logger.getLogger(AMaster.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if(code == Codes.REFRESH_CUSTOMERS){
             this.customerAdded = true;
@@ -81,7 +87,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         }
     }
     
-    private void loadContents(){
+    private void loadContents() throws Exception{
         String[] data = MasterDB.selectOneId(dbConnection.getStatement(), editId);
         if(data == null){
             System.out.println("Load Contents : selectedOneId has returned null");
@@ -101,7 +107,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         this.validateCategory();
     }
     
-    private void loadCategoryData(){
+    private void loadCategoryData() throws Exception{
         System.out.println("loading cateogry data");
         categoryData = CategoryDB.getCategory(this.dbConnection.getStatement());
     }
@@ -118,7 +124,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         }
     }
     
-    private void addCustomer(){
+    private void addCustomer() throws Exception{
         String id = this.accountCodeTbox.getText();
         if(!CustomerDB.checkExisting(this.dbConnection.getStatement(), id)){
             String name = this.accountHeadTbox.getText();
@@ -135,7 +141,7 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
         }
     }
     
-    private void checkCategory(){
+    private void checkCategory() throws Exception{
         String catCode = this.categoryTbox.getText().toUpperCase();
         if( catCode.compareTo("CR")==0 || catCode.compareTo("DB")==0 ){
             addCustomer();
@@ -589,7 +595,11 @@ public class AMaster extends javax.swing.JInternalFrame implements RefreshOption
             this.doDefaultCloseAction();
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.checkCategory();
+            try {
+                this.checkCategory();
+            } catch (Exception ex) {
+                Logger.getLogger(AMaster.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP){
             javax.swing.JComponent cmp = (javax.swing.JComponent)evt.getSource();
             cmp.transferFocusBackward();

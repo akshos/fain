@@ -5,6 +5,8 @@
  */
 package fain;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import users.User;
 import utility.Codes;
@@ -63,7 +65,7 @@ public class Login extends javax.swing.JInternalFrame {
         this.doDefaultCloseAction();
     }
     
-    private void attemptLogin(){
+    private void attemptLogin() throws Exception{
         String username = this.usernameTbox.getText().toLowerCase();
         String password = this.passwordPbox.getText().toLowerCase();
         if(!User.validPassword(password) || !User.validUsername(username)){
@@ -215,7 +217,11 @@ public class Login extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_passwordPboxKeyTyped
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-        attemptLogin();
+        try {
+            attemptLogin();
+        } catch (Exception ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_loginButtonActionPerformed
 
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
@@ -227,14 +233,22 @@ public class Login extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_usernameTboxActionPerformed
 
     private void passwordPboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordPboxActionPerformed
-        attemptLogin();
+        try {
+            attemptLogin();
+        } catch (Exception ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_passwordPboxActionPerformed
 
     private void loginButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_loginButtonKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE){
             exit();
         }else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            attemptLogin();
+            try {
+                attemptLogin();
+            } catch (Exception ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_loginButtonKeyPressed
 

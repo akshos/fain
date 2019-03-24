@@ -77,10 +77,11 @@ public class Expenses {
         Document doc;
         try{
             doc = startDocument(paper, orientation);
-            
+            Thread.sleep(500);
             ret = createTable(con, doc, fromDate, toDate, branch);
-            
-            doc.close();
+            if(ret)
+                doc.close();
+            Thread.sleep(500);
         }catch(Exception e){
             e.printStackTrace();
             return false;

@@ -48,7 +48,7 @@ public class PPurchaseLatex extends javax.swing.JInternalFrame{
         initComponents();
     }
     
-    public PPurchaseLatex(DBConnection db, Main frame, int level){
+    public PPurchaseLatex(DBConnection db, Main frame, int level) throws Exception{
         this.dbConnection = db;
         this.level = level;
         this.mainFrame = frame;
@@ -66,7 +66,7 @@ public class PPurchaseLatex extends javax.swing.JInternalFrame{
         this.toDatePicker.setText(date);
     }
     
-    private void loadAccountData(){
+    private void loadAccountData() throws Exception{
         String branchCode = "All";
         accountData = CustomerDB.getCustomersInBranch(this.dbConnection.getStatement(), branchCode);
     }

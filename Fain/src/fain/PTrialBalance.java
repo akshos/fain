@@ -85,7 +85,11 @@ public class PTrialBalance extends javax.swing.JInternalFrame{
                 wait.setSize(new Dimension(700, 400));
                 wait.setVisible(true);
                 mainFrame.addToMainDesktopPane(wait, level+1, Codes.NO_DATABASE);
-                TrialBalance.createReport(dbConnection, wait, paper, orientation, date);
+                try {
+                    TrialBalance.createReport(dbConnection, wait, paper, orientation, date);
+                } catch (Exception ex) {
+                    Logger.getLogger(PTrialBalance.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         t.start();

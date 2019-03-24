@@ -10,6 +10,8 @@ import database.CustomerDB;
 import database.MasterDB;
 import database.TransactionDB;
 import java.awt.Dimension;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -83,7 +85,7 @@ public class ECustomers extends javax.swing.JInternalFrame implements RefreshOpt
         }
     }
     
-    private void addEntry(){
+    private void addEntry() throws Exception{
         AMaster item = new AMaster(dbConnection, Codes.NEW_ENTRY, null, this.mainFrame, this.level+1, this);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
@@ -95,7 +97,7 @@ public class ECustomers extends javax.swing.JInternalFrame implements RefreshOpt
         mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }
     
-    private void editEntry(){
+    private void editEntry() throws Exception{
         int index = this.dataTable.getSelectedRow();
         if(index == -1 ) return;
         String id = this.dataTable.getModel().getValueAt(index, 0).toString();
@@ -479,15 +481,27 @@ public class ECustomers extends javax.swing.JInternalFrame implements RefreshOpt
     }//GEN-LAST:event_formInternalFrameClosing
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        addEntry();
+        try {
+            addEntry();
+        } catch (Exception ex) {
+            Logger.getLogger(ECustomers.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void dataTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dataTableKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.editEntry();
+            try {
+                this.editEntry();
+            } catch (Exception ex) {
+                Logger.getLogger(ECustomers.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F2){
-            addEntry();
+            try {
+                addEntry();
+            } catch (Exception ex) {
+                Logger.getLogger(ECustomers.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F3){
             deleteEntry();
@@ -510,7 +524,11 @@ public class ECustomers extends javax.swing.JInternalFrame implements RefreshOpt
     }//GEN-LAST:event_dataTableKeyPressed
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
-        editEntry();        // TODO add your handling code here:
+        try {
+            editEntry();        // TODO add your handling code here:
+        } catch (Exception ex) {
+            Logger.getLogger(ECustomers.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_editButtonActionPerformed
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized

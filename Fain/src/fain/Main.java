@@ -18,14 +18,19 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import database.InfoDB;
 import database.SessionInfoDB;
+import database.UpdateDB;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComboBox;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
+import reports.Statements;
 import reports.ViewPdf;
 import utility.UtilityFuncs;
+import utility.Wait;
 
 /**
  *
@@ -37,7 +42,7 @@ public class Main extends javax.swing.JFrame {
     DBConnection dbConnection;
     boolean dbFound;
     User user;
-    
+    boolean login;
     javax.swing.JMenu logoutMenu;
     /**
      * Creates new form Main
@@ -54,6 +59,7 @@ public class Main extends javax.swing.JFrame {
         this.level = 0;
         Preferences.loadAllProperties();  
         fainMainMenu.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0), "none");
+        login = false;
     }
     
     private void disableComponents(){
@@ -94,8 +100,9 @@ public class Main extends javax.swing.JFrame {
         this.user = user;
     }
     
-    public void loginSuccess(){
+    public void loginSuccess() throws Exception{
         this.enableComponents();
+        login = true;
         initDatabase();
     }
     
@@ -158,7 +165,45 @@ public class Main extends javax.swing.JFrame {
         return false;
     }
     
-    private void initDatabase(){
+    private void pullFromSession() {
+        String[] sessionNames = InfoDB.getSessionNames();
+        if(sessionNames == null){
+            int ret = JOptionPane.showConfirmDialog(this, "The session list was not found", "ERROR", JOptionPane.ERROR_MESSAGE);
+            closeFain();
+        }
+        JComboBox sessionNamesCbox = new JComboBox(sessionNames);
+        String currSession = this.dbConnection.getDatabaseName();
+        sessionNamesCbox.setSelectedItem(currSession);
+        sessionNamesCbox.setFont(new java.awt.Font("Dialog", 1, 24));
+        JLabel msg = new JLabel("Choose Session Name : ");
+        msg.setFont(new java.awt.Font("Dialog", 1, 24));
+        final JComponent[] inputs = new JComponent[]{
+            msg,
+            sessionNamesCbox
+        };
+        int res = JOptionPane.showConfirmDialog(this, inputs, "Choose a Session to continue", JOptionPane.PLAIN_MESSAGE);
+        if(res == JOptionPane.OK_OPTION){
+            String sessionName = sessionNamesCbox.getSelectedItem().toString();
+            if(dbConnection.getDatabaseName().equals(sessionName)) {
+                JOptionPane.showMessageDialog(this, "Please enter differenct SESSION to PULL from", "INVALID SESSION", JOptionPane.WARNING_MESSAGE);
+                return;
+            }            
+            Thread t;
+            t = new Thread(new Runnable(){
+                public void run(){
+                    Wait wait = new Wait();
+                    wait.setSize(new Dimension(700, 400));
+                    wait.setVisible(true);
+                    addToMainDesktopPane(wait, level+1, Codes.NO_DATABASE);
+                    UpdateDB.updateFromPrevSession(dbConnection, sessionName);
+                    wait.closeWait();
+                }
+            });
+            t.start();
+        }
+    }
+    
+    private void initDatabase() throws Exception{
         if(dbFound == true){
             return;
         }
@@ -191,7 +236,7 @@ public class Main extends javax.swing.JFrame {
         }
     }
     
-    private void addNewSession(){
+    private void addNewSession() throws Exception{
         String status = "<html>Session : <span style=\"color:blue\">Updating</span></html>";
         this.databaseNameStatus.setText(status);
         if(askForNewSession()){
@@ -202,7 +247,7 @@ public class Main extends javax.swing.JFrame {
         setDatabaseStatus();
     }
     
-    private void loadSession(){
+    private void loadSession() throws Exception{
         String status = "<html>Session : <span style=\"color:blue\">Updating</span></html>";
         this.databaseNameStatus.setText(status);
         if(askForSessionChoice()){
@@ -217,6 +262,7 @@ public class Main extends javax.swing.JFrame {
         if(ret == JOptionPane.YES_OPTION){
             System.out.println("Logout");
             user = null;
+            login = false;
             initLogin();
         }
     }
@@ -243,7 +289,7 @@ public class Main extends javax.swing.JFrame {
         fainMainMenu.add(logoutMenu);
     }
     
-    private void setDatabaseStatus(){
+    private void setDatabaseStatus() throws Exception{
         if(this.dbFound == true){
             String dbName = dbConnection.getDatabaseName();
             String status = "<html>Session : <span style=\"color:blue\">" + dbName + "</span></html>";
@@ -322,6 +368,7 @@ public class Main extends javax.swing.JFrame {
         optionsMenu = new javax.swing.JMenu();
         startNewSessionMenuItem = new javax.swing.JMenuItem();
         loadSessionMenuItem = new javax.swing.JMenuItem();
+        pullFromSession = new javax.swing.JMenuItem();
         sessionInfoMenuItem = new javax.swing.JMenuItem();
         addUserMenuItem = new javax.swing.JMenuItem();
 
@@ -846,6 +893,15 @@ public class Main extends javax.swing.JFrame {
         });
         optionsMenu.add(loadSessionMenuItem);
 
+        pullFromSession.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        pullFromSession.setText("Pull From Session");
+        pullFromSession.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pullFromSessionActionPerformed(evt);
+            }
+        });
+        optionsMenu.add(pullFromSession);
+
         sessionInfoMenuItem.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         sessionInfoMenuItem.setText("Session Details");
         sessionInfoMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -904,7 +960,12 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_optionsMenuMouseExited
 
     private void aMasterMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aMasterMenuItemActionPerformed
-        AMaster item = new AMaster(dbConnection, Codes.NEW_ENTRY, null, this, this.level+1);
+        AMaster item = null;
+        try {
+            item = new AMaster(dbConnection, Codes.NEW_ENTRY, null, this, this.level+1);
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             System.out.println("setting size");
@@ -993,7 +1054,8 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_aConsumptionMenuItemActionPerformed
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-        initLogin();
+        if(this.login == false)
+            initLogin();
     }//GEN-LAST:event_formWindowActivated
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
@@ -1089,11 +1151,19 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_eConsumptionMenuItemActionPerformed
 
     private void startNewSessionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startNewSessionMenuItemActionPerformed
-        addNewSession();
+        try {
+            addNewSession();
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_startNewSessionMenuItemActionPerformed
 
     private void loadSessionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadSessionMenuItemActionPerformed
-        loadSession();
+        try {
+            loadSession();
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_loadSessionMenuItemActionPerformed
 
     private void addUserMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserMenuItemActionPerformed
@@ -1113,7 +1183,12 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_aBranchesMenuItemActionPerformed
 
     private void pLedgerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pLedgerMenuItemActionPerformed
-        PLedger item = new PLedger(dbConnection, this, this.level+1);
+        PLedger item = null;
+        try {
+            item = new PLedger(dbConnection, this, this.level+1);
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -1135,7 +1210,12 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_pTrialBalanceMenuItemActionPerformed
 
     private void dayBookMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dayBookMenuItemActionPerformed
-        PAccountBooks item = new PAccountBooks(dbConnection, this, this.level+1, "DAY");
+        PAccountBooks item = null;
+        try {
+            item = new PAccountBooks(dbConnection, this, this.level+1, "DAY");
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -1146,7 +1226,12 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_dayBookMenuItemActionPerformed
 
     private void cashBookMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cashBookMenuItemActionPerformed
-        PAccountBooks item = new PAccountBooks(dbConnection, this, this.level+1, "CH");
+        PAccountBooks item = null;
+        try {
+            item = new PAccountBooks(dbConnection, this, this.level+1, "CH");
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -1157,7 +1242,12 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_cashBookMenuItemActionPerformed
 
     private void bankBookMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bankBookMenuItemActionPerformed
-        PAccountBooks item = new PAccountBooks(dbConnection, this, this.level+1, "BK");
+        PAccountBooks item = null;
+        try {
+            item = new PAccountBooks(dbConnection, this, this.level+1, "BK");
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -1168,7 +1258,12 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_bankBookMenuItemActionPerformed
 
     private void statementsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statementsMenuItemActionPerformed
-        PStatements item = new PStatements(dbConnection, this, this.level+1);
+        PStatements item = null;
+        try {
+            item = new PStatements(dbConnection, this, this.level+1);
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -1179,7 +1274,12 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_statementsMenuItemActionPerformed
 
     private void debtorsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_debtorsMenuItemActionPerformed
-        PDebtorCreditor item = new PDebtorCreditor(dbConnection, this, this.level+1, "DB");
+        PDebtorCreditor item = null;
+        try {
+            item = new PDebtorCreditor(dbConnection, this, this.level+1, "DB");
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -1190,7 +1290,12 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_debtorsMenuItemActionPerformed
 
     private void creditorsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creditorsMenuItemActionPerformed
-        PDebtorCreditor item = new PDebtorCreditor(dbConnection, this, this.level+1, "CR");
+        PDebtorCreditor item = null;
+        try {
+            item = new PDebtorCreditor(dbConnection, this, this.level+1, "CR");
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -1212,7 +1317,12 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_pProfitLossBLMenuItemActionPerformed
 
     private void pExpensesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pExpensesMenuItemActionPerformed
-        PExpenses item = new PExpenses(dbConnection, this, this.level+1);
+        PExpenses item = null;
+        try {
+            item = new PExpenses(dbConnection, this, this.level+1);
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -1223,7 +1333,12 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_pExpensesMenuItemActionPerformed
 
     private void sessionInfoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sessionInfoMenuItemActionPerformed
-        SessionInfo item = new SessionInfo(dbConnection, this, this.level+1);
+        SessionInfo item = null;
+        try {
+            item = new SessionInfo(dbConnection, this, this.level+1);
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -1248,7 +1363,12 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_mainDesktopPaneKeyPressed
 
     private void pPurchaseLatexMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pPurchaseLatexMenuItemActionPerformed
-        PPurchaseLatex item = new PPurchaseLatex(dbConnection, this, this.level+1);
+        PPurchaseLatex item = null;
+        try {
+            item = new PPurchaseLatex(dbConnection, this, this.level+1);
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -1259,7 +1379,12 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_pPurchaseLatexMenuItemActionPerformed
 
     private void pPartyWiseStatementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pPartyWiseStatementActionPerformed
-        PPartyWiseStatement item = new PPartyWiseStatement(dbConnection, this, this.level+1);
+        PPartyWiseStatement item = null;
+        try {
+            item = new PPartyWiseStatement(dbConnection, this, this.level+1);
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -1270,7 +1395,12 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_pPartyWiseStatementActionPerformed
 
     private void pListOfAccountsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pListOfAccountsMenuItemActionPerformed
-        PListOfAccounts item = new PListOfAccounts(dbConnection, this, this.level+1);
+        PListOfAccounts item = null;
+        try {
+            item = new PListOfAccounts(dbConnection, this, this.level+1);
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -1281,7 +1411,12 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_pListOfAccountsMenuItemActionPerformed
 
     private void pSalesLatexMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pSalesLatexMenuItemActionPerformed
-        PSalesLatexReport item = new PSalesLatexReport(dbConnection, this, this.level+1);
+        PSalesLatexReport item = null;
+        try {
+            item = new PSalesLatexReport(dbConnection, this, this.level+1);
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -1336,7 +1471,12 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_pBarrelDailyReportMenuItemActionPerformed
 
     private void pBarrelCustomerReportMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pBarrelCustomerReportMenuItemActionPerformed
-        PBarrelCustomerReport item = new PBarrelCustomerReport(dbConnection, this, this.level+1);
+        PBarrelCustomerReport item = null;
+        try {
+            item = new PBarrelCustomerReport(dbConnection, this, this.level+1);
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -1380,7 +1520,12 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_companyShowIssuesListsMenuItemActionPerformed
 
     private void pPartyWiseStmtVoucherMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pPartyWiseStmtVoucherMenuItemActionPerformed
-        PPartyWiseStatementVoucher item = new PPartyWiseStatementVoucher(dbConnection, this, this.level+1);
+        PPartyWiseStatementVoucher item = null;
+        try {
+            item = new PPartyWiseStatementVoucher(dbConnection, this, this.level+1);
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
             item.setSize(dim);
@@ -1408,6 +1553,11 @@ public class Main extends javax.swing.JFrame {
     private void eSalesBillTemplateMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eSalesBillTemplateMenuItemActionPerformed
         ViewPdf.openPdfViewer("salesbill.xls");
     }//GEN-LAST:event_eSalesBillTemplateMenuItemActionPerformed
+
+    private void pullFromSessionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pullFromSessionActionPerformed
+        // TODO add your handling code here:
+        this.pullFromSession();
+    }//GEN-LAST:event_pullFromSessionActionPerformed
     
     /**
      * @param item the internal frame to be added to desktop pane
@@ -1524,6 +1674,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem pSalesLatexMenuItem;
     private javax.swing.JMenuItem pTrialBalanceMenuItem;
     private javax.swing.JMenu printingMenu;
+    private javax.swing.JMenuItem pullFromSession;
     private javax.swing.JMenuItem sessionInfoMenuItem;
     private javax.swing.JMenuItem showIssuesLiftsMenuItem;
     private javax.swing.JMenuItem startNewSessionMenuItem;

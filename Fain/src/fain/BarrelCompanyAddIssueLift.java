@@ -53,7 +53,7 @@ public class BarrelCompanyAddIssueLift extends javax.swing.JInternalFrame implem
         prevFrame = null;
     }
     
-    public BarrelCompanyAddIssueLift(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame){
+    public BarrelCompanyAddIssueLift(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame) throws Exception{
         this.prevFrame = prevFrame;
         this.level = level;
         this.mainFrame = frame;
@@ -74,7 +74,7 @@ public class BarrelCompanyAddIssueLift extends javax.swing.JInternalFrame implem
         this.dateTbox.setText(date);
     }
     
-    private void loadContents(){
+    private void loadContents() throws Exception{
         String[] data = CompanyBarrelDB.selectOneId(dbConnection.getStatement(), editId);
         if(data == null){
             System.out.println("Load Contents : selectedOneId has returned null");

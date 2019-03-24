@@ -212,7 +212,7 @@ public class CommonFuncs {
         return ret;
     }
     
-    public static boolean updateStockAccount(DBConnection con, String date){
+    public static boolean updateStockAccount(DBConnection con, String date) throws Exception{
         String items[][] = StockDB.getItems(con.getStatement());
         if(items == null){
             JOptionPane.showMessageDialog(null, "No Items in Stock", "ERROR", JOptionPane.ERROR_MESSAGE);
@@ -233,7 +233,7 @@ public class CommonFuncs {
         return ret;
     }
     
-    public static boolean updateMaster(DBConnection con, String date){
+    public static boolean updateMaster(DBConnection con, String date) throws Exception{
         String accountData[][] = MasterDB.getAccountHead(con.getStatement());
         HashMap<String, Account> accounts = addToHashMap(accountData, false);
         
@@ -288,7 +288,7 @@ public class CommonFuncs {
         return true;
     }
     
-    public static boolean updateAllAccounts(DBConnection con, String date){
+    public static boolean updateAllAccounts(DBConnection con, String date) throws Exception{
         boolean ret;
         
         ret = calculateLatexStock(con, date);

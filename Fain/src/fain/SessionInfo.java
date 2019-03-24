@@ -33,7 +33,7 @@ public class SessionInfo extends javax.swing.JInternalFrame {
         initComponents();
     }
     
-    public SessionInfo(DBConnection db, Main frame, int level){
+    public SessionInfo(DBConnection db, Main frame, int level) throws Exception{
         this.dbConnection = db;
         this.level = level;
         this.mainFrame = frame;
@@ -41,7 +41,7 @@ public class SessionInfo extends javax.swing.JInternalFrame {
         loadContents();
     }
    
-    private void loadContents(){
+    private void loadContents() throws Exception{
         String data[] = SessionInfoDB.getDetails(dbConnection.getStatement());
         if(data == null){
             this.mode = Codes.NEW_ENTRY;

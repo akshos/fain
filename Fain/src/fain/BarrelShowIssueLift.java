@@ -11,6 +11,8 @@ import database.BranchDB;
 import database.CustomerDB;
 import database.TransactionDB;
 import java.awt.Dimension;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -86,7 +88,7 @@ public class BarrelShowIssueLift extends javax.swing.JInternalFrame implements R
         setColumnAlignment();
     }
     
-    private void addEntry(){
+    private void addEntry() throws Exception{
         BarrelAddIssueLift item = new BarrelAddIssueLift(dbConnection, Codes.NEW_ENTRY, null, mainFrame, this.level+1, this);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
@@ -103,7 +105,7 @@ public class BarrelShowIssueLift extends javax.swing.JInternalFrame implements R
         }
     }
     
-    private void editEntry(){
+    private void editEntry() throws Exception{
         int index = this.dataTable.getSelectedRow();
         if(index == -1 ) return;
         String id = this.dataTable.getModel().getValueAt(index, 0).toString();
@@ -516,15 +518,27 @@ public class BarrelShowIssueLift extends javax.swing.JInternalFrame implements R
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         System.out.println("Add Button Action Performed");
-        addEntry();
+        try {
+            addEntry();
+        } catch (Exception ex) {
+            Logger.getLogger(BarrelShowIssueLift.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void dataTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dataTableKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.editEntry();
+            try {
+                this.editEntry();
+            } catch (Exception ex) {
+                Logger.getLogger(BarrelShowIssueLift.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F2){
-            addEntry();
+            try {
+                addEntry();
+            } catch (Exception ex) {
+                Logger.getLogger(BarrelShowIssueLift.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F2){
         
@@ -551,7 +565,11 @@ public class BarrelShowIssueLift extends javax.swing.JInternalFrame implements R
     }//GEN-LAST:event_dataTableKeyPressed
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
-        editEntry();
+        try {
+            editEntry();
+        } catch (Exception ex) {
+            Logger.getLogger(BarrelShowIssueLift.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_editButtonActionPerformed
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized

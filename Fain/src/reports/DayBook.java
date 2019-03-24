@@ -88,8 +88,11 @@ public class DayBook {
             }
             
             double balance = calculatePreviousBalance(con, fromDate, cashAccountId);
+            Thread.sleep(500);
             ret = createTable(con, doc, fromDate, toDate, cashAccountId, balance);
-            doc.close();
+            if(ret)
+                doc.close();
+            Thread.sleep(500);
             if(ret)
                 ViewPdf.openPdfViewer(PREFIX + ".pdf");
         }catch(Exception e){
@@ -150,7 +153,7 @@ public class DayBook {
         table.addCell(cell);
     }
     
-    private static boolean createTable(DBConnection con, Document doc, String fromDate, String toDate, String cashAccountId, double prevBalance){
+    private static boolean createTable(DBConnection con, Document doc, String fromDate, String toDate, String cashAccountId, double prevBalance) throws Exception{
         float columns[] = {0.7f, 2, 1, 1};
         PdfPTable table = new PdfPTable(columns);
         table.setWidthPercentage(90);

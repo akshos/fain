@@ -75,9 +75,11 @@ public class PurchaseLatex {
             }
             
             doc = startDocument(paper, orientation);
-
+            Thread.sleep(500);
             ret = createTable(con, doc, fromDate, toDate, accountId);
-            doc.close();
+            if(ret)
+                doc.close();
+            Thread.sleep(500);
         }catch(Exception e){
             e.printStackTrace();
         }

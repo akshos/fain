@@ -65,6 +65,20 @@ public final class BranchDB {
         }
         return false;
     }
+    
+    public static boolean checkExistingName(Statement stmt,String name){
+        String check="select * from branch where name='"+name+"';";
+        try {
+            ResultSet rs=stmt.executeQuery(check);
+            if (rs.next()){
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BranchDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
     public static TableModel getTable(Statement stmt){
         String sqlQuery = "select branchId as 'ID', name as 'Name', address as 'Address', "
                 + "kgst as 'GST', rbno as 'RBNO' from branch;";
@@ -91,7 +105,7 @@ public final class BranchDB {
         return rs;
     }
     
-    public static String[] selectOneId(Statement stmt, String id){
+    public static String[] selectOneId(Statement stmt, String id) throws Exception{
         String sql="select * from branch where branchId="+id+";";
         ResultSet rs=null;
         try{
@@ -104,7 +118,7 @@ public final class BranchDB {
         return null;
     }
     
-    public static String[][] getBranch(Statement stmt){
+    public static String[][] getBranch(Statement stmt) throws Exception{
         String sql="select branchId,name from branch;";
         try {
             ResultSet rs=stmt.executeQuery(sql);

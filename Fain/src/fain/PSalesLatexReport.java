@@ -48,7 +48,7 @@ public class PSalesLatexReport extends javax.swing.JInternalFrame{
         initComponents();
     }
     
-    public PSalesLatexReport(DBConnection db, Main frame, int level){
+    public PSalesLatexReport(DBConnection db, Main frame, int level) throws Exception{
         this.dbConnection = db;
         this.level = level;
         this.mainFrame = frame;
@@ -66,7 +66,7 @@ public class PSalesLatexReport extends javax.swing.JInternalFrame{
         this.toDatePicker.setText(date);
     }
     
-    private void loadBranchData(){
+    private void loadBranchData() throws Exception{
         System.out.println("loading branch data");
         branchData = BranchDB.getBranch(this.dbConnection.getStatement());
     }

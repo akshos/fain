@@ -52,6 +52,20 @@ public class SessionInfoDB {
         return true;
     }
     
+    public static boolean checkExisting(Statement stmt, String id) throws SQLException{
+        String sql = "select * from info where id=" + id + ";";
+        ResultSet rs = stmt.executeQuery(sql);
+        if(rs.next()) {
+            return true;
+        }
+        return false;
+    }
+    
+    public static ResultSet selectAll(Statement stmt) throws SQLException {
+        String sql = "select * from info where id=1";
+        return stmt.executeQuery(sql);
+    }
+    
     public static void delete(Statement stmt,String id){
         String del="delete from info where id="+id+";";
         try {
@@ -61,7 +75,7 @@ public class SessionInfoDB {
         }
     }
     
-    public static String[] getDetails(Statement stmt){
+    public static String[] getDetails(Statement stmt) throws Exception{
         String sql="select * from info where id=1";
         ResultSet rs;
         try{
@@ -73,7 +87,7 @@ public class SessionInfoDB {
         return null;
     }
     
-    public static boolean loadSessionDetails(Statement stmt){
+    public static boolean loadSessionDetails(Statement stmt) throws Exception{
         String sql="select * from info where id=1";
         ResultSet rs;
         try{

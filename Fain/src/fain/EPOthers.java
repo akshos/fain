@@ -8,6 +8,8 @@ package fain;
 import database.DBConnection;
 import database.PurchaseDB;
 import java.awt.Dimension;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
@@ -88,7 +90,7 @@ public class EPOthers extends javax.swing.JInternalFrame implements RefreshOptio
         }
     }
     
-    private void addEntry(){
+    private void addEntry() throws Exception{
         APOthers item = new APOthers(dbConnection, Codes.NEW_ENTRY, null, this.mainFrame, this.level+1, this);
         Dimension dim = Preferences.getInternalFrameDimension(item);
         if(dim != null){
@@ -99,7 +101,7 @@ public class EPOthers extends javax.swing.JInternalFrame implements RefreshOptio
         mainFrame.addToMainDesktopPane(item, this.level, Codes.DATABASE_DEP);
     }
     
-    private void editEntry(){
+    private void editEntry() throws Exception{
         int index = this.dataTable.getSelectedRow();
         if(index == -1 ) return;
         String id = this.dataTable.getModel().getValueAt(index, 0).toString();
@@ -434,15 +436,27 @@ public class EPOthers extends javax.swing.JInternalFrame implements RefreshOptio
     }//GEN-LAST:event_formInternalFrameClosing
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        addEntry();        // TODO add your handling code here:
+        try {
+            addEntry();        // TODO add your handling code here:
+        } catch (Exception ex) {
+            Logger.getLogger(EPOthers.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void dataTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dataTableKeyPressed
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            this.editEntry();
+            try {
+                this.editEntry();
+            } catch (Exception ex) {
+                Logger.getLogger(EPOthers.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F2){
-            addEntry(); 
+            try { 
+                addEntry();
+            } catch (Exception ex) {
+                Logger.getLogger(EPOthers.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_F2){
         

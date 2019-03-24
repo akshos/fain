@@ -187,7 +187,7 @@ public final class SalesDB {
         return rs;
     }
     
-    public static String[] selectOneId(Statement stmt, String id){
+    public static String[] selectOneId(Statement stmt, String id) throws Exception{
         String sql="select * from sales where salesId="+id+";";
         ResultSet rs=null;
         try{

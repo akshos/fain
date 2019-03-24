@@ -48,7 +48,7 @@ public class PStatements extends javax.swing.JInternalFrame{
         initComponents();
     }
     
-    public PStatements(DBConnection db, Main frame, int level){
+    public PStatements(DBConnection db, Main frame, int level) throws Exception{
         this.dbConnection = db;
         this.level = level;
         this.mainFrame = frame;
@@ -67,7 +67,7 @@ public class PStatements extends javax.swing.JInternalFrame{
         this.toDatePicker.setText(date);
     }
     
-    private void loadBranchData(){
+    private void loadBranchData() throws Exception{
         System.out.println("loading branch data");
         branchData = BranchDB.getBranch(this.dbConnection.getStatement());
     }
@@ -94,7 +94,7 @@ public class PStatements extends javax.swing.JInternalFrame{
         }
     }
     
-   private void loadAccountData(){
+   private void loadAccountData() throws Exception{
         String branchCode = this.branchTbox.getText().trim();
         if(branchCode.isEmpty()){
             branchCode = "All";
@@ -467,7 +467,11 @@ public class PStatements extends javax.swing.JInternalFrame{
 
     private void branchTboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_branchTboxFocusLost
         this.validateBranch();
-        this.loadAccountData();
+        try {
+            this.loadAccountData();
+        } catch (Exception ex) {
+            Logger.getLogger(PStatements.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_branchTboxFocusLost
 
     private void branchTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_branchTboxKeyPressed

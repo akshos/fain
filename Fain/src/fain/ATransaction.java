@@ -66,7 +66,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         this.mode=mode;
     }
     
-    public ATransaction(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame){
+    public ATransaction(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame) throws Exception{
         this.prevFrame = prevFrame;
         this.level = level;
         this.mainFrame = frame;
@@ -90,18 +90,34 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
     @Override
     public void refreshContents(int type){
         if(type == Codes.REFRESH_ALL){
-            loadBranchData();
-            loadAccountData();
+            try {
+                loadBranchData();
+            } catch (Exception ex) {
+                Logger.getLogger(ATransaction.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                loadAccountData();
+            } catch (Exception ex) {
+                Logger.getLogger(ATransaction.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if(type == Codes.REFRESH_MASTER){
-            loadAccountData();
+            try {
+                loadAccountData();
+            } catch (Exception ex) {
+                Logger.getLogger(ATransaction.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if(type == Codes.REFRESH_BRANCHES){
-            loadBranchData();
+            try {
+                loadBranchData();
+            } catch (Exception ex) {
+                Logger.getLogger(ATransaction.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     
-    private void loadBranchData(){
+    private void loadBranchData() throws Exception{
         System.out.println("loading categorycbox");
         branchData = BranchDB.getBranch(this.dbConnection.getStatement());
     }
@@ -126,7 +142,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         }
     }
     
-    private void loadContents(){
+    private void loadContents() throws Exception{
         String[] data = TransactionDB.selectOneId(dbConnection.getStatement(), editId);
         if(data == null){
             System.out.println("Load Contents : selectedOneId has returned null");
@@ -151,7 +167,7 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
         this.narrationTbox.setText(data[6]);
     }
     
-    private void loadAccountData(){
+    private void loadAccountData() throws Exception{
         System.out.println("Loading Account Data");
         String branchCode = this.branchTbox.getText();
 
@@ -702,7 +718,11 @@ public class ATransaction extends javax.swing.JInternalFrame implements RefreshO
     }//GEN-LAST:event_creditTboxKeyPressed
 
     private void branchTboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_branchTboxFocusLost
-        this.loadAccountData();
+        try {
+            this.loadAccountData();
+        } catch (Exception ex) {
+            Logger.getLogger(ATransaction.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_branchTboxFocusLost
 
     private void branchTboxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_branchTboxFocusGained

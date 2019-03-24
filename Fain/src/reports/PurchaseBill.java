@@ -66,6 +66,7 @@ public class PurchaseBill {
     
     public static boolean createBill(DBConnection con, String purchaseId){
         try{
+            Thread.sleep(500);
             String[] purchaseData = PurchaseLatexDB.selectOneId(con.getStatement(), purchaseId);
             if(purchaseData == null){
                 JOptionPane.showMessageDialog(null, "Could not get Purchase Data", "ERROR", JOptionPane.ERROR_MESSAGE);

@@ -78,10 +78,24 @@ public class Statements {
             doc = startDocument(paper, orientation);
             
             double balance = calculatePreviousBalance(con, fromDate, accountId);
+            Thread.sleep(1000);
             ret = createTable(con, doc, fromDate, toDate, accountId, balance);
-            doc.close();
+            if(ret == true){
+                doc.close();
+                ret = true;
+            }else{
+                JOptionPane.showMessageDialog(null, "Sorry some error has occured. Please try Again.", "ERROR", JOptionPane.WARNING_MESSAGE);
+                ret = false;
+            }
+            Thread.sleep(1000);
         }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Sorry some error has occured. Please try Again.", "ERROR", JOptionPane.WARNING_MESSAGE);
             e.printStackTrace();
+            con.connect();
+            return ret;
+        }
+        finally{
+            con.connect();
         }
         if(ret)
             ViewPdf.openPdfViewer(PREFIX + ".pdf");
@@ -103,6 +117,7 @@ public class Statements {
             }
         }catch(SQLException se){
             se.printStackTrace();
+            con.connect();
         }
         double balance = debit-credit;
         return balance;
@@ -141,7 +156,7 @@ public class Statements {
         table.addCell(cell);
     }
     
-    private static boolean createTable(DBConnection con, Document doc, String fromDate, String toDate, String accountId, double prevBalance){
+    private static boolean createTable(DBConnection con, Document doc, String fromDate, String toDate, String accountId, double prevBalance) throws Exception{
         float columns[] = {0.7f, 2, 1, 1};
         PdfPTable table = new PdfPTable(columns);
         table.setWidthPercentage(90);
@@ -245,6 +260,7 @@ public class Statements {
             
         }catch(Exception e){
             e.printStackTrace();
+            con.connect();
             return false;
         }
         return true;

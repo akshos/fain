@@ -35,6 +35,25 @@ public final class CustomerDB {
         return true;
     }
     
+    public static boolean insert(Statement stmt, String code, String name, String address,String branch, String kgst,String rbno,String contact, String barrels ){
+        String in ="insert into customer values('"      +code           + "','"
+                                                        +name           + "','"
+                                                        +address        + "','"
+                                                        +branch         + "','"
+                                                        +kgst           + "','"
+                                                        +rbno           + "','"
+                                                        +contact        + "',"
+                                                        +barrels        + ");";
+        try{
+            stmt.execute(in);
+        }
+        catch(SQLException se){
+            se.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    
     public static boolean update(Statement stmt, String code, String name, String address, String branch, String kgst,String rbno,String contact ){
         String sql = "update customer set name='" + name + "', "
                 + "address='" + address + "', "
@@ -136,7 +155,7 @@ public final class CustomerDB {
         return rs;
     }
     
-    public static String[] selectOneId(Statement stmt, String id){
+    public static String[] selectOneId(Statement stmt, String id) throws Exception{
         String sql="select * from customer where customerCode='"+id+"';";
         ResultSet rs=null;
         
@@ -150,7 +169,7 @@ public final class CustomerDB {
         return null;
     }
     
-    public static String[][] getCustomersInBranch(Statement stmt, String branchId){
+    public static String[][] getCustomersInBranch(Statement stmt, String branchId) throws Exception{
         String sql = "select customerCode, name, address from customer";
         if(branchId.compareToIgnoreCase("All") != 0){
             sql += " where branch='"+branchId+"' ";
@@ -167,7 +186,7 @@ public final class CustomerDB {
         return null;
     }
     
-    public static String[][] getCustomersFilteredCodeBranch(Statement stmt, String branch, String code){
+    public static String[][] getCustomersFilteredCodeBranch(Statement stmt, String branch, String code) throws Exception{
         String sql = "select customerCode, name from customer";
         if(code.compareToIgnoreCase("All") != 0){
             sql += " where customerCode='"+code+"' ";
@@ -187,7 +206,7 @@ public final class CustomerDB {
         return null;
     }
     
-    public static String[][] getCustomersFilteredCode(Statement stmt, String code){
+    public static String[][] getCustomersFilteredCode(Statement stmt, String code) throws Exception{
         String sql = "select customerCode, name from customer";
         if(code.compareToIgnoreCase("All") != 0){
             sql += " where customerCode='"+code+"' ";

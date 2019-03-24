@@ -28,7 +28,7 @@ public class CategoryDB {
         }
         return true;
 }
-        public static String[][] getCategory(Statement stmt){
+        public static String[][] getCategory(Statement stmt) throws Exception{
         String sql="select code,name from category;";
         try {
             ResultSet rs=stmt.executeQuery(sql);

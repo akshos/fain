@@ -73,7 +73,7 @@ public class ProfitLossBalanceSheet {
         return null;
     }
     
-    public static boolean createReport(DBConnection con, String paper, String orientation, String date){
+    public static boolean createReport(DBConnection con, String paper, String orientation, String date) throws Exception{
         scon = con;
         currAcc = "";
         pageDebitTotal = 0.0;
@@ -102,9 +102,11 @@ public class ProfitLossBalanceSheet {
             
             doc.newPage();
             stitle = "BALANCE SHEET";
+            Thread.sleep(1000);
             balanceSheet(con, doc, profitLoss);
             
             doc.close();
+            Thread.sleep(100);
         }catch(Exception e){
             e.printStackTrace();
             return false;

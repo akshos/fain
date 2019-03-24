@@ -65,7 +65,7 @@ public class BarrelAddIssueLift extends javax.swing.JInternalFrame implements Re
         prevFrame = null;
     }
     
-    public BarrelAddIssueLift(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame){
+    public BarrelAddIssueLift(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame) throws Exception{
         this.prevFrame = prevFrame;
         this.level = level;
         this.mainFrame = frame;
@@ -86,7 +86,7 @@ public class BarrelAddIssueLift extends javax.swing.JInternalFrame implements Re
         this.dateTbox.setText(date);
     }
     
-    private void loadContents(){
+    private void loadContents() throws Exception{
         String[] data = BarrelDB.selectOneId(dbConnection.getStatement(), editId);
         if(data == null){
             System.out.println("Load Contents : selectedOneId has returned null");
@@ -109,7 +109,7 @@ public class BarrelAddIssueLift extends javax.swing.JInternalFrame implements Re
         this.differenceTbox.setText(data[7]);
     }
     
-     private void loadPartyData(){
+     private void loadPartyData() throws Exception{
         String branchCode = this.branchTbox.getText();
         partyData = CustomerDB.getCustomersInBranch(this.dbConnection.getStatement(), branchCode);   
     }
@@ -134,7 +134,7 @@ public class BarrelAddIssueLift extends javax.swing.JInternalFrame implements Re
         }
     }
         
-    private void loadBranchData(){
+    private void loadBranchData() throws Exception{
         System.out.println("loading branch data");
         branchData = BranchDB.getBranch(this.dbConnection.getStatement());
     }
@@ -186,14 +186,30 @@ public class BarrelAddIssueLift extends javax.swing.JInternalFrame implements Re
     @Override
     public void refreshContents(int type) {
         if(type == Codes.REFRESH_ALL){
-            loadBranchData();
-            loadPartyData();
+            try {
+                loadBranchData();
+            } catch (Exception ex) {
+                Logger.getLogger(BarrelAddIssueLift.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                loadPartyData();
+            } catch (Exception ex) {
+                Logger.getLogger(BarrelAddIssueLift.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if(type == Codes.REFRESH_BRANCHES){
-            loadBranchData();
+            try {
+                loadBranchData();
+            } catch (Exception ex) {
+                Logger.getLogger(BarrelAddIssueLift.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if(type == Codes.REFRESH_MASTER){
-            loadPartyData();
+            try {
+                loadPartyData();
+            } catch (Exception ex) {
+                Logger.getLogger(BarrelAddIssueLift.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     
@@ -683,7 +699,11 @@ public class BarrelAddIssueLift extends javax.swing.JInternalFrame implements Re
     }//GEN-LAST:event_barrelsIssuedTboxFocusLost
 
     private void branchTboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_branchTboxFocusLost
-        this.loadPartyData();        // TODO add your handling code here:
+         try {
+             this.loadPartyData();        // TODO add your handling code here:
+         } catch (Exception ex) {
+             Logger.getLogger(BarrelAddIssueLift.class.getName()).log(Level.SEVERE, null, ex);
+         }
     }//GEN-LAST:event_branchTboxFocusLost
 
     private void branchTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_branchTboxKeyPressed

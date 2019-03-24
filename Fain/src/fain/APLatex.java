@@ -64,7 +64,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         prevFrame = null;
     }
     
-    public APLatex(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame){
+    public APLatex(DBConnection db, int mode, String id, Main frame, int level, RefreshOption prevFrame) throws Exception{
         this.prevFrame = prevFrame;
         this.level = level;
         this.mainFrame = frame;
@@ -85,7 +85,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         this.dateTbox.setText(date);
     }
     
-    private void loadContents(){
+    private void loadContents() throws Exception{
         String[] data = PurchaseLatexDB.selectOneId(dbConnection.getStatement(), editId);
         if(data == null){
             System.out.println("Load Contents : selectedOneId has returned null");
@@ -111,7 +111,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         this.valueTbox.setText(data[9]);
     }
     
-     private void loadPartyData(){
+     private void loadPartyData() throws Exception{
         String branchCode = this.branchTbox.getText();
         partyData = CustomerDB.getCustomersInBranch(this.dbConnection.getStatement(), branchCode);   
     }
@@ -136,7 +136,7 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
         }
     }
         
-    private void loadBranchData(){
+    private void loadBranchData() throws Exception{
         System.out.println("loading branch data");
         branchData = BranchDB.getBranch(this.dbConnection.getStatement());
     }
@@ -164,14 +164,30 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
     @Override
     public void refreshContents(int type) {
         if(type == Codes.REFRESH_ALL){
-            loadBranchData();
-            loadPartyData();
+            try {
+                loadBranchData();
+            } catch (Exception ex) {
+                Logger.getLogger(APLatex.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                loadPartyData();
+            } catch (Exception ex) {
+                Logger.getLogger(APLatex.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if(type == Codes.REFRESH_BRANCHES){
-            loadBranchData();
+            try {
+                loadBranchData();
+            } catch (Exception ex) {
+                Logger.getLogger(APLatex.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if(type == Codes.REFRESH_MASTER){
-            loadPartyData();
+            try {
+                loadPartyData();
+            } catch (Exception ex) {
+                Logger.getLogger(APLatex.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     
@@ -824,7 +840,11 @@ public class APLatex extends javax.swing.JInternalFrame implements RefreshOption
     }//GEN-LAST:event_drcTboxFocusLost
 
     private void branchTboxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_branchTboxFocusLost
-        this.loadPartyData();        // TODO add your handling code here:
+         try {
+             this.loadPartyData();        // TODO add your handling code here:
+         } catch (Exception ex) {
+             Logger.getLogger(APLatex.class.getName()).log(Level.SEVERE, null, ex);
+         }
     }//GEN-LAST:event_branchTboxFocusLost
 
     private void branchTboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_branchTboxKeyPressed

@@ -58,10 +58,11 @@ public class BarrelMonthlyReport {
         Document doc;
         try{
             doc = startDocument(paper, orientation);
-            
+            Thread.sleep(500);
             ret = addTable(con, doc, fromDate, toDate);
-            
-            doc.close();
+            if(ret == true)
+                doc.close();
+            Thread.sleep(500);
         }catch(Exception e){
             e.printStackTrace();
             wait.closeWait();

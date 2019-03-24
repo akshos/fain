@@ -59,9 +59,11 @@ public class BarrelSummaryReport {
             
             addBarrelSummary(con, doc);
             CommonFuncs.addEmptyLine(doc, 1);
+            Thread.sleep(500);
             ret = addTable(con, doc);
-            
-            doc.close();
+            if(ret == true)
+                doc.close();
+            Thread.sleep(500);
         }catch(Exception e){
             e.printStackTrace();
             wait.closeWait();
