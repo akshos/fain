@@ -290,10 +290,10 @@ public class CommonFuncs {
     
     public static boolean updateAllAccounts(DBConnection con, String date) throws Exception{
         boolean ret;
-        
+        Thread.sleep(200);
         ret = calculateLatexStock(con, date);
         if(!ret) return ret;
-        
+        Thread.sleep(200);
         ret = updateMaster(con, date);
         if(!ret) return ret;
         

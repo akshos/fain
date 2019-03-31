@@ -8,6 +8,7 @@ package database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import reports.CommonFuncs;
 
 /**
  *
@@ -22,6 +23,8 @@ public class UpdateDB {
         
         try{
             currDB.startTransaction();
+            CommonFuncs.updateAllAccounts(fromDB,"2100-01-01");
+            Thread.sleep(200);
             updateMasterDB(fromDB, currDB);
             Thread.sleep(200);
             updateBranchDB(fromDB, currDB);
