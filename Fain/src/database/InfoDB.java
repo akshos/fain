@@ -22,7 +22,7 @@ public class InfoDB {
     private static String sep = File.separator;
     private static String infoDBFile = "db"+sep+"info.db";
     private static String url = "jdbc:sqlite:" + infoDBFile;
-    private static final String sessionNamePattern = "^[a-z0-9A-Z_ -]{3,15}$";
+    private static final String sessionNamePattern = "^[a-z0-9A-Z_ -]{3,100}$";
     
     public static String[] getSessionNames(){
         String query1 = "select count(*) from sessions;";
